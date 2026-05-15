@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة باثي بوك التعليمية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Lalezar&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Tajawal', sans-serif;
+    background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 50%, #fd79a8 100%);
+    background-attachment: fixed;
+  }
+
+  /* خلفية متحركة */
+  .bg-shape {
+    position: fixed;
+    pointer-events: none;
+    opacity: 0.35;
+    animation: floatBg 20s infinite ease-in-out;
+    z-index: 0;
+  }
+  .bg-shape:nth-child(1) { top: 5%; left: 5%; font-size: 40px; animation-delay: 0s; }
+  .bg-shape:nth-child(2) { top: 15%; right: 8%; font-size: 50px; animation-delay: 3s; }
+  .bg-shape:nth-child(3) { bottom: 10%; left: 10%; font-size: 45px; animation-delay: 6s; }
+  .bg-shape:nth-child(4) { bottom: 20%; right: 15%; font-size: 35px; animation-delay: 9s; }
+  .bg-shape:nth-child(5) { top: 50%; left: 3%; font-size: 55px; animation-delay: 12s; }
+  .bg-shape:nth-child(6) { top: 40%; right: 3%; font-size: 40px; animation-delay: 15s; }
+
+  @keyframes floatBg {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(15deg); }
+  }
+
+  /* الشريط العلوي */
+  .top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .logo {
+    font-family: 'Lalezar', cursive;
+    font-size: clamp(20px, 3vw, 32px);
+    background: linear-gradient(45deg, #e84393, #6c5ce7, #00b894);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+  }
+  .tools {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .tool-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+  }
+  .tool-btn:hover, .tool-btn:active { transform: scale(1.15); box-shadow: 0 5px 15px rgba(0,0,0,0.25); }
+  .tool-btn.active {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 3px #fff, 0 0 0 6px #e84393, 0 5px 15px rgba(0,0,0,0.3);
+  }
+  .tool-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: #e84393;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #e84393;
+  }
+  .color-pen { background: linear-gradient(135deg, #fd79a8, #e84393); color: #fff; }
+  .color-blue { background: #0984e3; color: #fff; }
+  .color-green { background: #00b894; color: #fff; }
+  .color-purple { background: #6c5ce7; color: #fff; }
+  .color-orange { background: #e17055; color: #fff; }
+  .eraser-btn { background: linear-gradient(135deg, #fdcb6e, #e17055); color: #fff; }
+  .clear-btn { background: linear-gradient(135deg, #d63031, #e84393); color: #fff; }
+  .sound-toggle { background: linear-gradient(135deg, #00cec9, #0984e3); color: #fff; }
+  .sound-toggle.muted { background: #b2bec3; }
+
+  /* مؤشر الوضع الحالي */
+  .mode-indicator {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 3px 8px rgba(108, 92, 231, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* الكتاب */
+  .book-stage {
+    position: absolute;
+    top: 70px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    perspective: 2000px;
+  }
+
+  .book {
+    position: relative;
+    width: min(95vw, 1100px);
+    height: min(85vh, 720px);
+    display: flex;
+    border-radius: 12px;
+    box-shadow:
+      0 20px 50px rgba(0,0,0,0.3),
+      0 0 0 8px #8b4513,
+      0 0 0 12px #6b3410,
+      inset 0 0 30px rgba(139, 69, 19, 0.2);
+    background: #6b3410;
+    transform-style: preserve-3d;
+  }
+
+  .page {
+    flex: 1;
+    background: linear-gradient(to bottom, #fffef5, #fff8e1);
+    background-image:
+      linear-gradient(to bottom, rgba(255,254,245,0.95), rgba(255,248,225,0.95)),
+      repeating-linear-gradient(0deg, transparent, transparent 35px, rgba(180, 140, 100, 0.12) 35px, rgba(180, 140, 100, 0.12) 36px);
+    position: relative;
+    overflow: hidden;
+    padding: 22px 25px;
+  }
+  .page.left {
+    border-radius: 8px 2px 2px 8px;
+    box-shadow: inset -20px 0 30px -20px rgba(0,0,0,0.3);
+  }
+  .page.right {
+    border-radius: 2px 8px 8px 2px;
+    box-shadow: inset 20px 0 30px -20px rgba(0,0,0,0.3);
+  }
+
+  .book-spine {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 4px;
+    background: linear-gradient(to right, rgba(0,0,0,0.4), rgba(0,0,0,0.1), rgba(0,0,0,0.4));
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .page-number {
+    position: absolute;
+    bottom: 8px;
+    font-size: 13px;
+    color: #8b4513;
+    font-weight: 700;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .page.left .page-number { left: 18px; }
+  .page.right .page-number { right: 18px; }
+
+  /* رأس الصفحة */
+  .page-header {
+    text-align: center;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 2;
+  }
+  .page-title {
+    font-family: 'Lalezar', cursive;
+    font-size: clamp(20px, 2.8vw, 30px);
+    color: #d63031;
+    text-shadow: 2px 2px 0 #fdcb6e, 4px 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 3px;
+  }
+  .page-subtitle {
+    font-size: clamp(12px, 1.5vw, 15px);
+    color: #6c5ce7;
+    font-weight: 700;
+  }
+
+  .page-content {
+    position: relative;
+    z-index: 2;
+    height: calc(100% - 75px);
+    overflow-y: auto;
+    padding-left: 5px;
+  }
+  .page-content::-webkit-scrollbar { width: 6px; }
+  .page-content::-webkit-scrollbar-thumb { background: #fdcb6e; border-radius: 3px; }
+
+  /* بطاقات */
+  .question-card {
+    background: rgba(255, 255, 255, 0.65);
+    border: 2px dashed #fd79a8;
+    border-radius: 15px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .q-number {
+    position: absolute;
+    top: -12px;
+    right: 10px;
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 15px;
+    box-shadow: 0 3px 8px rgba(232, 67, 147, 0.4);
+  }
+  .q-text {
+    font-size: clamp(13px, 1.7vw, 16px);
+    font-weight: 700;
+    color: #2d3436;
+    margin-bottom: 8px;
+    margin-right: 35px;
+  }
+
+  /* ========= العناصر التفاعلية الصوتية ========= */
+
+  /* الحرف الكبير */
+  .big-letter {
+    display: inline-block;
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(60px, 10vw, 110px);
+    font-weight: 700;
+    background: linear-gradient(135deg, #ff6b6b, #fd79a8, #6c5ce7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    cursor: pointer;
+    padding: 0 20px;
+    transition: transform 0.3s;
+    position: relative;
+    user-select: none;
+  }
+  .big-letter::after {
+    content: '🔊';
+    position: absolute;
+    top: 5px;
+    right: -8px;
+    font-size: 18px;
+    -webkit-text-fill-color: initial;
+    background: #fff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .big-letter:hover { transform: scale(1.1) rotate(-3deg); }
+  .big-letter.playing { animation: speakPulse 0.6s; }
+  @keyframes speakPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  /* عرض الحرف الإنجليزي */
+  .letter-display {
+    text-align: center;
+    background: linear-gradient(135deg, #fff5f7, #ffeaa7);
+    border-radius: 20px;
+    padding: 15px;
+    border: 3px dotted #fd79a8;
+    margin-bottom: 12px;
+  }
+  .letter-pair {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .letter-label {
+    font-size: 13px;
+    color: #6c5ce7;
+    font-weight: 700;
+    margin-top: 5px;
+  }
+
+  /* كلمات تفاعلية */
+  .word-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .word-card {
+    background: linear-gradient(135deg, #fff, #fff5f7);
+    border: 2px solid #fd79a8;
+    border-radius: 15px;
+    padding: 10px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+  }
+  .word-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(232, 67, 147, 0.3);
+  }
+  .word-card.playing {
+    animation: cardBounce 0.5s;
+    background: linear-gradient(135deg, #c7ecee, #dff9fb);
+    border-color: #00b894;
+  }
+  @keyframes cardBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .word-emoji {
+    font-size: clamp(35px, 5vw, 50px);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .word-text {
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(15px, 2vw, 19px);
+    font-weight: 700;
+    color: #6c5ce7;
+    direction: ltr;
+  }
+  .word-text-ar {
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    color: #636e72;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+  .word-sound-icon {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: #00b894;
+    color: #fff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+  }
+
+  /* خانة إجابة */
+  .answer-input {
+    width: 100%;
+    min-height: 38px;
+    background: #fffde7;
+    border: 2px solid #fdcb6e;
+    border-radius: 10px;
+    padding: 7px 12px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2d3436;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .answer-input:focus {
+    border-color: #e84393;
+    box-shadow: 0 0 0 3px rgba(232, 67, 147, 0.2);
+  }
+  .answer-input[dir="ltr"] {
+    font-family: 'Fredoka', sans-serif;
+    text-align: left;
+  }
+
+  /* خيارات */
+  .options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
+  }
+  .option-btn {
+    background: linear-gradient(135deg, #74b9ff, #0984e3);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 9px 10px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .option-btn[data-lang="en"] { font-family: 'Fredoka', sans-serif; }
+  .option-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(9, 132, 227, 0.4); }
+  .option-btn.correct { background: linear-gradient(135deg, #55efc4, #00b894); }
+  .option-btn.wrong { background: linear-gradient(135deg, #ff7675, #d63031); animation: shake 0.4s; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .check-btn {
+    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 7px 18px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.4);
+    margin-top: 6px;
+  }
+  .check-btn::before { content: "✓ "; }
+
+  /* زر سماع الجملة */
+  .listen-sentence {
+    background: linear-gradient(135deg, #00cec9, #0984e3);
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 6px;
+    box-shadow: 0 3px 10px rgba(0, 206, 201, 0.4);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .listen-sentence:hover { transform: scale(1.05); }
+
+  /* جملة تفاعلية */
+  .sentence-box {
+    background: linear-gradient(135deg, #fffde7, #fff5f7);
+    border: 2px solid #fdcb6e;
+    border-radius: 12px;
+    padding: 10px;
+    text-align: center;
+    direction: ltr;
+    font-family: 'Fredoka', sans-serif;
+    font-size: clamp(15px, 2vw, 19px);
+    font-weight: 600;
+    color: #2d3436;
+    margin-top: 6px;
+  }
+  .sentence-word {
+    display: inline-block;
+    margin: 0 3px;
+    padding: 2px 6px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .sentence-word:hover { background: #fd79a8; color: #fff; }
+  .sentence-word.highlight {
+    background: #00b894;
+    color: #fff;
+    animation: wordPop 0.4s;
+  }
+  @keyframes wordPop {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+  }
+
+  /* لوحة الرسم */
+  .draw-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .draw-layer.active { pointer-events: auto; cursor: crosshair; }
+
+  /* تنقل الصفحات */
+  .nav-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 -4px 15px rgba(0,0,0,0.1);
+    z-index: 100;
+  }
+  .nav-btn {
+    background: linear-gradient(135deg, #fd79a8, #e84393);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 7px 18px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 3px 10px rgba(232, 67, 147, 0.4);
+  }
+  .nav-btn:hover:not(:disabled) { transform: scale(1.05); }
+  .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .page-indicator {
+    font-weight: 900;
+    color: #2d3436;
+    font-size: 15px;
+  }
+
+  /* النوافذ المنبثقة */
+  .popup-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+  }
+  .popup-overlay.show { display: flex; animation: fadeIn 0.3s; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .popup {
+    background: linear-gradient(135deg, #fff, #fff5f5);
+    border-radius: 30px;
+    padding: 28px 36px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    position: relative;
+    max-width: 90vw;
+    animation: popIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes popIn {
+    from { transform: scale(0) rotate(-180deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+  }
+  .popup.correct { background: linear-gradient(135deg, #dff9fb, #c7ecee); border: 4px solid #00b894; }
+  .popup.wrong { background: linear-gradient(135deg, #ffeaa7, #fab1a0); border: 4px solid #e17055; }
+
+  .popup-emoji {
+    font-size: 75px;
+    display: block;
+    margin-bottom: 8px;
+    animation: bounce 1s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+  .popup-title {
+    font-family: 'Lalezar', cursive;
+    font-size: 40px;
+    margin-bottom: 6px;
+  }
+  .popup.correct .popup-title {
+    background: linear-gradient(45deg, #00b894, #00cec9, #6c5ce7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .popup.wrong .popup-title { color: #d63031; }
+  .popup-msg { font-size: 17px; color: #2d3436; margin-bottom: 14px; font-weight: 500; }
+  .popup-close {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    padding: 9px 28px;
+    font-family: 'Tajawal', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(108, 92, 231, 0.4);
+  }
+
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 999;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* الإهداء */
+  .credit {
+    text-align: center;
+    margin-top: 12px;
+    padding: 8px;
+    background: linear-gradient(135deg, rgba(253, 121, 168, 0.15), rgba(108, 92, 231, 0.15));
+    border-radius: 12px;
+    border: 2px dotted #6c5ce7;
+  }
+  .credit-text {
+    font-family: 'Lalezar', cursive;
+    font-size: clamp(13px, 1.7vw, 16px);
+    color: #6c5ce7;
+  }
+  .credit-name {
+    font-family: 'Lalezar', cursive;
+    font-size: clamp(15px, 1.9vw, 20px);
+    background: linear-gradient(45deg, #e84393, #fd79a8);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+  }
+
+  /* الغلاف */
+  .cover-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 15px;
+  }
+  .cover-title {
+    font-family: 'Lalezar', cursive;
+    font-size: clamp(34px, 5.5vw, 64px);
+    background: linear-gradient(45deg, #e84393, #fd79a8, #fdcb6e, #00b894, #6c5ce7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 3px 3px 8px rgba(0,0,0,0.1);
+    margin-bottom: 8px;
+    animation: rainbow 3s linear infinite;
+    background-size: 200% 200%;
+  }
+  @keyframes rainbow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .cover-subtitle {
+    font-family: 'Lalezar', cursive;
+    font-size: clamp(18px, 2.8vw, 28px);
+    color: #6c5ce7;
+    margin-bottom: 20px;
+  }
+  .cover-emojis {
+    font-size: clamp(45px, 7vw, 70px);
+    margin-bottom: 20px;
+    animation: wiggle 2s infinite;
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  .toc-list { list-style: none; padding: 8px 0; }
+  .toc-item {
+    background: rgba(255,255,255,0.7);
+    border-right: 5px solid #fd79a8;
+    border-radius: 8px;
+    padding: 9px 13px;
+    margin-bottom: 7px;
+    font-weight: 700;
+    color: #2d3436;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: clamp(12px, 1.5vw, 15px);
+  }
+  .toc-item:nth-child(2) { border-color: #fdcb6e; }
+  .toc-item:nth-child(3) { border-color: #00b894; }
+  .toc-item:nth-child(4) { border-color: #6c5ce7; }
+  .toc-item:nth-child(5) { border-color: #e17055; }
+  .toc-page { color: #6c5ce7; font-weight: 900; }
+
+  .page-turn { animation: pageFlip 0.6s ease-in-out; }
+  @keyframes pageFlip {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.95) rotateY(20deg); opacity: 0.5; }
+    100% { transform: scale(1) rotateY(0); opacity: 1; }
+  }
+
+  /* تلميح "اضغط للسماع" */
+  .listen-hint {
+    display: inline-block;
+    background: #ffeaa7;
+    color: #d63031;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 700;
+    margin-right: 5px;
+    animation: hintPulse 2s infinite;
+  }
+  @keyframes hintPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+
+  /* الجوال */
+  @media (max-width: 768px) {
+    .book { flex-direction: column; height: min(85vh, 720px); }
+    .page { padding: 12px; }
+    .page.left { border-radius: 8px 8px 0 0; }
+    .page.right { border-radius: 0 0 8px 8px; }
+    .book-spine { width: 100%; height: 4px; left: 0; top: 50%; transform: translateY(-50%); background: linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.1), rgba(0,0,0,0.4)); }
+    .tool-btn { width: 32px; height: 32px; font-size: 14px; }
+    .nav-btn { padding: 5px 12px; font-size: 12px; }
+    .mode-indicator { font-size: 11px; padding: 4px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-shape">⭐</div>
+<div class="bg-shape">🌈</div>
+<div class="bg-shape">✨</div>
+<div class="bg-shape">🎈</div>
+<div class="bg-shape">🌟</div>
+<div class="bg-shape">💫</div>
+
+<div class="top-bar">
+  <div class="logo">📚 باثي بوك</div>
+  <div class="mode-indicator" id="modeIndicator">👆 اضغط على أي عنصر لسماعه</div>
+  <div class="tools">
+    <button class="tool-btn sound-toggle" id="soundToggle" title="تشغيل/إيقاف الصوت">🔊</button>
+    <button class="tool-btn color-pen" data-color="#e84393" title="قلم وردي">✏️</button>
+    <button class="tool-btn color-blue" data-color="#0984e3" title="قلم أزرق">🖊️</button>
+    <button class="tool-btn color-green" data-color="#00b894" title="قلم أخضر">🖍️</button>
+    <button class="tool-btn color-purple" data-color="#6c5ce7" title="قلم بنفسجي">🖌️</button>
+    <button class="tool-btn color-orange" data-color="#e17055" title="قلم برتقالي">🎨</button>
+    <button class="tool-btn eraser-btn" id="eraserBtn" title="ممحاة">🧽</button>
+    <button class="tool-btn clear-btn" id="clearBtn" title="مسح كل الرسم">🗑️</button>
+  </div>
+</div>
+
+<div class="book-stage">
+  <div class="book" id="book">
+    <div class="page left" id="pageLeft">
+      <div class="page-number">1</div>
+    </div>
+    <div class="book-spine"></div>
+    <div class="page right" id="pageRight">
+      <div class="page-number">2</div>
+    </div>
+    <canvas class="draw-layer" id="drawCanvas"></canvas>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <button class="nav-btn" id="prevBtn">⬅️ السابق</button>
+  <span class="page-indicator" id="pageIndicator">١ / ٦</span>
+  <button class="nav-btn" id="nextBtn">التالي ➡️</button>
+</div>
+
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup" id="popupBox">
+    <span class="popup-emoji" id="popupEmoji">🎉</span>
+    <div class="popup-title" id="popupTitle">يا سلام!</div>
+    <div class="popup-msg" id="popupMsg">إجابة رائعة يا بطل!</div>
+    <button class="popup-close" id="popupClose">واصل التألق ✨</button>
+  </div>
+</div>
+
+<script>
+  // ============ نظام النطق الصوتي ============
+  const speech = {
+    enabled: true,
+    voices: [],
+    arabicVoice: null,
+    englishVoice: null,
+
+    init() {
+      const loadVoices = () => {
+        this.voices = window.speechSynthesis.getVoices();
+        // اختيار صوت عربي
+        this.arabicVoice = this.voices.find(v => v.lang.startsWith('ar')) || null;
+        // اختيار صوت إنجليزي (يفضل أمريكي أو بريطاني)
+        this.englishVoice = this.voices.find(v => v.lang === 'en-US') ||
+                            this.voices.find(v => v.lang === 'en-GB') ||
+                            this.voices.find(v => v.lang.startsWith('en')) || null;
+      };
+      loadVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    },
+
+    speak(text, lang = 'en', rate = 0.85) {
+      if (!this.enabled || !text) return;
+      // إيقاف أي نطق سابق
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = rate;
+      utterance.pitch = 1.1;
+
+      if (lang === 'ar') {
+        utterance.lang = 'ar-SA';
+        if (this.arabicVoice) utterance.voice = this.arabicVoice;
+      } else {
+        utterance.lang = 'en-US';
+        if (this.englishVoice) utterance.voice = this.englishVoice;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    },
+
+    speakLetter(letter) {
+      // نطق اسم الحرف الإنجليزي ثم صوته
+      this.speak(letter, 'en', 0.7);
+    },
+
+    toggle() {
+      this.enabled = !this.enabled;
+      if (!this.enabled) window.speechSynthesis.cancel();
+      return this.enabled;
+    }
+  };
+  speech.init();
+
+  // ============ محتوى الكتاب ============
+  const bookData = [
+    // === الصفحة 1: الغلاف + الفهرس ===
+    {
+      left: {
+        type: 'cover',
+        html: `
+          <div class="cover-content">
+            <div class="cover-emojis">📖✨📚</div>
+            <h1 class="cover-title">باثي بوك</h1>
+            <h2 class="cover-subtitle">رحلتي في عالم الحروف</h2>
+            <div class="credit">
+              <div class="credit-text">إعداد الأستاذة</div>
+              <div class="credit-name">لمى بنت عبدالله</div>
+            </div>
+          </div>
+        `
+      },
+      right: {
+        type: 'toc',
+        title: 'فهرس الكتاب',
+        subtitle: 'استكشف الدروس',
+        html: `
+          <ul class="toc-list">
+            <li class="toc-item"><span>📘 حرف S</span><span class="toc-page">٢-٣</span></li>
+            <li class="toc-item"><span>🍿 كلمات تبدأ بـ S</span><span class="toc-page">٤</span></li>
+            <li class="toc-item"><span>✏️ تدريبات الحرف</span><span class="toc-page">٥</span></li>
+            <li class="toc-item"><span>🎯 اختبار شامل</span><span class="toc-page">٦</span></li>
+            <li class="toc-item" style="background: linear-gradient(135deg, #ffeaa7, #fab1a0);">
+              <span>🎵 جميع العناصر تنطق! اضغط عليها</span>
+              <span class="toc-page">🔊</span>
+            </li>
+          </ul>
+        `
+      }
+    },
+
+    // === الصفحة 2: تعريف بحرف S ===
+    {
+      left: {
+        type: 'custom',
+        title: '📘 Letter S',
+        subtitle: 'تعرّف على حرف S',
+        html: `
+          <div class="letter-display">
+            <div class="letter-pair">
+              <div>
+                <span class="big-letter speakable" data-text="S" data-lang="en">S</span>
+                <div class="letter-label">حرف كبير</div>
+              </div>
+              <div>
+                <span class="big-letter speakable" data-text="s" data-lang="en">s</span>
+                <div class="letter-label">حرف صغير</div>
+              </div>
+            </div>
+          </div>
+          <div class="question-card" style="border-style: solid; background: linear-gradient(135deg, #c7ecee, #dff9fb);">
+            <div class="q-text" style="margin-right: 0; text-align: center;">
+              <span class="listen-hint">🔊 اضغط</span>
+              تعرّف على صوت الحرف
+            </div>
+            <div style="text-align: center;">
+              <button class="listen-sentence speakable" data-text="The letter S says sss like snake" data-lang="en">
+                🔊 Listen to the sound
+              </button>
+            </div>
+            <div style="text-align: center; margin-top: 10px; font-size: 14px; color: #6c5ce7; font-weight: 700;">
+              ✨ صوت الحرف: "سـ سـ سـ" مثل ثعبان 🐍
+            </div>
+          </div>
+        `
+      },
+      right: {
+        type: 'custom',
+        title: '✍️ Trace the Letter',
+        subtitle: 'تتبّع الحرف بقلمك',
+        html: `
+          <div class="question-card" style="text-align: center; background: rgba(255,255,255,0.8);">
+            <div class="q-text" style="margin-right: 0;">اضغط على الحرف لسماعه ثم تتبّعه بقلمك:</div>
+            <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 10px;">
+              <span class="big-letter speakable" data-text="S" data-lang="en" style="font-size: clamp(80px, 12vw, 130px); opacity: 0.35;">S</span>
+              <span class="big-letter speakable" data-text="s" data-lang="en" style="font-size: clamp(80px, 12vw, 130px); opacity: 0.35;">s</span>
+            </div>
+            <div style="font-size: 13px; color: #636e72; margin-top: 5px; font-weight: 600;">
+              💡 اختر قلماً من الأعلى ثم تتبّع الحرف
+            </div>
+          </div>
+          <div class="question-card">
+            <div class="q-number">١</div>
+            <div class="q-text">ما اسم هذا الحرف؟ <span class="big-letter speakable" data-text="S" data-lang="en" style="font-size: 40px; padding: 0 8px;">S</span></div>
+            <div class="options">
+              <button class="option-btn" data-correct="false" data-lang="en">A</button>
+              <button class="option-btn" data-correct="true" data-lang="en">S</button>
+              <button class="option-btn" data-correct="false" data-lang="en">M</button>
+              <button class="option-btn" data-correct="false" data-lang="en">T</button>
+            </div>
+          </div>
+        `
+      }
+    },
+
+    // === الصفحة 3: كلمات تبدأ بـ S ===
+    {
+      left: {
+        type: 'custom',
+        title: '🍿 Words with S',
+        subtitle: 'كلمات تبدأ بحرف S',
+        html: `
+          <div class="question-card">
+            <div class="q-text" style="margin-right: 0; text-align: center;">
+              <span class="listen-hint">🔊 اضغط</span>
+              اضغط على أي كلمة لسماعها
+            </div>
+            <div class="word-grid">
+              <div class="word-card speakable" data-text="Snack" data-lang="en">
+                <span class="word-sound-icon">🔊</span>
+                <span class="word-emoji">🍿</span>
+                <div class="word-text">Snack</div>
+                <div class="word-text-ar">وجبة خفيفة</div>
+              </div>
+              <div class="word-card speakable" data-text="Sun" data-lang="en">
+                <span class="word-sound-icon">🔊</span>
+                <span class="word-emoji">☀️</span>
+                <div class="word-text">Sun</div>
+                <div class="word-text-ar">الشمس</div>
+              </div>
+              <div class="word-card speakable" data-text="Star" data-lang="en">
+                <span class="word-sound-icon">🔊</span>
+                <span class="word-emoji">⭐</span>
+                <div class="word-text">Star</div>
+                <div class="word-text-ar">نجمة</div>
+              </div>
+              <div class="word-card speakable" data-text="Snake" data-lang="en">
+                <span class="word-sound-icon">🔊</span>
+                <span class="word-emoji">🐍</span>
+                <div class="word-text">Snake</div>
+                <div class="word-text-ar">ثعبان</div>
+              </div>
+            </div>
+          </div>
+        `
+      },
+      right: {
+        type: 'custom',
+        title: '🌟 More S Words',
+        subtitle: 'كلمات ممتعة أخرى',
+        html: `
+          <div class="question-card">
+            <div class="q-text" style="margin-right: 0; text-align: center;">
+              تابع الاستكشاف! 🎵
+            </div>
+            <div class="word-grid">
+              <div class="word-card speakable" data-text="Sea" data-lang="en">
+                <span class="word-sound-icon">🔊</span>
+                <span class="word-emoji">🌊</span>
+                <div class="word-text">Sea</div>
+                <div class="word-text-ar">البحر</div>
+              </div>
+              <div class="word-card speakable" data-text="Sand" data-lang="en">
+                <span class="word-sound-icon">🔊</span>
+                <span class="word-emoji">🏖️</span>
+                <div class="word-text">Sand</div>
+                <div class="word-text-ar">الرمل</div>
+              </div>
+              <div class="word-card speakable" data-text="School" data-lang="en">
+                <span class="word-sound-icon">🔊</span>
+                <span class="word-emoji">🏫</span>
+                <div class="word-text">School</div>
+                <div class="word-text-ar">المدرسة</div>
+              </div>
+              <div class="word-card speakable" data-text="Sock" data-lang="en">
+                <span class="word-sound-icon">🔊</span>
+                <span class="word-emoji">🧦</span>
+                <div class="word-text">Sock</div>
+                <div class="word-text-ar">جورب</div>
+              </div>
+            </div>
+          </div>
+          <div class="question-card">
+            <div class="q-number">٢</div>
+            <div class="q-text">أيّ من هذه الكلمات تبدأ بحرف S؟</div>
+            <div class="options">
+              <button class="option-btn" data-correct="false" data-lang="en">🐱 Cat</button>
+              <button class="option-btn" data-correct="true" data-lang="en">☀️ Sun</button>
+              <button class="option-btn" data-correct="false" data-lang="en">🐶 Dog</button>
+              <button class="option-btn" data-correct="false" data-lang="en">🐭 Mouse</button>
+            </div>
+          </div>
+        `
+      }
+    },
+
+    // === الصفحة 4: جمل تفاعلية ===
+    {
+      left: {
+        type: 'custom',
+        title: '📖 Read & Listen',
+        subtitle: 'اقرأ واستمع',
+        html: `
+          <div class="question-card">
+            <div class="q-text" style="margin-right: 0; text-align: center;">
+              <span class="listen-hint">🔊 اضغط على أي كلمة</span>
+            </div>
+            <div class="sentence-box">
+              <span class="sentence-word speakable" data-text="The" data-lang="en">The</span>
+              <span class="sentence-word speakable" data-text="snake" data-lang="en">snake</span>
+              <span class="sentence-word speakable" data-text="is" data-lang="en">is</span>
+              <span class="sentence-word speakable" data-text="on" data-lang="en">on</span>
+              <span class="sentence-word speakable" data-text="the" data-lang="en">the</span>
+              <span class="sentence-word speakable" data-text="sand" data-lang="en">sand</span>
+              <span style="font-size: 22px;">🐍🏖️</span>
+            </div>
+            <div style="text-align: center; margin-top: 8px;">
+              <button class="listen-sentence speakable" data-text="The snake is on the sand" data-lang="en">
+                🔊 Listen to the sentence
+              </button>
+            </div>
+          </div>
+          <div class="question-card">
+            <div class="q-text" style="margin-right: 0; text-align: center;">جملة ثانية:</div>
+            <div class="sentence-box">
+              <span class="sentence-word speakable" data-text="I" data-lang="en">I</span>
+              <span class="sentence-word speakable" data-text="see" data-lang="en">see</span>
+              <span class="sentence-word speakable" data-text="a" data-lang="en">a</span>
+              <span class="sentence-word speakable" data-text="star" data-lang="en">star</span>
+              <span class="sentence-word speakable" data-text="and" data-lang="en">and</span>
+              <span class="sentence-word speakable" data-text="the" data-lang="en">the</span>
+              <span class="sentence-word speakable" data-text="sun" data-lang="en">sun</span>
+              <span style="font-size: 22px;">⭐☀️</span>
+            </div>
+            <div style="text-align: center; margin-top: 8px;">
+              <button class="listen-sentence speakable" data-text="I see a star and the sun" data-lang="en">
+                🔊 Listen to the sentence
+              </button>
+            </div>
+          </div>
+        `
+      },
+      right: {
+        type: 'custom',
+        title: '✏️ Write the Word',
+        subtitle: 'اكتب الكلمة',
+        html: `
+          <div class="question-card">
+            <div class="q-number">٣</div>
+            <div class="q-text">اكتب كلمة "Snack" تحت الصورة:</div>
+            <div style="text-align: center;">
+              <span class="word-emoji speakable" data-text="Snack" data-lang="en" style="cursor: pointer; font-size: 60px;">🍿</span>
+            </div>
+            <input type="text" class="answer-input" dir="ltr" data-answers='["snack","Snack","SNACK"]' placeholder="Write here...">
+            <button class="check-btn">تحقق</button>
+          </div>
+          <div class="question-card">
+            <div class="q-number">٤</div>
+            <div class="q-text">اكتب كلمة "Sun":</div>
+            <div style="text-align: center;">
+              <span class="word-emoji speakable" data-text="Sun" data-lang="en" style="cursor: pointer; font-size: 60px;">☀️</span>
+            </div>
+            <input type="text" class="answer-input" dir="ltr" data-answers='["sun","Sun","SUN"]' placeholder="Write here...">
+            <button class="check-btn">تحقق</button>
+          </div>
+        `
+      }
+    },
+
+    // === الصفحة 5: تدريبات ===
+    {
+      left: {
+        type: 'custom',
+        title: '🎯 Match Game',
+        subtitle: 'الربط بين الكلمة والصورة',
+        html: `
+          <div class="question-card">
+            <div class="q-number">٥</div>
+            <div class="q-text">
+              <span class="speakable" data-text="Snake" data-lang="en" style="cursor:pointer; background: #fff5f7; padding: 3px 8px; border-radius: 6px; font-family: 'Fredoka'; color: #e84393;">🔊 Snake</span>
+              تطابق مع أي صورة؟
+            </div>
+            <div class="options">
+              <button class="option-btn" data-correct="false">🐶</button>
+              <button class="option-btn" data-correct="true">🐍</button>
+              <button class="option-btn" data-correct="false">🐱</button>
+              <button class="option-btn" data-correct="false">🐰</button>
+            </div>
+          </div>
+          <div class="question-card">
+            <div class="q-number">٦</div>
+            <div class="q-text">
+              <span class="speakable" data-text="Sun" data-lang="en" style="cursor:pointer; background: #fff5f7; padding: 3px 8px; border-radius: 6px; font-family: 'Fredoka'; color: #e84393;">🔊 Sun</span>
+              تطابق مع أي صورة؟
+            </div>
+            <div class="options">
+              <button class="option-btn" data-correct="false">🌙</button>
+              <button class="option-btn" data-correct="false">🌧️</button>
+              <button class="option-btn" data-correct="true">☀️</button>
+              <button class="option-btn" data-correct="false">❄️</button>
+            </div>
+          </div>
+        `
+      },
+      right: {
+        type: 'custom',
+        title: '🔤 Fill the Blank',
+        subtitle: 'املأ الفراغ',
+        html: `
+          <div class="question-card">
+            <div class="q-number">٧</div>
+            <div class="q-text">
+              أكمل الكلمة:
+              <span class="speakable" data-text="Star" data-lang="en" style="cursor:pointer; font-family: 'Fredoka'; color: #e84393; font-size: 22px;">⭐ _ tar</span>
+            </div>
+            <input type="text" class="answer-input" dir="ltr" data-answers='["s","S"]' placeholder="حرف واحد فقط" maxlength="2">
+            <button class="check-btn">تحقق</button>
+          </div>
+          <div class="question-card">
+            <div class="q-number">٨</div>
+            <div class="q-text">
+              أكمل الكلمة:
+              <span class="speakable" data-text="Snake" data-lang="en" style="cursor:pointer; font-family: 'Fredoka'; color: #e84393; font-size: 22px;">🐍 _ nake</span>
+            </div>
+            <input type="text" class="answer-input" dir="ltr" data-answers='["s","S"]' placeholder="حرف واحد فقط" maxlength="2">
+            <button class="check-btn">تحقق</button>
+          </div>
+          <div class="question-card">
+            <div class="q-number">٩</div>
+            <div class="q-text">اضغط القلم في الأعلى وارسم حرف S كبيراً هنا:</div>
+            <div style="background: #fffde7; border: 2px dashed #fdcb6e; border-radius: 10px; height: 70px; display: flex; align-items: center; justify-content: center; color: #b2bec3; font-size: 13px;">
+              ✏️ اختر قلماً ثم ارسم
+            </div>
+          </div>
+        `
+      }
+    },
+
+    // === الصفحة 6: اختبار شامل + النهاية ===
+    {
+      left: {
+        type: 'custom',
+        title: '🏆 Final Test',
+        subtitle: 'اختبار نهائي',
+        html: `
+          <div class="question-card">
+            <div class="q-number">١٠</div>
+            <div class="q-text">اضغط لسماع الكلمة ثم اختر الصورة الصحيحة:</div>
+            <div style="text-align: center; margin-bottom: 10px;">
+              <button class="listen-sentence speakable" data-text="Snack" data-lang="en">
+                🔊 اضغط لسماع الكلمة
+              </button>
+            </div>
+            <div class="options">
+              <button class="option-btn" data-correct="false">🍕</button>
+              <button class="option-btn" data-correct="true">🍿</button>
+              <button class="option-btn" data-correct="false">🍔</button>
+              <button class="option-btn" data-correct="false">🍰</button>
+            </div>
+          </div>
+          <div class="question-card">
+            <div class="q-number">١١</div>
+            <div class="q-text">اكتب اسمك بحرف S إذا أمكن:</div>
+            <input type="text" class="answer-input" dir="ltr" placeholder="My name is...">
+          </div>
+        `
+      },
+      right: {
+        type: 'custom',
+        title: '🌟 You Did It!',
+        subtitle: 'أحسنت! أكملت الرحلة',
+        html: `
+          <div class="question-card" style="text-align: center; background: linear-gradient(135deg, #ffeaa7, #fab1a0); border-style: solid; border-color: #e84393;">
+            <div style="font-size: 60px; margin-bottom: 10px;">🏆🌟🎉</div>
+            <div style="font-family: 'Lalezar', cursive; font-size: 28px; color: #d63031;">أنت بطل!</div>
+            <div style="margin-top: 8px; color: #2d3436; font-weight: 600; font-size: 15px;">
+              تعلمت حرف S وكلماته بنجاح
+            </div>
+            <button class="listen-sentence speakable" data-text="Congratulations! You learned letter S" data-lang="en" style="margin-top: 12px;">
+              🔊 Listen
+            </button>
+          </div>
+          <div class="question-card" style="text-align: center;">
+            <div class="q-text" style="margin-right: 0;">📝 رسالة شكر:</div>
+            <textarea class="answer-input" style="min-height: 60px; resize: none;" placeholder="اكتب ما تعلمته اليوم..."></textarea>
+          </div>
+          <div class="credit" style="margin-top: 10px;">
+            <div class="credit-text">إعداد الأستاذة</div>
+            <div class="credit-name">لمى بنت عبدالله</div>
+          </div>
+        `
+      }
+    }
+  ];
+
+  // ============ متغيرات الحالة ============
+  let currentPage = 0;
+  let currentColor = null; // لا يوجد قلم نشط افتراضياً
+  let isErasing = false;
+  let isDrawing = false;
+  let penActive = false; // القلم غير مفعّل افتراضياً
+  let canvas, ctx;
+  const drawingsByPage = {};
+  const inputsByPage = {};
+
+  const arabicNumbers = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+  function toArabicNum(n) {
+    return String(n).split('').map(d => arabicNumbers[d] || d).join('');
+  }
+
+  const successMessages = [
+    'إجابة رائعة يا بطل!',
+    'أحسنت! Excellent!',
+    'ممتاز جداً! Perfect!',
+    'عبقري صغير! 🌟',
+    'يا سلااام! Amazing!',
+    'ما شاء الله! Wonderful!'
+  ];
+  const failMessages = [
+    'لا بأس! حاول مرة أخرى 💪',
+    'قريب من الإجابة!',
+    'Try again! المحاولة شجاعة',
+    'الخطأ بداية النجاح ✨',
+    'You can do it! أنت قادر'
+  ];
+  const successEmojis = ['🎉', '🌟', '⭐', '🏆', '🎊', '💫'];
+  const failEmojis = ['💪', '🤔', '✨', '🌱', '🦋'];
+
+  // ============ بناء صفحة عادية ============
+  function buildLessonHTML(data) {
+    if (data.html) return `
+      <div class="page-header">
+        <div class="page-title">${data.title}</div>
+        <div class="page-subtitle">${data.subtitle}</div>
+      </div>
+      <div class="page-content">${data.html}</div>
+    `;
+    return '';
+  }
+
+  // ============ عرض الصفحة ============
+  function renderPage() {
+    const pageData = bookData[currentPage];
+    const pageLeft = document.getElementById('pageLeft');
+    const pageRight = document.getElementById('pageRight');
+
+    saveCurrentInputs();
+    window.speechSynthesis.cancel();
+
+    pageLeft.classList.add('page-turn');
+    pageRight.classList.add('page-turn');
+
+    setTimeout(() => {
+      if (pageData.left.type === 'cover') {
+        pageLeft.innerHTML = pageData.left.html + `<div class="page-number">${toArabicNum(currentPage * 2 + 1)}</div>`;
+      } else {
+        pageLeft.innerHTML = buildLessonHTML(pageData.left) + `<div class="page-number">${toArabicNum(currentPage * 2 + 1)}</div>`;
+      }
+
+      if (pageData.right.type === 'toc') {
+        pageRight.innerHTML = `
+          <div class="page-header">
+            <div class="page-title">${pageData.right.title}</div>
+            <div class="page-subtitle">${pageData.right.subtitle}</div>
+          </div>
+          <div class="page-content">${pageData.right.html}</div>
+          <div class="page-number">${toArabicNum(currentPage * 2 + 2)}</div>
+        `;
+      } else {
+        pageRight.innerHTML = buildLessonHTML(pageData.right) + `<div class="page-number">${toArabicNum(currentPage * 2 + 2)}</div>`;
+      }
+
+      pageLeft.classList.remove('page-turn');
+      pageRight.classList.remove('page-turn');
+
+      attachHandlers();
+      restoreInputs();
+      resizeCanvas();
+      restoreDrawing();
+      updateNav();
+    }, 200);
+  }
+
+  // ============ ربط جميع المعالجات ============
+  function attachHandlers() {
+    // العناصر القابلة للنطق
+    document.querySelectorAll('.speakable').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const text = el.dataset.text;
+        const lang = el.dataset.lang || 'en';
+
+        // تأثير بصري
+        el.classList.add('playing');
+        setTimeout(() => el.classList.remove('playing'), 600);
+
+        // نطق
+        if (lang === 'en' && text.length === 1) {
+          speech.speakLetter(text);
+        } else {
+          speech.speak(text, lang);
+        }
+      });
+    });
+
+    // كلمات الجمل (تنطق كلمة واحدة فقط)
+    document.querySelectorAll('.sentence-word').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        el.classList.add('highlight');
+        setTimeout(() => el.classList.remove('highlight'), 600);
+      });
+    });
+
+    // الخيارات
+    document.querySelectorAll('.option-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        // نطق محتوى الزر إن كان إنجليزياً
+        const text = btn.textContent.trim();
+        if (btn.dataset.lang === 'en' && /^[A-Za-z]+$/.test(text)) {
+          speech.speak(text, 'en');
+        }
+
+        const isCorrect = btn.dataset.correct === 'true';
+        if (isCorrect) {
+          btn.classList.add('correct');
+          setTimeout(() => showPopup(true), 300);
+        } else {
+          btn.classList.add('wrong');
+          setTimeout(() => showPopup(false), 200);
+          setTimeout(() => btn.classList.remove('wrong'), 1000);
+        }
+      });
+    });
+
+    // أزرار التحقق
+    document.querySelectorAll('.check-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = btn.closest('.question-card');
+        const input = card.querySelector('.answer-input');
+        const answersData = input.dataset.answers;
+        if (!answersData) return;
+        const answers = JSON.parse(answersData);
+        const userAnswer = input.value.trim().toLowerCase();
+
+        if (!userAnswer) {
+          alert('من فضلك اكتب إجابتك أولاً 😊');
+          return;
+        }
+
+        const isCorrect = answers.some(a => {
+          const normalized = a.toString().toLowerCase().trim();
+          return normalized === userAnswer;
+        });
+
+        showPopup(isCorrect);
+      });
+    });
+  }
+
+  // ============ النوافذ المنبثقة ============
+  function showPopup(isCorrect) {
+    const overlay = document.getElementById('popupOverlay');
+    const box = document.getElementById('popupBox');
+    const emoji = document.getElementById('popupEmoji');
+    const title = document.getElementById('popupTitle');
+    const msg = document.getElementById('popupMsg');
+
+    if (isCorrect) {
+      box.classList.remove('wrong');
+      box.classList.add('correct');
+      emoji.textContent = successEmojis[Math.floor(Math.random() * successEmojis.length)];
+      title.textContent = 'يا سلام! 🌟';
+      msg.textContent = successMessages[Math.floor(Math.random() * successMessages.length)];
+      launchConfetti();
+      speech.speak('Excellent!', 'en');
+    } else {
+      box.classList.remove('correct');
+      box.classList.add('wrong');
+      emoji.textContent = failEmojis[Math.floor(Math.random() * failEmojis.length)];
+      title.textContent = 'حظ أوفر! 💫';
+      msg.textContent = failMessages[Math.floor(Math.random() * failMessages.length)];
+      speech.speak('Try again', 'en');
+    }
+
+    overlay.classList.add('show');
+  }
+
+  function launchConfetti() {
+    const colors = ['#fd79a8', '#fdcb6e', '#00b894', '#6c5ce7', '#e17055', '#74b9ff'];
+    const shapes = ['🎉','⭐','✨','🌟','💫','🎊','🎈'];
+    for (let i = 0; i < 30; i++) {
+      const c = document.createElement('div');
+      c.className = 'confetti';
+      const useEmoji = Math.random() > 0.5;
+      if (useEmoji) {
+        c.textContent = shapes[Math.floor(Math.random() * shapes.length)];
+        c.style.fontSize = (15 + Math.random() * 20) + 'px';
+        c.style.background = 'transparent';
+      } else {
+        c.style.background = colors[Math.floor(Math.random() * colors.length)];
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      }
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.top = '-20px';
+      c.style.animation = `confettiFall ${2 + Math.random() * 2}s linear forwards`;
+      c.style.animationDelay = (Math.random() * 0.5) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }
+  }
+
+  document.getElementById('popupClose').addEventListener('click', () => {
+    document.getElementById('popupOverlay').classList.remove('show');
+  });
+  document.getElementById('popupOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'popupOverlay') {
+      document.getElementById('popupOverlay').classList.remove('show');
+    }
+  });
+
+  // ============ التنقل ============
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentPage > 0) { currentPage--; renderPage(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentPage < bookData.length - 1) { currentPage++; renderPage(); }
+  });
+  function updateNav() {
+    document.getElementById('prevBtn').disabled = currentPage === 0;
+    document.getElementById('nextBtn').disabled = currentPage === bookData.length - 1;
+    document.getElementById('pageIndicator').textContent =
+      `${toArabicNum(currentPage + 1)} / ${toArabicNum(bookData.length)}`;
+  }
+
+  // ============ تحديث المؤشر ============
+  function updateModeIndicator() {
+    const indicator = document.getElementById('modeIndicator');
+    if (penActive && !isErasing) {
+      indicator.innerHTML = '✏️ القلم جاهز للكتابة';
+      indicator.style.background = `linear-gradient(135deg, ${currentColor}, #e84393)`;
+    } else if (isErasing) {
+      indicator.innerHTML = '🧽 الممحاة نشطة';
+      indicator.style.background = 'linear-gradient(135deg, #fdcb6e, #e17055)';
+    } else {
+      indicator.innerHTML = '👆 اضغط على أي عنصر لسماعه';
+      indicator.style.background = 'linear-gradient(135deg, #6c5ce7, #a29bfe)';
+    }
+  }
+
+  // ============ الأقلام والممحاة ============
+  // ⭐ القلم لا يفعل شيئاً إلا بعد الضغط عليه
+  document.querySelectorAll('.tool-btn[data-color]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wasActive = btn.classList.contains('active');
+      document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+
+      if (wasActive) {
+        // إيقاف القلم
+        penActive = false;
+        isErasing = false;
+        canvas.classList.remove('active');
+      } else {
+        // تفعيل القلم
+        btn.classList.add('active');
+        currentColor = btn.dataset.color;
+        isErasing = false;
+        penActive = true;
+        canvas.classList.add('active');
+      }
+      updateModeIndicator();
+    });
+  });
+
+  document.getElementById('eraserBtn').addEventListener('click', () => {
+    const btn = document.getElementById('eraserBtn');
+    const wasActive = btn.classList.contains('active');
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+
+    if (wasActive) {
+      isErasing = false;
+      penActive = false;
+      canvas.classList.remove('active');
+    } else {
+      btn.classList.add('active');
+      isErasing = true;
+      penActive = true;
+      canvas.classList.add('active');
+    }
+    updateModeIndicator();
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', () => {
+    if (confirm('هل تريد مسح كل ما رسمته في هذه الصفحة؟')) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      delete drawingsByPage[currentPage];
+    }
+  });
+
+  // تشغيل/إيقاف الصوت
+  document.getElementById('soundToggle').addEventListener('click', () => {
+    const enabled = speech.toggle();
+    const btn = document.getElementById('soundToggle');
+    btn.textContent = enabled ? '🔊' : '🔇';
+    btn.classList.toggle('muted', !enabled);
+  });
+
+  // ============ لوحة الرسم ============
+  function initCanvas() {
+    canvas = document.getElementById('drawCanvas');
+    ctx = canvas.getContext('2d');
+    resizeCanvas();
+    // لا نضع active افتراضياً - حتى يضغط القلم
+
+    const startDraw = (e) => {
+      if (!penActive) return;
+      e.preventDefault();
+      const target = document.elementFromPoint(
+        e.touches ? e.touches[0].clientX : e.clientX,
+        e.touches ? e.touches[0].clientY : e.clientY
+      );
+      if (target && (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'BUTTON' || target.closest('button'))) {
+        return;
+      }
+      isDrawing = true;
+      const pos = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+    };
+
+    const moveDraw = (e) => {
+      if (!isDrawing || !penActive) return;
+      e.preventDefault();
+      const pos = getPos(e);
+      if (isErasing) {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineWidth = 25;
+      } else {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = currentColor;
+      }
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    };
+
+    const endDraw = () => {
+      if (isDrawing) {
+        isDrawing = false;
+        saveDrawing();
+      }
+    };
+
+    canvas.addEventListener('mousedown', startDraw);
+    canvas.addEventListener('mousemove', moveDraw);
+    canvas.addEventListener('mouseup', endDraw);
+    canvas.addEventListener('mouseleave', endDraw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove', moveDraw, { passive: false });
+    canvas.addEventListener('touchend', endDraw);
+  }
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return {
+      x: (clientX - rect.left) * (canvas.width / rect.width),
+      y: (clientY - rect.top) * (canvas.height / rect.height)
+    };
+  }
+
+  function resizeCanvas() {
+    if (!canvas) return;
+    const book = document.getElementById('book');
+    const rect = book.getBoundingClientRect();
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+  }
+
+  function saveDrawing() {
+    drawingsByPage[currentPage] = canvas.toDataURL();
+  }
+  function restoreDrawing() {
+    if (drawingsByPage[currentPage]) {
+      const img = new Image();
+      img.onload = () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      };
+      img.src = drawingsByPage[currentPage];
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+
+  // حفظ المدخلات
+  function saveCurrentInputs() {
+    const inputs = document.querySelectorAll('.answer-input');
+    if (inputs.length > 0) {
+      inputsByPage[currentPage] = [];
+      inputs.forEach(inp => inputsByPage[currentPage].push(inp.value));
+    }
+  }
+  function restoreInputs() {
+    if (inputsByPage[currentPage]) {
+      const inputs = document.querySelectorAll('.answer-input');
+      inputsByPage[currentPage].forEach((val, i) => {
+        if (inputs[i]) inputs[i].value = val;
+      });
+    }
+  }
+
+  // ============ التهيئة ============
+  window.addEventListener('load', () => {
+    initCanvas();
+    renderPage();
+    updateModeIndicator();
+  });
+  window.addEventListener('resize', () => {
+    setTimeout(() => {
+      saveCurrentInputs();
+      resizeCanvas();
+      restoreDrawing();
+    }, 100);
+  });
+
+  // إغلاق الكانفس عند التركيز على حقل إدخال
+  document.addEventListener('focus', (e) => {
+    if (e.target.classList && (e.target.classList.contains('answer-input'))) {
+      if (canvas) canvas.classList.remove('active');
+    }
+  }, true);
+  document.addEventListener('blur', (e) => {
+    if (e.target.classList && (e.target.classList.contains('answer-input'))) {
+      setTimeout(() => {
+        if (penActive && canvas) canvas.classList.add('active');
+      }, 100);
+    }
+  }, true);
+</script>
+</body>
+</html>

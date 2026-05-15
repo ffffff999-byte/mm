@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة الرياضيات التفاعلية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4A90E2;
+            --secondary: #F39C12;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+            --bg: #F0F4F8;
+            --text: #2C3E50;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #rewards-container {
+            font-size: 24px;
+            text-align: center;
+            padding: 10px;
+            min-height: 40px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .container {
+            flex: 1;
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            width: 90%;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* Home Menu */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .menu-card {
+            background: #fff;
+            border: 2px dashed var(--primary);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(74, 144, 226, 0.3);
+            background-color: #f9fcff;
+        }
+
+        .menu-card i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        /* Quiz Area */
+        #quiz-area {
+            display: none;
+        }
+
+        .question-text {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 15px;
+            font-size: 18px;
+            font-family: 'Cairo', sans-serif;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Custom Alert */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .alert-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .alert-box h2 { margin: 0 0 20px 0; font-size: 30px; }
+        .alert-box button {
+            background: var(--primary); color: white; border: none;
+            padding: 10px 30px; font-size: 18px; border-radius: 8px;
+            cursor: pointer; font-family: 'Cairo', sans-serif;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #34495E;
+            color: white;
+            margin-top: auto;
+        }
+
+        footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .back-btn {
+            background: #95a5a6; color: white; border: none;
+            padding: 10px 20px; border-radius: 5px; cursor: pointer;
+            margin-bottom: 20px; font-family: 'Cairo', sans-serif;
+        }
+
+        @media (max-width: 600px) {
+            .options-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🏆 منصة الرياضيات التفاعلية 🏆</h1>
+        <p>الصف الأول المتوسط - الفصل الدراسي الثاني</p>
+    </header>
+
+    <div id="rewards-container">
+        </div>
+
+    <div class="container">
+        <div id="home-screen">
+            <h2 style="text-align: center;">اختر الاختبار للبدء</h2>
+            <div class="menu-grid">
+                <div class="menu-card" onclick="startQuiz('part1')">
+                    <i>📄</i>
+                    <h3>اختبار الجزء الأول</h3>
+                    <p>أسئلة الاختيار من متعدد والنسب المئوية</p>
+                </div>
+                <div class="menu-card" onclick="startQuiz('part2')">
+                    <i>📊</i>
+                    <h3>اختبار الجزء الثاني</h3>
+                    <p>الإحصاء والبيانات (المتوسط، الوسيط، المنوال)</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="quiz-area">
+            <button class="back-btn" onclick="goHome()">🔙 العودة للقائمة</button>
+            <div id="question-container">
+                <div class="question-text" id="question-text">السؤال سيظهر هنا</div>
+                <div class="options-grid" id="options-grid">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overlay" id="alert-overlay">
+        <div class="alert-box" id="alert-box">
+            <h2 id="alert-msg">يا سلام! 🤩</h2>
+            <button onclick="nextQuestion()">متابعة</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>
+            <a href="#" target="_blank">تصميم د/فواز</a>
+        </p>
+    </footer>
+
+    <script>
+        // بنك الأسئلة
+        const questions = {
+            part1: [
+                { q: "قدر ٥٢٪ من ١٠", options: ["٥", "٧", "٦", "٨"], answer: "٥" },
+                { q: "ما العدد الذي يساوي ٥٠٪ من ٦ ؟", options: ["٢", "٣", "١", "٤"], answer: "٣" },
+                { q: "ما العدد الذي ٢٥٪ منه يساوي ٢٠ ؟", options: ["٨٠", "٦٠", "٧٠", "٩٠"], answer: "٨٠" },
+                { q: "العدد الذي يتكرر أكثر من غيره في مجموعة البيانات يسمى:", options: ["الوسيط", "المنوال", "المتوسط", "المدى"], answer: "المنوال" },
+                { q: "كتاب سعره ٥٠ ريال ونسبة التخفيض ٢٠٪ ، فكم يكون سعره بعد التخفيض؟", options: ["٣٠", "٤٠", "٢٥", "٤٥"], answer: "٤٠" },
+                { q: "أطوال سمكات: ٤٦ ، ٥٣ ، ٣٣ ، ٥٣ ، ٧٩. إذا أضيفت سمكة طولها ٩٨سم فما الذي يحدث؟", options: ["ينقص المنوال", "يزداد المتوسط", "ينقص الوسيط", "ينقص المتوسط"], answer: "يزداد المتوسط" }
+            ],
+            part2: [
+                { q: "تستعمل فيه الأعمدة لتمثيل تكرارات البيانات العددية المنظمة في فئات:", options: ["المدرج التكراري", "التمثيل بالنقاط", "التمثيل بالخطوط", "التناسب المئوي"], answer: "المدرج التكراري" },
+                { q: "القيمة التي تخصم من سعر السلعة الأصلي تسمى:", options: ["الخصم", "الزيادة في السعر", "التناسب المئوي", "رأس المال"], answer: "الخصم" },
+                { q: "نسبة تقارن جزء من الكمية مع الكمية الكلية:", options: ["التناسب المئوي", "المعدل", "الاحتمال", "المتوسط"], answer: "التناسب المئوي" },
+                { q: "في مجموعة البيانات (١، ٥، ٢، ٦، ٦)، ما هو المتوسط الحسابي؟", options: ["٤", "٥", "٦", "٢٠"], answer: "٤" },
+                { q: "في مجموعة البيانات (١، ٥، ٢، ٦، ٦)، ما هو الوسيط؟", options: ["٥", "٤", "٦", "٢"], answer: "٥" },
+                { q: "في مجموعة البيانات (١، ٥، ٢، ٦، ٦)، ما هو المنوال؟", options: ["٦", "٥", "١", "لا يوجد"], answer: "٦" }
+            ]
+        };
+
+        let currentQuiz = [];
+        let currentQuestionIndex = 0;
+
+        // دالة لخلط المصفوفة (تستخدم لخلط الخيارات عشوائياً)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz(part) {
+            document.getElementById('home-screen').style.display = 'none';
+            document.getElementById('quiz-area').style.display = 'block';
+            
+            // أخذ نسخة من الأسئلة وخلطها
+            currentQuiz = shuffleArray([...questions[part]]);
+            currentQuestionIndex = 0;
+            
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= currentQuiz.length) {
+                // إنهاء الاختبار
+                document.getElementById('question-text').innerText = "🎉 لقد أتممت هذا الجزء بنجاح!";
+                document.getElementById('options-grid').innerHTML = "";
+                return;
+            }
+
+            const qData = currentQuiz[currentQuestionIndex];
+            document.getElementById('question-text').innerText = `السؤال ${currentQuestionIndex + 1}: ${qData.q}`;
+            
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = ""; // تفريغ الخيارات السابقة
+
+            // خلط الخيارات في كل مرة تظهر فيها الشاشة
+            const shuffledOptions = shuffleArray([...qData.options]);
+
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(opt, qData.answer);
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const overlay = document.getElementById('alert-overlay');
+            const alertMsg = document.getElementById('alert-msg');
+            const alertBox = document.getElementById('alert-box');
+            const rewards = document.getElementById('rewards-container');
+
+            overlay.style.display = 'flex';
+
+            if (selected === correct) {
+                alertMsg.innerText = "يا سلام! إجابة صحيحة 🤩";
+                alertMsg.style.color = "var(--success)";
+                // إضافة مكافأة عشوائية (نجمة أو كأس)
+                const rewardIcon = Math.random() > 0.5 ? '⭐️' : '🏆';
+                rewards.innerHTML += rewardIcon;
+            } else {
+                alertMsg.innerText = "حظ أوفر! الإجابة خاطئة 😢";
+                alertMsg.style.color = "var(--danger)";
+                // يمكن إضافة كود لخصم نجوم هنا إذا رغبت، لكن التشجيع أفضل!
+            }
+        }
+
+        function nextQuestion() {
+            document.getElementById('alert-overlay').style.display = 'none';
+            currentQuestionIndex++;
+            loadQuestion();
+        }
+
+        function goHome() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>

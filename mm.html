@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>منصة الأسئلة التفاعلية - رياضيات</title>
+<style>
+:root{
+  --bg:#f4f8fb; --card:#ffffff; --ink:#172033; --muted:#667085; --primary:#176b87; --primary2:#64ccc5; --gold:#f8b84e; --green:#16a34a; --red:#dc2626; --line:#dbe7ef; --shadow:0 18px 50px rgba(23,32,51,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Tahoma","Arial",sans-serif;background:radial-gradient(circle at 15% 10%,#dff9fb 0,#f4f8fb 34%,#eef4ff 100%);color:var(--ink);min-height:100vh}
+.hero{position:relative;overflow:hidden;padding:26px 24px 18px;background:linear-gradient(135deg,#083344,#176b87 58%,#64ccc5);color:white;border-bottom:8px solid rgba(248,184,78,.7)}
+.hero:before{content:"";position:absolute;inset:auto -80px -120px auto;width:360px;height:360px;border-radius:50%;background:rgba(255,255,255,.13)}
+.hero:after{content:"";position:absolute;inset:-120px auto auto -80px;width:260px;height:260px;border-radius:50%;background:rgba(248,184,78,.16)}
+.hero-inner{position:relative;z-index:1;max-width:1180px;margin:auto;display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center}
+h1{margin:0 0 8px;font-size:clamp(25px,4vw,46px);letter-spacing:-1px}.subtitle{margin:0;font-size:16px;line-height:1.8;color:#e7fbff}.badge{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);padding:10px 14px;border-radius:999px;font-weight:700;white-space:nowrap}.wrap{max-width:1180px;margin:22px auto;padding:0 16px}.grid{display:grid;grid-template-columns:320px 1fr;gap:18px;align-items:start}.panel,.quiz,.settings{background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border:1px solid rgba(219,231,239,.9);border-radius:26px;box-shadow:var(--shadow)}.panel{padding:16px;position:sticky;top:14px}.panel h2,.settings h2{margin:4px 6px 14px;font-size:19px}.test-card{width:100%;border:1px solid var(--line);background:linear-gradient(180deg,#fff,#f8fbff);border-radius:22px;padding:14px;margin:10px 0;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:right;transition:.2s}.test-card:hover,.test-card.active{transform:translateY(-2px);border-color:var(--primary2);box-shadow:0 12px 25px rgba(23,107,135,.13)}.icon{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:27px;background:linear-gradient(135deg,#176b87,#64ccc5);color:white;box-shadow:0 9px 20px rgba(23,107,135,.22)}.test-card:nth-child(3) .icon{background:linear-gradient(135deg,#0f766e,#f8b84e)}.test-title{font-weight:800}.test-meta{color:var(--muted);font-size:12px;margin-top:4px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#f8fbff;border:1px solid var(--line);border-radius:18px;padding:10px;text-align:center}.stat b{display:block;font-size:22px;color:var(--primary)}.quiz{padding:18px;min-height:520px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:14px}.btn{border:0;border-radius:15px;padding:11px 14px;font-weight:800;cursor:pointer;background:var(--primary);color:white;box-shadow:0 9px 18px rgba(23,107,135,.16)}.btn.secondary{background:white;color:var(--primary);border:1px solid var(--line);box-shadow:none}.btn.gold{background:#f59e0b}.btn.red{background:#ef4444}.quiz-head{border:1px dashed var(--line);background:linear-gradient(135deg,#f8fbff,#fff);border-radius:22px;padding:15px;margin-bottom:15px}.quiz-head h2{margin:0 0 6px;font-size:23px;color:#0f4c5c}.quiz-head p{margin:0;color:var(--muted);line-height:1.8}.question{border:1px solid var(--line);background:white;border-radius:24px;padding:15px;margin:12px 0;position:relative;overflow:hidden}.question.answered{border-color:#bbf7d0}.q-top{display:flex;gap:10px;align-items:flex-start;margin-bottom:12px}.q-num{min-width:38px;height:38px;border-radius:14px;background:#e0f2fe;color:#075985;display:grid;place-items:center;font-weight:900}.q-text{font-size:17px;font-weight:800;line-height:1.75;flex:1}.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.answer{border:1px solid var(--line);background:#f9fbfd;border-radius:17px;padding:12px;cursor:pointer;transition:.15s;text-align:center;font-weight:800;min-height:48px}.answer:hover{background:#eefaff;border-color:var(--primary2)}.answer.correct{background:#dcfce7;border-color:#22c55e;color:#14532d}.answer.wrong{background:#fee2e2;border-color:#ef4444;color:#7f1d1d}.feedback{display:none;margin-top:12px;border-radius:18px;padding:11px 14px;font-weight:900;text-align:center}.feedback.good{display:block;background:#ecfdf5;color:#166534;border:1px solid #86efac}.feedback.bad{display:block;background:#fff1f2;color:#9f1239;border:1px solid #fecdd3}.empty{display:grid;place-items:center;min-height:480px;text-align:center;color:var(--muted)}.empty .big{font-size:80px;margin-bottom:8px}.settings{margin-top:18px;padding:16px}.settings-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.field label{display:block;font-size:12px;font-weight:800;color:var(--muted);margin:0 4px 6px}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);border-radius:14px;padding:10px;background:white;font-family:inherit}.field textarea{min-height:72px;resize:vertical}.credit{margin-top:14px;padding:12px;border-radius:18px;background:#f7fbff;border:1px dashed var(--primary2);font-weight:800;text-align:center}.credit a{color:var(--primary);text-decoration:none}.toast{position:fixed;left:50%;top:24px;transform:translateX(-50%) translateY(-20px);opacity:0;pointer-events:none;z-index:50;background:#0f172a;color:white;padding:14px 22px;border-radius:999px;font-size:20px;font-weight:900;box-shadow:0 18px 50px rgba(0,0,0,.25);transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:49}.piece{position:absolute;top:-20px;font-size:22px;animation:fall 1.25s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.05}}.editable [contenteditable="true"]{outline:2px dashed #f59e0b;background:#fff7ed}.top-link{position:fixed;bottom:18px;left:18px;width:48px;height:48px;border-radius:50%;border:0;background:#0f4c5c;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 12px 24px rgba(15,76,92,.25);z-index:40}.progress{height:11px;background:#e5eef5;border-radius:999px;overflow:hidden;margin:12px 0}.bar{height:100%;width:0;background:linear-gradient(90deg,#64ccc5,#f8b84e);transition:.3s}.note{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px}.inline-chart{display:inline-grid;grid-template-columns:repeat(9,18px);gap:1px;direction:ltr;vertical-align:middle;margin:4px}.dotcell{width:18px;height:18px;border-bottom:1px solid #999;position:relative}.dotcell:after{content:attr(data-x);position:absolute;bottom:-18px;left:5px;font-size:10px;color:#555}.xmark{display:block;text-align:center;font-weight:900;color:#334155;line-height:11px}.mini-table{border-collapse:collapse;margin:6px auto;min-width:200px}.mini-table th,.mini-table td{border:1px solid #94a3b8;padding:6px 10px;text-align:center}.mini-table th{background:#f1f5f9}@media (max-width:900px){.grid{grid-template-columns:1fr}.panel{position:static}.hero-inner{grid-template-columns:1fr}.answers,.settings-grid{grid-template-columns:1fr}.badge{width:max-content}}
+@media print{body{background:white}.hero,.panel,.settings,.toolbar,.toast,.confetti,.top-link{display:none!important}.wrap{margin:0;padding:0}.grid{display:block}.quiz{box-shadow:none;border:0;padding:0}.question{break-inside:avoid}.answer{border-color:#999}.feedback{display:none!important}@page{size:A4 portrait;margin:10mm}}
+</style>
+</head>
+<body>
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <div>
+      <h1 contenteditable="true">منصة الأسئلة التفاعلية</h1>
+      <p class="subtitle" contenteditable="true">اختبارات مستقلة من النماذج المرفقة، مع تغيير ترتيب الإجابات تلقائيًا وتنبيه فوري عند الاختيار.</p>
+    </div>
+    <div class="badge">🏆 نجوم وكؤوس للإجابات الصحيحة</div>
+  </div>
+</header>
+<div class="wrap" id="app">
+  <div class="grid">
+    <aside class="panel">
+      <h2>ملفات الاختبار</h2>
+      <button class="test-card active" data-test="main">
+        <span class="icon">📘</span><span><span class="test-title">اختبار الفترة الأولى</span><span class="test-meta">أول متوسط · رياضيات · ٧ أسئلة</span></span>
+      </button>
+      <button class="test-card" data-test="stats">
+        <span class="icon">📊</span><span><span class="test-title">تدريب الإحصاء والتمثيل</span><span class="test-meta">مطابقة + تمثيل نقاط + متوسط ووسيط ومنوال</span></span>
+      </button>
+      <div class="stats">
+        <div class="stat"><b id="score">0</b><span>الدرجة</span></div>
+        <div class="stat"><b id="total">0</b><span>الأسئلة</span></div>
+        <div class="stat"><b id="cups">0</b><span>كؤوس</span></div>
+      </div>
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <p class="note">ملاحظة: يمكن تعديل العنوان والسؤال بالنقر على النص بعد تفعيل زر التحرير.</p>
+    </aside>
+    <main class="quiz">
+      <div class="toolbar">
+        <div>
+          <button class="btn" onclick="resetQuiz()">إعادة المحاولة</button>
+          <button class="btn secondary" onclick="shuffleCurrent()">تغيير ترتيب الإجابات</button>
+          <button class="btn gold" onclick="toggleEdit()">تفعيل/إيقاف التحرير</button>
+        </div>
+        <div>
+          <button class="btn secondary" onclick="window.print()">طباعة / حفظ PDF</button>
+        </div>
+      </div>
+      <section id="quizBox"></section>
+    </main>
+  </div>
+  <section class="settings">
+    <h2>قائمة الإعدادات</h2>
+    <div class="settings-grid">
+      <div class="field"><label>اسم المدرسة</label><input id="school" value="اسم المدرسة" oninput="applySettings()"></div>
+      <div class="field"><label>الصف / المادة</label><input id="grade" value="الصف الأول المتوسط - رياضيات" oninput="applySettings()"></div>
+      <div class="field"><label>عنوان الاختبار</label><input id="titleInput" value="اختبار الفترة الأولى" oninput="applySettings()"></div>
+    </div>
+    <div class="credit">تصميم د/فواز &nbsp; | &nbsp; <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">تفضل للمزيد هنا</a></div>
+  </section>
+</div>
+<button class="top-link" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+<div class="toast" id="toast"></div><div class="confetti" id="confetti"></div>
+<script>
+const tests={
+  main:{
+    title:'اختبار الفترة الأولى للفصل الدراسي الثاني',
+    desc:'نموذج تفاعلي للأسئلة الموضوعية من صفحة الاختبار المرفقة.',
+    questions:[
+      {q:'قدِّر ٥٧٪ من ١٠.', choices:['٥','٧','٦','٨'], answer:'٥'},
+      {q:'العدد الذي يساوي ٥٠٪ من ٦ هو:', choices:['٣','٢','١','٤'], answer:'٣'},
+      {q:'ما العدد الذي ٢٥٪ منه يساوي ٢٠؟', choices:['٨٠','٦٠','٧٠','٩٠'], answer:'٨٠'},
+      {q:'العدد الذي يتكرر أكثر من غيره في مجموعة البيانات يسمى:', choices:['الوسيط','المنوال','المتوسط','المدى'], answer:'المنوال'},
+      {q:'كتاب سعره ٥٠ ريالًا ونسبة التخفيض ٢٠٪، فكم يكون سعره بعد التخفيض؟', choices:['٣٠','٤٠','٢٥','٤٥'], answer:'٤٠'},
+      {q:'إذا أُضيفت قيمة جديدة طولها ٨٩ سم إلى أطوال: ٤٦، ٥٣، ٣٣، ٥٣، ٧٠؛ فإن المنوال:', choices:['ينقص المنوال','يزداد المتوسط','ينقص الوسيط','ينقص المتوسط'], answer:'يزداد المتوسط'},
+      {q:'من التمثيل البياني لعدد الدورات التي سجلها محمد خلال عدة أيام، إذا استمر الاتجاه نفسه؛ فما عدد الدورات في اليوم العاشر؟', choices:['٥٠','٤٥','٦٠','٥٥'], answer:'٥٠'}
+    ]
+  },
+  stats:{
+    title:'تدريب الإحصاء والتمثيل بالنقاط',
+    desc:'مطابقة مفاهيم الإحصاء وحساب المدى والمتوسط والوسيط والمنوال.',
+    questions:[
+      {q:'تستعمل الأعمدة لتمثيل تكرارات البيانات العددية المنظمة في فئات. ما المصطلح المناسب؟', choices:['المدرج التكراري','التمثيل بالنقاط','التمثيل بالخطوط','القياس الذهني'], answer:'المدرج التكراري'},
+      {q:'القيمة التي تُطرح من السعر الأصلي تسمى:', choices:['الخصم','الزيادة في السعر','النسبة الكلية','المدى'], answer:'الخصم'},
+      {q:'يظهر تكرار البيانات على خط الأعداد في:', choices:['التمثيل بالنقاط','التمثيل بالخطوط','المدرج التكراري','الخصم'], answer:'التمثيل بالنقاط'},
+      {q:'نسبة تقارن جزءًا من الكمية مع الكمية الكلية تسمى:', choices:['النسبة المئوية','الخصم','الزيادة في السعر','المنوال'], answer:'النسبة المئوية'},
+      {q:'القيمة التي تُضاف إلى السعر الأصلي تسمى:', choices:['الزيادة في السعر','الخصم','المدى','التمثيل بالنقاط'], answer:'الزيادة في السعر'},
+      {q:'في تمثيل النقاط الموضح: التجمعات تقع غالبًا عند القيم:', choices:['١–٤','٤–٨','٠–٢','٦–٨'], answer:'١–٤'},
+      {q:'في تمثيل النقاط الموضح: الفجوات تقع بين:', choices:['٤–٨','١–٤','٠–١','٢–٣'], answer:'٤–٨'},
+      {q:'في تمثيل النقاط الموضح: القيم المتطرفة هي:', choices:['٨','٤','١','٣'], answer:'٨'},
+      {q:'مدى البيانات في تمثيل النقاط يساوي:', choices:['٨','٦','٥','٤'], answer:'٨'},
+      {q:'من الجدول: القيم ١،٣،٤،٥ وتكراراتها ١،٥،٢،٦. المتوسط الحسابي يساوي تقريبًا:', choices:['٤','٥','٦','٣'], answer:'٤'},
+      {q:'من الجدول نفسه: الوسيط يساوي:', choices:['٥','٤','٦','٣'], answer:'٥'},
+      {q:'من الجدول نفسه: المنوال هو:', choices:['٥','٤','٣','١'], answer:'٥'}
+    ]
+  }
+};
+let current='main', score=0, answered=0, cups=0, edit=false;
+const quizBox=document.getElementById('quizBox');
+function shuffle(arr){let a=[...arr];for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function render(){score=0;answered=0;cups=0;updateStats();const t=tests[current];quizBox.innerHTML=`<div class="quiz-head"><h2 contenteditable="${edit}">${t.title}</h2><p contenteditable="${edit}">${t.desc}</p><p><b>المدرسة:</b> <span id="schoolView">${document.getElementById('school').value}</span> · <b>الصف/المادة:</b> <span id="gradeView">${document.getElementById('grade').value}</span></p></div>`;
+ t.questions.forEach((item,idx)=>{const q=document.createElement('article');q.className='question';q.dataset.answer=item.answer;q.innerHTML=`<div class="q-top"><div class="q-num">${idx+1}</div><div class="q-text" contenteditable="${edit}">${item.q}</div></div><div class="answers"></div><div class="feedback"></div>`;const ans=q.querySelector('.answers');shuffle(item.choices).forEach(ch=>{const b=document.createElement('button');b.className='answer';b.type='button';b.textContent=ch;b.onclick=()=>check(b,q,ch,item.answer);ans.appendChild(b)});quizBox.appendChild(q)});document.getElementById('total').textContent=t.questions.length;}
+function check(btn,q,choice,answer){if(q.classList.contains('answered'))return;q.classList.add('answered');answered++;const fb=q.querySelector('.feedback');q.querySelectorAll('.answer').forEach(x=>{x.disabled=true;if(x.textContent===answer)x.classList.add('correct')});if(choice===answer){score++;cups++;btn.classList.add('correct');fb.className='feedback good';fb.textContent='ياسلام ⭐ إجابة صحيحة!';showToast('ياسلام 🏆');confetti();}else{btn.classList.add('wrong');fb.className='feedback bad';fb.textContent='حظ أوفر، الإجابة الصحيحة: '+answer;showToast('حظ أوفر');}updateStats();}
+function updateStats(){document.getElementById('score').textContent=score;document.getElementById('cups').textContent=cups;const total=tests[current].questions.length;document.getElementById('total').textContent=total;document.getElementById('bar').style.width=(answered/total*100||0)+'%'}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),1200)}
+function confetti(){const box=document.getElementById('confetti');const icons=['⭐','🏆','✨','🎉'];for(let i=0;i<28;i++){const p=document.createElement('span');p.className='piece';p.textContent=icons[Math.floor(Math.random()*icons.length)];p.style.left=Math.random()*100+'%';p.style.animationDelay=(Math.random()*.25)+'s';box.appendChild(p);setTimeout(()=>p.remove(),1500)}}
+function resetQuiz(){render();showToast('تمت إعادة المحاولة')}
+function shuffleCurrent(){render();showToast('تم تغيير ترتيب الإجابات')}
+function toggleEdit(){edit=!edit;document.body.classList.toggle('editable',edit);render();showToast(edit?'تم تفعيل التحرير':'تم إيقاف التحرير')}
+function applySettings(){const s=document.getElementById('schoolView'),g=document.getElementById('gradeView');if(s)s.textContent=document.getElementById('school').value;if(g)g.textContent=document.getElementById('grade').value;tests[current].title=document.getElementById('titleInput').value;const h=quizBox.querySelector('.quiz-head h2');if(h)h.textContent=tests[current].title}
+document.querySelectorAll('.test-card').forEach(card=>card.addEventListener('click',()=>{document.querySelectorAll('.test-card').forEach(c=>c.classList.remove('active'));card.classList.add('active');current=card.dataset.test;document.getElementById('titleInput').value=tests[current].title;render()}));
+render();
+</script>
+</body>
+</html>

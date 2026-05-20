@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام كشف تضخم الدرجات - مدارس الصالحية الأهلية للبنات</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@300;400;600;700;900&display=swap');
+
+  :root {
+    --navy: #0D1B3E;
+    --royal: #1A237E;
+    --cobalt: #283593;
+    --indigo: #3949AB;
+    --teal: #00695C;
+    --teal-light: #00897B;
+    --gold: #F9A825;
+    --gold-light: #FDD835;
+    --red: #C62828;
+    --red-soft: #EF5350;
+    --green: #2E7D32;
+    --green-soft: #4CAF50;
+    --orange: #E65100;
+    --white: #FFFFFF;
+    --off-white: #F8F9FF;
+    --ghost: #EEF0FF;
+    --mid-gray: #B0BEC5;
+    --dark: #1A1A2E;
+    --card-shadow: 0 8px 32px rgba(13,27,62,0.12);
+    --card-shadow-hover: 0 16px 48px rgba(13,27,62,0.22);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Tajawal', 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #0D1B3E 0%, #1A237E 40%, #0D47A1 100%);
+    min-height: 100vh;
+    color: var(--dark);
+    direction: rtl;
+  }
+
+  /* ===== HEADER ===== */
+  .app-header {
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 0 24px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .header-brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .header-logo {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; box-shadow: 0 4px 12px rgba(249,168,37,0.4);
+  }
+  .header-title { color: white; font-weight: 800; font-size: 16px; line-height: 1.2; }
+  .header-subtitle { color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400; }
+  .header-actions { display: flex; gap: 8px; }
+  .btn-header {
+    padding: 7px 16px; border-radius: 8px; font-family: inherit;
+    font-size: 12px; font-weight: 600; cursor: pointer; border: none;
+    transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .btn-primary { background: var(--gold); color: var(--navy); }
+  .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+  .btn-ghost { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+  .btn-ghost:hover { background: rgba(255,255,255,0.18); }
+  .btn-danger { background: var(--red); color: white; }
+  .btn-danger:hover { background: #D32F2F; }
+  .btn-teal { background: var(--teal); color: white; }
+  .btn-teal:hover { background: var(--teal-light); }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main-wrap { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+  /* ===== TABS ===== */
+  .tab-nav {
+    display: flex; gap: 6px; margin-bottom: 24px;
+    background: rgba(255,255,255,0.06); padding: 6px; border-radius: 12px;
+    backdrop-filter: blur(10px);
+  }
+  .tab-btn {
+    flex: 1; padding: 10px 16px; border: none; cursor: pointer;
+    border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 700;
+    color: rgba(255,255,255,0.6); background: transparent;
+    transition: all 0.3s; display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .tab-btn.active {
+    background: white; color: var(--royal); box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+  .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.12); color: white; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ===== SETTINGS CARD ===== */
+  .settings-card {
+    background: white; border-radius: var(--radius); padding: 24px;
+    box-shadow: var(--card-shadow); margin-bottom: 20px;
+  }
+  .settings-title {
+    font-size: 15px; font-weight: 800; color: var(--royal);
+    margin-bottom: 18px; padding-bottom: 12px;
+    border-bottom: 2px solid var(--ghost); display: flex; align-items: center; gap: 8px;
+  }
+  .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; }
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+  .field-label { font-size: 12px; font-weight: 700; color: var(--cobalt); }
+  .field-input {
+    padding: 9px 12px; border: 1.5px solid #E0E0E0; border-radius: var(--radius-sm);
+    font-family: inherit; font-size: 13px; color: var(--dark);
+    transition: border-color 0.2s; background: var(--off-white);
+  }
+  .field-input:focus { outline: none; border-color: var(--indigo); background: white; }
+
+  /* ===== IMPORT ZONE ===== */
+  .import-zone {
+    border: 2px dashed var(--indigo); border-radius: var(--radius);
+    padding: 40px 24px; text-align: center; cursor: pointer;
+    transition: all 0.3s; background: var(--ghost); margin-bottom: 20px;
+  }
+  .import-zone:hover, .import-zone.dragging {
+    border-color: var(--teal); background: #E0F7FA;
+  }
+  .import-icon { font-size: 48px; margin-bottom: 12px; display: block; }
+  .import-title { font-size: 16px; font-weight: 700; color: var(--royal); margin-bottom: 6px; }
+  .import-desc { font-size: 12px; color: #78909C; }
+
+  /* ===== DATA TABLE ===== */
+  .table-wrap { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--card-shadow); }
+  .table-toolbar {
+    padding: 16px 20px; display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(135deg, var(--royal), var(--cobalt));
+    gap: 12px; flex-wrap: wrap;
+  }
+  .table-title { color: white; font-weight: 700; font-size: 14px; }
+  .table-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: linear-gradient(135deg, var(--navy), var(--royal)); }
+  thead th {
+    color: white; padding: 11px 14px; text-align: center; font-weight: 700;
+    white-space: nowrap; position: sticky; top: 0; z-index: 2;
+    border-left: 1px solid rgba(255,255,255,0.1);
+  }
+  tbody tr { transition: background 0.15s; border-bottom: 1px solid #EEF0F8; }
+  tbody tr:hover { background: #F0F4FF; }
+  tbody tr:nth-child(even) { background: #FAFBFF; }
+  tbody tr:nth-child(even):hover { background: #EEF2FF; }
+  td {
+    padding: 10px 14px; text-align: center;
+    border-left: 1px solid #EEF0F8;
+  }
+  td.name-cell { text-align: right; font-weight: 600; color: var(--navy); }
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap;
+  }
+  .badge-red { background: #FFEBEE; color: var(--red); }
+  .badge-orange { background: #FFF3E0; color: var(--orange); }
+  .badge-green { background: #E8F5E9; color: var(--green); }
+  .badge-blue { background: #E3F2FD; color: #1565C0; }
+  .badge-gray { background: #ECEFF1; color: #546E7A; }
+  .score-chip {
+    display: inline-block; padding: 4px 12px; border-radius: 20px;
+    font-weight: 800; font-size: 13px; min-width: 52px;
+  }
+  .score-a  { background: #E8F5E9; color: var(--green); }
+  .score-b  { background: #E3F2FD; color: #1565C0; }
+  .score-c  { background: #FFF8E1; color: #F57F17; }
+  .score-d  { background: #FFF3E0; color: var(--orange); }
+  .score-f  { background: #FFEBEE; color: var(--red); }
+
+  /* ===== DASHBOARD ===== */
+  .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .kpi-card {
+    background: white; border-radius: var(--radius); padding: 20px;
+    box-shadow: var(--card-shadow); transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .kpi-card:hover { transform: translateY(-3px); box-shadow: var(--card-shadow-hover); }
+  .kpi-card::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 4px; height: 100%; border-radius: 0 var(--radius) var(--radius) 0;
+  }
+  .kpi-card.navy::before  { background: var(--navy); }
+  .kpi-card.teal::before  { background: var(--teal); }
+  .kpi-card.gold::before  { background: var(--gold); }
+  .kpi-card.red::before   { background: var(--red); }
+  .kpi-card.green::before { background: var(--green); }
+  .kpi-card.orange::before{ background: var(--orange); }
+  .kpi-icon { font-size: 28px; margin-bottom: 8px; }
+  .kpi-label { font-size: 11px; color: #90A4AE; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+  .kpi-value { font-size: 28px; font-weight: 900; line-height: 1; }
+  .kpi-card.navy  .kpi-value { color: var(--navy); }
+  .kpi-card.teal  .kpi-value { color: var(--teal); }
+  .kpi-card.gold  .kpi-value { color: #E65100; }
+  .kpi-card.red   .kpi-value { color: var(--red); }
+  .kpi-card.green .kpi-value { color: var(--green); }
+  .kpi-card.orange.kpi-value{ color: var(--orange); }
+  .kpi-sub { font-size: 11px; color: #90A4AE; margin-top: 6px; }
+
+  /* ===== INFLATION VERDICT ===== */
+  .verdict-banner {
+    border-radius: var(--radius); padding: 24px 32px;
+    margin-bottom: 24px; display: flex; align-items: center; gap: 20px;
+    box-shadow: var(--card-shadow);
+  }
+  .verdict-icon { font-size: 52px; flex-shrink: 0; }
+  .verdict-title { font-size: 22px; font-weight: 900; }
+  .verdict-desc { font-size: 14px; opacity: 0.85; margin-top: 6px; }
+  .verdict-red { background: linear-gradient(135deg, #C62828, #EF5350); color: white; }
+  .verdict-orange { background: linear-gradient(135deg, #E65100, #FF7043); color: white; }
+  .verdict-green { background: linear-gradient(135deg, #2E7D32, #43A047); color: white; }
+  .verdict-blue { background: linear-gradient(135deg, #1565C0, #1E88E5); color: white; }
+
+  /* ===== CHARTS ===== */
+  .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  @media(max-width: 900px) { .charts-grid { grid-template-columns: 1fr; } }
+  .chart-card {
+    background: white; border-radius: var(--radius); padding: 20px;
+    box-shadow: var(--card-shadow);
+  }
+  .chart-title {
+    font-size: 14px; font-weight: 800; color: var(--royal);
+    margin-bottom: 16px; padding-bottom: 10px; border-bottom: 2px solid var(--ghost);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .chart-container { position: relative; height: 240px; }
+
+  /* ===== INFLATION CRITERIA TABLE ===== */
+  .criteria-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .criteria-table th {
+    background: linear-gradient(135deg, var(--royal), var(--cobalt));
+    color: white; padding: 11px 16px; text-align: right; font-weight: 700;
+  }
+  .criteria-table td { padding: 11px 16px; border-bottom: 1px solid #EEF0F8; }
+  .criteria-table tr:hover td { background: #F0F4FF; }
+  .pass { color: var(--green); font-weight: 700; }
+  .fail { color: var(--red); font-weight: 700; }
+  .warn { color: var(--orange); font-weight: 700; }
+
+  /* ===== STATS GRID ===== */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .stat-item {
+    background: white; border-radius: var(--radius-sm); padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center;
+  }
+  .stat-num { font-size: 22px; font-weight: 900; color: var(--royal); }
+  .stat-lbl { font-size: 11px; color: #90A4AE; font-weight: 600; margin-top: 4px; }
+
+  /* ===== DISTRIBUTION TABLE ===== */
+  .dist-table { width: 100%; border-collapse: collapse; }
+  .dist-table th { background: var(--navy); color: white; padding: 10px 14px; text-align: center; font-size: 12px; }
+  .dist-table td { padding: 10px 14px; border-bottom: 1px solid #EEF0F8; text-align: center; font-size: 13px; }
+  .dist-bar-wrap { width: 120px; height: 10px; background: #EEF0F8; border-radius: 5px; display: inline-block; overflow: hidden; }
+  .dist-bar-fill { height: 100%; border-radius: 5px; transition: width 0.8s ease; }
+
+  /* ===== NOTIFICATION TOAST ===== */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: var(--navy); color: white; padding: 12px 24px; border-radius: 30px;
+    font-size: 13px; font-weight: 700; z-index: 9999;
+    transition: transform 0.4s cubic-bezier(.34,1.56,.64,1); box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    white-space: nowrap;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ===== FOOTER ===== */
+  .app-footer {
+    text-align: center; padding: 20px; color: rgba(255,255,255,0.5);
+    font-size: 12px; margin-top: 12px;
+  }
+  .app-footer a { color: var(--gold-light); text-decoration: none; font-weight: 600; }
+  .app-footer a:hover { text-decoration: underline; }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: white !important; }
+    .app-header, .tab-nav, .table-actions, .header-actions,
+    .import-zone, .btn-header, #toast, .no-print { display: none !important; }
+    .tab-panel { display: block !important; }
+    .main-wrap { padding: 0; max-width: 100%; }
+    .table-wrap, .kpi-card, .chart-card, .settings-card {
+      box-shadow: none !important; border: 1px solid #DDD;
+    }
+    .charts-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ===== MISC ===== */
+  .section-card {
+    background: white; border-radius: var(--radius); padding: 20px;
+    box-shadow: var(--card-shadow); margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: 14px; font-weight: 800; color: var(--royal);
+    margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    padding-bottom: 10px; border-bottom: 2px solid var(--ghost);
+  }
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: #90A4AE;
+  }
+  .empty-state .empty-icon { font-size: 64px; display: block; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; font-weight: 600; }
+  input[type=file] { display: none; }
+  .row-num { color: #90A4AE; font-size: 11px; }
+  .editable-score {
+    width: 60px; text-align: center; padding: 4px 6px; border-radius: 6px;
+    border: 1.5px solid #E0E0E0; font-family: inherit; font-size: 13px; font-weight: 700;
+    color: var(--navy); background: var(--off-white);
+    transition: border-color 0.2s;
+  }
+  .editable-score:focus { outline: none; border-color: var(--indigo); background: white; }
+  .z-pos { color: var(--green); font-weight: 700; }
+  .z-neg { color: var(--red); font-weight: 700; }
+  .z-neu { color: #78909C; font-weight: 600; }
+  .add-row-btn {
+    width: 100%; padding: 10px; background: var(--ghost); border: 2px dashed #C5CAE9;
+    border-radius: var(--radius-sm); cursor: pointer; color: var(--indigo); font-weight: 700;
+    font-family: inherit; font-size: 13px; transition: all 0.2s;
+  }
+  .add-row-btn:hover { background: #E8EAF6; }
+
+  .percentile-bar {
+    width: 80px; height: 8px; background: #EEF0F8; border-radius: 4px; display: inline-block; overflow: hidden; vertical-align: middle; margin-right: 6px;
+  }
+  .percentile-fill { height: 100%; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="header-brand">
+    <div class="header-logo">📊</div>
+    <div>
+      <div class="header-title">نظام كشف تضخم الدرجات</div>
+      <div class="header-subtitle">مدارس الصالحية الأهلية للبنات</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-header btn-teal" onclick="savePDF()">💾 حفظ PDF</button>
+    <button class="btn-header btn-ghost" onclick="window.print()">🖨️ طباعة</button>
+    <button class="btn-header btn-danger" onclick="clearAll()">🗑️ مسح الكل</button>
+  </div>
+</header>
+
+<div class="main-wrap">
+
+  <!-- TABS -->
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('dashboard')">📊 لوحة التحكم</button>
+    <button class="tab-btn" onclick="switchTab('data')">📋 الدرجات</button>
+    <button class="tab-btn" onclick="switchTab('analysis')">🔍 تحليل التضخم</button>
+    <button class="tab-btn" onclick="switchTab('charts')">📈 الرسوم البيانية</button>
+    <button class="tab-btn" onclick="switchTab('report')">📄 التقرير</button>
+  </nav>
+
+  <!-- ============================================================ -->
+  <!-- TAB 1: DASHBOARD                                             -->
+  <!-- ============================================================ -->
+  <div id="tab-dashboard" class="tab-panel active">
+
+    <!-- Settings -->
+    <div class="settings-card">
+      <div class="settings-title">⚙️ إعدادات التقييم</div>
+      <div class="settings-grid">
+        <div class="field-group">
+          <label class="field-label">اسم المدرسة</label>
+          <input class="field-input" id="s_school" value="" placeholder="اسم المدرسة" oninput="saveSettings()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">المادة الدراسية</label>
+          <input class="field-input" id="s_subject" value="الرياضيات" oninput="saveSettings()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">الصف والشعبة</label>
+          <input class="field-input" id="s_class" value="الثالث المتوسط - أ" oninput="saveSettings()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">الفصل الدراسي</label>
+          <select class="field-input" id="s_semester" onchange="saveSettings()">
+            <option value="الأول">الفصل الأول</option>
+            <option value="الثاني" selected>الفصل الثاني</option>
+            <option value="الثالث">الفصل الثالث</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">نوع التقويم</label>
+          <select class="field-input" id="s_exam" onchange="saveSettings()">
+            <option>اختبار نهائي</option>
+            <option>اختبار منتصف الفصل</option>
+            <option>واجب / مشروع</option>
+            <option>تقويم مستمر</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">الدرجة القصوى</label>
+          <input class="field-input" id="s_max" type="number" value="100" min="1" max="200" oninput="saveSettings();recalcAll()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">المعلمة</label>
+          <input class="field-input" id="s_teacher" value="" placeholder="اسم المعلمة" oninput="saveSettings()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">التاريخ</label>
+          <input class="field-input" id="s_date" type="date" oninput="saveSettings()">
+        </div>
+        <div class="field-group">
+          <label class="field-label">حد التضخم (متوسط%)</label>
+          <input class="field-input" id="s_threshold" type="number" value="75" min="50" max="95" oninput="saveSettings();recalcAll()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Import Zone -->
+    <div class="import-zone" id="importZone" onclick="document.getElementById('fileInput').click()"
+         ondragover="event.preventDefault();this.classList.add('dragging')"
+         ondragleave="this.classList.remove('dragging')"
+         ondrop="handleDrop(event)">
+      <span class="import-icon">📂</span>
+      <div class="import-title">استيراد بيانات Excel</div>
+      <div class="import-desc">اسحب ملف Excel هنا أو انقر للاختيار — يدعم .xlsx و .xls و .csv<br>يجب أن يحتوي على أعمدة: الاسم، الدرجة (أو رقم الهوية اختيارياً)</div>
+      <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" onchange="importFile(event)">
+    </div>
+
+    <!-- Verdict Banner -->
+    <div id="verdictBanner" class="verdict-banner verdict-blue" style="display:none">
+      <div class="verdict-icon" id="verdictIcon">📊</div>
+      <div>
+        <div class="verdict-title" id="verdictTitle">جاري الحساب...</div>
+        <div class="verdict-desc" id="verdictDesc"></div>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="dash-grid" id="kpiGrid">
+      <div class="kpi-card navy">
+        <div class="kpi-icon">👩‍🎓</div>
+        <div class="kpi-label">عدد الطالبات</div>
+        <div class="kpi-value" id="kpi-count">0</div>
+        <div class="kpi-sub">إجمالي المسجلات</div>
+      </div>
+      <div class="kpi-card teal">
+        <div class="kpi-icon">📐</div>
+        <div class="kpi-label">المتوسط الحسابي</div>
+        <div class="kpi-value" id="kpi-mean">—</div>
+        <div class="kpi-sub" id="kpi-mean-pct">من الدرجة القصوى</div>
+      </div>
+      <div class="kpi-card gold">
+        <div class="kpi-icon">📏</div>
+        <div class="kpi-label">الانحراف المعياري</div>
+        <div class="kpi-value" id="kpi-std">—</div>
+        <div class="kpi-sub">تباين الدرجات</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-icon">🏆</div>
+        <div class="kpi-label">الممتازون ≥90%</div>
+        <div class="kpi-value" id="kpi-top">0%</div>
+        <div class="kpi-sub">حد التضخم: 30%</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-icon">📉</div>
+        <div class="kpi-label">الراسبون <60%</div>
+        <div class="kpi-value" id="kpi-fail">0%</div>
+        <div class="kpi-sub">المعدل الطبيعي: 5-15%</div>
+      </div>
+      <div class="kpi-card orange">
+        <div class="kpi-icon">🌡️</div>
+        <div class="kpi-label">مؤشر التضخم</div>
+        <div class="kpi-value" id="kpi-inflation-idx">—</div>
+        <div class="kpi-sub">0 = طبيعي / 100 = شديد</div>
+      </div>
+    </div>
+
+    <!-- Quick Stats Row -->
+    <div class="stats-grid" id="statsGrid">
+      <div class="stat-item"><div class="stat-num" id="stat-median">—</div><div class="stat-lbl">الوسيط</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-mode">—</div><div class="stat-lbl">المنوال</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-max">—</div><div class="stat-lbl">أعلى درجة</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-min">—</div><div class="stat-lbl">أدنى درجة</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-range">—</div><div class="stat-lbl">المدى</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-skew">—</div><div class="stat-lbl">معامل الالتواء</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-kurt">—</div><div class="stat-lbl">معامل التفلطح</div></div>
+      <div class="stat-item"><div class="stat-num" id="stat-iqr">—</div><div class="stat-lbl">المدى البيني IQR</div></div>
+    </div>
+
+    <!-- Footer link -->
+    <div class="no-print" style="text-align:center;padding:16px 0 4px;font-size:12px;color:#90A4AE;">
+      تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--indigo);font-weight:700;">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TAB 2: DATA TABLE                                            -->
+  <!-- ============================================================ -->
+  <div id="tab-data" class="tab-panel">
+    <div class="table-wrap">
+      <div class="table-toolbar">
+        <div class="table-title">📋 قائمة الطالبات والدرجات</div>
+        <div class="table-actions">
+          <button class="btn-header btn-primary" onclick="addRow()">➕ إضافة طالبة</button>
+          <button class="btn-header btn-ghost" onclick="recalcAll()">🔄 إعادة الحساب</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table id="mainTable">
+          <thead>
+            <tr>
+              <th style="width:46px">م</th>
+              <th style="min-width:200px">اسم الطالبة</th>
+              <th style="width:120px">رقم الهوية</th>
+              <th style="width:100px">الدرجة</th>
+              <th style="width:100px">النسبة%</th>
+              <th style="width:90px">التقدير</th>
+              <th style="width:70px">الرتبة</th>
+              <th style="width:110px">الفرق عن المتوسط</th>
+              <th style="width:100px">z-Score</th>
+              <th style="width:140px">مستوى التضخم</th>
+              <th style="width:120px">الشريحة</th>
+              <th style="width:60px">حذف</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+      </div>
+      <div id="tableEmpty" class="empty-state">
+        <span class="empty-icon">📭</span>
+        <p>لا توجد بيانات بعد — استورد ملف Excel أو أضف طالبة يدوياً</p>
+      </div>
+      <div style="padding:12px">
+        <button class="add-row-btn" onclick="addRow()">➕ إضافة طالبة جديدة</button>
+      </div>
+    </div>
+
+    <div class="no-print" style="text-align:center;padding:16px 0 4px;font-size:12px;color:#90A4AE;">
+      تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--indigo);font-weight:700;">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TAB 3: INFLATION ANALYSIS                                    -->
+  <!-- ============================================================ -->
+  <div id="tab-analysis" class="tab-panel">
+
+    <div class="section-card">
+      <div class="section-title">🔬 معايير اكتشاف تضخم الدرجات</div>
+      <table class="criteria-table" id="criteriaTable">
+        <thead>
+          <tr>
+            <th>المعيار</th>
+            <th>القيمة الفعلية</th>
+            <th>الحد المرجعي</th>
+            <th>الحكم</th>
+            <th>شدة المشكلة</th>
+            <th>التوصية</th>
+          </tr>
+        </thead>
+        <tbody id="criteriaBody">
+          <tr><td colspan="6" class="empty-state" style="padding:40px;text-align:center;color:#90A4AE">أدخل البيانات لعرض التحليل</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">📊 توزيع الدرجات على الفئات</div>
+      <table class="dist-table" id="distTable">
+        <thead>
+          <tr>
+            <th>الفئة</th>
+            <th>التقدير</th>
+            <th>العدد</th>
+            <th>النسبة%</th>
+            <th>التوزيع البصري</th>
+            <th>المعدل الطبيعي</th>
+            <th>الحكم</th>
+          </tr>
+        </thead>
+        <tbody id="distBody"></tbody>
+      </table>
+    </div>
+
+    <div class="section-card">
+      <div class="section-title">📐 المئينيات والشرائح</div>
+      <div id="percentilesContent" style="color:#90A4AE;text-align:center;padding:30px">أدخل البيانات أولاً</div>
+    </div>
+
+    <div class="no-print" style="text-align:center;padding:16px 0 4px;font-size:12px;color:#90A4AE;">
+      تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--indigo);font-weight:700;">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TAB 4: CHARTS                                                -->
+  <!-- ============================================================ -->
+  <div id="tab-charts" class="tab-panel">
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title">📊 توزيع الدرجات (هيستوجرام)</div>
+        <div class="chart-container"><canvas id="histChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">🥧 توزيع التقديرات</div>
+        <div class="chart-container"><canvas id="pieChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">📈 منحنى الدرجات مرتبة</div>
+        <div class="chart-container"><canvas id="lineChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">🌡️ مؤشرات التضخم</div>
+        <div class="chart-container"><canvas id="radarChart"></canvas></div>
+      </div>
+    </div>
+
+    <div class="no-print" style="text-align:center;padding:16px 0 4px;font-size:12px;color:#90A4AE;">
+      تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--indigo);font-weight:700;">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- TAB 5: REPORT                                                -->
+  <!-- ============================================================ -->
+  <div id="tab-report" class="tab-panel">
+    <div class="section-card" id="reportContent">
+      <div style="text-align:center;color:#90A4AE;padding:40px">
+        <span style="font-size:52px;display:block;margin-bottom:12px">📄</span>
+        <p style="font-size:14px;font-weight:600">أدخل بيانات الدرجات لإنشاء التقرير التلقائي</p>
+      </div>
+    </div>
+
+    <div class="no-print" style="text-align:center;padding:16px 0 4px;font-size:12px;color:#90A4AE;">
+      تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--indigo);font-weight:700;">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </div>
+
+</div><!-- /main-wrap -->
+
+<div id="toast"></div>
+
+<!-- ============================================================ -->
+<!-- JAVASCRIPT                                                   -->
+<!-- ============================================================ -->
+<script>
+// ===================== STATE =====================
+let students = [];    // [{name, id, score}]
+let stats = {};       // computed statistics
+let histChartObj=null, pieChartObj=null, lineChartObj=null, radarChartObj=null;
+
+// ===================== INIT =====================
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today
+  document.getElementById('s_date').value = new Date().toISOString().split('T')[0];
+  loadData();
+  if(students.length===0) loadSampleData();
+  recalcAll();
+});
+
+function loadSampleData(){
+  const names=[
+    "نورة أحمد العتيبي","سارة محمد الزهراني","ريم عبدالله القحطاني",
+    "هند سالم الشمري","لمى خالد الغامدي","دانة فهد العنزي",
+    "منى ناصر الدوسري","رنا يوسف الحربي","أسماء طارق الرشيدي",
+    "وفاء عمر المطيري","جواهر سعد البقمي","عهود علي الجهني",
+    "شيماء حسن الصبيحي","بيان أحمد الوهيبي","لجين محمد السلمي",
+    "نادين خالد العسيري","تالا فيصل الحازمي","روان ماجد الثبيتي",
+    "شروق عبدالرحمن الخالدي","ميسم ناصر الحميدي",
+    "غدير سلطان المالكي","ديما يحيى العمري","أميرة كريم الزبيدي",
+    "رغد سامي الحربي","نجود طارق الشهري"
+  ];
+  // Generate scores biased high (grade inflation scenario)
+  const scrs=[94,91,88,95,82,79,97,76,85,90,83,87,93,72,88,91,69,85,78,96,88,74,92,81,89];
+  students = names.map((n,i)=>({name:n,id:`43${100001+i}`,score:scrs[i]}));
+}
+
+// ===================== TABS =====================
+function switchTab(id){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if(id==='charts') setTimeout(drawCharts,100);
+  if(id==='report') buildReport();
+}
+
+// ===================== FILE IMPORT =====================
+function importFile(e){ handleFile(e.target.files[0]); }
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('importZone').classList.remove('dragging');
+  handleFile(e.dataTransfer.files[0]);
+}
+function handleFile(file){
+  if(!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if(ext==='csv'){
+    const r = new FileReader();
+    r.onload = ev => parseCSV(ev.target.result);
+    r.readAsText(file);
+  } else {
+    const r = new FileReader();
+    r.onload = ev => parseXLSX(ev.target.result);
+    r.readAsArrayBuffer(file);
+  }
+}
+function parseXLSX(buf){
+  const wb = XLSX.read(buf, {type:'arraybuffer', cellFormula:false, cellNF:false});
+  // Try all sheets, collect all students
+  let allStudents = [];
+  let sheetInfo = [];
+
+  for(const shName of wb.SheetNames){
+    const ws = wb.Sheets[shName];
+    // Read with formulas evaluated (raw values)
+    const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:'', raw:true});
+    const result = detectAndParseSheet(rows, shName);
+    if(result && result.length > 0){
+      allStudents = allStudents.concat(result);
+      sheetInfo.push(`${shName}(${result.length})`);
+    }
+  }
+
+  if(allStudents.length === 0){
+    toast('⚠️ لم يتم العثور على بيانات — تأكد من وجود أعمدة الاسم والدرجة');
+    return;
+  }
+  students = allStudents;
+
+  // Auto-detect max score from data
+  const maxDetected = Math.max(...students.map(s => s.score));
+  const currentMax = +document.getElementById('s_max').value || 100;
+  // If detected max is clearly different from current setting, suggest update
+  if(maxDetected > 0 && Math.abs(maxDetected - currentMax) > 5){
+    // Common noor max: 60 (sum of 6 columns × 10)
+    const likelyMax = [60, 100, 50, 80, 40, 30, 20].find(m => maxDetected <= m) || maxDetected;
+    document.getElementById('s_max').value = likelyMax;
+    saveSettings();
+  }
+
+  toast(`✅ تم استيراد ${students.length} طالبة من: ${sheetInfo.join('، ')}`);
+  recalcAll();
+  saveData();
+}
+
+function detectAndParseSheet(rows, sheetName){
+  // Find header row (search all rows up to row 20)
+  let headerRowIdx = -1;
+  let nameIdx = -1;
+  let scoreIdx = -1;
+  let idIdx = -1;
+
+  const nameCandidates = ['اسم الطالبة','اسم الطالب','الاسم','name','student','طالبة','طالب'];
+  const scoreCandidates = ['المجموع','الدرجة','score','grade','درجة','mark','علامة','نتيجة','result','مجموع'];
+  const idCandidates = ['هوية','id','رقم الهوية','identity','السجل'];
+
+  for(let i = 0; i < Math.min(rows.length, 20); i++){
+    const row = rows[i];
+    const cells = row.map(c => String(c||'').trim());
+    const joined = cells.join('');
+    // Check if this row looks like a header
+    const hasName  = nameCandidates.some(k => cells.some(c => c.includes(k)));
+    const hasScore = scoreCandidates.some(k => cells.some(c => c.includes(k)));
+    if(hasName && hasScore){
+      headerRowIdx = i;
+      // Find column indices
+      cells.forEach((c, idx) => {
+        if(nameIdx  === -1 && nameCandidates.some(k => c.includes(k)))  nameIdx  = idx;
+        if(idIdx    === -1 && idCandidates.some(k => c.includes(k)))     idIdx    = idx;
+      });
+      // For noor files: score column is "المجموع" which may span merged header rows
+      // Look ahead one row to find numeric score columns
+      cells.forEach((c, idx) => {
+        if(scoreIdx === -1 && scoreCandidates.some(k => c.includes(k))) scoreIdx = idx;
+      });
+      break;
+    }
+  }
+
+  if(headerRowIdx === -1 || nameIdx === -1) return [];
+
+  // For noor format: المجموع column often has formula strings like "=SUM(C11:H11)"
+  // We need to either: use the actual numeric value OR sum columns C-H ourselves
+  // Detect noor format: score column contains SUM formulas
+  let isNoorFormat = false;
+  let noorSumCols = []; // columns to sum for noor format
+
+  // Check the row right after header (or 2 rows after for noor's sub-headers)
+  // Noor has: row8=main header, row9=sub-header, row10=max row, row11+=data
+  // Data starts at headerRowIdx + 3 (skip sub-header and max row)
+  let dataStartRow = headerRowIdx + 1;
+
+  // Detect noor: look for SUM formula pattern in the score column
+  for(let i = headerRowIdx + 1; i < Math.min(rows.length, headerRowIdx + 5); i++){
+    const cell = String(rows[i][scoreIdx] || '');
+    if(cell.startsWith('=SUM') || cell.includes('SUM(')){
+      isNoorFormat = true;
+      // Extract column range from formula like =SUM(C11:H11) → cols C to H → indices 2 to 7
+      const match = cell.match(/SUM\(([A-Z]+)\d+:([A-Z]+)\d+\)/i);
+      if(match){
+        const colLetter = c => c.toUpperCase().charCodeAt(0) - 65;
+        for(let ci = colLetter(match[1]); ci <= colLetter(match[2]); ci++) noorSumCols.push(ci);
+      }
+      // Skip sub-header rows: find first row where col 0 is a number (م)
+      for(let j = headerRowIdx + 1; j < Math.min(rows.length, headerRowIdx + 6); j++){
+        const firstCell = rows[j][0];
+        if(typeof firstCell === 'number' && firstCell >= 1){
+          dataStartRow = j;
+          break;
+        }
+      }
+      break;
+    }
+  }
+
+  const result = [];
+  for(let i = dataStartRow; i < rows.length; i++){
+    const row = rows[i];
+    const name = String(row[nameIdx] || '').trim();
+    if(!name || name === 'اسم الطالبة' || name === 'الاسم') continue;
+
+    let score;
+    if(isNoorFormat && noorSumCols.length > 0){
+      // Sum the individual score columns (C to H)
+      score = noorSumCols.reduce((acc, ci) => {
+        const v = parseFloat(row[ci]);
+        return acc + (isNaN(v) ? 0 : v);
+      }, 0);
+      // If sum is 0 and there's a numeric value in scoreIdx, use it
+      const directScore = parseFloat(row[scoreIdx]);
+      if(score === 0 && !isNaN(directScore) && directScore > 0) score = directScore;
+    } else {
+      score = parseFloat(row[scoreIdx]);
+    }
+
+    if(!name || isNaN(score) || score < 0) continue;
+    const id = idIdx > -1 ? String(row[idIdx] || '').trim() : '';
+    result.push({name, id, score});
+  }
+  return result;
+}
+
+function parseCSV(text){
+  const rows = text.split('\n').map(r=>r.split(','));
+  // Use same smart detection for CSV
+  const result = detectAndParseSheet(rows, 'CSV');
+  if(!result || result.length === 0){
+    toast('⚠️ لم يتم العثور على بيانات في الملف');
+    return;
+  }
+  students = result;
+  toast(`✅ تم استيراد ${students.length} طالبة بنجاح`);
+  recalcAll();
+  saveData();
+}
+
+function findCol(headers, candidates){
+  for(const c of candidates){
+    const i = headers.findIndex(h=>h.includes(c));
+    if(i>-1) return i;
+  }
+  return -1;
+}
+
+// ===================== STATISTICS ENGINE =====================
+function computeStats(){
+  const s = students.map(x=>x.score).filter(v=>!isNaN(v));
+  if(!s.length) return null;
+  const n = s.length;
+  const mx = +document.getElementById('s_max').value || 100;
+  const sorted = [...s].sort((a,b)=>a-b);
+  const mean = s.reduce((a,b)=>a+b,0)/n;
+  const variance = s.reduce((a,b)=>a+(b-mean)**2,0)/(n-1||1);
+  const std = Math.sqrt(variance);
+  const median = n%2===0 ? (sorted[n/2-1]+sorted[n/2])/2 : sorted[Math.floor(n/2)];
+  const modeMap={}; s.forEach(v=>{modeMap[v]=(modeMap[v]||0)+1;});
+  const mode = +Object.entries(modeMap).sort((a,b)=>b[1]-a[1])[0][0];
+  const range = sorted[n-1]-sorted[0];
+  const q1 = percentile(sorted, 25);
+  const q3 = percentile(sorted, 75);
+  const iqr = q3-q1;
+  const p90= percentile(sorted,90);
+  const p95= percentile(sorted,95);
+  const skew= n>=3 ? (3*(mean-median)/(std||1)) : 0;
+  const kurt= kurtosis(s, mean, std);
+  const above90 = s.filter(v=>v>=(mx*0.9)).length/n;
+  const above80 = s.filter(v=>v>=(mx*0.8)).length/n;
+  const below60 = s.filter(v=>v<(mx*0.6)).length/n;
+  const pctMean = mean/mx*100;
+  // مؤشر التضخم المركّب بالمعايير المحدّثة
+  // المتوسط: 70-85 طبيعي، 85-90 مرتفع، فوق 90 خطر
+  const sm = pctMean>90?40 : pctMean>85?25 : pctMean>80?10 : 0;
+  // الانحراف: <5 خطر، 5-10 مقلق، 10-20 طبيعي
+  const ss = std<5?30 : std<10?15 : std>20?5 : 0;
+  // نسبة الممتازين
+  const st = above90>0.45?20 : above90>0.30?10 : 0;
+  // الالتواء السالب
+  const sk2 = skew<-1?10 : skew<-0.5?5 : 0;
+  const inflationIdx = Math.min(100, sm+ss+st+sk2);
+  return {n, mean, std, median, mode, range, iqr, q1, q3, p90, p95,
+          skew, kurt, above90, above80, below60, inflationIdx, sorted, mx};
+}
+function percentile(sorted, p){
+  const idx = (p/100)*(sorted.length-1);
+  const lo=Math.floor(idx), hi=Math.ceil(idx);
+  return sorted[lo]+(sorted[hi]-sorted[lo])*(idx-lo);
+}
+function kurtosis(arr, mean, std){
+  if(arr.length<4||std===0) return 0;
+  const n=arr.length;
+  const m4=arr.reduce((s,v)=>s+((v-mean)/std)**4,0);
+  return (n*(n+1)/((n-1)*(n-2)*(n-3)))*m4 - 3*(n-1)**2/((n-2)*(n-3));
+}
+function zScore(val, mean, std){ return std>0 ? (val-mean)/std : 0; }
+function gradeLabel(score, mx){
+  const pct=score/mx*100;
+  if(pct>=90) return ['ممتاز','score-a'];
+  if(pct>=80) return ['جيد جداً','score-b'];
+  if(pct>=70) return ['جيد','score-c'];
+  if(pct>=60) return ['مقبول','score-d'];
+  return ['ضعيف','score-f'];
+}
+function inflationLabel(score, mx){
+  const pct=score/mx*100;
+  if(pct>=90) return ['🔴 تضخم عالٍ','badge-red'];
+  if(pct>=80) return ['🟡 متوسط','badge-orange'];
+  if(pct>=70) return ['🟢 طبيعي','badge-green'];
+  if(pct>=60) return ['🔵 دون المتوسط','badge-blue'];
+  return ['⚪ منخفض','badge-gray'];
+}
+function shriha(score, q1, median, q3, p90){
+  if(score>=p90) return 'الشريحة العليا 10%';
+  if(score>=q3)  return 'الربيع الأعلى';
+  if(score>=median) return 'فوق الوسيط';
+  if(score>=q1)  return 'تحت الوسيط';
+  return 'الشريحة الدنيا';
+}
+
+// ===================== RECALC ALL =====================
+function recalcAll(){
+  stats = computeStats();
+  updateKPIs();
+  renderTable();
+  updateCriteria();
+  updateDist();
+  updatePercentiles();
+  buildReport();
+  saveData();
+}
+
+// ===================== KPI UPDATE =====================
+function updateKPIs(){
+  if(!stats){ return; }
+  const {n,mean,std,median,mode,range,iqr,skew,kurt,above90,below60,inflationIdx,mx} = stats;
+  document.getElementById('kpi-count').textContent = n;
+  document.getElementById('kpi-mean').textContent = mean.toFixed(1);
+  document.getElementById('kpi-mean-pct').textContent = `${(mean/mx*100).toFixed(1)}% من ${mx}`;
+  document.getElementById('kpi-std').textContent = std.toFixed(1);
+  document.getElementById('kpi-top').textContent = (above90*100).toFixed(1)+'%';
+  document.getElementById('kpi-fail').textContent = (below60*100).toFixed(1)+'%';
+  document.getElementById('kpi-inflation-idx').textContent = inflationIdx.toFixed(0);
+  document.getElementById('stat-median').textContent = median.toFixed(1);
+  document.getElementById('stat-mode').textContent = mode;
+  document.getElementById('stat-max').textContent = stats.sorted[n-1];
+  document.getElementById('stat-min').textContent = stats.sorted[0];
+  document.getElementById('stat-range').textContent = range.toFixed(1);
+  document.getElementById('stat-skew').textContent = skew.toFixed(3);
+  document.getElementById('stat-kurt').textContent = kurt.toFixed(3);
+  document.getElementById('stat-iqr').textContent = stats.iqr.toFixed(1);
+
+  // Verdict
+  const threshold = +document.getElementById('s_threshold').value || 75;
+  const pct = mean/mx*100;
+  const banner = document.getElementById('verdictBanner');
+  banner.style.display='flex';
+  let cls,icon,title,desc;
+  // معايير محدّثة: فوق 90% = تضخم حاد، 85-90% = مرتفع، 70-85% = طبيعي، أقل = دون المتوسط
+  if(above90>0.35 || pct>90 || (std<5 && pct>80)){
+    cls='verdict-red'; icon='🔴'; title='تضخم حاد في الدرجات';
+    desc=`المتوسط ${mean.toFixed(1)} (${pct.toFixed(1)}% من السقف) — ${(above90*100).toFixed(1)}% حصلن على 90%+ — الانحراف ${std.toFixed(1)} — يُوصى بمراجعة معايير التصحيح وأسئلة الاختبار`;
+  } else if(above90>0.20 || pct>85 || std<10){
+    cls='verdict-orange'; icon='🟡'; title='تضخم متوسط — الدرجات مرتفعة';
+    desc=`المتوسط ${mean.toFixed(1)} (${pct.toFixed(1)}%) — نسبة الممتازات ${(above90*100).toFixed(1)}% — الانحراف ${std.toFixed(1)} — يُنصح بتضمين أسئلة تطبيقية (مستويات بلوم العليا)`;
+  } else if(pct>=70){
+    cls='verdict-green'; icon='🟢'; title='الدرجات في المستوى الطبيعي';
+    desc=`المتوسط ${mean.toFixed(1)} (${pct.toFixed(1)}%) — التوزيع مقبول إحصائياً — الانحراف المعياري ${std.toFixed(1)}`;
+  } else {
+    cls='verdict-blue'; icon='🔵'; title='الدرجات دون المتوسط المتوقع';
+    desc=`المتوسط ${mean.toFixed(1)} (${pct.toFixed(1)}%) — قد يستلزم مراجعة مستوى الأسئلة أو أسلوب التدريس`;
+  }
+  banner.className='verdict-banner '+cls;
+  document.getElementById('verdictIcon').textContent=icon;
+  document.getElementById('verdictTitle').textContent=title;
+  document.getElementById('verdictDesc').textContent=desc;
+}
+
+// ===================== RENDER TABLE =====================
+function renderTable(){
+  const tbody = document.getElementById('tableBody');
+  const empty = document.getElementById('tableEmpty');
+  if(!students.length){ tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  if(!stats){ tbody.innerHTML=''; return; }
+  const {mean,std,q1,q3,median,p90,mx} = stats;
+  const sorted=[...students].map((s,i)=>({...s,_i:i})).sort((a,b)=>b.score-a.score);
+  const rankMap={};
+  sorted.forEach((s,i)=>{ rankMap[s._i]=i+1; });
+  tbody.innerHTML = students.map((s,i)=>{
+    const pct=(s.score/mx*100).toFixed(1);
+    const [gl,gc]=gradeLabel(s.score,mx);
+    const [il,ic]=inflationLabel(s.score,mx);
+    const z=zScore(s.score,mean,std);
+    const diff=s.score-mean;
+    const sh=shriha(s.score,q1,median,q3,p90);
+    const zClass=z>1?'z-pos':z<-1?'z-neg':'z-neu';
+    return `<tr>
+      <td class="row-num">${i+1}</td>
+      <td class="name-cell">${s.name||''}</td>
+      <td style="font-size:11px;color:#90A4AE">${s.id||'—'}</td>
+      <td><input class="editable-score" type="number" value="${s.score}" min="0" max="${mx}" onchange="updateScore(${i},this.value)"></td>
+      <td style="font-weight:700;color:var(--cobalt)">${pct}%</td>
+      <td><span class="badge ${gc}" style="font-size:11px">${gl}</span></td>
+      <td style="font-weight:800;color:var(--navy)">${rankMap[i]}</td>
+      <td style="color:${diff>0?'var(--green)':diff<0?'var(--red)':'#78909C'};font-weight:700">
+        ${diff>0?'+':''}${diff.toFixed(1)}
+      </td>
+      <td class="${zClass}">${z.toFixed(2)}</td>
+      <td><span class="badge ${ic}" style="font-size:11px">${il}</span></td>
+      <td style="font-size:11px;color:#546E7A">${sh}</td>
+      <td><button onclick="deleteRow(${i})" style="background:none;border:none;cursor:pointer;font-size:16px" title="حذف">🗑️</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function updateScore(i, val){
+  students[i].score = parseFloat(val)||0;
+  recalcAll();
+}
+function deleteRow(i){
+  students.splice(i,1);
+  recalcAll();
+}
+function addRow(){
+  students.push({name:'اسم الطالبة',id:'',score:0});
+  renderTable();
+  // Focus last name input not available since we used innerHTML, just scroll
+  switchTab('data');
+}
+
+// ===================== CRITERIA =====================
+function updateCriteria(){
+  const tbody=document.getElementById('criteriaBody');
+  if(!stats){
+    tbody.innerHTML='<tr><td colspan="6" style="padding:40px;text-align:center;color:#90A4AE">أدخل البيانات لعرض التحليل</td></tr>';
+    return;
+  }
+  const {mean,std,above90,above80,below60,skew,inflationIdx,mx,n} = stats;
+  const pct=mean/mx*100;
+  const criteria=[
+    {
+      label:'متوسط الدرجات',
+      actual:`${mean.toFixed(1)} (${pct.toFixed(1)}%)`,
+      ref:'70–85% طبيعي | 85–90% مرتفع | فوق 90% خطر',
+      pass: pct<=85,
+      severity: pct>90?'تضخم حاد':pct>85?'مرتفع':pct>=70?'طبيعي':'منخفض',
+      rec: pct>90?'المتوسط فوق 90% — مراجعة معايير التصحيح وزيادة صعوبة الأسئلة':
+           pct>85?'المتوسط مرتفع — تضمين أسئلة تطبيقية وتحليلية (مستويات بلوم العليا)':'المتوسط ضمن النطاق الطبيعي'
+    },{
+      label:'الانحراف المعياري',
+      actual:`${std.toFixed(1)} درجة`,
+      ref:'أقل من 5 = خطر | 5-10 = مقلق | 10-20 = طبيعي',
+      pass: std>=10 && std<=20,
+      severity: std<5?'ضعف تمييز شديد':std<10?'مقلق':std>20?'تشتت عالٍ':'طبيعي',
+      rec: std<5?'الانحراف أقل من 5 — الاختبار لا يميّز بين القوي والضعيف على الإطلاق':
+           std<10?'الانحراف منخفض — الدرجات متقاربة جداً، يشير لسهولة مفرطة أو تضخم':
+           std>20?'تشتت كبير في الدرجات — مراجعة مستوى الأسئلة':'التوزيع طبيعي ✓'
+    },{
+      label:'نسبة الحاصلين على 90%+',
+      actual:`${(above90*100).toFixed(1)}%`,
+      ref:'أقل من 30%',
+      pass: above90<0.30,
+      severity: above90>=0.45?'تضخم حاد':above90>=0.30?'مرتفع':'طبيعي',
+      rec: above90>=0.30?'نسبة الممتازين مرتفعة — التحقق من معايير التقييم ومنح الدرجات':'ضمن الحد الطبيعي ✓'
+    },{
+      label:'نسبة الحاصلين على 80%+',
+      actual:`${(above80*100).toFixed(1)}%`,
+      ref:'أقل من 60%',
+      pass: above80<0.60,
+      severity: above80>=0.80?'مرتفع جداً':above80>=0.60?'مرتفع':'طبيعي',
+      rec: above80>=0.60?'غالبية الطالبات فوق 80% — تنويع مستويات الأسئلة وفق بلوم':'ضمن الحد الطبيعي ✓'
+    },{
+      label:'نسبة الراسبين (<60%)',
+      actual:`${(below60*100).toFixed(1)}%`,
+      ref:'5%-15% (الحد الطبيعي)',
+      pass: below60>=0.05 && below60<=0.15,
+      severity: below60<0.02?'صفر — تسهيل مفرط':below60<0.05?'منخفض جداً':below60>0.25?'مرتفع':'طبيعي',
+      rec: below60<0.05?'100% نجاح أو قريب منه — قد يشير لتسهيل مفرط في التصحيح':'ضمن النطاق الطبيعي'
+    },{
+      label:'معامل الالتواء',
+      actual:stats.skew.toFixed(3),
+      ref:'بين -0.5 و 0.5 (طبيعي)',
+      pass: Math.abs(stats.skew)<0.5,
+      severity: stats.skew<-1?'تضخم سلبي شديد':stats.skew<-0.5?'التواء سالب':stats.skew>1?'التواء موجب':'طبيعي',
+      rec: stats.skew<-0.5?'الالتواء السالب يؤكد أن الدرجات منحازة للأعلى — دليل إحصائي على التضخم (Ceiling Effect)':'التوزيع مقبول ✓'
+    },{
+      label:'مؤشر التضخم الكلي (0-100)',
+      actual:`${inflationIdx.toFixed(0)}/100`,
+      ref:'أقل من 30 طبيعي | 30-60 مقلق | فوق 60 خطر',
+      pass: inflationIdx<30,
+      severity: inflationIdx>=60?'خطر':inflationIdx>=30?'مقلق':'طبيعي',
+      rec: inflationIdx>=60?'يُوصى بمراجعة شاملة لأسلوب التقييم وأسئلة الاختبار':
+           inflationIdx>=30?'يُنصح بمتابعة المؤشرات ومقارنة النتائج بالاختبارات المعيارية كنافس':'الدرجات طبيعية ✓'
+    }
+  ];
+  tbody.innerHTML=criteria.map(c=>`
+    <tr>
+      <td style="text-align:right;font-weight:700">${c.label}</td>
+      <td style="font-weight:800;color:var(--royal)">${c.actual}</td>
+      <td style="color:#78909C;font-size:12px">${c.ref}</td>
+      <td class="${c.pass?'pass':'fail'}">${c.pass?'✅ مقبول':'❌ تجاوز الحد'}</td>
+      <td><span class="badge ${c.severity.includes('عال')?'badge-red':c.severity.includes('متوسط')?'badge-orange':c.severity.includes('مقل')?'badge-orange':'badge-green'}" style="font-size:11px">${c.severity}</span></td>
+      <td style="font-size:12px;color:#546E7A">${c.rec}</td>
+    </tr>
+  `).join('');
+}
+
+// ===================== DISTRIBUTION =====================
+function updateDist(){
+  const tbody=document.getElementById('distBody');
+  if(!stats){ tbody.innerHTML=''; return; }
+  const {n,mx,sorted} = stats;
+  const bands=[
+    {lo:0.95,hi:1.01,label:'95-100',grade:'ممتاز+',norm:'5-10%',color:'#43A047'},
+    {lo:0.90,hi:0.95,label:'90-94',grade:'ممتاز',norm:'10-15%',color:'#66BB6A'},
+    {lo:0.80,hi:0.90,label:'80-89',grade:'جيد جداً',norm:'20-25%',color:'#42A5F5'},
+    {lo:0.70,hi:0.80,label:'70-79',grade:'جيد',norm:'20-25%',color:'#FFA726'},
+    {lo:0.60,hi:0.70,label:'60-69',grade:'مقبول',norm:'15-20%',color:'#FF7043'},
+    {lo:0.50,hi:0.60,label:'50-59',grade:'ضعيف',norm:'5-10%',color:'#EF5350'},
+    {lo:0,hi:0.50,label:'أقل من 50',grade:'راسب',norm:'5%',color:'#C62828'},
+  ];
+  tbody.innerHTML=bands.map(b=>{
+    const cnt=students.filter(s=>s.score/mx>=b.lo && s.score/mx<b.hi).length;
+    const pct=n>0?(cnt/n*100):0;
+    const barW=Math.min(100,pct*2);
+    return `<tr>
+      <td style="font-weight:700;text-align:right">${b.label}</td>
+      <td>${b.grade}</td>
+      <td style="font-weight:800;color:var(--royal)">${cnt}</td>
+      <td style="font-weight:700">${pct.toFixed(1)}%</td>
+      <td>
+        <div class="dist-bar-wrap" style="width:120px">
+          <div class="dist-bar-fill" style="width:${barW}%;background:${b.color}"></div>
+        </div>
+        <span style="font-size:11px;color:#90A4AE;margin-right:6px">${pct.toFixed(0)}%</span>
+      </td>
+      <td style="color:#78909C;font-size:12px">${b.norm}</td>
+      <td><span class="badge ${pct>parseFloat(b.norm.split('-')[1]||b.norm)*1.5?'badge-red':pct>parseFloat(b.norm.split('-')[1]||b.norm)?'badge-orange':'badge-green'}" style="font-size:10px">${pct>parseFloat(b.norm.split('-')[1]||b.norm)*1.2?'⚠️ مرتفع':'✓'}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+// ===================== PERCENTILES =====================
+function updatePercentiles(){
+  const el=document.getElementById('percentilesContent');
+  if(!stats){ el.innerHTML='<p style="color:#90A4AE;text-align:center;padding:30px">أدخل البيانات أولاً</p>'; return; }
+  const {q1,median,q3,p90,p95,iqr,sorted,n,mx}=stats;
+  const percs=[10,20,25,30,40,50,60,70,75,80,90,95,99].map(p=>({p,val:percentile(sorted,p)}));
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px">
+      ${percs.map(({p,val})=>`
+        <div style="background:var(--ghost);border-radius:10px;padding:14px;text-align:center">
+          <div style="font-size:11px;color:#90A4AE;font-weight:700;margin-bottom:6px">المئين ${p}</div>
+          <div style="font-size:20px;font-weight:900;color:var(--royal)">${val.toFixed(1)}</div>
+          <div style="font-size:11px;color:#78909C">${(val/mx*100).toFixed(0)}% من السقف</div>
+          <div class="percentile-bar" style="width:100%;margin-top:8px">
+            <div class="percentile-fill" style="width:${val/mx*100}%;background:${val/mx>=0.9?'var(--green)':val/mx>=0.7?'var(--indigo)':val/mx>=0.5?'var(--gold)':'var(--red)'}"></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:16px;padding:14px;background:var(--ghost);border-radius:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:center">
+      <div><div style="font-size:11px;color:#90A4AE;font-weight:700">الربيع الأول Q1</div><div style="font-size:18px;font-weight:900;color:var(--cobalt)">${q1.toFixed(1)}</div></div>
+      <div><div style="font-size:11px;color:#90A4AE;font-weight:700">الوسيط Q2</div><div style="font-size:18px;font-weight:900;color:var(--cobalt)">${median.toFixed(1)}</div></div>
+      <div><div style="font-size:11px;color:#90A4AE;font-weight:700">الربيع الثالث Q3</div><div style="font-size:18px;font-weight:900;color:var(--cobalt)">${q3.toFixed(1)}</div></div>
+    </div>
+    <div style="margin-top:12px;padding:12px;background:#FFF8E1;border-radius:8px;text-align:center;font-size:13px;font-weight:700;color:var(--orange)">
+      المدى البيني (IQR) = Q3 − Q1 = ${q3.toFixed(1)} − ${q1.toFixed(1)} = <strong>${iqr.toFixed(1)}</strong> درجة
+    </div>`;
+}
+
+// ===================== CHARTS =====================
+function drawCharts(){
+  if(!stats) return;
+  const {mean,std,sorted,n,mx} = stats;
+  drawHist();
+  drawPie();
+  drawLine();
+  drawRadar();
+}
+
+function drawHist(){
+  const ctx=document.getElementById('histChart').getContext('2d');
+  if(histChartObj) histChartObj.destroy();
+  const bins=[]; const labels=[]; const step=5;
+  for(let i=0;i<=95;i+=step){
+    labels.push(`${i}-${i+step}`);
+    bins.push(students.filter(s=>s.score>=i&&s.score<i+step).length);
+  }
+  histChartObj=new Chart(ctx,{type:'bar',data:{labels,datasets:[{
+    label:'عدد الطالبات',data:bins,
+    backgroundColor:bins.map((_,i)=>i>14?'rgba(198,40,40,0.7)':i>12?'rgba(230,81,0,0.7)':'rgba(57,73,171,0.7)'),
+    borderColor:'rgba(255,255,255,0.5)',borderWidth:1,borderRadius:4
+  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+  scales:{x:{ticks:{font:{family:'Tajawal',size:10}}},y:{beginAtZero:true,ticks:{font:{family:'Tajawal'}}}}}});
+}
+
+function drawPie(){
+  const ctx=document.getElementById('pieChart').getContext('2d');
+  if(pieChartObj) pieChartObj.destroy();
+  const mx=stats.mx;
+  const bands=[
+    {label:'ممتاز 90+',lo:90,hi:101,color:'#43A047'},
+    {label:'جيد جداً 80+',lo:80,hi:90,color:'#42A5F5'},
+    {label:'جيد 70+',lo:70,hi:80,color:'#FFA726'},
+    {label:'مقبول 60+',lo:60,hi:70,color:'#FF7043'},
+    {label:'ضعيف <60',lo:0,hi:60,color:'#EF5350'},
+  ].map(b=>({...b,cnt:students.filter(s=>s.score/mx*100>=b.lo&&s.score/mx*100<b.hi).length}))
+  .filter(b=>b.cnt>0);
+  pieChartObj=new Chart(ctx,{type:'doughnut',data:{
+    labels:bands.map(b=>b.label),
+    datasets:[{data:bands.map(b=>b.cnt),backgroundColor:bands.map(b=>b.color),borderWidth:2,borderColor:'#fff'}]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{family:'Tajawal',size:11}}}}}});
+}
+
+function drawLine(){
+  const ctx=document.getElementById('lineChart').getContext('2d');
+  if(lineChartObj) lineChartObj.destroy();
+  const sorted=[...students].sort((a,b)=>b.score-a.score);
+  lineChartObj=new Chart(ctx,{type:'line',data:{
+    labels:sorted.map((_,i)=>i+1),
+    datasets:[{
+      label:'الدرجة',data:sorted.map(s=>s.score),
+      borderColor:'#3949AB',backgroundColor:'rgba(57,73,171,0.1)',
+      fill:true,tension:0.4,pointRadius:2,pointHoverRadius:5
+    },{
+      label:'المتوسط',data:Array(sorted.length).fill(stats.mean),
+      borderColor:'#E65100',borderDash:[8,4],pointRadius:0,fill:false
+    }]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{family:'Tajawal',size:11}}}},
+    scales:{x:{title:{display:true,text:'الرتبة',font:{family:'Tajawal'}}},
+            y:{min:0,max:stats.mx,title:{display:true,text:'الدرجة',font:{family:'Tajawal'}}}}}});
+}
+
+function drawRadar(){
+  const ctx=document.getElementById('radarChart').getContext('2d');
+  if(radarChartObj) radarChartObj.destroy();
+  const {mean,std,above90,below60,skew,inflationIdx,mx}=stats;
+  const pct=mean/mx*100;
+  const radarData=[
+    Math.min(100,pct),
+    above90*100,
+    Math.max(0,100-below60*100),
+    Math.max(0,100-(std/mx*100)*5),
+    Math.max(0,50-skew*20+50),
+    inflationIdx
+  ];
+  radarChartObj=new Chart(ctx,{type:'radar',data:{
+    labels:['المتوسط%','نسبة الممتازات%','تضخم الراسبين','استقرار التوزيع','الالتواء','مؤشر التضخم'],
+    datasets:[{
+      label:'القيم الفعلية',data:radarData,
+      backgroundColor:'rgba(198,40,40,0.15)',borderColor:'#C62828',
+      pointBackgroundColor:'#C62828',pointRadius:4
+    },{
+      label:'الحد المقبول',data:[75,30,85,70,50,40],
+      backgroundColor:'rgba(57,73,171,0.1)',borderColor:'#3949AB',
+      borderDash:[6,3],pointRadius:0
+    }]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'bottom',labels:{font:{family:'Tajawal',size:11}}}},
+    scales:{r:{min:0,max:100,ticks:{font:{family:'Tajawal',size:9}},
+               pointLabels:{font:{family:'Tajawal',size:10}}}}}});
+}
+
+// ===================== REPORT =====================
+function buildReport(){
+  const el=document.getElementById('reportContent');
+  if(!stats||!students.length){ return; }
+  const {mean,std,median,mode,skew,kurt,above90,above80,below60,inflationIdx,n,mx,q1,q3,iqr,p90,p95,range,sorted}=stats;
+  const subject=document.getElementById('s_subject').value;
+  const cls=document.getElementById('s_class').value;
+  const teacher=document.getElementById('s_teacher').value;
+  const school=document.getElementById('s_school').value;
+  const semester=document.getElementById('s_semester').value;
+  const exam=document.getElementById('s_exam').value;
+  const date=document.getElementById('s_date').value;
+  const topStudents=[...students].sort((a,b)=>b.score-a.score).slice(0,5);
+  const pct=mean/mx*100;
+  const verdict=above90>0.35||pct>90||(std<5&&pct>80)?'تضخم حاد':above90>0.20||pct>85||std<10?'تضخم متوسط':pct>=70?'طبيعي':'دون المتوسط';
+  const verdictColor=above90>0.35||pct>90?'background:#FFEBEE;border:2px solid var(--red)':above90>0.20||pct>85||std<10?'background:#FFF3E0;border:2px solid var(--orange)':'background:#E8F5E9;border:2px solid var(--green)';
+  const verdictIcon=above90>0.35||pct>90?'🔴':above90>0.20||pct>85||std<10?'🟡':'🟢';
+  el.innerHTML=`
+    <div style="padding:10px 0">
+      <div style="text-align:center;padding:24px 0 20px;border-bottom:3px solid var(--navy)">
+        ${school?`<div style="font-size:11px;color:#90A4AE;font-weight:700;margin-bottom:8px">${school}</div>`:''}
+        <h2 style="font-size:20px;color:var(--navy);font-weight:900;margin-bottom:6px">تقرير تحليل تضخم الدرجات</h2>
+        <div style="font-size:13px;color:#546E7A">${exam} — ${subject} — ${cls} — الفصل ${semester} — ${date}</div>
+        ${teacher?`<div style="font-size:12px;color:#90A4AE;margin-top:4px">المعلمة: ${teacher}</div>`:''}
+      </div>
+      
+      <div style="margin:20px 0;padding:16px;border-radius:10px;${verdictColor}">
+        <div style="font-size:16px;font-weight:900;margin-bottom:6px">${verdictIcon} حكم: ${verdict}</div>
+        <div style="font-size:13px">المتوسط العام ${mean.toFixed(1)} درجة (${pct.toFixed(1)}% من الدرجة القصوى ${mx}) — الانحراف المعياري ${std.toFixed(1)} — نسبة الممتازات ${(above90*100).toFixed(1)}%</div>
+      </div>
+      
+      <h3 style="color:var(--royal);font-size:15px;margin:20px 0 12px">أولاً: الإحصاءات الوصفية</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <tr style="background:var(--ghost)">
+          ${[['عدد الطالبات',n],['المتوسط',mean.toFixed(2)],['الوسيط',median.toFixed(2)],['المنوال',mode]].map(([l,v])=>`<td style="padding:10px;text-align:center;border:1px solid #E0E0E0"><div style="font-size:11px;color:#90A4AE;font-weight:700">${l}</div><div style="font-size:18px;font-weight:900;color:var(--royal)">${v}</div></td>`).join('')}
+        </tr>
+        <tr>
+          ${[['الانحراف المعياري',std.toFixed(2)],['المدى',range.toFixed(1)],['IQR',iqr.toFixed(2)],['معامل الالتواء',skew.toFixed(3)]].map(([l,v])=>`<td style="padding:10px;text-align:center;border:1px solid #E0E0E0"><div style="font-size:11px;color:#90A4AE;font-weight:700">${l}</div><div style="font-size:18px;font-weight:900;color:var(--cobalt)">${v}</div></td>`).join('')}
+        </tr>
+      </table>
+      
+      <h3 style="color:var(--royal);font-size:15px;margin:20px 0 12px">ثانياً: مؤشرات التضخم</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        <thead><tr style="background:var(--navy);color:white">
+          <th style="padding:9px 14px;text-align:right">المؤشر</th><th>القيمة</th><th>الحد المرجعي</th><th>الحكم</th>
+        </tr></thead>
+        <tbody>
+          ${[
+            ['متوسط الدرجات',pct.toFixed(1)+'%','70-85% طبيعي | فوق 85% مرتفع',pct<=85],
+            ['الانحراف المعياري',std.toFixed(1)+' درجة','10-20 طبيعي | أقل من 5 خطر',std>=10&&std<=20],
+            ['نسبة الممتازات ≥90%',(above90*100).toFixed(1)+'%','أقل من 30%',above90<0.3],
+            ['نسبة الجيد جداً ≥80%',(above80*100).toFixed(1)+'%','أقل من 60%',above80<0.6],
+            ['نسبة الراسبين <60%',(below60*100).toFixed(1)+'%','5%-15%',below60>=0.05&&below60<=0.15],
+            ['معامل الالتواء',skew.toFixed(3),'بين -0.5 و 0.5',Math.abs(skew)<0.5],
+            ['مؤشر التضخم الكلي',inflationIdx.toFixed(0)+'/100','أقل من 30',inflationIdx<30],
+          ].map(([l,v,r,p])=>`<tr style="border-bottom:1px solid #EEF0F8">
+            <td style="padding:9px 14px;font-weight:600;text-align:right">${l}</td>
+            <td style="text-align:center;font-weight:800;color:var(--royal)">${v}</td>
+            <td style="text-align:center;color:#78909C">${r}</td>
+            <td style="text-align:center;color:${p?'var(--green)':'var(--red)'};font-weight:700">${p?'✅ مقبول':'❌ تجاوز الحد'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      
+      <h3 style="color:var(--royal);font-size:15px;margin:20px 0 12px">ثالثاً: أعلى 5 طالبات</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr style="background:var(--teal);color:white">
+          <th style="padding:9px">م</th><th>الاسم</th><th>الدرجة</th><th>النسبة%</th><th>التقدير</th>
+        </tr></thead>
+        <tbody>
+          ${topStudents.map((s,i)=>`<tr style="border-bottom:1px solid #EEF0F8;background:${i%2===0?'#F1F8E9':'white'}">
+            <td style="text-align:center;font-weight:700">${i+1}</td>
+            <td style="text-align:right;padding:9px 14px;font-weight:600">${s.name}</td>
+            <td style="text-align:center;font-weight:800;color:var(--green)">${s.score}</td>
+            <td style="text-align:center">${(s.score/mx*100).toFixed(1)}%</td>
+            <td style="text-align:center">${gradeLabel(s.score,mx)[0]}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+      
+      <h3 style="color:var(--royal);font-size:15px;margin:20px 0 12px">رابعاً: التوصيات</h3>
+      <div style="background:var(--ghost);border-radius:10px;padding:16px">
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:10px">
+          ${pct>90?`<li style="display:flex;gap:10px"><span>🔴</span><span>المتوسط ${pct.toFixed(1)}% من السقف — يتجاوز حد التضخم الحاد (90%) — يُوصى بمراجعة معايير التصحيح وإعادة النظر في مستوى الأسئلة</span></li>`:pct>85?`<li style="display:flex;gap:10px"><span>🟡</span><span>المتوسط ${pct.toFixed(1)}% مرتفع — يُوصى بتضمين أسئلة تطبيقية وتحليلية من مستويات بلوم العليا</span></li>`:''}
+          ${std<5?`<li style="display:flex;gap:10px"><span>🔴</span><span>الانحراف المعياري ${std.toFixed(1)} أقل من 5 — الاختبار لا يميّز بين القوي والضعيف على الإطلاق — ضرورة مراجعة الأسئلة</span></li>`:std<10?`<li style="display:flex;gap:10px"><span>⚠️</span><span>الانحراف المعياري ${std.toFixed(1)} منخفض (5-10) — الدرجات متقاربة جداً — يشير لسهولة مفرطة أو تصحيح موحّد</span></li>`:''}
+          ${above90>0.30?`<li style="display:flex;gap:10px"><span>🔴</span><span>نسبة الحاصلات على 90%+ تبلغ ${(above90*100).toFixed(1)}% — تتجاوز الحد المرجعي 30% — مراجعة معايير التقييم</span></li>`:''}
+          ${skew<-0.5?`<li style="display:flex;gap:10px"><span>📊</span><span>الالتواء السالب (${skew.toFixed(2)}) يؤكد أن الدرجات منحازة نحو الأعلى (Ceiling Effect) — دليل إحصائي على التضخم</span></li>`:''}
+          ${below60<0.05?`<li style="display:flex;gap:10px"><span>🔵</span><span>نسبة الراسبات ${(below60*100).toFixed(1)}% أقل من الحد الطبيعي (5%) — قد يشير لتسهيل مفرط في التصحيح</span></li>`:''}
+          <li style="display:flex;gap:10px"><span>✅</span><span>يُنصح بمقارنة النتائج باختبارات نافس والاختبارات المركزية — إذا كانت درجات المدرسة مرتفعة لكن نتائج الاختبارات الخارجية منخفضة، فهذه علامة قوية على تضخم الدرجات</span></li>
+        </ul>
+      </div>
+      
+      <div class="no-print" style="margin-top:24px;padding-top:16px;border-top:2px solid #EEF0F8;text-align:center;font-size:11px;color:#90A4AE">
+        تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--indigo);font-weight:700">https://t.me/TAqhjT3MFVE1Yzk0</a>
+      </div>
+    </div>`;
+}
+
+// ===================== EXPORT EXCEL =====================
+function exportExcelNow(){
+  if(!students.length){ toast('⚠️ لا توجد بيانات للتصدير'); return; }
+  const wb = XLSX.utils.book_new();
+  const mx = +document.getElementById('s_max').value||100;
+  const s = computeStats();
+  
+  // Sheet 1: Data
+  const data1=[['م','اسم الطالبة','رقم الهوية','الدرجة','النسبة%','التقدير','الرتبة','الفرق عن المتوسط','z-Score','مستوى التضخم','الشريحة']];
+  const sorted=[...students].sort((a,b)=>b.score-a.score);
+  const rankMap={}; sorted.forEach((x,i)=>{ const idx=students.indexOf(x); rankMap[idx]=i+1; });
+  students.forEach((st,i)=>{
+    const pct=(st.score/mx*100).toFixed(1);
+    const [gl]=gradeLabel(st.score,mx);
+    const [il]=inflationLabel(st.score,mx);
+    const z=s?zScore(st.score,s.mean,s.std).toFixed(2):0;
+    const diff=s?(st.score-s.mean).toFixed(1):0;
+    const sh=s?shriha(st.score,s.q1,s.median,s.q3,s.p90):'';
+    data1.push([i+1,st.name,st.id,st.score,pct+'%',gl,rankMap[i]||'',diff,z,il,sh]);
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data1), 'الدرجات');
+  
+  // Sheet 2: Stats
+  if(s){
+    const data2=[
+      ['الإحصاء','القيمة'],
+      ['عدد الطالبات',s.n],['المتوسط',+s.mean.toFixed(2)],
+      ['الوسيط',+s.median.toFixed(2)],['المنوال',s.mode],
+      ['الانحراف المعياري',+s.std.toFixed(2)],['التباين',+(s.std**2).toFixed(2)],
+      ['أعلى درجة',s.sorted[s.n-1]],['أدنى درجة',s.sorted[0]],
+      ['المدى',+s.range.toFixed(1)],['IQR',+s.iqr.toFixed(2)],
+      ['معامل الالتواء',+s.skew.toFixed(3)],['معامل التفلطح',+s.kurt.toFixed(3)],
+      ['Q1',+s.q1.toFixed(2)],['Q3',+s.q3.toFixed(2)],
+      ['المئين 90',+s.p90.toFixed(2)],['المئين 95',+s.p95.toFixed(2)],
+      ['نسبة الممتازات ≥90%',(s.above90*100).toFixed(1)+'%'],
+      ['نسبة الراسبين <60%',(s.below60*100).toFixed(1)+'%'],
+      ['مؤشر التضخم',+s.inflationIdx.toFixed(1)],
+    ];
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data2), 'الإحصاءات');
+  }
+  
+  const subject=document.getElementById('s_subject').value||'الدرجات';
+  XLSX.writeFile(wb, `تحليل_تضخم_${subject}_${new Date().toISOString().split('T')[0]}.xlsx`);
+  toast('✅ تم تصدير ملف Excel بنجاح');
+}
+
+// ===================== SAVE/LOAD =====================
+function saveData(){
+  try {
+    localStorage.setItem('inflationData', JSON.stringify({
+      students,
+      settings:{
+        school:document.getElementById('s_school').value,
+        subject:document.getElementById('s_subject').value,
+        cls:document.getElementById('s_class').value,
+        semester:document.getElementById('s_semester').value,
+        exam:document.getElementById('s_exam').value,
+        max:document.getElementById('s_max').value,
+        teacher:document.getElementById('s_teacher').value,
+        date:document.getElementById('s_date').value,
+        threshold:document.getElementById('s_threshold').value,
+      }
+    }));
+  } catch(e){}
+}
+function loadData(){
+  try {
+    const d=JSON.parse(localStorage.getItem('inflationData')||'{}');
+    if(d.students) students=d.students;
+    if(d.settings){
+      const s=d.settings;
+      if(s.school) document.getElementById('s_school').value=s.school;
+      if(s.subject) document.getElementById('s_subject').value=s.subject;
+      if(s.cls) document.getElementById('s_class').value=s.cls;
+      if(s.semester) document.getElementById('s_semester').value=s.semester;
+      if(s.exam) document.getElementById('s_exam').value=s.exam;
+      if(s.max) document.getElementById('s_max').value=s.max;
+      if(s.teacher) document.getElementById('s_teacher').value=s.teacher;
+      if(s.date) document.getElementById('s_date').value=s.date;
+      if(s.threshold) document.getElementById('s_threshold').value=s.threshold;
+    }
+  } catch(e){}
+}
+function saveSettings(){ saveData(); }
+function clearAll(){
+  if(confirm('هل تريد مسح جميع البيانات؟ لا يمكن التراجع عن هذه العملية.')){
+    students=[];
+    stats={};
+    localStorage.removeItem('inflationData');
+    recalcAll();
+    toast('✅ تم مسح جميع البيانات');
+  }
+}
+
+// ===================== SAVE PDF =====================
+function savePDF(){
+  // Hide no-print elements, trigger browser print-to-PDF
+  document.querySelectorAll('.no-print').forEach(el => el.style.setProperty('display','none','important'));
+  const style = document.createElement('style');
+  style.id = 'pdf-temp-style';
+  style.textContent = `
+    @media print {
+      body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .app-header, .tab-nav, .table-actions, .header-actions,
+      .import-zone, .btn-header, #toast, .no-print { display: none !important; }
+      .tab-panel { display: block !important; }
+      .main-wrap { padding: 0 10px; max-width: 100%; }
+      .table-wrap, .kpi-card, .chart-card, .settings-card { box-shadow: none !important; border: 1px solid #DDD; }
+      .charts-grid { grid-template-columns: 1fr 1fr; }
+      .kpi-card::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  `;
+  document.head.appendChild(style);
+  window.print();
+  setTimeout(()=>{
+    const s = document.getElementById('pdf-temp-style');
+    if(s) s.remove();
+    document.querySelectorAll('.no-print').forEach(el => el.style.removeProperty('display'));
+  }, 1000);
+}
+
+// ===================== TOAST =====================
+let toastTimer;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>el.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>

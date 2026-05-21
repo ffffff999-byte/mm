@@ -1,0 +1,2263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة تحليل بطاقة نافس</title>
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Cairo:wght@300;400;600;700;900&display=swap');
+
+  :root {
+    --primary: #1a3a5c;
+    --secondary: #2563a8;
+    --accent: #e8a020;
+    --accent2: #c0392b;
+    --green: #27ae60;
+    --light-bg: #f0f4f8;
+    --card-bg: #ffffff;
+    --text-dark: #1a2535;
+    --text-mid: #3d5a80;
+    --text-light: #7f9ab5;
+    --border: #d0dde9;
+    --shadow: 0 4px 20px rgba(26,58,92,0.10);
+    --shadow-lg: 0 8px 40px rgba(26,58,92,0.18);
+    --radius: 14px;
+    --radius-sm: 8px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    background: linear-gradient(135deg, #e8f0f8 0%, #f5f8fc 60%, #eaf3ee 100%);
+    min-height: 100vh;
+    color: var(--text-dark);
+    direction: rtl;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(120deg, var(--primary) 0%, var(--secondary) 100%);
+    color: #fff;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(26,58,92,0.25);
+  }
+  .header-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    gap: 12px;
+  }
+  .header-logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .header-logo .icon {
+    width: 48px; height: 48px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .header-title { line-height: 1.2; }
+  .header-title h1 { font-size: 1.35rem; font-weight: 900; letter-spacing: -0.5px; }
+  .header-title p { font-size: 0.78rem; opacity: 0.78; }
+  .header-badge {
+    background: var(--accent);
+    color: #fff;
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+  }
+
+  /* ===== TABS ===== */
+  .nav-tabs {
+    background: rgba(255,255,255,0.10);
+    display: flex;
+    gap: 4px;
+    padding: 0 28px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    overflow-x: auto;
+  }
+  .nav-tab {
+    padding: 10px 20px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-bottom: 3px solid transparent;
+    transition: all 0.25s;
+    white-space: nowrap;
+    border: none; background: none;
+    font-family: inherit;
+  }
+  .nav-tab:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .nav-tab.active {
+    color: var(--accent);
+    border-bottom: 3px solid var(--accent);
+    background: rgba(255,255,255,0.06);
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 28px 20px;
+  }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    border: 1px solid var(--border);
+  }
+  .card-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 18px;
+    display: flex; align-items: center; gap: 8px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--light-bg);
+  }
+  .card-title .icon { font-size: 1.2rem; }
+
+  /* ===== INPUT FORM ===== */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-mid);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .field input, .field select {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 0.92rem;
+    color: var(--text-dark);
+    background: var(--light-bg);
+    transition: border 0.2s, box-shadow 0.2s;
+    direction: rtl;
+  }
+  .field input:focus, .field select:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(37,99,168,0.10);
+    background: #fff;
+  }
+
+  /* ===== SECTION HEADERS ===== */
+  .section-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 22px; gap: 12px;
+  }
+  .section-header h2 {
+    font-size: 1.2rem; font-weight: 900; color: var(--primary);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-header h2 span { font-size: 1.4rem; }
+
+  /* ===== DOMAIN INPUT SECTIONS ===== */
+  .domain-header {
+    display: flex; align-items: center; gap: 10px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    color: #fff; padding: 10px 18px;
+    border-radius: var(--radius-sm);
+    margin-bottom: 14px;
+    font-size: 0.95rem; font-weight: 800;
+  }
+
+  /* ===== LEVEL INPUT TABLE ===== */
+  .level-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+  .level-table th {
+    background: var(--primary);
+    color: #fff;
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: center;
+  }
+  .level-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: center;
+    font-size: 0.88rem;
+  }
+  .level-table tr:nth-child(even) td { background: var(--light-bg); }
+  .level-table input[type=number] {
+    width: 80px;
+    padding: 7px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.88rem;
+    text-align: center;
+    background: #fff;
+  }
+  .level-table input:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 2px rgba(37,99,168,0.12);
+  }
+  .level-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .badge-vlow { background: var(--accent2); }
+  .badge-low  { background: #e67e22; }
+  .badge-mid  { background: var(--accent); }
+  .badge-high { background: var(--green); }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 24px;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: linear-gradient(120deg, var(--primary), var(--secondary));
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(37,99,168,0.25);
+  }
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,168,0.35); }
+  .btn-accent {
+    background: linear-gradient(120deg, var(--accent), #f0a500);
+    color: #fff;
+  }
+  .btn-accent:hover { opacity: 0.9; }
+  .btn-success {
+    background: linear-gradient(120deg, #27ae60, #2ecc71);
+    color: #fff;
+  }
+  .btn-danger {
+    background: linear-gradient(120deg, var(--accent2), #e74c3c);
+    color: #fff;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 2px solid var(--border);
+    color: var(--text-mid);
+  }
+  .btn-outline:hover { border-color: var(--secondary); color: var(--secondary); }
+  .btn-sm { padding: 7px 16px; font-size: 0.82rem; }
+  .btn-lg { padding: 14px 32px; font-size: 1rem; }
+
+  /* ===== RESULT DASHBOARD ===== */
+  .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    text-align: center;
+    border-top: 4px solid var(--secondary);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(37,99,168,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .kpi-card.green { border-top-color: var(--green); }
+  .kpi-card.orange { border-top-color: var(--accent); }
+  .kpi-card.red { border-top-color: var(--accent2); }
+  .kpi-value {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--primary);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-label {
+    font-size: 0.78rem;
+    color: var(--text-light);
+    font-weight: 600;
+  }
+  .kpi-sub {
+    font-size: 0.72rem;
+    color: var(--text-light);
+    margin-top: 2px;
+  }
+  .kpi-icon {
+    font-size: 2rem;
+    margin-bottom: 6px;
+    opacity: 0.75;
+  }
+
+  /* ===== DOMAIN RESULTS ===== */
+  .domain-result-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; margin-bottom: 24px; }
+  .domain-result-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    border: 1px solid var(--border);
+  }
+  .domain-result-title {
+    font-size: 1rem; font-weight: 900; color: var(--primary);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .progress-wrap { margin-bottom: 10px; }
+  .progress-label {
+    display: flex; justify-content: space-between;
+    font-size: 0.8rem; color: var(--text-mid);
+    margin-bottom: 4px; font-weight: 600;
+  }
+  .progress-track {
+    height: 10px; background: #e9eef4;
+    border-radius: 8px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; border-radius: 8px;
+    transition: width 0.8s cubic-bezier(.4,0,.2,1);
+  }
+  .fill-vlow { background: var(--accent2); }
+  .fill-low  { background: #e67e22; }
+  .fill-mid  { background: var(--accent); }
+  .fill-high { background: var(--green); }
+  .fill-mastery { background: linear-gradient(90deg, var(--secondary), var(--green)); }
+
+  /* ===== SUB-DOMAIN TABLE ===== */
+  .sub-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .sub-table th {
+    background: var(--light-bg);
+    color: var(--primary);
+    padding: 8px 12px;
+    font-weight: 800;
+    text-align: right;
+    border-bottom: 2px solid var(--border);
+  }
+  .sub-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #f0f3f7;
+    vertical-align: middle;
+  }
+  .sub-table tr:hover td { background: #f7fafd; }
+
+  /* ===== ALERTS / ANALYSIS TEXT ===== */
+  .alert {
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin-bottom: 14px;
+    border-right: 4px solid;
+  }
+  .alert-info { background: #eef5ff; border-color: var(--secondary); color: var(--primary); }
+  .alert-warn { background: #fff8ec; border-color: var(--accent); color: #7a4f00; }
+  .alert-success { background: #edfaf2; border-color: var(--green); color: #1a5c33; }
+  .alert-danger { background: #fef0ef; border-color: var(--accent2); color: #7a1a1a; }
+
+  /* ===== MASTERY INDEX ===== */
+  .mastery-gauge-wrap { text-align: center; padding: 20px; }
+  .mastery-number {
+    font-size: 4rem; font-weight: 900;
+    background: linear-gradient(120deg, var(--secondary), var(--green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .mastery-label { font-size: 0.9rem; color: var(--text-light); font-weight: 600; }
+
+  /* ===== CHANGE INDICATOR ===== */
+  .change-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+  .change-up { background: #edfaf2; color: var(--green); }
+  .change-down { background: #fef0ef; color: var(--accent2); }
+  .change-same { background: #f0f3f7; color: var(--text-light); }
+
+  /* ===== SETTINGS SECTION ===== */
+  .settings-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; }
+  .settings-card { margin-bottom: 20px; }
+  .target-row { display: flex; align-items: center; gap: 10px; font-size: 0.88rem; color: var(--text-mid); }
+  .target-row label { font-weight: 700; min-width: 160px; }
+  .target-row input { width: 90px; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-family: inherit; font-size: 0.88rem; text-align: center; }
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* ===== PRINT CARD ===== */
+  .print-preview {
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px;
+    font-size: 0.9rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .print-school-header {
+    text-align: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 3px double var(--primary);
+  }
+  .print-school-header h2 { font-size: 1.4rem; color: var(--primary); margin-bottom: 4px; }
+  .print-school-header p { font-size: 0.88rem; color: var(--text-light); }
+  .print-meta-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 20px; }
+  .print-meta-item {
+    text-align: center; padding: 12px;
+    background: var(--light-bg); border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+  }
+  .print-meta-item strong { display: block; font-size: 1rem; color: var(--primary); margin-bottom: 2px; }
+
+  /* ===== CHART ===== */
+  .chart-container {
+    position: relative;
+    height: 220px;
+    background: var(--light-bg);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    margin-top: 14px;
+  }
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    height: 100%;
+    padding: 16px 12px 32px;
+    gap: 6px;
+  }
+  .chart-bar-group { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .chart-bar {
+    width: 100%;
+    border-radius: 6px 6px 0 0;
+    min-height: 4px;
+    transition: height 0.8s cubic-bezier(.4,0,.2,1);
+    position: relative;
+  }
+  .chart-bar-val {
+    position: absolute; top: -18px; width: 100%; text-align: center;
+    font-size: 0.7rem; font-weight: 700; color: var(--primary);
+  }
+  .chart-bar-label {
+    font-size: 0.7rem; color: var(--text-mid); text-align: center; font-weight: 600;
+    max-width: 60px; word-break: break-word; line-height: 1.2;
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .kpi-row { grid-template-columns: repeat(2,1fr); }
+    .domain-result-grid { grid-template-columns: 1fr; }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+    .print-meta-grid { grid-template-columns: repeat(2,1fr); }
+  }
+  @media (max-width: 600px) {
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .header-inner { padding: 10px 14px; }
+    .main { padding: 14px 10px; }
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    text-align: center;
+    padding: 18px;
+    color: var(--text-light);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 30px;
+    background: #fff;
+  }
+  .footer a { color: var(--secondary); text-decoration: none; font-weight: 700; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* ===== UTILITY ===== */
+  .mb-4 { margin-bottom: 16px; }
+  .mb-6 { margin-bottom: 24px; }
+  .mt-4 { margin-top: 16px; }
+  .text-center { text-align: center; }
+  .flex { display: flex; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .flex-wrap { flex-wrap: wrap; }
+  .hidden { display: none !important; }
+  .w-full { width: 100%; }
+  .font-bold { font-weight: 800; }
+  .text-sm { font-size: 0.82rem; }
+  .text-primary { color: var(--primary); }
+  .text-green { color: var(--green); }
+  .text-red { color: var(--accent2); }
+  .italic { font-style: italic; }
+
+  @media print {
+    .header, .nav-tabs, button, footer, .footer,
+    #section-input, #section-result, #section-import { display: none !important; }
+    #section-print { display: block !important; }
+    .section-header { margin-bottom: 10px !important; }
+    body { background: #fff !important; margin: 0; padding: 0; }
+    .main { padding: 0 !important; max-width: 100% !important; }
+    .print-preview { border: none !important; box-shadow: none !important; padding: 10px !important; margin: 0 !important; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+
+  /* ===== IMPORT STYLES ===== */
+  .import-tabs {
+    display: flex; gap: 6px; margin-bottom: 18px;
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 0;
+  }
+  .import-tab {
+    padding: 9px 20px;
+    border: none; background: none;
+    font-family: inherit; font-size: 0.88rem; font-weight: 700;
+    color: var(--text-light); cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  }
+  .import-tab:hover { color: var(--secondary); background: var(--light-bg); }
+  .import-tab.active { color: var(--secondary); border-bottom-color: var(--secondary); background: rgba(37,99,168,0.05); }
+
+  .import-panel { padding-top: 4px; }
+
+  .import-drop-zone {
+    border: 2.5px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    background: var(--light-bg);
+  }
+  .import-drop-zone:hover, .import-drop-zone.dragover {
+    border-color: var(--secondary);
+    background: rgba(37,99,168,0.06);
+    transform: translateY(-1px);
+  }
+  .drop-icon { font-size: 2.8rem; margin-bottom: 10px; opacity: 0.6; }
+  .drop-text { font-size: 0.92rem; color: var(--text-mid); font-weight: 600; line-height: 1.6; }
+  .drop-text span { font-size: 0.8rem; color: var(--text-light); }
+
+  .import-loading {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 20px; margin-top: 14px;
+    background: rgba(37,99,168,0.07);
+    border-radius: var(--radius-sm);
+    color: var(--secondary); font-weight: 700; font-size: 0.92rem;
+  }
+  .spinner {
+    width: 26px; height: 26px;
+    border: 3px solid rgba(37,99,168,0.2);
+    border-top-color: var(--secondary);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .import-result-box {
+    margin-top: 16px;
+    border: 1.5px solid var(--green);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    background: #f4fdf7;
+  }
+  .import-result-title {
+    font-size: 0.92rem; font-weight: 900; color: var(--green);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+  }
+  .extracted-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  .extracted-item {
+    background: #fff; border-radius: 8px;
+    padding: 10px 14px; border: 1px solid #d4edda;
+  }
+  .extracted-item .ei-label { font-size: 0.72rem; color: var(--text-light); font-weight: 700; margin-bottom: 4px; }
+  .extracted-item .ei-val { font-size: 1rem; font-weight: 900; color: var(--primary); }
+  .extracted-item .ei-val.na { color: var(--text-light); font-weight: 400; font-style: italic; font-size: 0.82rem; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="icon">📊</div>
+      <div class="header-title">
+        <h1>منصة تحليل بطاقة نافس</h1>
+        <p>تحليل وتفريغ بيانات الرياضيات والعلوم والقراءة</p>
+      </div>
+    </div>
+  </div></div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('section-input', this)">📝 إدخال البيانات</button>
+    <button class="nav-tab" onclick="showSection('section-result', this)">📊 التحليل والنتائج</button>
+    <button class="nav-tab" onclick="showSection('section-print', this)">🖨️ بطاقة الطباعة</button>
+    <button class="nav-tab" onclick="showSection('section-settings', this)">⚙️ الإعدادات</button>
+  </nav>
+</header>
+
+<!-- ======================== SECTION: INPUT ======================== -->
+<main class="main">
+<div id="section-input" class="section active">
+
+  <!-- School Info -->
+  <div class="card mb-6">
+    <div class="card-title"><span class="icon">🏫</span> معلومات المدرسة</div>
+    <div class="grid-3 mb-4">
+      <div class="field">
+        <label>اسم المدرسة</label>
+        <input type="text" id="schoolName" placeholder="أدخل اسم المدرسة" value="">
+      </div>
+      <div class="field">
+        <label>اسم مدير/مديرة المدرسة</label>
+        <input type="text" id="directorName" placeholder="اسم المدير/المديرة">
+      </div>
+      <div class="field">
+        <label>الصف الدراسي</label>
+        <select id="gradeLevel">
+          <option value="الرابع">الصف الرابع</option>
+          <option value="الخامس">الصف الخامس</option>
+          <option value="السادس" selected>الصف السادس</option>
+          <option value="الثالث">الصف الثالث</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid-4">
+      <div class="field">
+        <label>العام الدراسي</label>
+        <input type="text" id="year" value="2025">
+      </div>
+      <div class="field">
+        <label>إجمالي طلاب الصف</label>
+        <input type="number" id="totalStudents" min="1" value="" placeholder="عدد الطلاب">
+      </div>
+      <div class="field">
+        <label>عدد المختبرين</label>
+        <input type="number" id="testedStudents" min="0" value="" placeholder="المختبرون">
+      </div>
+      <div class="field">
+        <label>المرحلة الدراسية</label>
+        <select id="schoolLevel">
+          <option value="ابتدائية" selected>ابتدائية</option>
+          <option value="متوسطة">متوسطة</option>
+          <option value="ثانوية">ثانوية</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- MATH -->
+  <div class="card mb-6">
+    <div class="domain-header">➕ الرياضيات — توزيع الطلبة على مستويات الأداء</div>
+    <table class="level-table">
+      <thead>
+        <tr>
+          <th>المستوى</th>
+          <th>عدد الطلاب</th>
+          <th>ملاحظات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="level-badge badge-vlow">منخفض جداً</span></td>
+          <td><input type="number" id="math_vlow" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">لا يظهر الحد الأدنى من الأداء المناسب</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-low">منخفض</span></td>
+          <td><input type="number" id="math_low" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء أقل من المعايير المتوقعة</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-mid">متوسط</span></td>
+          <td><input type="number" id="math_mid" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء مناسب على مستوى الصف</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-high">مرتفع</span></td>
+          <td><input type="number" id="math_high" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء متقدم وتميز استثنائي</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="divider"></div>
+    <div class="card-title" style="font-size:0.92rem; margin-bottom:12px;">📐 المجالات الفرعية — الرياضيات</div>
+    <div class="grid-4">
+      <div class="field"><label>الجبر</label><input type="number" id="math_sub1" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+      <div class="field"><label>الأعداد والعمليات</label><input type="number" id="math_sub2" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+      <div class="field"><label>البيانات والاحتمالات</label><input type="number" id="math_sub3" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+      <div class="field"><label>الهندسة والقياس</label><input type="number" id="math_sub4" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+    </div>
+  </div>
+
+  <!-- SCIENCE -->
+  <div class="card mb-6">
+    <div class="domain-header">🔬 العلوم — توزيع الطلبة على مستويات الأداء</div>
+    <table class="level-table">
+      <thead>
+        <tr>
+          <th>المستوى</th>
+          <th>عدد الطلاب</th>
+          <th>ملاحظات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="level-badge badge-vlow">منخفض جداً</span></td>
+          <td><input type="number" id="sci_vlow" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">لا يظهر الحد الأدنى من الأداء المناسب</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-low">منخفض</span></td>
+          <td><input type="number" id="sci_low" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء أقل من المعايير المتوقعة</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-mid">متوسط</span></td>
+          <td><input type="number" id="sci_mid" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء مناسب على مستوى الصف</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-high">مرتفع</span></td>
+          <td><input type="number" id="sci_high" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء متقدم وتميز استثنائي</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="divider"></div>
+    <div class="card-title" style="font-size:0.92rem; margin-bottom:12px;">🧪 المجالات الفرعية — العلوم</div>
+    <div class="grid-3">
+      <div class="field"><label>العلوم الفيزيائية والكيميائية</label><input type="number" id="sci_sub1" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+      <div class="field"><label>علوم الأرض والفلك</label><input type="number" id="sci_sub2" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+      <div class="field"><label>علوم الحياة</label><input type="number" id="sci_sub3" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+    </div>
+  </div>
+
+  <!-- READING -->
+  <div class="card mb-6">
+    <div class="domain-header">📖 القراءة — توزيع الطلبة على مستويات الأداء</div>
+    <table class="level-table">
+      <thead>
+        <tr>
+          <th>المستوى</th>
+          <th>عدد الطلاب</th>
+          <th>ملاحظات</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="level-badge badge-vlow">منخفض جداً</span></td>
+          <td><input type="number" id="read_vlow" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">لا يظهر الحد الأدنى من الأداء المناسب</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-low">منخفض</span></td>
+          <td><input type="number" id="read_low" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء أقل من المعايير المتوقعة</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-mid">متوسط</span></td>
+          <td><input type="number" id="read_mid" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء مناسب على مستوى الصف</td>
+        </tr>
+        <tr>
+          <td><span class="level-badge badge-high">مرتفع</span></td>
+          <td><input type="number" id="read_high" min="0" placeholder="0" oninput="autoCalc()"></td>
+          <td class="text-sm italic" style="color:var(--text-light)">أداء متقدم وتميز استثنائي</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="divider"></div>
+    <div class="card-title" style="font-size:0.92rem; margin-bottom:12px;">📚 المجالات الفرعية — القراءة</div>
+    <div class="grid-2">
+      <div class="field"><label>دلالات الألفاظ / المفردات</label><input type="number" id="read_sub1" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+      <div class="field"><label>استيعاب المقروء</label><input type="number" id="read_sub2" min="0" placeholder="عدد المتقنين" oninput="autoCalc()"></div>
+    </div>
+  </div>
+
+  <!-- Previous Year -->
+  <div class="card mb-6">
+    <div class="card-title"><span class="icon">📅</span> بيانات العام السابق (للمقارنة)</div>
+    <div class="grid-3">
+      <div class="field"><label>متوسط الرياضيات — العام السابق</label><input type="number" id="prev_math" min="0" max="100" placeholder="درجة من 100" step="0.01"></div>
+      <div class="field"><label>متوسط العلوم — العام السابق</label><input type="number" id="prev_sci" min="0" max="100" placeholder="درجة من 100" step="0.01"></div>
+      <div class="field"><label>متوسط القراءة — العام السابق</label><input type="number" id="prev_read" min="0" max="100" placeholder="درجة من 100" step="0.01"></div>
+    </div>
+    <div class="divider"></div>
+    <div class="grid-3">
+      <div class="field"><label>نسبة إتقان الرياضيات — السابق (%)</label><input type="number" id="prev_math_pct" min="0" max="100" placeholder="%" step="0.1"></div>
+      <div class="field"><label>نسبة إتقان العلوم — السابق (%)</label><input type="number" id="prev_sci_pct" min="0" max="100" placeholder="%" step="0.1"></div>
+      <div class="field"><label>نسبة إتقان القراءة — السابق (%)</label><input type="number" id="prev_read_pct" min="0" max="100" placeholder="%" step="0.1"></div>
+    </div>
+  </div>
+
+  <!-- ===== IMPORT NAFIS CARD ===== -->
+  <div class="card mb-6" id="import-card">
+    <div class="card-title"><span class="icon">📥</span> استيراد بيانات تقرير نافس</div>
+
+    <div class="import-tabs">
+      <button class="import-tab active" onclick="switchImportTab('img', this)">🖼️ استيراد من صورة التقرير</button>
+      <button class="import-tab" onclick="switchImportTab('pdf', this)">📄 استيراد من PDF</button>
+      <button class="import-tab" onclick="switchImportTab('excel', this)">📊 استيراد من Excel</button>
+    </div>
+
+    <!-- IMAGE IMPORT -->
+    <div id="import-img-panel" class="import-panel">
+      <div class="import-drop-zone" id="img-drop-zone" onclick="document.getElementById('img-file-input').click()"
+           ondragover="event.preventDefault();this.classList.add('dragover')"
+           ondragleave="this.classList.remove('dragover')"
+           ondrop="handleImgDrop(event)">
+        <div class="drop-icon">🖼️</div>
+        <div class="drop-text">اسحب وأفلت صورة تقرير نافس هنا<br><span>أو انقر لاختيار الصورة</span></div>
+        <input type="file" id="img-file-input" accept="image/*" style="display:none" onchange="handleImgSelect(event)">
+      </div>
+      <div id="img-preview-wrap" style="display:none;margin-top:14px;text-align:center">
+        <img id="img-preview" style="max-width:100%;max-height:280px;border-radius:10px;border:2px solid var(--border);box-shadow:var(--shadow)">
+        <div style="margin-top:10px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="extractFromImage()">🤖 استخراج البيانات بالذكاء الاصطناعي</button>
+          <button class="btn btn-outline btn-sm" onclick="clearImgImport()">✕ إلغاء</button>
+        </div>
+      </div>
+      <div id="img-loading" style="display:none" class="import-loading">
+        <div class="spinner"></div>
+        <span>جارٍ تحليل الصورة بالذكاء الاصطناعي…</span>
+      </div>
+      <div id="img-result-preview" style="display:none" class="import-result-box">
+        <div class="import-result-title">✅ البيانات المستخرجة — راجع وأكد</div>
+        <div id="img-result-content"></div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-success" onclick="applyExtractedData()">✅ تطبيق البيانات على النموذج</button>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('img-result-preview').style.display='none'">✕ إغلاق</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDF IMPORT -->
+    <div id="import-pdf-panel" class="import-panel" style="display:none">
+      <div class="alert alert-info" style="margin-bottom:14px;font-size:0.85rem">
+        <strong>📄 استيراد من ملف PDF:</strong><br>
+        يمكنك رفع تقرير نافس بصيغة PDF وسيقوم الذكاء الاصطناعي باستخراج جميع البيانات تلقائياً.
+      </div>
+      <div class="import-drop-zone" id="pdf-drop-zone" onclick="document.getElementById('pdf-file-input').click()"
+           ondragover="event.preventDefault();this.classList.add('dragover')"
+           ondragleave="this.classList.remove('dragover')"
+           ondrop="handlePdfDrop(event)">
+        <div class="drop-icon">📄</div>
+        <div class="drop-text">اسحب وأفلت ملف PDF هنا<br><span>أو انقر لاختيار الملف (.pdf)</span></div>
+        <input type="file" id="pdf-file-input" accept=".pdf" style="display:none" onchange="handlePdfSelect(event)">
+      </div>
+      <div id="pdf-preview-wrap" style="display:none;margin-top:14px">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 18px;background:var(--light-bg);border-radius:10px;border:1.5px solid var(--border)">
+          <span style="font-size:2rem">📄</span>
+          <div style="flex:1">
+            <div id="pdf-file-name" style="font-weight:800;color:var(--primary);font-size:0.95rem"></div>
+            <div id="pdf-file-size" style="font-size:0.78rem;color:var(--text-light);margin-top:2px"></div>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="clearPdfImport()">✕ إزالة</button>
+        </div>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="extractFromPdf()">🤖 استخراج البيانات بالذكاء الاصطناعي</button>
+        </div>
+      </div>
+      <div id="pdf-loading" style="display:none" class="import-loading">
+        <div class="spinner"></div>
+        <span>جارٍ تحليل ملف PDF بالذكاء الاصطناعي…</span>
+      </div>
+      <div id="pdf-result-preview" style="display:none" class="import-result-box">
+        <div class="import-result-title">✅ البيانات المستخرجة من PDF — راجع وأكد</div>
+        <div id="pdf-result-content"></div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-success" onclick="applyPdfData()">✅ تطبيق البيانات على النموذج</button>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('pdf-result-preview').style.display='none'">✕ إغلاق</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXCEL IMPORT -->
+    <div id="import-excel-panel" class="import-panel" style="display:none">
+      <div class="alert alert-info" style="margin-bottom:14px;font-size:0.85rem">
+        <strong>📋 تنسيق Excel المطلوب:</strong><br>
+        الصف الأول = عناوين | الأعمدة: اسم المدرسة، الصف، العام، إجمالي الطلاب، المختبرون<br>
+        ثم: رياضيات_منخفض_جداً، رياضيات_منخفض، رياضيات_متوسط، رياضيات_مرتفع<br>
+        علوم_منخفض_جداً، علوم_منخفض، علوم_متوسط، علوم_مرتفع<br>
+        قراءة_منخفض_جداً، قراءة_منخفض، قراءة_متوسط، قراءة_مرتفع
+        <br><button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="downloadExcelTemplate()">⬇️ تحميل نموذج Excel</button>
+      </div>
+      <div class="import-drop-zone" id="excel-drop-zone" onclick="document.getElementById('excel-file-input').click()"
+           ondragover="event.preventDefault();this.classList.add('dragover')"
+           ondragleave="this.classList.remove('dragover')"
+           ondrop="handleExcelDrop(event)">
+        <div class="drop-icon">📊</div>
+        <div class="drop-text">اسحب وأفلت ملف Excel هنا<br><span>أو انقر لاختيار الملف (.xlsx, .xls, .csv)</span></div>
+        <input type="file" id="excel-file-input" accept=".xlsx,.xls,.csv" style="display:none" onchange="handleExcelSelect(event)">
+      </div>
+      <div id="excel-loading" style="display:none" class="import-loading">
+        <div class="spinner"></div>
+        <span>جارٍ قراءة الملف…</span>
+      </div>
+      <div id="excel-result-preview" style="display:none" class="import-result-box">
+        <div class="import-result-title">✅ البيانات المقروءة من Excel</div>
+        <div id="excel-result-content"></div>
+        <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-success" onclick="applyExcelData()">✅ تطبيق على النموذج</button>
+          <button class="btn btn-outline btn-sm" onclick="document.getElementById('excel-result-preview').style.display='none'">✕ إغلاق</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="flex gap-3 flex-wrap">
+    <button class="btn btn-primary btn-lg" onclick="generateResults()">📊 توليد التحليل والنتائج</button>
+    <button class="btn btn-outline" onclick="clearAll()">🗑️ مسح الكل</button>
+    <button class="btn btn-outline" onclick="loadSample()">📋 تحميل بيانات نموذجية</button>
+  </div>
+</div>
+
+<!-- ======================== SECTION: RESULTS ======================== -->
+<div id="section-result" class="section">
+
+  <div class="section-header">
+    <h2><span>📊</span> لوحة التحليل والنتائج</h2>
+    <div class="flex gap-2">
+      <button class="btn btn-outline btn-sm" onclick="showSection('section-print', document.querySelectorAll('.nav-tab')[2])">🖨️ طباعة البطاقة</button>
+    </div>
+  </div>
+
+  <!-- School Summary -->
+  <div class="card mb-6" id="result-school-header">
+    <div class="flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <div style="font-size:1.3rem;font-weight:900;color:var(--primary)" id="res-school-name">—</div>
+        <div style="font-size:0.85rem;color:var(--text-light)" id="res-school-meta">—</div>
+      </div>
+      <div class="flex gap-3 flex-wrap">
+        <div style="text-align:center;padding:10px 20px;background:var(--light-bg);border-radius:10px">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--primary)" id="res-total">—</div>
+          <div style="font-size:0.75rem;color:var(--text-light)">إجمالي الطلاب</div>
+        </div>
+        <div style="text-align:center;padding:10px 20px;background:var(--light-bg);border-radius:10px">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--secondary)" id="res-tested">—</div>
+          <div style="font-size:0.75rem;color:var(--text-light)">المختبرون</div>
+        </div>
+        <div style="text-align:center;padding:10px 20px;background:var(--light-bg);border-radius:10px">
+          <div style="font-size:1.4rem;font-weight:900;color:var(--accent)" id="res-pct-tested">—</div>
+          <div style="font-size:0.75rem;color:var(--text-light)">نسبة الاختبار</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="kpi-row mb-6">
+    <div class="kpi-card">
+      <div class="kpi-icon">➕</div>
+      <div class="kpi-value" id="kpi-math-mastery">—</div>
+      <div class="kpi-label">إتقان الرياضيات</div>
+      <div class="kpi-sub" id="kpi-math-change"></div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-icon">🔬</div>
+      <div class="kpi-value" id="kpi-sci-mastery">—</div>
+      <div class="kpi-label">إتقان العلوم</div>
+      <div class="kpi-sub" id="kpi-sci-change"></div>
+    </div>
+    <div class="kpi-card orange">
+      <div class="kpi-icon">📖</div>
+      <div class="kpi-value" id="kpi-read-mastery">—</div>
+      <div class="kpi-label">إتقان القراءة</div>
+      <div class="kpi-sub" id="kpi-read-change"></div>
+    </div>
+    <div class="kpi-card red">
+      <div class="kpi-icon">🏆</div>
+      <div class="kpi-value" id="kpi-all-mastery">—</div>
+      <div class="kpi-label">إتقان المجالات الثلاثة معاً</div>
+      <div class="kpi-sub" id="kpi-all-sub"></div>
+    </div>
+  </div>
+
+  <!-- Analysis Text -->
+  <div id="res-analysis-text" class="mb-6"></div>
+
+  <!-- Domain Results -->
+  <div class="domain-result-grid mb-6">
+
+    <!-- MATH RESULT -->
+    <div class="domain-result-card">
+      <div class="domain-result-title">➕ الرياضيات</div>
+      <div id="math-levels-chart"></div>
+      <div class="divider"></div>
+      <div style="font-size:0.8rem;font-weight:800;color:var(--primary);margin-bottom:8px">المجالات الفرعية</div>
+      <table class="sub-table" id="math-sub-table">
+        <thead><tr><th>المجال</th><th>المتقنون</th><th>النسبة</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- SCIENCE RESULT -->
+    <div class="domain-result-card">
+      <div class="domain-result-title">🔬 العلوم</div>
+      <div id="sci-levels-chart"></div>
+      <div class="divider"></div>
+      <div style="font-size:0.8rem;font-weight:800;color:var(--primary);margin-bottom:8px">المجالات الفرعية</div>
+      <table class="sub-table" id="sci-sub-table">
+        <thead><tr><th>المجال</th><th>المتقنون</th><th>النسبة</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <!-- READING RESULT -->
+    <div class="domain-result-card">
+      <div class="domain-result-title">📖 القراءة</div>
+      <div id="read-levels-chart"></div>
+      <div class="divider"></div>
+      <div style="font-size:0.8rem;font-weight:800;color:var(--primary);margin-bottom:8px">المجالات الفرعية</div>
+      <table class="sub-table" id="read-sub-table">
+        <thead><tr><th>المجال</th><th>المتقنون</th><th>النسبة</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Mastery All Three -->
+  <div class="card mb-6">
+    <div class="card-title"><span class="icon">🏆</span> الطلبة الذين اجتازوا مستوى الحد الأدنى للإتقان في المجالات الثلاثة معاً</div>
+    <div class="grid-2">
+      <div class="mastery-gauge-wrap">
+        <div class="mastery-number" id="all3-pct">—</div>
+        <div class="mastery-label">نسبة المتقنين في الثلاثة مجالات</div>
+        <div style="margin-top:8px" id="all3-count-label"></div>
+      </div>
+      <div>
+        <div id="all3-analysis" class="alert alert-info" style="margin-bottom:10px">—</div>
+        <div id="all3-target-info"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Table -->
+  <div class="card mb-6">
+    <div class="card-title"><span class="icon">📋</span> جدول الملخص الشامل</div>
+    <div style="overflow-x:auto">
+      <table class="level-table" id="summary-table">
+        <thead>
+          <tr>
+            <th>المجال</th>
+            <th>منخفض جداً</th>
+            <th>منخفض</th>
+            <th>متوسط</th>
+            <th>مرتفع</th>
+            <th>الإجمالي</th>
+            <th>نسبة الإتقان</th>
+            <th>التغير</th>
+          </tr>
+        </thead>
+        <tbody id="summary-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- ======================== SECTION: PRINT ======================== -->
+<div id="section-print" class="section">
+  <div class="section-header">
+    <h2><span>🖨️</span> بطاقة التقرير للطباعة</h2>
+    <button class="btn btn-primary btn-sm" onclick="window.print()">🖨️ طباعة</button>
+  </div>
+  <div class="print-preview" id="print-card">
+
+    <div class="print-school-header">
+      <div style="font-size:0.82rem;color:var(--text-light);margin-bottom:4px">الإدارة العامة للتعليم</div>
+      <h2 id="print-school-name">اسم المدرسة</h2>
+    <p id="print-school-sub">—</p>
+    </div>
+
+    <div class="print-meta-grid">
+      <div class="print-meta-item"><strong id="print-grade">—</strong>الصف</div>
+      <div class="print-meta-item"><strong id="print-year">—</strong>العام الدراسي</div>
+      <div class="print-meta-item"><strong id="print-total">—</strong>إجمالي الطلاب</div>
+      <div class="print-meta-item"><strong id="print-tested">—</strong>المختبرون</div>
+    </div>
+
+    <!-- Mastery Big Box -->
+    <div style="background:linear-gradient(120deg,var(--primary),var(--secondary));color:#fff;border-radius:12px;padding:20px;margin-bottom:20px;text-align:center">
+      <div style="font-size:0.85rem;opacity:0.85;margin-bottom:6px">نسبة الطلبة الذين اجتازوا مستوى الحد الأدنى للإتقان في المجالات الثلاثة معاً</div>
+      <div style="font-size:3rem;font-weight:900;line-height:1" id="print-all3">—</div>
+      <div style="font-size:0.82rem;opacity:0.8;margin-top:4px" id="print-all3-sub">—</div>
+    </div>
+
+    <!-- Domain Summary -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px">
+      <div style="background:var(--light-bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:0.85rem;font-weight:800;color:var(--primary);margin-bottom:8px">➕ الرياضيات</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--secondary)" id="print-math-mastery">—</div>
+        <div style="font-size:0.72rem;color:var(--text-light)">نسبة الإتقان</div>
+        <div id="print-math-dist" style="margin-top:8px;font-size:0.72rem"></div>
+      </div>
+      <div style="background:var(--light-bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:0.85rem;font-weight:800;color:var(--primary);margin-bottom:8px">🔬 العلوم</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--green)" id="print-sci-mastery">—</div>
+        <div style="font-size:0.72rem;color:var(--text-light)">نسبة الإتقان</div>
+        <div id="print-sci-dist" style="margin-top:8px;font-size:0.72rem"></div>
+      </div>
+      <div style="background:var(--light-bg);border-radius:10px;padding:14px;text-align:center">
+        <div style="font-size:0.85rem;font-weight:800;color:var(--primary);margin-bottom:8px">📖 القراءة</div>
+        <div style="font-size:1.5rem;font-weight:900;color:var(--accent)" id="print-read-mastery">—</div>
+        <div style="font-size:0.72rem;color:var(--text-light)">نسبة الإتقان</div>
+        <div id="print-read-dist" style="margin-top:8px;font-size:0.72rem"></div>
+      </div>
+    </div>
+
+    <!-- Sub-domains -->
+    <div style="margin-bottom:16px">
+      <div style="font-size:0.88rem;font-weight:800;color:var(--primary);margin-bottom:8px">نسبة الطلبة الذين اجتازوا الحد الأدنى للإتقان في المجالات الفرعية</div>
+      <div id="print-subdomains"></div>
+    </div>
+
+    <!-- Analysis Note -->
+    <div id="print-analysis-note" class="alert alert-info" style="font-size:0.82rem;"></div>
+
+  </div>
+</div>
+
+<!-- ======================== SECTION: SETTINGS ======================== -->
+<div id="section-settings" class="section">
+  <div class="section-header">
+    <h2><span>⚙️</span> الإعدادات والأهداف</h2>
+  </div>
+
+  <div class="card settings-card mb-6">
+    <div class="card-title"><span class="icon">🎯</span> أهداف 2030 ومستهدفات نافس</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="target-row">
+        <label>هدف إتقان الرياضيات 2030 (%):</label>
+        <input type="number" id="target_math_2030" value="80" min="0" max="100">
+        <span class="text-sm" style="color:var(--text-light)">المستهدف العام للمملكة</span>
+      </div>
+      <div class="target-row">
+        <label>هدف إتقان العلوم 2030 (%):</label>
+        <input type="number" id="target_sci_2030" value="85" min="0" max="100">
+        <span class="text-sm" style="color:var(--text-light)">المستهدف العام للمملكة</span>
+      </div>
+      <div class="target-row">
+        <label>هدف إتقان القراءة 2030 (%):</label>
+        <input type="number" id="target_read_2030" value="82" min="0" max="100">
+        <span class="text-sm" style="color:var(--text-light)">المستهدف العام للمملكة</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card settings-card mb-6">
+    <div class="card-title"><span class="icon">🏛️</span> المقارنة المرجعية</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="target-row">
+        <label>متوسط إدارة التعليم — رياضيات (%):</label>
+        <input type="number" id="ref_dept_math" placeholder="%" min="0" max="100" step="0.1">
+      </div>
+      <div class="target-row">
+        <label>متوسط إدارة التعليم — علوم (%):</label>
+        <input type="number" id="ref_dept_sci" placeholder="%" min="0" max="100" step="0.1">
+      </div>
+      <div class="target-row">
+        <label>متوسط إدارة التعليم — قراءة (%):</label>
+        <input type="number" id="ref_dept_read" placeholder="%" min="0" max="100" step="0.1">
+      </div>
+      <div class="divider"></div>
+      <div class="target-row">
+        <label>متوسط المملكة — رياضيات (%):</label>
+        <input type="number" id="ref_ksa_math" placeholder="%" min="0" max="100" step="0.1">
+      </div>
+      <div class="target-row">
+        <label>متوسط المملكة — علوم (%):</label>
+        <input type="number" id="ref_ksa_sci" placeholder="%" min="0" max="100" step="0.1">
+      </div>
+      <div class="target-row">
+        <label>متوسط المملكة — قراءة (%):</label>
+        <input type="number" id="ref_ksa_read" placeholder="%" min="0" max="100" step="0.1">
+      </div>
+    </div>
+  </div>
+
+  <div class="card settings-card mb-6">
+    <div class="card-title"><span class="icon">🏫</span> بيانات المدرسة الافتراضية</div>
+    <div class="grid-2">
+      <div class="field">
+        <label>النوع الاجتماعي</label>
+        <select id="set_gender">
+          <option value="بنات" selected>بنات</option>
+          <option value="بنين">بنين</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>نوع المدرسة</label>
+        <select id="set_type">
+          <option value="حكومي" selected>حكومي</option>
+          <option value="أهلي">أهلي</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>المنطقة / المدينة</label>
+        <input type="text" id="set_region" value="">
+      </div>
+      <div class="field">
+        <label>إدارة التعليم</label>
+        <input type="text" id="set_dept" value="">
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Footer credit -->
+  <div class="alert alert-info" style="text-align:center;font-size:0.88rem;">
+    <strong>تصميم د/فواز</strong> &nbsp;|&nbsp;
+    تفضل للمزيد هنا: <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--secondary);font-weight:700;">https://t.me/TAqhjT3MFVE1Yzk0</a>
+  </div>
+
+</div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div>منصة تحليل بطاقة نافس</div>
+  <div style="margin-top:4px">
+    تصميم <strong>د/فواز</strong> &nbsp;|&nbsp;
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد هنا</a>
+  </div>
+</footer>
+
+<script>
+// ===================================================================
+//  UTILITY
+// ===================================================================
+function v(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
+function vStr(id) { return document.getElementById(id)?.value?.trim() || ''; }
+function pct(num, den) { if (!den) return 0; return (num / den) * 100; }
+function fmt(n, d=1) { return isNaN(n) ? '—' : n.toFixed(d); }
+function fmtPct(n, d=1) { if (isNaN(n)) return '—'; return n.toFixed(d) + '%'; }
+
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+function autoCalc() {
+  // live feedback while typing (lightweight)
+}
+
+function changeBadge(curr, prev) {
+  if (!prev || isNaN(prev)) return '';
+  const diff = curr - prev;
+  const sign = diff > 0 ? '+' : '';
+  const cls = diff > 0 ? 'change-up' : diff < 0 ? 'change-down' : 'change-same';
+  const arrow = diff > 0 ? '↑' : diff < 0 ? '↓' : '—';
+  return `<span class="change-badge ${cls}">${arrow} ${sign}${fmt(diff)}%</span>`;
+}
+
+// ===================================================================
+//  LEVEL DISTRIBUTION CHART (Pure CSS/HTML bars)
+// ===================================================================
+function buildChart(containerId, levels, tested) {
+  const colors = ['#c0392b','#e67e22','#e8a020','#27ae60'];
+  const labels = ['منخفض جداً','منخفض','متوسط','مرتفع'];
+  const total = levels.reduce((a,b)=>a+b,0) || 1;
+
+  const bars = levels.map((n,i) => {
+    const p = pct(n, tested || total);
+    const height = Math.max(4, (p / 100) * 160);
+    return `<div class="chart-bar-group">
+      <div class="chart-bar" style="height:${height}px;background:${colors[i]};">
+        <span class="chart-bar-val">${fmt(p)}%</span>
+      </div>
+      <div class="chart-bar-label">${labels[i]}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById(containerId).innerHTML =
+    `<div class="chart-container"><div class="chart-bars">${bars}</div></div>`;
+}
+
+// ===================================================================
+//  SUB-DOMAIN TABLE
+// ===================================================================
+function buildSubTable(tableId, domains, tested) {
+  const tbody = document.querySelector(`#${tableId} tbody`);
+  tbody.innerHTML = '';
+  domains.forEach(d => {
+    const p = pct(d.count, tested);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${d.name}</td>
+      <td style="text-align:center;font-weight:700">${d.count > 0 ? fmt(d.count,2) : '—'}</td>
+      <td style="text-align:center">
+        <div class="progress-track" style="width:80px;display:inline-block">
+          <div class="progress-fill fill-mastery" style="width:${Math.min(100,p)}%"></div>
+        </div>
+        <span style="margin-right:6px;font-size:0.8rem;font-weight:700">${d.count > 0 ? fmtPct(p) : '—'}</span>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===================================================================
+//  MAIN GENERATE FUNCTION
+// ===================================================================
+function generateResults() {
+  const tested = v('testedStudents') || v('totalStudents');
+  const total  = v('totalStudents') || tested;
+  if (!tested) { alert('يرجى إدخال عدد المختبرين أولاً'); return; }
+
+  // Raw levels
+  const mathLvl  = [v('math_vlow'), v('math_low'),  v('math_mid'),  v('math_high')];
+  const sciLvl   = [v('sci_vlow'),  v('sci_low'),   v('sci_mid'),   v('sci_high')];
+  const readLvl  = [v('read_vlow'), v('read_low'),  v('read_mid'),  v('read_high')];
+
+  const mathMastery  = mathLvl[2] + mathLvl[3];
+  const sciMastery   = sciLvl[2]  + sciLvl[3];
+  const readMastery  = readLvl[2] + readLvl[3];
+
+  const mathPct  = pct(mathMastery, tested);
+  const sciPct   = pct(sciMastery, tested);
+  const readPct  = pct(readMastery, tested);
+
+  // Previous year
+  const prevMathPct  = v('prev_math_pct');
+  const prevSciPct   = v('prev_sci_pct');
+  const prevReadPct  = v('prev_read_pct');
+
+  // All three mastery = students who passed in all 3 (approximation: minimum ratio applied)
+  const allThreePct  = Math.min(mathPct, sciPct, readPct);
+  const allThreeCount = (allThreePct / 100) * tested;
+
+  // Sub-domains
+  const mathSubs = [
+    { name: 'الجبر', count: v('math_sub1') },
+    { name: 'الأعداد والعمليات', count: v('math_sub2') },
+    { name: 'البيانات والاحتمالات', count: v('math_sub3') },
+    { name: 'الهندسة والقياس', count: v('math_sub4') },
+  ];
+  const sciSubs = [
+    { name: 'العلوم الفيزيائية والكيميائية', count: v('sci_sub1') },
+    { name: 'علوم الأرض والفلك', count: v('sci_sub2') },
+    { name: 'علوم الحياة', count: v('sci_sub3') },
+  ];
+  const readSubs = [
+    { name: 'دلالات الألفاظ / المفردات', count: v('read_sub1') },
+    { name: 'استيعاب المقروء', count: v('read_sub2') },
+  ];
+
+  // ---- UPDATE RESULTS SECTION ----
+  const school = vStr('schoolName') || 'المدرسة';
+  const grade  = vStr('gradeLevel');
+  const year   = vStr('year');
+  const dir    = vStr('directorName');
+  const level  = vStr('schoolLevel');
+  const gender = vStr('set_gender') || 'بنات';
+  const type   = vStr('set_type') || 'حكومي';
+  const region = vStr('set_region') || '';
+  const dept   = vStr('set_dept') || '';
+
+  // School header
+  document.getElementById('res-school-name').textContent = school;
+  document.getElementById('res-school-meta').textContent =
+    `${level} | ${gender} | ${type} | ${region} | الصف: ${grade} | العام: ${year}${dir ? ' | المدير: '+dir : ''}`;
+  document.getElementById('res-total').textContent = total;
+  document.getElementById('res-tested').textContent = tested;
+  document.getElementById('res-pct-tested').textContent = fmtPct(pct(tested,total));
+
+  // KPIs
+  document.getElementById('kpi-math-mastery').textContent = fmtPct(mathPct);
+  document.getElementById('kpi-sci-mastery').textContent  = fmtPct(sciPct);
+  document.getElementById('kpi-read-mastery').textContent = fmtPct(readPct);
+  document.getElementById('kpi-all-mastery').textContent  = fmtPct(allThreePct);
+  document.getElementById('kpi-all-sub').innerHTML = `≈ ${fmt(allThreeCount,1)} طالب`;
+
+  if (prevMathPct) document.getElementById('kpi-math-change').innerHTML = changeBadge(mathPct, prevMathPct);
+  if (prevSciPct)  document.getElementById('kpi-sci-change').innerHTML  = changeBadge(sciPct, prevSciPct);
+  if (prevReadPct) document.getElementById('kpi-read-change').innerHTML = changeBadge(readPct, prevReadPct);
+
+  // Analysis Text
+  const analysisHTML = buildAnalysisText(school, grade, tested, total,
+    mathPct, sciPct, readPct, allThreePct, allThreeCount, level);
+  document.getElementById('res-analysis-text').innerHTML = analysisHTML;
+
+  // Charts
+  buildChart('math-levels-chart', mathLvl, tested);
+  buildChart('sci-levels-chart',  sciLvl,  tested);
+  buildChart('read-levels-chart', readLvl, tested);
+
+  // Sub tables
+  buildSubTable('math-sub-table', mathSubs, tested);
+  buildSubTable('sci-sub-table',  sciSubs,  tested);
+  buildSubTable('read-sub-table', readSubs, tested);
+
+  // All-three summary
+  document.getElementById('all3-pct').textContent = fmtPct(allThreePct);
+  document.getElementById('all3-count-label').innerHTML =
+    `<span style="font-size:0.9rem;color:var(--text-mid)">أي ما يقارب <strong>${fmt(allThreeCount,1)}</strong> طالب من أصل ${tested} مختبر</span>`;
+
+  const target2030Math = v('target_math_2030') || 80;
+  const target2030Sci  = v('target_sci_2030')  || 85;
+  const target2030Read = v('target_read_2030') || 82;
+  const gapMath = target2030Math - mathPct;
+  const gapSci  = target2030Sci  - sciPct;
+  const gapRead = target2030Read - readPct;
+
+  let all3Text = `تشير نتائج المدرسة أن <strong>(${fmtPct(allThreePct)})</strong> من إجمالي الطلبة المختبرين اجتازوا مستوى الحد الأدنى للإتقان في المجالات العامة الثلاثة معاً (الرياضيات، العلوم، والقراءة) للصف ${grade} ${level}؛ ذلك يعني أن <strong>(${fmt(allThreeCount,1)})</strong> من طلاب المدرسة حصلوا على مستوى تحصيلي ما بين مرتفع ومتوسط في كل مجال من المجالات الثلاثة.`;
+  document.getElementById('all3-analysis').innerHTML = all3Text;
+
+  const targetGapMax = Math.max(gapMath, gapSci, gapRead);
+  if (targetGapMax > 0) {
+    document.getElementById('all3-target-info').innerHTML =
+      `<div class="alert alert-warn">المسافة المتبقية لتحقيق مستهدفات 2030: الرياضيات <strong>${fmt(gapMath)}%</strong> | العلوم <strong>${fmt(gapSci)}%</strong> | القراءة <strong>${fmt(gapRead)}%</strong></div>`;
+  } else {
+    document.getElementById('all3-target-info').innerHTML =
+      `<div class="alert alert-success">🎉 المدرسة تجاوزت جميع مستهدفات نافس 2030 في المجالات الثلاثة!</div>`;
+  }
+
+  // Summary table
+  buildSummaryTable(mathLvl, sciLvl, readLvl, tested, mathPct, sciPct, readPct, prevMathPct, prevSciPct, prevReadPct);
+
+  // Print card
+  buildPrintCard(school, grade, year, total, tested, level, gender, type, region, dept,
+    mathPct, sciPct, readPct, allThreePct, allThreeCount,
+    mathLvl, sciLvl, readLvl, mathSubs, sciSubs, readSubs, all3Text);
+
+  // Switch to results tab
+  showSection('section-result', document.querySelectorAll('.nav-tab')[1]);
+}
+
+// ===================================================================
+//  ANALYSIS TEXT BLOCK
+// ===================================================================
+function buildAnalysisText(school, grade, tested, total, mathPct, sciPct, readPct, allPct, allCount, level) {
+  const weakDomains = [];
+  const strongDomains = [];
+  if (mathPct < 50) weakDomains.push('الرياضيات'); else strongDomains.push('الرياضيات');
+  if (sciPct  < 50) weakDomains.push('العلوم');    else strongDomains.push('العلوم');
+  if (readPct < 50) weakDomains.push('القراءة');   else strongDomains.push('القراءة');
+
+  const overallLevel = allPct >= 70 ? 'جيد' : allPct >= 50 ? 'متوسط' : 'يحتاج دعماً';
+
+  let html = `<div class="alert alert-info">
+    <strong>📝 التحليل الإجمالي:</strong><br>
+    تشير نتائج اختبار نافس لصف ${grade} ${level} في مدرسة "${school}" إلى أن نسبة الإتقان الكلية في المجالات الثلاثة بلغت <strong>${fmtPct(allPct)}</strong>، وهو مستوى <strong>${overallLevel}</strong>.`;
+
+  if (strongDomains.length)
+    html += ` تتميز المدرسة في مجال <strong>${strongDomains.join(' و')}</strong>`;
+  if (weakDomains.length)
+    html += `، وتحتاج إلى تعزيز مجال <strong>${weakDomains.join(' و')}</strong>`;
+
+  html += `.</div>`;
+
+  if (weakDomains.length > 0) {
+    html += `<div class="alert alert-warn">
+      <strong>⚠️ توصيات:</strong> يُنصح بتركيز الجهود التطويرية على مجال(ات) <strong>${weakDomains.join(' و')}</strong> من خلال برامج دعم مكثفة للطلبة في مستويي (منخفض جداً) و(منخفض)، مع وضع خطط علاجية واضحة وفق مؤشرات بطاقة نافس.
+    </div>`;
+  }
+
+  if (allPct >= 70) {
+    html += `<div class="alert alert-success">
+      <strong>🏆 إنجاز مميز:</strong> تتقدم المدرسة بمستوى أداء لافت يعكس جهود هيئة التدريس والقيادة المدرسية في رفع مستوى التحصيل الأكاديمي نحو أهداف رؤية 2030.
+    </div>`;
+  }
+
+  return html;
+}
+
+// ===================================================================
+//  SUMMARY TABLE
+// ===================================================================
+function buildSummaryTable(mL, sL, rL, tested, mPct, sPct, rPct, pmPct, psPct, prPct) {
+  const tbody = document.getElementById('summary-tbody');
+  tbody.innerHTML = '';
+
+  const rows = [
+    { name: '➕ الرياضيات', levels: mL, mastery: mPct, prev: pmPct },
+    { name: '🔬 العلوم',    levels: sL, mastery: sPct, prev: psPct },
+    { name: '📖 القراءة',   levels: rL, mastery: rPct, prev: prPct },
+  ];
+
+  rows.forEach(r => {
+    const total = r.levels.reduce((a,b)=>a+b,0);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td style="font-weight:800">${r.name}</td>
+      <td style="text-align:center;color:var(--accent2);font-weight:700">${fmt(r.levels[0],2)} (${fmtPct(pct(r.levels[0],tested))})</td>
+      <td style="text-align:center;color:#e67e22;font-weight:700">${fmt(r.levels[1],2)} (${fmtPct(pct(r.levels[1],tested))})</td>
+      <td style="text-align:center;color:var(--accent);font-weight:700">${fmt(r.levels[2],2)} (${fmtPct(pct(r.levels[2],tested))})</td>
+      <td style="text-align:center;color:var(--green);font-weight:700">${fmt(r.levels[3],2)} (${fmtPct(pct(r.levels[3],tested))})</td>
+      <td style="text-align:center;font-weight:800">${total > 0 ? fmt(total,2) : '—'}</td>
+      <td style="text-align:center;font-weight:900;color:var(--primary)">${fmtPct(r.mastery)}</td>
+      <td style="text-align:center">${r.prev ? changeBadge(r.mastery, r.prev) : '—'}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// ===================================================================
+//  PRINT CARD BUILD
+// ===================================================================
+function buildPrintCard(school, grade, year, total, tested, level, gender, type, region, dept,
+  mPct, sPct, rPct, allPct, allCount, mL, sL, rL, mathSubs, sciSubs, readSubs, all3Text) {
+
+  document.getElementById('print-school-name').textContent = school || 'اسم المدرسة';
+  document.getElementById('print-school-sub').textContent =
+    `${level} | ${gender} | ${type} | ${region}`;
+  document.getElementById('print-grade').textContent    = grade;
+  document.getElementById('print-year').textContent     = year;
+  document.getElementById('print-total').textContent    = total;
+  document.getElementById('print-tested').textContent   = tested;
+  document.getElementById('print-all3').textContent     = fmtPct(allPct);
+  document.getElementById('print-all3-sub').textContent =
+    `يعادل ≈ ${fmt(allCount,1)} طالب من أصل ${tested} مختبر`;
+
+  document.getElementById('print-math-mastery').textContent = fmtPct(mPct);
+  document.getElementById('print-sci-mastery').textContent  = fmtPct(sPct);
+  document.getElementById('print-read-mastery').textContent = fmtPct(rPct);
+
+  const makeDist = (levels, tested) => {
+    const labels = ['منخفض جداً','منخفض','متوسط','مرتفع'];
+    const colors = ['#c0392b','#e67e22','#e8a020','#27ae60'];
+    return levels.map((n,i) => n > 0 ?
+      `<span style="color:${colors[i]};font-weight:700">${labels[i]}: ${fmtPct(pct(n,tested))}</span>`
+      : '').filter(Boolean).join(' | ');
+  };
+  document.getElementById('print-math-dist').innerHTML = makeDist(mL, tested);
+  document.getElementById('print-sci-dist').innerHTML  = makeDist(sL, tested);
+  document.getElementById('print-read-dist').innerHTML = makeDist(rL, tested);
+
+  const allSubs = [
+    ...mathSubs.map(s => ({ ...s, domain: 'رياضيات' })),
+    ...sciSubs.map(s  => ({ ...s, domain: 'علوم' })),
+    ...readSubs.map(s => ({ ...s, domain: 'قراءة' })),
+  ].filter(s => s.count > 0);
+
+  if (allSubs.length) {
+    const bars = allSubs.map(s => {
+      const p = pct(s.count, tested);
+      return `<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <div style="width:120px;font-size:0.75rem;color:var(--text-mid);text-align:right">${s.name}</div>
+        <div style="flex:1;background:#e9eef4;border-radius:6px;height:16px;overflow:hidden">
+          <div style="width:${Math.min(100,p)}%;height:100%;background:linear-gradient(90deg,var(--secondary),var(--green));border-radius:6px"></div>
+        </div>
+        <div style="width:50px;text-align:left;font-size:0.78rem;font-weight:800;color:var(--primary)">${fmtPct(p)}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('print-subdomains').innerHTML = bars;
+  }
+
+  document.getElementById('print-analysis-note').innerHTML = all3Text;
+}
+
+// ===================================================================
+//  LOAD SAMPLE DATA
+// ===================================================================
+function loadSample() {
+  // بيانات نموذجية للتجربة — أرقام فقط
+  document.getElementById('totalStudents').value  = '50';
+  document.getElementById('testedStudents').value = '48';
+  // Math
+  document.getElementById('math_vlow').value = '10';
+  document.getElementById('math_low').value  = '15';
+  document.getElementById('math_mid').value  = '14';
+  document.getElementById('math_high').value = '9';
+  document.getElementById('math_sub1').value = '8';
+  document.getElementById('math_sub2').value = '7';
+  document.getElementById('math_sub3').value = '5';
+  document.getElementById('math_sub4').value = '6';
+  // Science
+  document.getElementById('sci_vlow').value = '6';
+  document.getElementById('sci_low').value  = '4';
+  document.getElementById('sci_mid').value  = '28';
+  document.getElementById('sci_high').value = '10';
+  document.getElementById('sci_sub1').value = '10';
+  document.getElementById('sci_sub2').value = '4';
+  document.getElementById('sci_sub3').value = '12';
+  // Reading
+  document.getElementById('read_vlow').value = '4';
+  document.getElementById('read_low').value  = '7';
+  document.getElementById('read_mid').value  = '20';
+  document.getElementById('read_high').value = '17';
+  document.getElementById('read_sub1').value = '13';
+  document.getElementById('read_sub2').value = '15';
+}
+
+function clearAll() {
+  document.querySelectorAll('input[type=number], input[type=text]').forEach(el => {
+    if (!['year','set_region','set_dept','target_math_2030','target_sci_2030','target_read_2030'].includes(el.id))
+      el.value = '';
+  });
+}
+
+// Form opens blank — enter your own data
+
+// ===================================================================
+//  IMPORT TABS
+// ===================================================================
+function switchImportTab(tab, btn) {
+  document.querySelectorAll('.import-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('import-img-panel').style.display   = tab === 'img'   ? '' : 'none';
+  document.getElementById('import-pdf-panel').style.display   = tab === 'pdf'   ? '' : 'none';
+  document.getElementById('import-excel-panel').style.display = tab === 'excel' ? '' : 'none';
+}
+
+
+// ===================================================================
+//  PDF IMPORT — AI EXTRACTION
+// ===================================================================
+let _pdfBase64 = null;
+let _pdfExtractedData = null;
+
+function handlePdfDrop(e) {
+  e.preventDefault();
+  document.getElementById('pdf-drop-zone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') loadPdfPreview(file);
+  else showPdfError('الملف المحدد ليس PDF. الرجاء اختيار ملف .pdf');
+}
+
+function handlePdfSelect(e) {
+  const file = e.target.files[0];
+  if (file) loadPdfPreview(file);
+}
+
+function loadPdfPreview(file) {
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    _pdfBase64 = ev.target.result.split(',')[1];
+    document.getElementById('pdf-file-name').textContent = file.name;
+    document.getElementById('pdf-file-size').textContent = (file.size / 1024).toFixed(1) + ' KB';
+    document.getElementById('pdf-preview-wrap').style.display = '';
+    document.getElementById('pdf-result-preview').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearPdfImport() {
+  _pdfBase64 = null;
+  _pdfExtractedData = null;
+  document.getElementById('pdf-preview-wrap').style.display = 'none';
+  document.getElementById('pdf-file-input').value = '';
+  document.getElementById('pdf-result-preview').style.display = 'none';
+}
+
+async function extractFromPdf() {
+  if (!_pdfBase64) return;
+  document.getElementById('pdf-loading').style.display = 'flex';
+  document.getElementById('pdf-result-preview').style.display = 'none';
+
+  const prompt = `أنت خبير في قراءة تقارير نافس التعليمية. استخرج البيانات التالية من ملف PDF وأعدها بصيغة JSON فقط بدون أي نص إضافي أو backticks:
+{
+  "schoolName": "اسم المدرسة",
+  "grade": "الصف (مثل: السادس)",
+  "year": "العام الدراسي (مثل: 2025)",
+  "total": عدد إجمالي الطلاب كرقم,
+  "tested": عدد المختبرين كرقم,
+  "math": { "vlow": %, "low": %, "mid": %, "high": % },
+  "sci":  { "vlow": %, "low": %, "mid": %, "high": % },
+  "read": { "vlow": %, "low": %, "mid": %, "high": % },
+  "mathMastery": نسبة الإتقان في الرياضيات كرقم عشري,
+  "sciMastery":  نسبة الإتقان في العلوم كرقم عشري,
+  "readMastery": نسبة الإتقان في القراءة كرقم عشري
+}
+القيم في math/sci/read هي النسب المئوية (%). إذا لم تجد قيمة أدخل null. أعد JSON فقط.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'document',
+              source: { type: 'base64', media_type: 'application/pdf', data: _pdfBase64 }
+            },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message || 'API error');
+    const raw = data.content.map(c => c.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    _pdfExtractedData = JSON.parse(clean);
+    renderPdfExtractedPreview(_pdfExtractedData);
+  } catch(err) {
+    showPdfError('تعذّر استخراج البيانات من PDF. تأكد من أن الملف هو تقرير نافس. (' + err.message + ')');
+  }
+  document.getElementById('pdf-loading').style.display = 'none';
+}
+
+function renderPdfExtractedPreview(d) {
+  const f  = v => v != null ? v : '—';
+  const fp = v => v != null ? v + '%' : '—';
+  const items = [
+    { label: 'اسم المدرسة',           val: f(d.schoolName) },
+    { label: 'الصف',                   val: f(d.grade) },
+    { label: 'العام الدراسي',          val: f(d.year) },
+    { label: 'إجمالي الطلاب',          val: f(d.total) },
+    { label: 'المختبرون',              val: f(d.tested) },
+    { label: 'رياضيات — منخفض جداً',   val: fp(d.math?.vlow) },
+    { label: 'رياضيات — منخفض',        val: fp(d.math?.low) },
+    { label: 'رياضيات — متوسط',        val: fp(d.math?.mid) },
+    { label: 'رياضيات — مرتفع',        val: fp(d.math?.high) },
+    { label: 'رياضيات — إتقان',        val: fp(d.mathMastery) },
+    { label: 'علوم — منخفض جداً',      val: fp(d.sci?.vlow) },
+    { label: 'علوم — منخفض',           val: fp(d.sci?.low) },
+    { label: 'علوم — متوسط',           val: fp(d.sci?.mid) },
+    { label: 'علوم — مرتفع',           val: fp(d.sci?.high) },
+    { label: 'علوم — إتقان',           val: fp(d.sciMastery) },
+    { label: 'قراءة — منخفض جداً',     val: fp(d.read?.vlow) },
+    { label: 'قراءة — منخفض',          val: fp(d.read?.low) },
+    { label: 'قراءة — متوسط',          val: fp(d.read?.mid) },
+    { label: 'قراءة — مرتفع',          val: fp(d.read?.high) },
+    { label: 'قراءة — إتقان',          val: fp(d.readMastery) },
+  ];
+  const html = `<div class="extracted-grid">${
+    items.map(i => `<div class="extracted-item">
+      <div class="ei-label">${i.label}</div>
+      <div class="ei-val${i.val==='—'?' na':''}">${i.val}</div>
+    </div>`).join('')
+  }</div>`;
+  document.getElementById('pdf-result-content').innerHTML = html;
+  document.getElementById('pdf-result-preview').style.display = '';
+}
+
+function applyPdfData() {
+  if (!_pdfExtractedData) return;
+  const d = _pdfExtractedData;
+  const setVal = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+
+  setVal('schoolName', d.schoolName);
+  setVal('year', d.year);
+  setVal('totalStudents', d.total);
+  setVal('testedStudents', d.tested);
+
+  if (d.grade) {
+    const sel = document.getElementById('gradeLevel');
+    const opt = [...sel.options].find(o => o.value.includes(d.grade) || d.grade.includes(o.value));
+    if (opt) sel.value = opt.value;
+  }
+
+  // Convert percentages to student counts using tested count
+  const tested = parseInt(d.tested) || 0;
+  const toCount = (pct) => pct != null && tested ? Math.round(pct * tested / 100) : null;
+
+  if (d.math) {
+    setVal('math_vlow', toCount(d.math.vlow)); setVal('math_low', toCount(d.math.low));
+    setVal('math_mid',  toCount(d.math.mid));  setVal('math_high', toCount(d.math.high));
+  }
+  if (d.sci) {
+    setVal('sci_vlow', toCount(d.sci.vlow)); setVal('sci_low', toCount(d.sci.low));
+    setVal('sci_mid',  toCount(d.sci.mid));  setVal('sci_high', toCount(d.sci.high));
+  }
+  if (d.read) {
+    setVal('read_vlow', toCount(d.read.vlow)); setVal('read_low', toCount(d.read.low));
+    setVal('read_mid',  toCount(d.read.mid));  setVal('read_high', toCount(d.read.high));
+  }
+
+  autoCalc();
+  document.getElementById('pdf-result-preview').style.display = 'none';
+  showToast('✅ تم استيراد بيانات PDF إلى النموذج');
+}
+
+function showPdfError(msg) {
+  document.getElementById('pdf-result-content').innerHTML = `<div class="alert alert-danger">❌ ${msg}</div>`;
+  document.getElementById('pdf-result-preview').style.display = '';
+  document.getElementById('pdf-loading').style.display = 'none';
+}
+
+// ===================================================================
+//  IMAGE IMPORT — AI EXTRACTION
+// ===================================================================
+let _imgBase64 = null;
+
+function handleImgDrop(e) {
+  e.preventDefault();
+  document.getElementById('img-drop-zone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) loadImgPreview(file);
+}
+function handleImgSelect(e) {
+  const file = e.target.files[0];
+  if (file) loadImgPreview(file);
+}
+function loadImgPreview(file) {
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    _imgBase64 = ev.target.result.split(',')[1];
+    document.getElementById('img-preview').src = ev.target.result;
+    document.getElementById('img-preview-wrap').style.display = '';
+    document.getElementById('img-result-preview').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+function clearImgImport() {
+  _imgBase64 = null;
+  document.getElementById('img-preview-wrap').style.display = 'none';
+  document.getElementById('img-file-input').value = '';
+  document.getElementById('img-result-preview').style.display = 'none';
+}
+
+let _extractedData = null;
+
+async function extractFromImage() {
+  if (!_imgBase64) return;
+  document.getElementById('img-loading').style.display = 'flex';
+  document.getElementById('img-result-preview').style.display = 'none';
+
+  const prompt = `أنت خبير في قراءة تقارير نافس التعليمية. استخرج البيانات التالية من الصورة وأعدها بصيغة JSON فقط بدون أي نص آخر:
+{
+  "schoolName": "اسم المدرسة",
+  "grade": "الصف (مثل: السادس)",
+  "year": "العام الدراسي (مثل: 2025)",
+  "total": عدد إجمالي الطلاب كرقم,
+  "tested": عدد المختبرين كرقم,
+  "math": { "vlow": %, "low": %, "mid": %, "high": % },
+  "sci":  { "vlow": %, "low": %, "mid": %, "high": % },
+  "read": { "vlow": %, "low": %, "mid": %, "high": % },
+  "mathMastery": نسبة الإتقان في الرياضيات كرقم عشري,
+  "sciMastery":  نسبة الإتقان في العلوم كرقم عشري,
+  "readMastery": نسبة الإتقان في القراءة كرقم عشري
+}
+ملاحظة: القيم في math/sci/read هي النسب المئوية (%) من الصورة. إذا لم تجد قيمة أدخل null.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: [
+            { type: 'image', source: { type: 'base64', media_type: 'image/jpeg', data: _imgBase64 } },
+            { type: 'text', text: prompt }
+          ]
+        }]
+      })
+    });
+    const data = await res.json();
+    const raw = data.content.map(c => c.text || '').join('');
+    const clean = raw.replace(/```json|```/g, '').trim();
+    _extractedData = JSON.parse(clean);
+    renderExtractedPreview(_extractedData);
+  } catch(err) {
+    document.getElementById('img-result-content').innerHTML =
+      `<div class="alert alert-danger">❌ تعذّر استخراج البيانات. تأكد من وضوح الصورة وأنها تقرير نافس. (${err.message})</div>`;
+    document.getElementById('img-result-preview').style.display = '';
+  }
+  document.getElementById('img-loading').style.display = 'none';
+}
+
+function renderExtractedPreview(d) {
+  const f = v => v != null ? v : '—';
+  const fp = v => v != null ? v + '%' : '—';
+
+  const items = [
+    { label: 'اسم المدرسة',       val: f(d.schoolName) },
+    { label: 'الصف',               val: f(d.grade) },
+    { label: 'العام الدراسي',      val: f(d.year) },
+    { label: 'إجمالي الطلاب',      val: f(d.total) },
+    { label: 'المختبرون',          val: f(d.tested) },
+    { label: 'رياضيات — منخفض جداً', val: fp(d.math?.vlow) },
+    { label: 'رياضيات — منخفض',     val: fp(d.math?.low) },
+    { label: 'رياضيات — متوسط',     val: fp(d.math?.mid) },
+    { label: 'رياضيات — مرتفع',     val: fp(d.math?.high) },
+    { label: 'رياضيات — إتقان',     val: fp(d.mathMastery) },
+    { label: 'علوم — منخفض جداً',   val: fp(d.sci?.vlow) },
+    { label: 'علوم — منخفض',        val: fp(d.sci?.low) },
+    { label: 'علوم — متوسط',        val: fp(d.sci?.mid) },
+    { label: 'علوم — مرتفع',        val: fp(d.sci?.high) },
+    { label: 'علوم — إتقان',        val: fp(d.sciMastery) },
+    { label: 'قراءة — منخفض جداً',  val: fp(d.read?.vlow) },
+    { label: 'قراءة — منخفض',       val: fp(d.read?.low) },
+    { label: 'قراءة — متوسط',       val: fp(d.read?.mid) },
+    { label: 'قراءة — مرتفع',       val: fp(d.read?.high) },
+    { label: 'قراءة — إتقان',       val: fp(d.readMastery) },
+  ];
+
+  const html = `<div class="extracted-grid">${
+    items.map(i => `<div class="extracted-item">
+      <div class="ei-label">${i.label}</div>
+      <div class="ei-val${i.val === '—' ? ' na' : ''}">${i.val}</div>
+    </div>`).join('')
+  }</div>
+  <div class="alert alert-warn" style="margin-top:12px;font-size:0.82rem">⚠️ راجع القيم المستخرجة قبل التطبيق. قد تحتاج بعض الحقول لتعديل يدوي بعد الاستيراد.</div>`;
+
+  document.getElementById('img-result-content').innerHTML = html;
+  document.getElementById('img-result-preview').style.display = '';
+}
+
+function applyExtractedData() {
+  if (!_extractedData) return;
+  const d = _extractedData;
+
+  const setVal = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+
+  setVal('schoolName', d.schoolName);
+  setVal('year', d.year);
+  if (d.grade) {
+    const sel = document.getElementById('gradeLevel');
+    if (sel) {
+      const opt = [...sel.options].find(o => o.value.includes(d.grade) || d.grade.includes(o.value));
+      if (opt) sel.value = opt.value;
+    }
+  }
+  setVal('totalStudents', d.total);
+  setVal('testedStudents', d.tested);
+
+  // Convert percentages to counts if tested is known
+  const tested = parseInt(d.tested) || 0;
+  const pctToCount = (pct) => tested > 0 && pct != null ? Math.round(tested * pct / 100) : null;
+
+  if (d.math) {
+    setVal('math_vlow', pctToCount(d.math.vlow));
+    setVal('math_low',  pctToCount(d.math.low));
+    setVal('math_mid',  pctToCount(d.math.mid));
+    setVal('math_high', pctToCount(d.math.high));
+  }
+  if (d.sci) {
+    setVal('sci_vlow', pctToCount(d.sci.vlow));
+    setVal('sci_low',  pctToCount(d.sci.low));
+    setVal('sci_mid',  pctToCount(d.sci.mid));
+    setVal('sci_high', pctToCount(d.sci.high));
+  }
+  if (d.read) {
+    setVal('read_vlow', pctToCount(d.read.vlow));
+    setVal('read_low',  pctToCount(d.read.low));
+    setVal('read_mid',  pctToCount(d.read.mid));
+    setVal('read_high', pctToCount(d.read.high));
+  }
+  autoCalc();
+  document.getElementById('img-result-preview').style.display = 'none';
+
+  // Show success toast
+  showToast('✅ تم تطبيق البيانات المستخرجة على النموذج');
+}
+
+// ===================================================================
+//  EXCEL IMPORT
+// ===================================================================
+let _excelData = null;
+
+function handleExcelDrop(e) {
+  e.preventDefault();
+  document.getElementById('excel-drop-zone').classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file) processExcelFile(file);
+}
+function handleExcelSelect(e) {
+  const file = e.target.files[0];
+  if (file) processExcelFile(file);
+}
+
+function processExcelFile(file) {
+  document.getElementById('excel-loading').style.display = 'flex';
+  document.getElementById('excel-result-preview').style.display = 'none';
+
+  const name = file.name.toLowerCase();
+
+  if (name.endsWith('.csv')) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        let text = e.target.result.replace(/^\uFEFF/, '');
+        const lines = text.split(/\r?\n/).filter(l => l.trim());
+        if (lines.length < 2) { showExcelError('الملف لا يحتوي على بيانات كافية'); document.getElementById('excel-loading').style.display='none'; return; }
+        const headers = parseCSVLine(lines[0]);
+        const values  = parseCSVLine(lines[1]);
+        const row = {};
+        headers.forEach((h, i) => row[h] = values[i] || '');
+        _excelData = mapExcelRow(row);
+        renderExcelPreview(_excelData);
+      } catch(err) { showExcelError('خطأ في قراءة CSV: ' + err.message); }
+      document.getElementById('excel-loading').style.display = 'none';
+    };
+    reader.onerror = () => { showExcelError('تعذّر قراءة الملف'); document.getElementById('excel-loading').style.display='none'; };
+    reader.readAsText(file, 'UTF-8');
+
+  } else if (name.endsWith('.xlsx') || name.endsWith('.xls')) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const rows = parseXlsxSimple(e.target.result);
+        if (!rows || rows.length < 2) {
+          showExcelError('تعذّر قراءة ملف Excel مباشرةً.<br>💡 <strong>الحل:</strong> افتح الملف في Excel → اختر "حفظ باسم" → اختر CSV → ثم استورده هنا.');
+          document.getElementById('excel-loading').style.display = 'none';
+          return;
+        }
+        const headers = rows[0];
+        const values  = rows[1];
+        const row = {};
+        headers.forEach((h, i) => row[String(h).trim()] = String(values[i] !== undefined ? values[i] : '').trim());
+        _excelData = mapExcelRow(row);
+        renderExcelPreview(_excelData);
+      } catch(err) {
+        showExcelError('تعذّر قراءة ملف Excel.<br>💡 <strong>الحل:</strong> احفظ الملف كـ CSV ثم استورده هنا.');
+      }
+      document.getElementById('excel-loading').style.display = 'none';
+    };
+    reader.onerror = () => { showExcelError('تعذّر قراءة الملف'); document.getElementById('excel-loading').style.display='none'; };
+    reader.readAsArrayBuffer(file);
+  } else {
+    showExcelError('صيغة الملف غير مدعومة. استخدم CSV أو XLSX.');
+    document.getElementById('excel-loading').style.display = 'none';
+  }
+}
+
+// CSV parser يدعم الحقول بين علامات اقتباس
+function parseCSVLine(line) {
+  const result = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { inQ = !inQ; }
+    else if (c === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+    else { cur += c; }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+// قارئ XLSX بسيط بدون مكتبات خارجية
+function parseXlsxSimple(arrayBuffer) {
+  const bytes = new Uint8Array(arrayBuffer);
+  const dec = new TextDecoder('utf-8');
+
+  function findZipEntry(targetName) {
+    for (let i = 0; i < bytes.length - 30; i++) {
+      if (bytes[i]===0x50&&bytes[i+1]===0x4B&&bytes[i+2]===0x03&&bytes[i+3]===0x04) {
+        const fnLen = bytes[i+26]|(bytes[i+27]<<8);
+        const exLen = bytes[i+28]|(bytes[i+29]<<8);
+        const fn = dec.decode(bytes.slice(i+30, i+30+fnLen));
+        if (fn === targetName) {
+          const compMethod = bytes[i+8]|(bytes[i+9]<<8);
+          const compSize   = bytes[i+18]|(bytes[i+19]<<8)|(bytes[i+20]<<16)|(bytes[i+21]<<24);
+          const dataStart  = i+30+fnLen+exLen;
+          if (compMethod === 0) return dec.decode(bytes.slice(dataStart, dataStart+compSize));
+          return null; // deflated — نحتاج pako
+        }
+      }
+    }
+    return null;
+  }
+
+  const ssXml   = findZipEntry('xl/sharedStrings.xml');
+  const shXml   = findZipEntry('xl/worksheets/sheet1.xml');
+  if (!shXml) return null;
+
+  const ss = [];
+  if (ssXml) {
+    (ssXml.match(/<si>([\s\S]*?)<\/si>/g)||[]).forEach(si => {
+      ss.push((si.match(/<t[^>]*>([^<]*)<\/t>/g)||[]).map(t=>t.replace(/<[^>]+>/g,'')).join(''));
+    });
+  }
+
+  const rows = [];
+  (shXml.match(/<row[^>]*>([\s\S]*?)<\/row>/g)||[]).forEach(rowXml => {
+    const cells = [];
+    (rowXml.match(/<c [^>]*>[\s\S]*?<\/c>/g)||[]).forEach(cx => {
+      const t   = (cx.match(/t="([^"]*)"/)||[])[1];
+      const vm  = cx.match(/<v>([^<]*)<\/v>/);
+      cells.push(vm ? (t==='s' ? (ss[+vm[1]]||'') : vm[1]) : '');
+    });
+    if (cells.length) rows.push(cells);
+  });
+  return rows;
+}
+
+function mapExcelRow(row) {
+  const g = (keys) => {
+    for (const k of keys) {
+      const found = Object.keys(row).find(rk => rk.includes(k));
+      if (found && row[found] !== '') return row[found];
+    }
+    return null;
+  };
+  return {
+    schoolName: g(['اسم المدرسة','المدرسة','school']),
+    grade:      g(['الصف','grade']),
+    year:       g(['العام','year','سنة']),
+    total:      g(['إجمالي','total','الإجمالي']),
+    tested:     g(['المختبر','tested','مختبر']),
+    math_vlow:  g(['رياضيات_منخفض_جداً','math_vlow','رياضيات منخفض جداً']),
+    math_low:   g(['رياضيات_منخفض','math_low','رياضيات منخفض']),
+    math_mid:   g(['رياضيات_متوسط','math_mid','رياضيات متوسط']),
+    math_high:  g(['رياضيات_مرتفع','math_high','رياضيات مرتفع']),
+    sci_vlow:   g(['علوم_منخفض_جداً','sci_vlow','علوم منخفض جداً']),
+    sci_low:    g(['علوم_منخفض','sci_low','علوم منخفض']),
+    sci_mid:    g(['علوم_متوسط','sci_mid','علوم متوسط']),
+    sci_high:   g(['علوم_مرتفع','sci_high','علوم مرتفع']),
+    read_vlow:  g(['قراءة_منخفض_جداً','read_vlow','قراءة منخفض جداً']),
+    read_low:   g(['قراءة_منخفض','read_low','قراءة منخفض']),
+    read_mid:   g(['قراءة_متوسط','read_mid','قراءة متوسط']),
+    read_high:  g(['قراءة_مرتفع','read_high','قراءة مرتفع']),
+  };
+}
+
+function renderExcelPreview(d) {
+  const f = v => v != null && v !== '' ? v : '—';
+  const items = [
+    ['اسم المدرسة', f(d.schoolName)], ['الصف', f(d.grade)], ['العام', f(d.year)],
+    ['إجمالي الطلاب', f(d.total)], ['المختبرون', f(d.tested)],
+    ['رياضيات — منخفض جداً', f(d.math_vlow)], ['رياضيات — منخفض', f(d.math_low)],
+    ['رياضيات — متوسط', f(d.math_mid)], ['رياضيات — مرتفع', f(d.math_high)],
+    ['علوم — منخفض جداً', f(d.sci_vlow)], ['علوم — منخفض', f(d.sci_low)],
+    ['علوم — متوسط', f(d.sci_mid)], ['علوم — مرتفع', f(d.sci_high)],
+    ['قراءة — منخفض جداً', f(d.read_vlow)], ['قراءة — منخفض', f(d.read_low)],
+    ['قراءة — متوسط', f(d.read_mid)], ['قراءة — مرتفع', f(d.read_high)],
+  ];
+  const html = `<div class="extracted-grid">${
+    items.map(([label, val]) => `<div class="extracted-item">
+      <div class="ei-label">${label}</div>
+      <div class="ei-val${val==='—'?' na':''}">${val}</div>
+    </div>`).join('')
+  }</div>`;
+  document.getElementById('excel-result-content').innerHTML = html;
+  document.getElementById('excel-result-preview').style.display = '';
+}
+
+function applyExcelData() {
+  if (!_excelData) return;
+  const d = _excelData;
+  const setVal = (id, v) => { const el = document.getElementById(id); if (el && v != null && v !== '') el.value = v; };
+  setVal('schoolName', d.schoolName);
+  setVal('year', d.year);
+  setVal('totalStudents', d.total);
+  setVal('testedStudents', d.tested);
+  if (d.grade) {
+    const sel = document.getElementById('gradeLevel');
+    const opt = [...sel.options].find(o => o.value.includes(d.grade) || d.grade.includes(o.value));
+    if (opt) sel.value = opt.value;
+  }
+  setVal('math_vlow', d.math_vlow); setVal('math_low', d.math_low);
+  setVal('math_mid', d.math_mid);   setVal('math_high', d.math_high);
+  setVal('sci_vlow', d.sci_vlow);   setVal('sci_low', d.sci_low);
+  setVal('sci_mid', d.sci_mid);     setVal('sci_high', d.sci_high);
+  setVal('read_vlow', d.read_vlow); setVal('read_low', d.read_low);
+  setVal('read_mid', d.read_mid);   setVal('read_high', d.read_high);
+  autoCalc();
+  document.getElementById('excel-result-preview').style.display = 'none';
+  showToast('✅ تم استيراد بيانات Excel إلى النموذج');
+}
+
+function showExcelError(msg) {
+  document.getElementById('excel-result-content').innerHTML = `<div class="alert alert-danger">❌ ${msg}</div>`;
+  document.getElementById('excel-result-preview').style.display = '';
+  document.getElementById('excel-loading').style.display = 'none';
+}
+
+// ===================================================================
+//  EXCEL TEMPLATE DOWNLOAD
+// ===================================================================
+function downloadExcelTemplate() {
+  const headers = ['اسم المدرسة','الصف','العام','إجمالي الطلاب','المختبرون',
+    'رياضيات_منخفض_جداً','رياضيات_منخفض','رياضيات_متوسط','رياضيات_مرتفع',
+    'علوم_منخفض_جداً','علوم_منخفض','علوم_متوسط','علوم_مرتفع',
+    'قراءة_منخفض_جداً','قراءة_منخفض','قراءة_متوسط','قراءة_مرتفع'];
+  const sample = ['مدارس الصالحية الأهلية','السادس','2025','60','58','5','10','20','23','3','6','25','24','4','8','22','24'];
+  const csv = '\uFEFF' + headers.join(',') + '\n' + sample.join(',');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'نموذج_نافس.csv';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ===================================================================
+//  TOAST NOTIFICATION
+// ===================================================================
+function showToast(msg) {
+  let t = document.getElementById('global-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'global-toast';
+    t.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+      background:var(--green);color:#fff;padding:12px 28px;border-radius:30px;
+      font-size:0.92rem;font-weight:700;box-shadow:0 6px 24px rgba(0,0,0,0.2);
+      z-index:9999;opacity:0;transition:opacity 0.3s;white-space:nowrap`;
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  setTimeout(() => { t.style.opacity = '0'; }, 3000);
+}
+
+function editNafisYear() {
+  document.getElementById('nafis-badge-display').style.display = 'none';
+  const edit = document.getElementById('nafis-badge-edit');
+  edit.style.display = 'flex';
+  const inp = document.getElementById('nafis-year-input');
+  // extract current year from badge text
+  const curr = document.getElementById('nafis-badge-display').textContent.replace('NAFIS ','').trim();
+  inp.value = curr;
+  setTimeout(() => inp.focus(), 50);
+}
+
+function applyNafisYear() {
+  const inp = document.getElementById('nafis-year-input');
+  const yr = inp.value.trim() || '2024';
+  document.getElementById('nafis-badge-display').textContent = 'NAFIS ' + yr;
+  document.getElementById('nafis-badge-display').style.display = '';
+  document.getElementById('nafis-badge-edit').style.display = 'none';
+}
+</script>
+
+</body>
+</html>

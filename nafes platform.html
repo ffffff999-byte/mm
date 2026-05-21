@@ -1,0 +1,2329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة التحليل الذكي لبطاقات نافس</title>
+<style>
+/* ===== CSS VARIABLES & RESET ===== */
+:root {
+  --primary: #0a1628;
+  --primary-mid: #0d1f3c;
+  --secondary: #1a3a6b;
+  --accent-gold: #c9a227;
+  --accent-gold-light: #e8c458;
+  --accent-teal: #00b4d8;
+  --accent-green: #2ecc71;
+  --accent-red: #e74c3c;
+  --accent-orange: #f39c12;
+  --white: #ffffff;
+  --gray-100: #f4f6fb;
+  --gray-200: #e8ecf4;
+  --gray-300: #c8d0e0;
+  --gray-500: #7a8ba8;
+  --gray-700: #3d4f6e;
+  --card-bg: rgba(255,255,255,0.04);
+  --card-border: rgba(201,162,39,0.2);
+  --shadow: 0 8px 32px rgba(0,0,0,0.3);
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.15);
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font-main: 'Segoe UI', 'Arial', sans-serif;
+  --transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: var(--font-main);
+  background: var(--primary);
+  color: var(--white);
+  min-height: 100vh;
+  direction: rtl;
+}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--primary); }
+::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 3px; }
+
+/* ===== LAYOUT ===== */
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ===== HEADER ===== */
+.header {
+  background: linear-gradient(135deg, var(--primary-mid), var(--secondary));
+  border-bottom: 2px solid var(--accent-gold);
+  padding: 0 24px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-logo .logo-icon {
+  width: 44px; height: 44px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+}
+
+.header-logo .logo-text h1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.2;
+}
+
+.header-logo .logo-text span {
+  font-size: 11px;
+  color: var(--accent-gold);
+  letter-spacing: 0.5px;
+}
+
+.header-nav {
+  display: flex;
+  gap: 4px;
+}
+
+.nav-btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--gray-300);
+  cursor: pointer;
+  font-size: 13px;
+  transition: var(--transition);
+  font-family: var(--font-main);
+}
+
+.nav-btn:hover, .nav-btn.active {
+  background: rgba(201,162,39,0.15);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+/* ===== MAIN CONTENT ===== */
+.main { flex: 1; }
+
+/* ===== PAGES ===== */
+.page { display: none; animation: fadeIn 0.4s ease; }
+.page.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== UPLOAD PAGE ===== */
+.upload-page {
+  min-height: calc(100vh - 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: radial-gradient(ellipse at center top, rgba(26,58,107,0.3) 0%, transparent 70%);
+}
+
+.upload-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.upload-hero .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  background: rgba(201,162,39,0.15);
+  border: 1px solid rgba(201,162,39,0.4);
+  border-radius: 100px;
+  font-size: 12px;
+  color: var(--accent-gold);
+  margin-bottom: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(201,162,39,0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(201,162,39,0); }
+}
+
+.upload-hero h2 {
+  font-size: 42px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff 0%, var(--accent-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.upload-hero p {
+  font-size: 16px;
+  color: var(--gray-300);
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.upload-zone {
+  width: 100%;
+  max-width: 640px;
+  border: 2px dashed rgba(201,162,39,0.4);
+  border-radius: var(--radius);
+  padding: 48px;
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  background: var(--card-bg);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.upload-zone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(201,162,39,0.05) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.upload-zone:hover::before, .upload-zone.drag-over::before { opacity: 1; }
+
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 60px rgba(201,162,39,0.15);
+}
+
+.upload-zone .upload-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.upload-zone h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.upload-zone p {
+  color: var(--gray-500);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.btn-upload {
+  padding: 12px 32px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+  color: var(--primary);
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-main);
+}
+
+.btn-upload:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(201,162,39,0.4);
+}
+
+#fileInput { display: none; }
+
+.upload-info {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.info-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 100px;
+  font-size: 12px;
+  color: var(--gray-300);
+}
+
+/* ===== PROGRESS ===== */
+.progress-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,22,40,0.95);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.progress-overlay.show { display: flex; }
+
+.progress-spinner {
+  width: 80px; height: 80px;
+  border: 4px solid rgba(201,162,39,0.2);
+  border-top-color: var(--accent-gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.progress-text {
+  text-align: center;
+}
+
+.progress-text h3 {
+  font-size: 20px;
+  color: var(--accent-gold);
+  margin-bottom: 8px;
+}
+
+.progress-text p {
+  font-size: 14px;
+  color: var(--gray-300);
+}
+
+.progress-bar-container {
+  width: 320px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 100px;
+  height: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-gold), var(--accent-gold-light));
+  border-radius: 100px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* ===== DASHBOARD PAGE ===== */
+.dashboard-page { padding: 28px; }
+
+/* School Header Card */
+.school-card {
+  background: linear-gradient(135deg, var(--secondary), var(--primary-mid));
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.school-card::after {
+  content: '🎓';
+  position: absolute;
+  left: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 80px;
+  opacity: 0.06;
+}
+
+.school-name {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.school-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.meta-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 100px;
+  font-size: 13px;
+  color: var(--gray-200);
+}
+
+.school-stats {
+  display: flex;
+  gap: 20px;
+}
+
+.stat-bubble {
+  text-align: center;
+  padding: 16px 20px;
+  background: rgba(201,162,39,0.1);
+  border: 1px solid rgba(201,162,39,0.3);
+  border-radius: 12px;
+  min-width: 90px;
+}
+
+.stat-bubble .val {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--accent-gold);
+  display: block;
+}
+
+.stat-bubble .lbl {
+  font-size: 11px;
+  color: var(--gray-300);
+  margin-top: 2px;
+  display: block;
+}
+
+/* KPI Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.kpi-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+}
+
+.kpi-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-gold);
+  box-shadow: var(--shadow);
+}
+
+.kpi-card .kpi-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.kpi-card .kpi-val {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--white);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.kpi-card .kpi-lbl {
+  font-size: 12px;
+  color: var(--gray-500);
+}
+
+.kpi-card .kpi-trend {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 100px;
+}
+
+.trend-up { background: rgba(46,204,113,0.2); color: var(--accent-green); }
+.trend-down { background: rgba(231,76,60,0.2); color: var(--accent-red); }
+.trend-neutral { background: rgba(243,156,18,0.2); color: var(--accent-orange); }
+
+.kpi-bar {
+  margin-top: 10px;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.kpi-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1.5s ease;
+}
+
+/* Section Header */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.section-header h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.section-header .line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-gold) 0%, transparent 100%);
+}
+
+/* Subject Cards */
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.subject-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+}
+
+.subject-card:hover {
+  border-color: var(--accent-gold);
+  box-shadow: var(--shadow);
+}
+
+.subject-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.subject-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.subject-icon {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.subject-mastery {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--accent-gold);
+}
+
+/* Performance Levels Bar */
+.perf-levels {
+  margin-bottom: 16px;
+}
+
+.perf-levels-bar {
+  display: flex;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.perf-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  transition: flex 1s ease;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.seg-advanced { background: #27ae60; }
+.seg-proficient { background: #2ecc71; }
+.seg-basic { background: #f39c12; }
+.seg-below { background: #e74c3c; }
+
+.perf-legend {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: var(--gray-300);
+}
+
+.legend-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Comparison Chart */
+.comparison-section {
+  margin-bottom: 16px;
+}
+
+.comparison-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.comparison-label {
+  font-size: 12px;
+  color: var(--gray-300);
+  min-width: 60px;
+  text-align: right;
+}
+
+.comparison-bar-track {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.comparison-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 1.5s ease;
+}
+
+.comparison-val {
+  font-size: 12px;
+  font-weight: 700;
+  min-width: 42px;
+  text-align: left;
+  color: var(--white);
+}
+
+/* Sub-domains section */
+.subdomains-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.subdomain-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  transition: var(--transition);
+}
+
+.subdomain-card:hover { border-color: rgba(201,162,39,0.5); }
+
+.subdomain-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.subdomain-name {
+  font-size: 13px;
+  color: var(--gray-200);
+  font-weight: 600;
+}
+
+.subdomain-subject {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 100px;
+  background: rgba(255,255,255,0.06);
+  color: var(--gray-500);
+}
+
+.subdomain-val {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.subdomain-bar-track {
+  height: 5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.subdomain-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 1.5s ease;
+}
+
+/* ===== ANALYSIS PAGE ===== */
+.analysis-page { padding: 28px; }
+
+.analysis-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.analysis-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  backdrop-filter: blur(10px);
+}
+
+.analysis-card h4 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.strengths-list, .weaknesses-list {
+  list-style: none;
+}
+
+.strengths-list li, .weaknesses-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.strengths-list li {
+  background: rgba(46,204,113,0.08);
+  border: 1px solid rgba(46,204,113,0.2);
+  color: #a8f0c8;
+}
+
+.weaknesses-list li {
+  background: rgba(231,76,60,0.08);
+  border: 1px solid rgba(231,76,60,0.2);
+  color: #f5b7b1;
+}
+
+.recommendations-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.rec-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  background: rgba(0,180,216,0.06);
+  border: 1px solid rgba(0,180,216,0.2);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.rec-num {
+  width: 28px; height: 28px;
+  background: var(--accent-teal);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.rec-content h5 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.rec-content p {
+  font-size: 12px;
+  color: var(--gray-300);
+  line-height: 1.5;
+}
+
+/* AI Chat area */
+.ai-chat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.ai-response {
+  background: rgba(0,180,216,0.06);
+  border: 1px solid rgba(0,180,216,0.2);
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--gray-100);
+  min-height: 120px;
+  white-space: pre-wrap;
+}
+
+.ai-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gray-500);
+  font-size: 13px;
+}
+
+.ai-dots span {
+  width: 6px; height: 6px;
+  background: var(--accent-teal);
+  border-radius: 50%;
+  display: inline-block;
+  animation: bounce 1.4s infinite both;
+}
+
+.ai-dots span:nth-child(2) { animation-delay: 0.2s; }
+.ai-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes bounce {
+  0%,80%,100% { transform: translateY(0); }
+  40% { transform: translateY(-8px); }
+}
+
+.ai-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.ai-btn {
+  padding: 8px 16px;
+  border: 1px solid rgba(0,180,216,0.4);
+  background: rgba(0,180,216,0.1);
+  color: var(--accent-teal);
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: var(--transition);
+  font-family: var(--font-main);
+}
+
+.ai-btn:hover {
+  background: rgba(0,180,216,0.2);
+  transform: translateY(-1px);
+}
+
+/* ===== COMPARISON PAGE ===== */
+.comparison-page { padding: 28px; }
+
+.year-comparison {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.comp-subject-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 1fr 80px;
+  gap: 16px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  background: rgba(255,255,255,0.03);
+}
+
+.comp-subject-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.comp-year-col { text-align: center; }
+.comp-year-label {
+  font-size: 10px;
+  color: var(--gray-500);
+  margin-bottom: 4px;
+}
+
+.comp-val-big {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.comp-change {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* ===== REPORTS PAGE ===== */
+.reports-page { padding: 28px; }
+
+.reports-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.report-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 24px;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.report-card:hover {
+  border-color: var(--accent-gold);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.report-icon {
+  font-size: 40px;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.report-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.report-desc {
+  font-size: 12px;
+  color: var(--gray-500);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.btn-generate {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+  color: var(--primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font-main);
+}
+
+.btn-generate:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(201,162,39,0.35);
+}
+
+/* ===== PRINT REPORT MODAL ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 9998;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.show { display: flex; }
+
+.modal-content {
+  background: #0d1f3c;
+  border: 1px solid var(--accent-gold);
+  border-radius: var(--radius);
+  padding: 32px;
+  max-width: 800px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(201,162,39,0.2);
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-gold);
+}
+
+.modal-close {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.08);
+  border: none;
+  border-radius: 50%;
+  color: var(--white);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.modal-close:hover { background: rgba(231,76,60,0.3); }
+
+.report-body {
+  font-size: 14px;
+  line-height: 2;
+  color: var(--gray-100);
+}
+
+.report-body h4 {
+  font-size: 16px;
+  color: var(--accent-gold);
+  margin: 20px 0 10px;
+  border-right: 3px solid var(--accent-gold);
+  padding-right: 10px;
+}
+
+.report-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+}
+
+.report-body th {
+  background: rgba(201,162,39,0.15);
+  color: var(--accent-gold);
+  padding: 8px 12px;
+  text-align: right;
+  font-size: 13px;
+  border: 1px solid rgba(201,162,39,0.2);
+}
+
+.report-body td {
+  padding: 8px 12px;
+  text-align: right;
+  font-size: 13px;
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--gray-200);
+}
+
+.report-body tr:nth-child(even) td {
+  background: rgba(255,255,255,0.02);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(201,162,39,0.2);
+}
+
+.btn-print {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+  color: var(--primary);
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: var(--font-main);
+}
+
+.btn-close-modal {
+  padding: 10px 24px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--white);
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--font-main);
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-state .empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  color: var(--gray-500);
+  font-size: 15px;
+}
+
+/* ===== ALERTS ===== */
+.alert-banner {
+  padding: 12px 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.alert-warning {
+  background: rgba(243,156,18,0.1);
+  border: 1px solid rgba(243,156,18,0.3);
+  color: #ffd980;
+}
+
+.alert-danger {
+  background: rgba(231,76,60,0.1);
+  border: 1px solid rgba(231,76,60,0.3);
+  color: #f5b7b1;
+}
+
+.alert-success {
+  background: rgba(46,204,113,0.1);
+  border: 1px solid rgba(46,204,113,0.3);
+  color: #a8f0c8;
+}
+
+/* ===== HEATMAP ===== */
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.heatmap-cell {
+  padding: 14px 10px;
+  border-radius: 8px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.heatmap-cell:hover { transform: scale(1.05); }
+
+.heatmap-cell .hm-val {
+  font-size: 18px;
+  font-weight: 800;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.heatmap-cell .hm-name {
+  font-size: 10px;
+  opacity: 0.85;
+}
+
+.hm-high { background: rgba(46,204,113,0.25); color: #a8f0c8; border: 1px solid rgba(46,204,113,0.3); }
+.hm-mid { background: rgba(243,156,18,0.25); color: #ffd980; border: 1px solid rgba(243,156,18,0.3); }
+.hm-low { background: rgba(231,76,60,0.25); color: #f5b7b1; border: 1px solid rgba(231,76,60,0.3); }
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  body { background: white; color: black; }
+  .header, .nav-btn, .ai-actions, .modal-actions { display: none !important; }
+  .modal-content {
+    background: white;
+    border: none;
+    max-height: none;
+    padding: 0;
+  }
+  @page { size: A4 portrait; margin: 15mm; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .subjects-grid { grid-template-columns: 1fr; }
+  .analysis-grid { grid-template-columns: 1fr; }
+  .school-card { grid-template-columns: 1fr; }
+  .school-stats { flex-wrap: wrap; }
+  .header-nav { display: none; }
+  .upload-hero h2 { font-size: 28px; }
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-icon">📊</div>
+      <div class="logo-text">
+        <h1>منصة التحليل الذكي</h1>
+        <span>بطاقات نافس • هيئة تقويم التعليم والتدريب</span>
+      </div>
+    </div>
+    <nav class="header-nav">
+      <button class="nav-btn active" onclick="showPage('upload')">🏠 الرئيسية</button>
+      <button class="nav-btn" onclick="showPage('dashboard')" id="nav-dashboard">📊 لوحة البيانات</button>
+      <button class="nav-btn" onclick="showPage('analysis')" id="nav-analysis">🔍 التحليل الذكي</button>
+      <button class="nav-btn" onclick="showPage('comparison')" id="nav-comparison">📈 المقارنات</button>
+      <button class="nav-btn" onclick="showPage('reports')" id="nav-reports">📄 التقارير</button>
+    </nav>
+  </header>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- UPLOAD PAGE -->
+    <div id="page-upload" class="page active">
+      <div class="upload-page">
+        <div class="upload-hero">
+          <div class="badge">⭐ النظام الرسمي لتحليل نتائج نافس</div>
+          <h2>منصة التحليل الذكي<br>لبطاقات نافس</h2>
+          <p>ارفع بطاقة نافس PDF لتحليل نتائج الطلاب فورياً واستخراج رؤى تربوية دقيقة تدعم اتخاذ القرار</p>
+        </div>
+
+        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+          <span class="upload-icon">📄</span>
+          <h3>ارفع بطاقة نافس PDF</h3>
+          <p>اسحب وأفلت الملف هنا أو اضغط لاختيار الملف</p>
+          <button class="btn-upload" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
+            اختر ملف PDF
+          </button>
+          <input type="file" id="fileInput" accept=".pdf" onchange="handleFileUpload(event)">
+        </div>
+
+        <div class="upload-info">
+          <div class="info-chip">✅ استخراج البيانات تلقائياً</div>
+          <div class="info-chip">📊 تحليل إحصائي متقدم</div>
+          <div class="info-chip">🤖 ذكاء اصطناعي تربوي</div>
+          <div class="info-chip">🖨️ تقارير قابلة للطباعة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="page-dashboard" class="page">
+      <div class="dashboard-page" id="dashboardContent">
+        <div class="empty-state">
+          <div class="empty-icon">📊</div>
+          <p>ارفع بطاقة نافس أولاً لعرض لوحة البيانات</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYSIS PAGE -->
+    <div id="page-analysis" class="page">
+      <div class="analysis-page" id="analysisContent">
+        <div class="empty-state">
+          <div class="empty-icon">🔍</div>
+          <p>ارفع بطاقة نافس أولاً للحصول على التحليل الذكي</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARISON PAGE -->
+    <div id="page-comparison" class="page">
+      <div class="comparison-page" id="comparisonContent">
+        <div class="empty-state">
+          <div class="empty-icon">📈</div>
+          <p>ارفع بطاقة نافس أولاً لعرض المقارنات</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORTS PAGE -->
+    <div id="page-reports" class="page">
+      <div class="reports-page" id="reportsContent">
+        <div class="empty-state">
+          <div class="empty-icon">📄</div>
+          <p>ارفع بطاقة نافس أولاً لإنشاء التقارير</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- PROGRESS OVERLAY -->
+<div class="progress-overlay" id="progressOverlay">
+  <div class="progress-spinner"></div>
+  <div class="progress-text">
+    <h3 id="progressTitle">جاري تحليل البطاقة...</h3>
+    <p id="progressSub">يتم استخراج البيانات بدقة عالية</p>
+  </div>
+  <div class="progress-bar-container">
+    <div class="progress-bar-fill" id="progressBar"></div>
+  </div>
+</div>
+
+<!-- REPORT MODAL -->
+<div class="modal-overlay" id="reportModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 id="modalTitle">التقرير</h3>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="report-body" id="modalBody"></div>
+    <div class="modal-actions">
+      <button class="btn-print" onclick="window.print()">🖨️ طباعة</button>
+      <button class="btn-close-modal" onclick="closeModal()">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== GLOBAL STATE =====
+let nafesData = null;
+let aiAnalysis = null;
+
+// ===== PAGE NAVIGATION =====
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const navBtn = document.querySelector(`[onclick="showPage('${name}')"]`);
+  if (navBtn) navBtn.classList.add('active');
+}
+
+// ===== DRAG AND DROP =====
+const uploadZone = document.getElementById('uploadZone');
+uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop', e => {
+  e.preventDefault();
+  uploadZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') processFile(file);
+});
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (file) processFile(file);
+}
+
+// ===== PROGRESS HELPERS =====
+function setProgress(pct, title, sub) {
+  document.getElementById('progressBar').style.width = pct + '%';
+  if (title) document.getElementById('progressTitle').textContent = title;
+  if (sub) document.getElementById('progressSub').textContent = sub;
+}
+
+function showProgress() { document.getElementById('progressOverlay').classList.add('show'); }
+function hideProgress() { document.getElementById('progressOverlay').classList.remove('show'); }
+
+// ===== PDF PROCESSING =====
+async function processFile(file) {
+  showProgress();
+  setProgress(10, 'جاري قراءة الملف...', 'تحميل بطاقة نافس');
+
+  try {
+    // ---- Step 1: render PDF page to canvas (memory-efficient, works on iOS) ----
+    setProgress(20, 'تحويل الصفحة لصورة...', 'معالجة بطاقة نافس');
+    const imageBase64 = await renderPDFToImage(file);
+
+    setProgress(45, 'تحليل بيانات البطاقة...', 'الذكاء الاصطناعي يقرأ البيانات');
+    const extractedData = await extractDataFromImage(imageBase64);
+
+    setProgress(70, 'معالجة النتائج...', 'بناء التحليل الإحصائي');
+    nafesData = extractedData;
+
+    setProgress(85, 'إنشاء لوحة البيانات...', 'تجهيز الرسوم البيانية');
+    await new Promise(r => setTimeout(r, 400));
+
+    renderDashboard();
+    renderAnalysis();
+    renderComparison();
+    renderReports();
+
+    setProgress(100, 'اكتمل التحليل ✓', 'جاهز للعرض');
+    await new Promise(r => setTimeout(r, 700));
+    hideProgress();
+
+    localStorage.setItem('nafesData', JSON.stringify(nafesData));
+    localStorage.setItem('nafesFileName', file.name);
+    showPage('dashboard');
+
+  } catch (err) {
+    hideProgress();
+    alert('حدث خطأ أثناء تحليل الملف: ' + err.message);
+    console.error(err);
+  }
+}
+
+// ===== RENDER PDF PAGE → JPEG BASE64 (no full ArrayBuffer in memory) =====
+async function renderPDFToImage(file) {
+  return new Promise((resolve, reject) => {
+    // Use FileReader in chunks via createObjectURL — much lighter on iOS memory
+    const url = URL.createObjectURL(file);
+
+    // Dynamically load PDF.js from a data-URI shim approach.
+    // We use an <iframe> + canvas trick: create an off-screen iframe,
+    // render the PDF page there, grab canvas toDataURL.
+    // Simpler & more reliable: use pdf.js CDN via a <script> tag injected once.
+
+    // Inject pdf.js if not already loaded
+    if (window.pdfjsLib) {
+      _doPDFRender(url, resolve, reject);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    script.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+        'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      _doPDFRender(url, resolve, reject);
+    };
+    script.onerror = () => reject(new Error('تعذّر تحميل مكتبة قراءة PDF. تحقق من الاتصال بالإنترنت.'));
+    document.head.appendChild(script);
+  });
+}
+
+async function _doPDFRender(objectURL, resolve, reject) {
+  try {
+    const loadingTask = window.pdfjsLib.getDocument({ url: objectURL, disableStream: false });
+    const pdfDoc = await loadingTask.promise;
+    const page = await pdfDoc.getPage(1);
+
+    // Scale to ~1200px wide for good quality without huge memory
+    const viewport = page.getViewport({ scale: 1 });
+    const targetWidth = 1200;
+    const scale = targetWidth / viewport.width;
+    const scaledViewport = page.getViewport({ scale });
+
+    const canvas = document.createElement('canvas');
+    canvas.width  = Math.floor(scaledViewport.width);
+    canvas.height = Math.floor(scaledViewport.height);
+    const ctx = canvas.getContext('2d');
+
+    await page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
+
+    // Export as JPEG at 85% quality (~200-400KB typically)
+    const dataURL = canvas.toDataURL('image/jpeg', 0.85);
+    const base64 = dataURL.split(',')[1];
+
+    // Clean up
+    URL.revokeObjectURL(objectURL);
+    canvas.width = 0; canvas.height = 0;
+
+    resolve(base64);
+  } catch (e) {
+    URL.revokeObjectURL(objectURL);
+    reject(e);
+  }
+}
+
+// ===== CLAUDE API CALL – sends IMAGE (not PDF binary) =====
+async function extractDataFromImage(imageBase64) {
+  const prompt = `أنت خبير متخصص في تحليل بطاقات نافس السعودية (اختبارات TIMSS/PIRLS المحلية).
+
+قم بتحليل هذه البطاقة واستخراج جميع البيانات بدقة عالية جداً. أعد الإجابة بصيغة JSON فقط بدون أي نص إضافي.
+
+استخرج البيانات التالية:
+
+{
+  "school": {
+    "name": "اسم المدرسة",
+    "stage": "المرحلة",
+    "grade": "الصف",
+    "region": "الإدارة التعليمية",
+    "office": "مكتب التعليم",
+    "sector": "القطاع (بنين/بنات)",
+    "totalStudents": رقم,
+    "testedStudents": رقم,
+    "participationRate": رقم,
+    "academicYear": "العام الدراسي",
+    "changeValue": رقم
+  },
+  "subjects": {
+    "math": {
+      "name": "الرياضيات",
+      "mastery": رقم,
+      "mastery2023": رقم,
+      "target2030": رقم,
+      "change": رقم,
+      "levels": { "advanced": رقم, "proficient": رقم, "basic": رقم, "belowBasic": رقم },
+      "comparisons": { "school": رقم, "kingdom": رقم, "region": رقم, "office": رقم },
+      "subdomains": [{"name": "اسم المجال", "value": رقم, "value2023": رقم}]
+    },
+    "science": {
+      "name": "العلوم",
+      "mastery": رقم, "mastery2023": رقم, "target2030": رقم, "change": رقم,
+      "levels": { "advanced": رقم, "proficient": رقم, "basic": رقم, "belowBasic": رقم },
+      "comparisons": { "school": رقم, "kingdom": رقم, "region": رقم, "office": رقم },
+      "subdomains": [{"name": "...", "value": رقم, "value2023": رقم}]
+    },
+    "reading": {
+      "name": "القراءة",
+      "mastery": رقم, "mastery2023": رقم, "target2030": رقم, "change": رقم,
+      "levels": { "advanced": رقم, "proficient": رقم, "basic": رقم, "belowBasic": رقم },
+      "comparisons": { "school": رقم, "kingdom": رقم, "region": رقم, "office": رقم },
+      "subdomains": [{"name": "...", "value": رقم, "value2023": رقم}]
+    }
+  },
+  "overallMastery": { "current": رقم, "previous": رقم, "change": رقم }
+}
+
+استخرج كل الأرقام بدقة. لا تخمن. إذا لم تجد قيمة ضع null.`;
+
+  const response = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{
+        role: 'user',
+        content: [
+          {
+            type: 'image',
+            source: { type: 'base64', media_type: 'image/jpeg', data: imageBase64 }
+          },
+          { type: 'text', text: prompt }
+        ]
+      }]
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`API Error ${response.status}: ${errText}`);
+  }
+
+  const data = await response.json();
+  const text = data.content.map(i => i.text || '').join('');
+  const clean = text.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+
+// ===== RENDER DASHBOARD =====
+function renderDashboard() {
+  const d = nafesData;
+  const s = d.school;
+  const subj = d.subjects;
+
+  const avgMastery = d.overallMastery.current;
+  const prevMastery = d.overallMastery.previous;
+  const change = d.overallMastery.change;
+  const changeSign = change >= 0 ? '+' : '';
+  const changeTrend = change >= 0 ? 'trend-up' : 'trend-down';
+
+  document.getElementById('dashboardContent').innerHTML = `
+
+    <!-- Alerts -->
+    ${generateAlerts(d)}
+
+    <!-- School Card -->
+    <div class="school-card">
+      <div>
+        <div class="school-name">${s.name || 'المدرسة'}</div>
+        <div class="school-meta">
+          <div class="meta-tag">🎓 ${s.stage || ''} – ${s.grade || ''}</div>
+          <div class="meta-tag">🏢 ${s.region || ''}</div>
+          <div class="meta-tag">📍 ${s.office || ''}</div>
+          <div class="meta-tag">📅 العام ${s.academicYear || '1445'}</div>
+          ${s.sector ? `<div class="meta-tag">👤 ${s.sector}</div>` : ''}
+        </div>
+      </div>
+      <div class="school-stats">
+        <div class="stat-bubble">
+          <span class="val">${s.totalStudents || '-'}</span>
+          <span class="lbl">إجمالي الطلاب</span>
+        </div>
+        <div class="stat-bubble">
+          <span class="val">${s.testedStudents || '-'}</span>
+          <span class="lbl">المختبرون</span>
+        </div>
+        ${s.changeValue != null ? `
+        <div class="stat-bubble">
+          <span class="val" style="color:${change >= 0 ? '#2ecc71' : '#e74c3c'}">${changeSign}${s.changeValue}</span>
+          <span class="lbl">مقدار التغير</span>
+        </div>` : ''}
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <span class="kpi-icon">🏆</span>
+        <span class="kpi-val">${avgMastery != null ? avgMastery.toFixed(1) + '%' : '-'}</span>
+        <div class="kpi-lbl">متوسط الإتقان الكلي</div>
+        <div class="kpi-trend ${changeTrend}">${changeSign}${change != null ? change.toFixed(1) : 0}%</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:${avgMastery || 0}%;background:linear-gradient(90deg,#c9a227,#e8c458)"></div></div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon">📐</span>
+        <span class="kpi-val">${subj.math?.mastery != null ? subj.math.mastery + '%' : '-'}</span>
+        <div class="kpi-lbl">نسبة إتقان الرياضيات</div>
+        <div class="kpi-trend ${(subj.math?.change||0)>=0?'trend-up':'trend-down'}">${(subj.math?.change||0)>=0?'+':''}${subj.math?.change||0}%</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:${subj.math?.mastery||0}%;background:linear-gradient(90deg,#3498db,#00b4d8)"></div></div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon">🔬</span>
+        <span class="kpi-val">${subj.science?.mastery != null ? subj.science.mastery + '%' : '-'}</span>
+        <div class="kpi-lbl">نسبة إتقان العلوم</div>
+        <div class="kpi-trend ${(subj.science?.change||0)>=0?'trend-up':'trend-down'}">${(subj.science?.change||0)>=0?'+':''}${subj.science?.change||0}%</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:${subj.science?.mastery||0}%;background:linear-gradient(90deg,#27ae60,#2ecc71)"></div></div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon">📚</span>
+        <span class="kpi-val">${subj.reading?.mastery != null ? subj.reading.mastery + '%' : '-'}</span>
+        <div class="kpi-lbl">نسبة إتقان القراءة</div>
+        <div class="kpi-trend ${(subj.reading?.change||0)>=0?'trend-up':'trend-down'}">${(subj.reading?.change||0)>=0?'+':''}${subj.reading?.change||0}%</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:${subj.reading?.mastery||0}%;background:linear-gradient(90deg,#8e44ad,#9b59b6)"></div></div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon">👥</span>
+        <span class="kpi-val">${s.participationRate != null ? s.participationRate + '%' : (s.testedStudents && s.totalStudents ? Math.round(s.testedStudents/s.totalStudents*100)+'%' : '-')}</span>
+        <div class="kpi-lbl">نسبة المشاركة</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" style="width:${s.participationRate||Math.round((s.testedStudents/s.totalStudents)*100)||95}%;background:linear-gradient(90deg,#f39c12,#e8c458)"></div></div>
+      </div>
+      <div class="kpi-card">
+        <span class="kpi-icon">🎯</span>
+        <span class="kpi-val">${getBestSubject(subj).name}</span>
+        <div class="kpi-lbl">أعلى مادة أداءً</div>
+        <div class="kpi-trend trend-up">${getBestSubject(subj).val}%</div>
+      </div>
+    </div>
+
+    <!-- Subjects Section -->
+    <div class="section-header">
+      <h3>📊 أداء المواد الدراسية</h3>
+      <div class="line"></div>
+    </div>
+    <div class="subjects-grid">
+      ${renderSubjectCard(subj.math, '#3498db', '📐')}
+      ${renderSubjectCard(subj.science, '#27ae60', '🔬')}
+      ${renderSubjectCard(subj.reading, '#8e44ad', '📚')}
+    </div>
+
+    <!-- Subdomains Heatmap -->
+    <div class="section-header">
+      <h3>🗺️ خريطة حرارة المجالات الفرعية</h3>
+      <div class="line"></div>
+    </div>
+    <div class="heatmap-grid" id="heatmapGrid">
+      ${renderHeatmap(d)}
+    </div>
+  `;
+
+  // Animate bars after render
+  setTimeout(() => {
+    document.querySelectorAll('.kpi-bar-fill, .comparison-bar-fill, .subdomain-bar-fill').forEach(el => {
+      const w = el.style.width;
+      el.style.width = '0';
+      setTimeout(() => el.style.width = w, 100);
+    });
+  }, 100);
+}
+
+function getBestSubject(subj) {
+  const vals = [
+    { name: 'الرياضيات', val: subj.math?.mastery || 0 },
+    { name: 'العلوم', val: subj.science?.mastery || 0 },
+    { name: 'القراءة', val: subj.reading?.mastery || 0 }
+  ];
+  return vals.sort((a,b) => b.val - a.val)[0];
+}
+
+function getWorstSubject(subj) {
+  const vals = [
+    { name: 'الرياضيات', val: subj.math?.mastery || 0 },
+    { name: 'العلوم', val: subj.science?.mastery || 0 },
+    { name: 'القراءة', val: subj.reading?.mastery || 0 }
+  ];
+  return vals.sort((a,b) => a.val - b.val)[0];
+}
+
+function generateAlerts(d) {
+  const alerts = [];
+  const s = d.subjects;
+
+  if ((s.math?.mastery || 0) < 30) {
+    alerts.push(`<div class="alert-banner alert-danger">🚨 تنبيه حرج: أداء الرياضيات (${s.math?.mastery}%) دون المستوى المطلوب بشكل ملحوظ – يستدعي تدخلاً فورياً</div>`);
+  }
+
+  if ((d.overallMastery?.change || 0) < 0) {
+    alerts.push(`<div class="alert-banner alert-warning">⚠️ تراجع في الأداء العام بمقدار ${Math.abs(d.overallMastery?.change || 0)}% مقارنة بالعام الماضي</div>`);
+  } else if ((d.overallMastery?.change || 0) > 5) {
+    alerts.push(`<div class="alert-banner alert-success">✅ تحسن ملحوظ في الأداء العام بمقدار +${d.overallMastery?.change}% – يستحق التعزيز والاستمرار</div>`);
+  }
+
+  return alerts.join('');
+}
+
+function renderSubjectCard(subj, color, icon) {
+  if (!subj) return `<div class="subject-card"><p style="color:var(--gray-500);text-align:center;padding:20px">لا توجد بيانات</p></div>`;
+
+  const lvls = subj.levels || {};
+  const comp = subj.comparisons || {};
+
+  return `
+    <div class="subject-card">
+      <div class="subject-header">
+        <div class="subject-title">
+          <div class="subject-icon" style="background:${color}22">${icon}</div>
+          ${subj.name || ''}
+        </div>
+        <div class="subject-mastery" style="color:${color}">${subj.mastery != null ? subj.mastery + '%' : '-'}</div>
+      </div>
+
+      <div class="perf-levels">
+        <div style="font-size:11px;color:var(--gray-500);margin-bottom:6px">توزيع مستويات الأداء</div>
+        <div class="perf-levels-bar">
+          ${lvls.advanced ? `<div class="perf-seg seg-advanced" style="flex:${lvls.advanced}">${lvls.advanced > 5 ? lvls.advanced + '%' : ''}</div>` : ''}
+          ${lvls.proficient ? `<div class="perf-seg seg-proficient" style="flex:${lvls.proficient}">${lvls.proficient > 5 ? lvls.proficient + '%' : ''}</div>` : ''}
+          ${lvls.basic ? `<div class="perf-seg seg-basic" style="flex:${lvls.basic}">${lvls.basic > 5 ? lvls.basic + '%' : ''}</div>` : ''}
+          ${lvls.belowBasic ? `<div class="perf-seg seg-below" style="flex:${lvls.belowBasic}">${lvls.belowBasic > 5 ? lvls.belowBasic + '%' : ''}</div>` : ''}
+        </div>
+        <div class="perf-legend">
+          ${lvls.advanced ? `<div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div>متقدم ${lvls.advanced}%</div>` : ''}
+          ${lvls.proficient ? `<div class="legend-item"><div class="legend-dot" style="background:#2ecc71"></div>متقن ${lvls.proficient}%</div>` : ''}
+          ${lvls.basic ? `<div class="legend-item"><div class="legend-dot" style="background:#f39c12"></div>أساسي ${lvls.basic}%</div>` : ''}
+          ${lvls.belowBasic ? `<div class="legend-item"><div class="legend-dot" style="background:#e74c3c"></div>دون الأساسي ${lvls.belowBasic}%</div>` : ''}
+        </div>
+      </div>
+
+      ${comp.kingdom || comp.region || comp.office ? `
+      <div class="comparison-section" style="margin-top:16px">
+        <div style="font-size:11px;color:var(--gray-500);margin-bottom:8px">المقارنة مع الجهات</div>
+        ${comp.school ? renderCompRow('المدرسة', comp.school, color) : ''}
+        ${comp.kingdom ? renderCompRow('المملكة', comp.kingdom, '#8e44ad') : ''}
+        ${comp.region ? renderCompRow('الإدارة', comp.region, '#e67e22') : ''}
+        ${comp.office ? renderCompRow('المكتب', comp.office, '#16a085') : ''}
+      </div>` : ''}
+
+      ${subj.subdomains && subj.subdomains.length > 0 ? `
+      <div style="margin-top:16px">
+        <div style="font-size:11px;color:var(--gray-500);margin-bottom:8px">المجالات الفرعية</div>
+        ${subj.subdomains.slice(0,4).map(sd => `
+          <div style="margin-bottom:6px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+              <span style="color:var(--gray-300)">${sd.name}</span>
+              <span style="color:${color};font-weight:700">${sd.value}%</span>
+            </div>
+            <div class="subdomain-bar-track">
+              <div class="subdomain-bar-fill" style="width:${sd.value}%;background:${color}"></div>
+            </div>
+          </div>
+        `).join('')}
+      </div>` : ''}
+
+      ${subj.target2030 ? `
+      <div style="margin-top:14px;padding:10px;background:rgba(201,162,39,0.08);border-radius:8px;border:1px solid rgba(201,162,39,0.2)">
+        <div style="font-size:11px;color:var(--gray-500)">المستهدف 2030</div>
+        <div style="font-size:18px;font-weight:800;color:var(--accent-gold)">${subj.target2030}%</div>
+        <div style="font-size:11px;color:${(subj.mastery||0)>=(subj.target2030||100)?'#2ecc71':'#e74c3c'}">
+          ${(subj.mastery||0)>=(subj.target2030||100) ? '✅ تجاوز المستهدف' : `⬆ الفجوة: ${((subj.target2030||0)-(subj.mastery||0)).toFixed(1)}%`}
+        </div>
+      </div>` : ''}
+    </div>
+  `;
+}
+
+function renderCompRow(label, val, color) {
+  return `
+    <div class="comparison-row">
+      <div class="comparison-label">${label}</div>
+      <div class="comparison-bar-track">
+        <div class="comparison-bar-fill" style="width:${val}%;background:${color}"></div>
+      </div>
+      <div class="comparison-val" style="color:${color}">${val}%</div>
+    </div>
+  `;
+}
+
+function renderHeatmap(d) {
+  const all = [];
+  ['math','science','reading'].forEach(key => {
+    const subj = d.subjects[key];
+    if (subj?.subdomains) {
+      subj.subdomains.forEach(sd => {
+        all.push({ name: sd.name, val: sd.value, subject: subj.name });
+      });
+    }
+  });
+
+  if (all.length === 0) return '<p style="color:var(--gray-500);font-size:14px">لا توجد بيانات مجالات فرعية</p>';
+
+  return all.map(item => {
+    const cls = item.val >= 60 ? 'hm-high' : item.val >= 40 ? 'hm-mid' : 'hm-low';
+    return `
+      <div class="heatmap-cell ${cls}">
+        <span class="hm-val">${item.val}%</span>
+        <span class="hm-name">${item.name}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== RENDER ANALYSIS PAGE =====
+function renderAnalysis() {
+  const d = nafesData;
+  const subj = d.subjects;
+
+  const strengths = generateStrengths(d);
+  const weaknesses = generateWeaknesses(d);
+  const recommendations = generateRecommendations(d);
+
+  document.getElementById('analysisContent').innerHTML = `
+
+    <div class="analysis-grid">
+      <div class="analysis-card">
+        <h4 style="color:#2ecc71">✅ نقاط القوة</h4>
+        <ul class="strengths-list">
+          ${strengths.map(s => `<li>✅ ${s}</li>`).join('')}
+        </ul>
+      </div>
+      <div class="analysis-card">
+        <h4 style="color:#e74c3c">⚠️ نقاط الضعف والمخاوف</h4>
+        <ul class="weaknesses-list">
+          ${weaknesses.map(w => `<li>⚠️ ${w}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <div class="recommendations-card">
+      <h4 style="font-size:16px;font-weight:700;margin-bottom:16px">💡 التوصيات والإجراءات العلاجية المقترحة</h4>
+      ${recommendations.map((rec, i) => `
+        <div class="rec-item">
+          <div class="rec-num">${i + 1}</div>
+          <div class="rec-content">
+            <h5>${rec.title}</h5>
+            <p>${rec.desc}</p>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="ai-chat-card">
+      <h4 style="font-size:16px;font-weight:700;margin-bottom:16px">🤖 المحلل التربوي الذكي</h4>
+      <div class="ai-response" id="aiResponse">
+        <div class="ai-loading">
+          <div class="ai-dots"><span></span><span></span><span></span></div>
+          <span>جاري إعداد التحليل التربوي...</span>
+        </div>
+      </div>
+      <div class="ai-actions">
+        <button class="ai-btn" onclick="getAIAnalysis('executive')">📋 ملخص تنفيذي</button>
+        <button class="ai-btn" onclick="getAIAnalysis('improvement')">📈 خطة تحسين</button>
+        <button class="ai-btn" onclick="getAIAnalysis('kpis')">🎯 مؤشرات أداء مقترحة</button>
+        <button class="ai-btn" onclick="getAIAnalysis('initiatives')">🚀 مبادرات مقترحة</button>
+        <button class="ai-btn" onclick="getAIAnalysis('causes')">🔎 أسباب التدني المحتملة</button>
+      </div>
+    </div>
+  `;
+
+  // Auto-trigger AI analysis
+  setTimeout(() => getAIAnalysis('executive'), 500);
+}
+
+function generateStrengths(d) {
+  const strs = [];
+  const subj = d.subjects;
+  const best = getBestSubject(subj);
+
+  strs.push(`أعلى أداء في مادة ${best.name} بنسبة ${best.val}%`);
+
+  if ((subj.reading?.mastery || 0) > 50) strs.push(`مستوى القراءة فوق نسبة الإتقان المستهدفة بشكل ملحوظ`);
+  if ((d.overallMastery?.change || 0) > 0) strs.push(`تحسن إيجابي في الأداء العام بمقدار +${d.overallMastery.change}% مقارنة بالعام الماضي`);
+
+  ['math','science','reading'].forEach(key => {
+    const s = subj[key];
+    if (s && (s.levels?.advanced || 0) > 10) {
+      strs.push(`نسبة طلاب المستوى المتقدم في ${s.name} تجاوزت ${s.levels.advanced}%`);
+    }
+  });
+
+  if (strs.length < 3) strs.push('التزام المدرسة بمعايير الجودة وتطبيق اختبارات نافس');
+
+  return strs;
+}
+
+function generateWeaknesses(d) {
+  const weaks = [];
+  const subj = d.subjects;
+  const worst = getWorstSubject(subj);
+
+  weaks.push(`تدني الأداء في مادة ${worst.name} بنسبة ${worst.val}% يستدعي مراجعة المنهج`);
+
+  ['math','science','reading'].forEach(key => {
+    const s = subj[key];
+    if (s && (s.levels?.belowBasic || 0) > 20) {
+      weaks.push(`نسبة الطلاب دون المستوى الأساسي في ${s.name} تبلغ ${s.levels.belowBasic}% – حاجة ماسة للدعم`);
+    }
+    if (s && s.target2030 && (s.mastery || 0) < s.target2030) {
+      weaks.push(`فجوة بمقدار ${(s.target2030 - s.mastery).toFixed(1)}% بين أداء ${s.name} والمستهدف 2030`);
+    }
+  });
+
+  if (weaks.length < 3) weaks.push('الحاجة إلى تطوير استراتيجيات التدريس في المجالات الفرعية الضعيفة');
+
+  return weaks;
+}
+
+function generateRecommendations(d) {
+  const recs = [];
+  const worst = getWorstSubject(d.subjects);
+
+  recs.push({
+    title: `تعزيز أداء ${worst.name}`,
+    desc: `إعداد خطة علاجية مكثفة لمادة ${worst.name} تشمل: حصص دعم إضافية، برامج تعليمية تكيفية، ومراجعة أساليب التدريس المتبعة.`
+  });
+
+  recs.push({
+    title: 'برامج الطلاب دون المستوى الأساسي',
+    desc: 'استهداف الطلاب في المستوى دون الأساسي ببرامج تعليمية فردية ومجموعات تعلم صغيرة لرفع مستواهم قبل الاختبار القادم.'
+  });
+
+  recs.push({
+    title: 'تطوير الكفاءات التدريسية',
+    desc: 'تنظيم ورش تدريبية للمعلمين متخصصة في الأساليب التدريسية الحديثة وتحليل نتائج الاختبارات وتوظيفها في التخطيط.'
+  });
+
+  recs.push({
+    title: 'مبادرة نحو مستهدف 2030',
+    desc: 'وضع خارطة طريق واضحة بأهداف فصلية قابلة للقياس للوصول إلى مستهدفات رؤية 2030 في جميع المواد الدراسية.'
+  });
+
+  recs.push({
+    title: 'تعزيز نقاط القوة ونشر الممارسات الجيدة',
+    desc: `الاستفادة من النجاح في ${getBestSubject(d.subjects).name} وتطبيق ممارساتها على المواد الأخرى عبر جلسات مشاركة المعرفة بين المعلمين.`
+  });
+
+  return recs;
+}
+
+// ===== AI ANALYSIS =====
+async function getAIAnalysis(type) {
+  const responseEl = document.getElementById('aiResponse');
+  if (!responseEl) return;
+
+  responseEl.innerHTML = `<div class="ai-loading"><div class="ai-dots"><span></span><span></span><span></span></div><span>جاري التحليل...</span></div>`;
+
+  const prompts = {
+    executive: `اكتب ملخصاً تنفيذياً احترافياً باللغة العربية عن نتائج اختبار نافس للمدرسة التالية: ${JSON.stringify(nafesData)} في 3-4 فقرات تشمل: الأداء العام، أبرز النتائج، والتوصيات الرئيسية. اكتب بأسلوب تربوي احترافي يناسب القيادة التعليمية.`,
+    improvement: `بناءً على نتائج نافس التالية: ${JSON.stringify(nafesData)} - اكتب خطة تحسين تفصيلية لمدة فصل دراسي تشمل: الأهداف، الإجراءات، الجدول الزمني، ومؤشرات النجاح. بأسلوب تربوي متخصص.`,
+    kpis: `بناءً على نتائج نافس: ${JSON.stringify(nafesData)} - اقترح 6-8 مؤشرات أداء رئيسية (KPIs) مع المستهدفات الكمية والجداول الزمنية للوصول إليها. اكتب بصيغة جدول منظم.`,
+    initiatives: `بناءً على نتائج نافس: ${JSON.stringify(nafesData)} - اقترح 4-5 مبادرات تربوية ابتكارية مع وصف تفصيلي لكل منها وآلية التنفيذ والمتوقع من كل مبادرة.`,
+    causes: `بناءً على نتائج نافس: ${JSON.stringify(nafesData)} - حلل أسباب التدني في المواد الضعيفة من منظور تربوي متخصص، وصنفها إلى: أسباب تعليمية، بيئية، وتنظيمية.`
+  };
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompts[type] }]
+      })
+    });
+
+    const data = await resp.json();
+    const text = data.content.map(i => i.text || '').join('');
+    responseEl.textContent = text;
+  } catch (err) {
+    responseEl.textContent = 'عذراً، حدث خطأ في الاتصال بالمحلل الذكي. تأكد من الاتصال بالإنترنت.';
+  }
+}
+
+// ===== RENDER COMPARISON =====
+function renderComparison() {
+  const d = nafesData;
+  const subj = d.subjects;
+  const all = [
+    { key:'math', label:'الرياضيات', color:'#3498db', icon:'📐' },
+    { key:'science', label:'العلوم', color:'#27ae60', icon:'🔬' },
+    { key:'reading', label:'القراءة', color:'#8e44ad', icon:'📚' }
+  ];
+
+  document.getElementById('comparisonContent').innerHTML = `
+
+    <div class="section-header">
+      <h3>📈 مقارنة الأداء بين العامين 2023 و2024</h3>
+      <div class="line"></div>
+    </div>
+
+    <div class="year-comparison">
+      <div style="display:grid;grid-template-columns:120px 1fr 1fr 80px;gap:16px;padding:8px 12px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--gray-500)">المادة</div>
+        <div style="text-align:center;font-size:11px;color:var(--gray-500)">2023</div>
+        <div style="text-align:center;font-size:11px;color:var(--gray-500)">2024</div>
+        <div style="text-align:center;font-size:11px;color:var(--gray-500)">التغيير</div>
+      </div>
+
+      ${all.map(item => {
+        const s = subj[item.key];
+        if (!s) return '';
+        const prev = s.mastery2023;
+        const curr = s.mastery;
+        const chg = (curr != null && prev != null) ? (curr - prev).toFixed(1) : null;
+        const chgColor = chg > 0 ? '#2ecc71' : chg < 0 ? '#e74c3c' : '#f39c12';
+        return `
+          <div class="comp-subject-row">
+            <div class="comp-subject-name">${item.icon} ${item.label}</div>
+            <div class="comp-year-col">
+              <div class="comp-year-label">2023</div>
+              <div class="comp-val-big" style="color:${item.color}88">${prev != null ? prev + '%' : '-'}</div>
+            </div>
+            <div class="comp-year-col">
+              <div class="comp-year-label">2024</div>
+              <div class="comp-val-big" style="color:${item.color}">${curr != null ? curr + '%' : '-'}</div>
+            </div>
+            <div class="comp-change" style="color:${chgColor}">
+              ${chg != null ? (chg > 0 ? '▲' : chg < 0 ? '▼' : '●') + ' ' + Math.abs(chg) + '%' : '-'}
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div class="section-header">
+      <h3>🌐 مقارنة المدرسة بالجهات</h3>
+      <div class="line"></div>
+    </div>
+
+    ${all.map(item => {
+      const s = subj[item.key];
+      if (!s?.comparisons) return '';
+      const comp = s.comparisons;
+      return `
+        <div class="year-comparison" style="margin-bottom:16px">
+          <div style="font-size:15px;font-weight:700;color:${item.color};margin-bottom:16px">${item.icon} ${item.label}</div>
+          ${comp.school ? renderCompRow('المدرسة', comp.school, item.color) : ''}
+          ${comp.kingdom ? renderCompRow('المملكة', comp.kingdom, '#8e44ad') : ''}
+          ${comp.region ? renderCompRow('الإدارة', comp.region, '#e67e22') : ''}
+          ${comp.office ? renderCompRow('المكتب', comp.office, '#16a085') : ''}
+        </div>
+      `;
+    }).join('')}
+
+    ${renderSubdomainComparison(d)}
+  `;
+}
+
+function renderSubdomainComparison(d) {
+  const all = [];
+  ['math','science','reading'].forEach(key => {
+    const subj = d.subjects[key];
+    if (subj?.subdomains?.length) {
+      subj.subdomains.forEach(sd => {
+        if (sd.value2023 != null && sd.value != null) {
+          all.push({ ...sd, subject: subj.name });
+        }
+      });
+    }
+  });
+
+  if (!all.length) return '';
+
+  return `
+    <div class="section-header" style="margin-top:24px">
+      <h3>📊 مقارنة المجالات الفرعية (2023 vs 2024)</h3>
+      <div class="line"></div>
+    </div>
+    <div class="year-comparison">
+      ${all.map(sd => {
+        const chg = (sd.value - sd.value2023).toFixed(1);
+        const chgColor = chg > 0 ? '#2ecc71' : '#e74c3c';
+        return `
+          <div class="comp-subject-row">
+            <div class="comp-subject-name" style="font-size:12px">${sd.name}<br><span style="font-size:10px;color:var(--gray-500)">${sd.subject}</span></div>
+            <div class="comp-year-col">
+              <div class="comp-year-label">2023</div>
+              <div class="comp-val-big" style="color:var(--gray-500);font-size:18px">${sd.value2023}%</div>
+            </div>
+            <div class="comp-year-col">
+              <div class="comp-year-label">2024</div>
+              <div class="comp-val-big" style="color:var(--accent-gold);font-size:18px">${sd.value}%</div>
+            </div>
+            <div class="comp-change" style="color:${chgColor};font-size:14px">
+              ${chg > 0 ? '▲' : '▼'} ${Math.abs(chg)}%
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+// ===== RENDER REPORTS =====
+function renderReports() {
+  document.getElementById('reportsContent').innerHTML = `
+
+    <div class="section-header">
+      <h3>📄 مركز التقارير الذكية</h3>
+      <div class="line"></div>
+    </div>
+
+    <div class="reports-grid">
+      <div class="report-card" onclick="generateReport('executive')">
+        <span class="report-icon">📋</span>
+        <div class="report-title">التقرير التنفيذي</div>
+        <div class="report-desc">ملخص شامل للأداء العام يناسب القيادة التعليمية وصانعي القرار</div>
+        <button class="btn-generate">إنشاء التقرير</button>
+      </div>
+      <div class="report-card" onclick="generateReport('detailed')">
+        <span class="report-icon">📊</span>
+        <div class="report-title">التقرير التفصيلي</div>
+        <div class="report-desc">تقرير شامل بجميع البيانات والنسب والمجالات الفرعية والمقارنات</div>
+        <button class="btn-generate">إنشاء التقرير</button>
+      </div>
+      <div class="report-card" onclick="generateReport('math')">
+        <span class="report-icon">📐</span>
+        <div class="report-title">تقرير الرياضيات</div>
+        <div class="report-desc">تحليل معمق لأداء الرياضيات بجميع مجالاتها الفرعية والمستويات</div>
+        <button class="btn-generate">إنشاء التقرير</button>
+      </div>
+      <div class="report-card" onclick="generateReport('science')">
+        <span class="report-icon">🔬</span>
+        <div class="report-title">تقرير العلوم</div>
+        <div class="report-desc">تحليل أداء العلوم والمقارنة بين المجالات الفرعية والمستهدفات</div>
+        <button class="btn-generate">إنشاء التقرير</button>
+      </div>
+      <div class="report-card" onclick="generateReport('reading')">
+        <span class="report-icon">📚</span>
+        <div class="report-title">تقرير القراءة</div>
+        <div class="report-desc">تحليل كفاءات القراءة وفهم المقروء وأداء المجالات الفرعية</div>
+        <button class="btn-generate">إنشاء التقرير</button>
+      </div>
+      <div class="report-card" onclick="generateReport('improvement')">
+        <span class="report-icon">🚀</span>
+        <div class="report-title">تقرير التحسين</div>
+        <div class="report-desc">خطة تحسين مفصلة بأهداف قابلة للقياس وإجراءات علاجية مقترحة</div>
+        <button class="btn-generate">إنشاء التقرير</button>
+      </div>
+    </div>
+  `;
+}
+
+function generateReport(type) {
+  const d = nafesData;
+  const s = d.school;
+  const subj = d.subjects;
+
+  let title = '';
+  let body = '';
+
+  if (type === 'executive') {
+    title = 'التقرير التنفيذي – نتائج اختبارات نافس';
+    body = `
+      <h4>بيانات المدرسة</h4>
+      <table>
+        <tr><th>المدرسة</th><td>${s.name}</td><th>المرحلة</th><td>${s.stage}</td></tr>
+        <tr><th>الصف</th><td>${s.grade}</td><th>العام الدراسي</th><td>${s.academicYear}</td></tr>
+        <tr><th>الإدارة التعليمية</th><td>${s.region}</td><th>مكتب التعليم</th><td>${s.office}</td></tr>
+        <tr><th>إجمالي الطلاب</th><td>${s.totalStudents}</td><th>المختبرون</th><td>${s.testedStudents}</td></tr>
+      </table>
+
+      <h4>ملخص الأداء</h4>
+      <table>
+        <tr><th>المادة</th><th>نسبة الإتقان 2024</th><th>نسبة الإتقان 2023</th><th>التغيير</th></tr>
+        ${['math','science','reading'].map(k => {
+          const subj_d = subj[k];
+          if (!subj_d) return '';
+          const chg = (subj_d.mastery != null && subj_d.mastery2023 != null)
+            ? ((subj_d.mastery - subj_d.mastery2023) > 0 ? '+' : '') + (subj_d.mastery - subj_d.mastery2023).toFixed(1) + '%'
+            : '-';
+          return `<tr><td>${subj_d.name}</td><td>${subj_d.mastery != null ? subj_d.mastery + '%' : '-'}</td><td>${subj_d.mastery2023 != null ? subj_d.mastery2023 + '%' : '-'}</td><td>${chg}</td></tr>`;
+        }).join('')}
+      </table>
+
+      <h4>أبرز النتائج</h4>
+      <p>• أعلى أداء في مادة ${getBestSubject(subj).name} بنسبة ${getBestSubject(subj).val}%</p>
+      <p>• أدنى أداء في مادة ${getWorstSubject(subj).name} بنسبة ${getWorstSubject(subj).val}%</p>
+      <p>• متوسط الأداء الكلي: ${d.overallMastery?.current?.toFixed(1) || '-'}%</p>
+      <p>• التغيير عن العام الماضي: ${d.overallMastery?.change != null ? (d.overallMastery.change > 0 ? '+' : '') + d.overallMastery.change + '%' : '-'}</p>
+
+      <h4>التوصيات الرئيسية</h4>
+      ${generateRecommendations(d).map((r, i) => `<p><strong>${i+1}. ${r.title}:</strong> ${r.desc}</p>`).join('')}
+    `;
+  } else if (type === 'detailed') {
+    title = 'التقرير التفصيلي – نتائج اختبارات نافس';
+    body = `
+      <h4>بيانات المدرسة</h4>
+      <table>
+        <tr><th>المدرسة</th><td>${s.name}</td><th>المرحلة</th><td>${s.stage}</td></tr>
+        <tr><th>الصف</th><td>${s.grade}</td><th>العام الدراسي</th><td>${s.academicYear}</td></tr>
+        <tr><th>الإدارة التعليمية</th><td>${s.region}</td><th>مكتب التعليم</th><td>${s.office}</td></tr>
+        <tr><th>إجمالي الطلاب</th><td>${s.totalStudents}</td><th>المختبرون</th><td>${s.testedStudents}</td></tr>
+      </table>
+
+      ${['math','science','reading'].map(k => {
+        const sd = subj[k];
+        if (!sd) return '';
+        return `
+          <h4>${sd.name}</h4>
+          <table>
+            <tr><th>نسبة الإتقان 2024</th><td>${sd.mastery != null ? sd.mastery + '%' : '-'}</td><th>نسبة الإتقان 2023</th><td>${sd.mastery2023 != null ? sd.mastery2023 + '%' : '-'}</td></tr>
+            <tr><th>المستوى المتقدم</th><td>${sd.levels?.advanced != null ? sd.levels.advanced + '%' : '-'}</td><th>المستوى المتقن</th><td>${sd.levels?.proficient != null ? sd.levels.proficient + '%' : '-'}</td></tr>
+            <tr><th>المستوى الأساسي</th><td>${sd.levels?.basic != null ? sd.levels.basic + '%' : '-'}</td><th>دون الأساسي</th><td>${sd.levels?.belowBasic != null ? sd.levels.belowBasic + '%' : '-'}</td></tr>
+            ${sd.target2030 ? `<tr><th>المستهدف 2030</th><td>${sd.target2030}%</td><th>الفجوة</th><td>${((sd.target2030 - (sd.mastery||0)).toFixed(1))}%</td></tr>` : ''}
+          </table>
+          ${sd.subdomains?.length ? `
+          <p><strong>المجالات الفرعية:</strong></p>
+          <table>
+            <tr><th>المجال</th><th>2024</th><th>2023</th><th>التغيير</th></tr>
+            ${sd.subdomains.map(dom => {
+              const chg = (dom.value != null && dom.value2023 != null) ? ((dom.value - dom.value2023) > 0 ? '+' : '') + (dom.value - dom.value2023).toFixed(1) + '%' : '-';
+              return `<tr><td>${dom.name}</td><td>${dom.value != null ? dom.value + '%' : '-'}</td><td>${dom.value2023 != null ? dom.value2023 + '%' : '-'}</td><td>${chg}</td></tr>`;
+            }).join('')}
+          </table>` : ''}
+        `;
+      }).join('')}
+    `;
+  } else if (['math','science','reading'].includes(type)) {
+    const sd = subj[type];
+    if (!sd) { alert('لا توجد بيانات لهذه المادة'); return; }
+    title = `تقرير ${sd.name}`;
+    body = `
+      <h4>أداء ${sd.name}</h4>
+      <table>
+        <tr><th>نسبة الإتقان 2024</th><td style="font-size:18px;font-weight:800;color:var(--accent-gold)">${sd.mastery != null ? sd.mastery + '%' : '-'}</td></tr>
+        <tr><th>نسبة الإتقان 2023</th><td>${sd.mastery2023 != null ? sd.mastery2023 + '%' : '-'}</td></tr>
+        <tr><th>التغيير</th><td>${sd.change != null ? (sd.change > 0 ? '+' : '') + sd.change + '%' : '-'}</td></tr>
+        ${sd.target2030 ? `<tr><th>المستهدف 2030</th><td>${sd.target2030}%</td></tr>` : ''}
+      </table>
+      <h4>توزيع مستويات الأداء</h4>
+      <table>
+        <tr><th>المستوى المتقدم</th><td>${sd.levels?.advanced != null ? sd.levels.advanced + '%' : '-'}</td></tr>
+        <tr><th>المستوى المتقن</th><td>${sd.levels?.proficient != null ? sd.levels.proficient + '%' : '-'}</td></tr>
+        <tr><th>المستوى الأساسي</th><td>${sd.levels?.basic != null ? sd.levels.basic + '%' : '-'}</td></tr>
+        <tr><th>دون المستوى الأساسي</th><td>${sd.levels?.belowBasic != null ? sd.levels.belowBasic + '%' : '-'}</td></tr>
+      </table>
+      ${sd.comparisons ? `
+      <h4>المقارنة مع الجهات</h4>
+      <table>
+        ${sd.comparisons.school ? `<tr><th>المدرسة</th><td>${sd.comparisons.school}%</td></tr>` : ''}
+        ${sd.comparisons.kingdom ? `<tr><th>المملكة</th><td>${sd.comparisons.kingdom}%</td></tr>` : ''}
+        ${sd.comparisons.region ? `<tr><th>الإدارة التعليمية</th><td>${sd.comparisons.region}%</td></tr>` : ''}
+        ${sd.comparisons.office ? `<tr><th>مكتب التعليم</th><td>${sd.comparisons.office}%</td></tr>` : ''}
+      </table>` : ''}
+      ${sd.subdomains?.length ? `
+      <h4>المجالات الفرعية</h4>
+      <table>
+        <tr><th>المجال</th><th>الأداء 2024</th><th>الأداء 2023</th><th>التقييم</th></tr>
+        ${sd.subdomains.map(dom => `
+          <tr>
+            <td>${dom.name}</td>
+            <td>${dom.value != null ? dom.value + '%' : '-'}</td>
+            <td>${dom.value2023 != null ? dom.value2023 + '%' : '-'}</td>
+            <td>${dom.value >= 60 ? '✅ جيد' : dom.value >= 40 ? '⚠️ متوسط' : '❗ ضعيف'}</td>
+          </tr>
+        `).join('')}
+      </table>` : ''}
+    `;
+  } else if (type === 'improvement') {
+    title = 'خطة التحسين المستقبلية';
+    const recs = generateRecommendations(d);
+    body = `
+      <h4>الهدف العام</h4>
+      <p>تحسين أداء الطلاب في اختبارات نافس وسد الفجوات التعليمية للوصول إلى مستهدفات رؤية 2030</p>
+      
+      <h4>الأولويات</h4>
+      <p>المادة ذات الأولوية القصوى: <strong>${getWorstSubject(subj).name}</strong> (${getWorstSubject(subj).val}%)</p>
+      
+      <h4>المحاور الأساسية للتحسين</h4>
+      ${recs.map((r, i) => `<p><strong>المحور ${i+1}: ${r.title}</strong><br>${r.desc}</p>`).join('')}
+      
+      <h4>الجدول الزمني المقترح</h4>
+      <table>
+        <tr><th>الفترة</th><th>الإجراء</th><th>المسؤول</th></tr>
+        <tr><td>الأسبوع 1-2</td><td>تشكيل فريق التحسين وتحليل الفجوات</td><td>قائد المدرسة</td></tr>
+        <tr><td>الأسبوع 3-4</td><td>إطلاق برامج الدعم للطلاب دون الأساسي</td><td>المعلمون</td></tr>
+        <tr><td>الشهر 2</td><td>ورش تطوير مهني للمعلمين</td><td>المشرفون</td></tr>
+        <tr><td>الشهر 3</td><td>تقييم مرحلي ومراجعة الخطة</td><td>القيادة التعليمية</td></tr>
+        <tr><td>نهاية الفصل</td><td>قياس الأثر وإعداد تقرير التحسين</td><td>قائد المدرسة</td></tr>
+      </table>
+    `;
+  }
+
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = body;
+  document.getElementById('reportModal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('reportModal').classList.remove('show');
+}
+
+// ===== LOAD SAVED DATA =====
+window.addEventListener('load', () => {
+  const saved = localStorage.getItem('nafesData');
+  if (saved) {
+    try {
+      nafesData = JSON.parse(saved);
+      renderDashboard();
+      renderAnalysis();
+      renderComparison();
+      renderReports();
+    } catch(e) { localStorage.removeItem('nafesData'); }
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>منصة شهادات الشكر والتقدير</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #0a4a6e;
+  --primary-light: #1a6e9e;
+  --accent: #c8930a;
+  --accent-light: #f0b429;
+  --green: #1a7c4f;
+  --green-light: #2aad6e;
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --text: #1a2a3a;
+  --muted: #6b7a8d;
+  --border: #d0dce8;
+  --shadow: 0 4px 24px rgba(10,74,110,0.10);
+  --header-h: 68px;
+  --sidebar-w: 360px;
+  --tab-h: 56px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+
+body {
+  font-family:'Cairo',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ══════════════════════════════
+   HEADER
+══════════════════════════════ */
+.header {
+  height:var(--header-h);
+  background:linear-gradient(135deg,var(--primary) 0%,#0d5a8a 50%,var(--primary-light) 100%);
+  color:white;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 4px 20px rgba(10,74,110,0.35);
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:200;
+  gap:12px;
+}
+.header-logo{display:flex;align-items:center;gap:10px;min-width:0;}
+.header-icon{
+  width:42px;height:42px;flex-shrink:0;
+  background:rgba(255,255,255,0.15);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  border:1px solid rgba(255,255,255,0.25);
+}
+.header-text{min-width:0;}
+.header h1{font-size:17px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.header p{font-size:11px;opacity:0.8;margin-top:1px;white-space:nowrap;}
+.header-badge{
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  padding:6px 14px;
+  border-radius:20px;
+  font-size:12px;
+  white-space:nowrap;
+  flex-shrink:0;
+}
+/* hamburger – mobile only */
+.menu-btn{
+  display:none;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:10px;
+  color:white;
+  font-size:20px;
+  width:40px;height:40px;
+  cursor:pointer;
+  align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+
+/* ══════════════════════════════
+   BODY SHELL
+══════════════════════════════ */
+.shell {
+  position:fixed;
+  top:var(--header-h);
+  left:0;right:0;bottom:0;
+  display:flex;
+}
+
+/* ══════════════════════════════
+   SIDEBAR
+══════════════════════════════ */
+.sidebar {
+  width:var(--sidebar-w);
+  flex-shrink:0;
+  background:white;
+  border-left:1px solid var(--border);
+  display:flex;
+  flex-direction:column;
+  overflow-y:auto;
+  overflow-x:hidden;
+  height:100%;
+  transition:transform 0.3s cubic-bezier(.4,0,.2,1);
+  z-index:150;
+}
+
+.sidebar-section{padding:18px 18px;border-bottom:1px solid var(--border);}
+.sidebar-section:last-child{border-bottom:none;}
+
+.section-title{
+  font-size:12px;font-weight:800;
+  color:var(--primary);
+  letter-spacing:.4px;
+  margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+  text-transform:uppercase;
+}
+.section-title::before{
+  content:'';width:4px;height:15px;
+  background:var(--accent);border-radius:2px;
+  flex-shrink:0;
+}
+
+/* Template grid */
+.template-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.template-card{
+  border:2px solid var(--border);
+  border-radius:10px;padding:10px 8px;
+  cursor:pointer;text-align:center;
+  transition:all .2s;background:var(--bg);
+  position:relative;overflow:hidden;
+}
+.template-card:active{transform:scale(.97);}
+.template-card.active{border-color:var(--primary);background:#e8f4ff;box-shadow:0 0 0 3px rgba(10,74,110,0.1);}
+.template-card.active::after{
+  content:'✓';position:absolute;top:5px;left:5px;
+  width:18px;height:18px;background:var(--primary);
+  color:white;border-radius:50%;font-size:10px;
+  display:flex;align-items:center;justify-content:center;font-weight:bold;
+}
+.template-card .t-icon{font-size:24px;margin-bottom:4px;}
+.template-card .t-name{font-size:11px;font-weight:700;color:var(--text);}
+.template-card .t-desc{font-size:10px;color:var(--muted);margin-top:1px;}
+
+/* Fields */
+.field-group{margin-bottom:12px;}
+label{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px;}
+input[type=text],input[type=date],textarea,select{
+  width:100%;padding:9px 12px;
+  border:1.5px solid var(--border);border-radius:9px;
+  font-family:'Cairo',sans-serif;font-size:14px;
+  color:var(--text);background:var(--bg);
+  outline:none;direction:rtl;
+  transition:border-color .2s,box-shadow .2s;
+  -webkit-appearance:none;
+}
+input[type=text]:focus,textarea:focus,select:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(10,74,110,0.1);
+  background:white;
+}
+textarea{min-height:70px;resize:vertical;}
+
+/* Buttons */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 18px;border-radius:10px;
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;
+  cursor:pointer;border:none;transition:all .2s;width:100%;
+  -webkit-appearance:none;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;box-shadow:0 4px 12px rgba(10,74,110,0.3);}
+.btn-success{background:linear-gradient(135deg,var(--green),var(--green-light));color:white;box-shadow:0 4px 12px rgba(26,124,79,0.3);}
+.btn-outline{background:white;color:var(--primary);border:2px solid var(--primary);}
+.btn-outline:active{background:var(--primary);color:white;}
+.btn-accent{background:linear-gradient(135deg,var(--accent),var(--accent-light));color:white;box-shadow:0 4px 12px rgba(200,147,10,0.3);}
+.btn-group{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px;}
+
+/* Slider */
+.slider-row{display:flex;align-items:center;gap:10px;}
+input[type=range]{flex:1;accent-color:var(--primary);cursor:pointer;height:4px;}
+.slider-val{font-size:13px;font-weight:700;color:var(--primary);min-width:34px;text-align:center;background:#e8f4ff;padding:3px 7px;border-radius:6px;}
+
+/* Toggle */
+.toggle-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.toggle-label{font-size:13px;color:var(--text);font-weight:600;}
+.toggle{
+  width:44px;height:24px;background:var(--border);border-radius:12px;
+  position:relative;cursor:pointer;border:none;outline:none;
+  transition:background .2s;flex-shrink:0;
+}
+.toggle.on{background:var(--primary);}
+.toggle::after{
+  content:'';position:absolute;top:3px;right:3px;
+  width:18px;height:18px;background:white;border-radius:50%;
+  transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);
+}
+.toggle.on::after{transform:translateX(-20px);}
+
+/* Sidebar footer */
+.sidebar-footer{
+  padding:16px 18px;
+  background:linear-gradient(135deg,#f8fafc,#e8f4ff);
+  border-top:1px solid var(--border);
+  text-align:center;
+  margin-top:auto;
+}
+.sidebar-footer p{font-size:12px;color:var(--muted);margin-bottom:6px;}
+.sidebar-footer a{
+  color:var(--primary);font-weight:700;text-decoration:none;font-size:13px;
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 16px;background:white;border-radius:20px;
+  border:1.5px solid var(--border);transition:all .2s;
+}
+.sidebar-footer a:active{border-color:var(--primary);}
+
+/* ══════════════════════════════
+   PREVIEW AREA
+══════════════════════════════ */
+.preview-area {
+  flex:1;
+  background:#dde4ed;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  min-width:0;
+}
+
+.preview-toolbar{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 16px;
+  background:white;
+  border-bottom:1px solid var(--border);
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  flex-shrink:0;
+  flex-wrap:wrap;
+}
+.preview-toolbar-title{
+  font-size:14px;font-weight:700;color:var(--primary);
+  display:flex;align-items:center;gap:8px;flex:1;min-width:120px;
+}
+.tag{
+  display:inline-block;padding:3px 9px;border-radius:20px;
+  font-size:11px;font-weight:700;
+  background:#e8f4ff;color:var(--primary);
+  border:1px solid #b8d4e8;
+}
+.preview-toolbar-actions{display:flex;gap:8px;flex-shrink:0;}
+.preview-toolbar .btn{width:auto;padding:8px 16px;font-size:13px;}
+
+/* Certificate scroll container */
+.cert-scroll{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+#cert-wrapper{
+  width:100%;
+  max-width:860px;
+  background:white;
+  border-radius:14px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.14);
+  overflow:hidden;
+}
+
+/* ══════════════════════════════
+   MOBILE BOTTOM TAB BAR
+══════════════════════════════ */
+.bottom-tabs{
+  display:none;
+  height:var(--tab-h);
+  background:white;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.tab-btn{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  transition:color .2s;padding:6px 4px;
+  -webkit-tap-highlight-color:transparent;
+}
+.tab-btn.active{color:var(--primary);}
+.tab-btn .tab-icon{font-size:20px;}
+
+/* Overlay for mobile sidebar */
+.overlay{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,0.4);z-index:140;
+  opacity:0;transition:opacity .3s;
+}
+.overlay.show{opacity:1;}
+
+/* ══════════════════════════════
+   CERTIFICATE TEMPLATES
+══════════════════════════════ */
+#certificate{
+  width:100%;min-height:500px;
+  position:relative;display:flex;flex-direction:column;
+  font-family:'Amiri','Cairo',serif;direction:rtl;
+}
+
+/* ─── TPL 1: Blue Dark ─── */
+#certificate.tpl-1{background:#0a3d5c;color:white;}
+.tpl-1 .cert-header{background:#0a4a6e;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #c8930a;}
+.tpl-1 .cert-logo-area{display:flex;align-items:center;gap:14px;}
+.tpl-1 .cert-logo{width:62px;height:62px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid rgba(255,255,255,.3);}
+.tpl-1 .cert-org-text .ministry{font-size:11px;opacity:.8;font-family:'Cairo',sans-serif;}
+.tpl-1 .cert-org-text .org{font-size:13px;font-weight:700;font-family:'Cairo',sans-serif;}
+.tpl-1 .cert-org-text .school{font-size:12px;color:#f0b429;font-family:'Cairo',sans-serif;margin-top:2px;}
+.tpl-1 .cert-body{flex:1;padding:30px 50px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;}
+.tpl-1 .cert-title-art{font-size:52px;font-family:'Amiri',serif;color:#f0b429;margin-bottom:8px;text-shadow:0 0 30px rgba(240,180,41,.3);line-height:1;}
+.tpl-1 .cert-sub{font-size:15px;color:#b8d4e8;margin-bottom:24px;font-family:'Cairo',sans-serif;}
+.tpl-1 .cert-main-text{font-size:1em;line-height:2.1;max-width:680px;font-family:'Amiri',serif;}
+.tpl-1 .cert-main-text .highlight{color:#f0b429;font-size:1.1em;font-weight:700;border-bottom:1px dashed #f0b429;padding-bottom:1px;}
+.tpl-1 .cert-divider{width:180px;height:2px;background:linear-gradient(90deg,transparent,#c8930a,transparent);margin:16px auto;}
+.tpl-1 .cert-footer{padding:18px 40px;background:rgba(0,0,0,.2);display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.1);font-family:'Cairo',sans-serif;font-size:13px;}
+.tpl-1 .cert-footer .sig-block{text-align:center;}
+.tpl-1 .cert-footer .sig-name{color:#f0b429;font-weight:700;}
+.tpl-1 .cert-footer .sig-title{font-size:11px;opacity:.8;}
+.tpl-1 .cert-decoration{position:absolute;top:15px;left:15px;width:70px;height:70px;border:2px solid rgba(200,147,10,.3);border-radius:50%;opacity:.4;}
+
+/* ─── TPL 2: Green Official ─── */
+#certificate.tpl-2{background:white;border:7px solid #1a6e4a;}
+.tpl-2 .cert-header{background:linear-gradient(135deg,#1a4a2e,#1a7c4f);padding:20px 34px;display:flex;align-items:center;justify-content:space-between;color:white;}
+.tpl-2 .cert-logo-area{display:flex;align-items:center;gap:12px;}
+.tpl-2 .cert-logo{width:58px;height:58px;background:rgba(255,255,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;border:2px solid rgba(255,255,255,.4);}
+.tpl-2 .cert-org-text .ministry{font-size:11px;opacity:.8;font-family:'Cairo',sans-serif;}
+.tpl-2 .cert-org-text .org{font-size:13px;font-weight:700;font-family:'Cairo',sans-serif;}
+.tpl-2 .cert-org-text .school{font-size:12px;color:#b8f0d0;font-family:'Cairo',sans-serif;margin-top:2px;}
+.tpl-2 .cert-body{flex:1;padding:28px 50px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;}
+.tpl-2 .cert-title-art{font-size:48px;font-family:'Amiri',serif;color:#1a7c4f;margin-bottom:6px;line-height:1.1;}
+.tpl-2 .cert-sub{font-size:14px;color:#2aad6e;margin-bottom:22px;font-family:'Cairo',sans-serif;font-weight:700;}
+.tpl-2 .cert-main-text{font-size:1em;line-height:2.1;max-width:660px;color:#1a3a2a;font-family:'Amiri',serif;}
+.tpl-2 .cert-main-text .highlight{color:#1a7c4f;font-size:1.1em;font-weight:700;border-bottom:2px solid #1a7c4f;}
+.tpl-2 .cert-divider{width:160px;height:3px;background:linear-gradient(90deg,transparent,#1a7c4f,transparent);margin:14px auto;}
+.tpl-2 .cert-footer{padding:18px 40px;background:#f0fff8;display:flex;justify-content:space-between;align-items:center;border-top:2px solid #b8e8d0;font-family:'Cairo',sans-serif;font-size:13px;}
+.tpl-2 .cert-footer .sig-block{text-align:center;}
+.tpl-2 .cert-footer .sig-name{color:#1a7c4f;font-weight:700;}
+.tpl-2 .cert-footer .sig-title{font-size:11px;color:#555;}
+.tpl-2 .cert-decoration{position:absolute;top:12px;left:12px;width:55px;height:55px;border:2px solid rgba(26,124,79,.2);border-radius:50%;}
+
+/* ─── TPL 3: Mothers Pink ─── */
+#certificate.tpl-3{background:linear-gradient(135deg,#fff9f0,#fff0f5);border:5px solid #e8a0b0;}
+.tpl-3 .cert-header{background:linear-gradient(135deg,#c0436a,#e06090);padding:18px 34px;text-align:center;color:white;position:relative;overflow:hidden;}
+.tpl-3 .cert-header::before{content:'🌸';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:36px;opacity:.6;}
+.tpl-3 .cert-header::after{content:'🌷';position:absolute;left:24px;top:50%;transform:translateY(-50%);font-size:36px;opacity:.6;}
+.tpl-3 .cert-header-title{font-size:26px;font-family:'Amiri',serif;font-weight:700;}
+.tpl-3 .cert-header-sub{font-size:13px;opacity:.9;margin-top:3px;font-family:'Cairo',sans-serif;}
+.tpl-3 .cert-body{flex:1;padding:28px 50px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.tpl-3 .cert-title-art{font-size:18px;color:#c0436a;font-family:'Amiri',serif;font-style:italic;margin-bottom:16px;line-height:1.9;}
+.tpl-3 .cert-main-text{font-size:1em;line-height:2.2;max-width:660px;color:#3a1a2a;font-family:'Amiri',serif;}
+.tpl-3 .cert-main-text .highlight{color:#c0436a;font-size:1.1em;font-weight:700;border-bottom:2px dashed #e8a0b0;}
+.tpl-3 .cert-divider{display:flex;align-items:center;gap:8px;margin:14px 0;color:#e8a0b0;font-size:18px;}
+.tpl-3 .cert-footer{padding:16px 40px;background:linear-gradient(135deg,#fff0f5,#ffe8f0);display:flex;justify-content:space-between;align-items:center;border-top:2px solid #f0c0d0;font-family:'Cairo',sans-serif;font-size:13px;}
+.tpl-3 .cert-footer .sig-block{text-align:center;}
+.tpl-3 .cert-footer .sig-name{color:#c0436a;font-weight:700;}
+.tpl-3 .cert-footer .sig-title{font-size:11px;color:#888;}
+
+/* ─── TPL 4: Gold Dark ─── */
+#certificate.tpl-4{background:linear-gradient(160deg,#1a1a2e,#16213e,#0f3460);color:white;border:7px solid #c8930a;}
+.tpl-4 .cert-header{padding:20px 34px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid rgba(200,147,10,.4);position:relative;overflow:hidden;}
+.tpl-4 .cert-logo-area{display:flex;align-items:center;gap:12px;position:relative;}
+.tpl-4 .cert-logo{width:62px;height:62px;background:rgba(200,147,10,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid rgba(200,147,10,.5);box-shadow:0 0 20px rgba(200,147,10,.2);}
+.tpl-4 .cert-org-text .ministry{font-size:11px;opacity:.7;font-family:'Cairo',sans-serif;}
+.tpl-4 .cert-org-text .org{font-size:13px;font-weight:700;font-family:'Cairo',sans-serif;}
+.tpl-4 .cert-org-text .school{font-size:12px;color:#f0b429;font-family:'Cairo',sans-serif;margin-top:2px;}
+.tpl-4 .cert-body{flex:1;padding:30px 50px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;}
+.tpl-4 .cert-title-art{font-size:52px;font-family:'Amiri',serif;background:linear-gradient(135deg,#f0b429,#ffd700,#c8930a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;line-height:1.1;}
+.tpl-4 .cert-main-text{font-size:1em;line-height:2.2;max-width:680px;font-family:'Amiri',serif;color:#e0eaf8;}
+.tpl-4 .cert-main-text .highlight{color:#f0b429;font-size:1.1em;font-weight:700;}
+.tpl-4 .cert-divider{display:flex;align-items:center;gap:10px;margin:14px 0;}
+.tpl-4 .cert-divider-line{height:1px;width:70px;background:linear-gradient(90deg,transparent,#c8930a);}
+.tpl-4 .cert-divider-line.rev{background:linear-gradient(90deg,#c8930a,transparent);}
+.tpl-4 .cert-divider-star{color:#f0b429;font-size:16px;}
+.tpl-4 .cert-footer{padding:18px 40px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(200,147,10,.3);font-family:'Cairo',sans-serif;font-size:13px;background:rgba(0,0,0,.2);}
+.tpl-4 .cert-footer .sig-block{text-align:center;}
+.tpl-4 .cert-footer .sig-name{color:#f0b429;font-weight:700;}
+.tpl-4 .cert-footer .sig-title{font-size:11px;opacity:.7;}
+
+/* ─── TPL 5: Light Academic ─── */
+#certificate.tpl-5{background:white;}
+.tpl-5 .cert-header{background:white;padding:20px 34px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid #e0e8f0;border-top:7px solid #0a4a6e;}
+.tpl-5 .cert-logo-area{display:flex;align-items:center;gap:12px;}
+.tpl-5 .cert-logo{width:60px;height:60px;background:#e8f4ff;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid #b8d4e8;}
+.tpl-5 .cert-org-text .ministry{font-size:11px;color:#888;font-family:'Cairo',sans-serif;}
+.tpl-5 .cert-org-text .org{font-size:13px;font-weight:700;color:#0a4a6e;font-family:'Cairo',sans-serif;}
+.tpl-5 .cert-org-text .school{font-size:12px;color:#1a6e9e;font-family:'Cairo',sans-serif;margin-top:2px;}
+.tpl-5 .cert-body{flex:1;padding:28px 50px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.tpl-5 .cert-title-art{font-size:48px;font-family:'Amiri',serif;color:#0a4a6e;margin-bottom:6px;line-height:1.1;}
+.tpl-5 .cert-sub{font-size:14px;color:#1a6e9e;margin-bottom:22px;font-family:'Cairo',sans-serif;font-weight:600;}
+.tpl-5 .cert-main-text{font-size:1em;line-height:2.1;max-width:680px;color:#1a2a3a;font-family:'Amiri',serif;}
+.tpl-5 .cert-main-text .highlight{color:#0a4a6e;font-size:1.1em;font-weight:700;border-bottom:2px solid #0a4a6e;}
+.tpl-5 .cert-divider{width:180px;height:3px;background:linear-gradient(90deg,transparent,#0a4a6e,transparent);margin:16px auto;}
+.tpl-5 .cert-footer{padding:18px 40px;background:#f8fafc;display:flex;justify-content:space-between;align-items:center;border-top:2px solid #e0e8f0;font-family:'Cairo',sans-serif;font-size:13px;}
+.tpl-5 .cert-footer .sig-block{text-align:center;}
+.tpl-5 .cert-footer .sig-name{color:#0a4a6e;font-weight:700;}
+.tpl-5 .cert-footer .sig-title{font-size:11px;color:#888;}
+
+/* ─── TPL 6: Workshop ─── */
+#certificate.tpl-6{background:#0a3d5c;color:white;}
+.tpl-6 .cert-header{background:#0a4a6e;padding:18px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #c8930a;}
+.tpl-6 .cert-logo-area{display:flex;align-items:center;gap:14px;}
+.tpl-6 .cert-logo{width:62px;height:62px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid rgba(255,255,255,.3);}
+.tpl-6 .cert-org-text .ministry{font-size:11px;opacity:.8;font-family:'Cairo',sans-serif;}
+.tpl-6 .cert-org-text .org{font-size:13px;font-weight:700;font-family:'Cairo',sans-serif;}
+.tpl-6 .cert-org-text .school{font-size:12px;color:#f0b429;font-family:'Cairo',sans-serif;margin-top:2px;}
+.tpl-6 .cert-body{flex:1;padding:30px 50px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;}
+.tpl-6 .cert-title-art{font-size:52px;font-family:'Amiri',serif;color:#f0b429;margin-bottom:8px;line-height:1;}
+.tpl-6 .cert-sub{font-size:15px;color:#b8d4e8;margin-bottom:22px;font-family:'Cairo',sans-serif;}
+.tpl-6 .cert-main-text{font-size:1em;line-height:2.1;max-width:680px;font-family:'Amiri',serif;}
+.tpl-6 .cert-main-text .highlight{color:#f0b429;font-size:1.1em;font-weight:700;border-bottom:1px dashed #f0b429;padding-bottom:1px;}
+.tpl-6 .cert-divider{width:180px;height:2px;background:linear-gradient(90deg,transparent,#c8930a,transparent);margin:16px auto;}
+.tpl-6 .cert-footer{padding:18px 40px;background:rgba(0,0,0,.2);display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,.1);font-family:'Cairo',sans-serif;font-size:13px;}
+.tpl-6 .cert-footer .sig-block{text-align:center;}
+.tpl-6 .cert-footer .sig-name{color:#f0b429;font-weight:700;}
+.tpl-6 .cert-footer .sig-title{font-size:11px;opacity:.8;}
+.tpl-6 .cert-decoration{position:absolute;top:15px;left:15px;width:70px;height:70px;border:2px solid rgba(200,147,10,.3);border-radius:50%;opacity:.4;}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(120px);
+  background:#1a3a2a;color:white;
+  padding:11px 22px;border-radius:24px;
+  font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;
+  box-shadow:0 6px 24px rgba(0,0,0,.3);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+  z-index:999;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ══════════════════════════════
+   TABLET  ≤ 900px
+══════════════════════════════ */
+@media (max-width:900px){
+  :root{--sidebar-w:300px;}
+  .header h1{font-size:15px;}
+  .header p{display:none;}
+  .header-badge{display:none;}
+  .tpl-1 .cert-body,.tpl-2 .cert-body,.tpl-3 .cert-body,
+  .tpl-4 .cert-body,.tpl-5 .cert-body,.tpl-6 .cert-body{padding:22px 28px;}
+  .tpl-1 .cert-header,.tpl-2 .cert-header,.tpl-4 .cert-header,
+  .tpl-5 .cert-header,.tpl-6 .cert-header{padding:14px 22px;}
+  .tpl-3 .cert-header{padding:14px 22px;}
+  .tpl-1 .cert-footer,.tpl-2 .cert-footer,.tpl-3 .cert-footer,
+  .tpl-4 .cert-footer,.tpl-5 .cert-footer,.tpl-6 .cert-footer{padding:14px 22px;}
+  .tpl-1 .cert-title-art,.tpl-4 .cert-title-art,.tpl-6 .cert-title-art{font-size:40px;}
+  .tpl-2 .cert-title-art,.tpl-5 .cert-title-art{font-size:36px;}
+}
+
+/* ══════════════════════════════
+   MOBILE  ≤ 640px
+══════════════════════════════ */
+@media (max-width:640px){
+  :root{--header-h:60px;}
+  html,body{overflow:hidden;}
+
+  .header{padding:0 14px;}
+  .header-icon{width:36px;height:36px;font-size:18px;}
+  .header h1{font-size:14px;}
+  .menu-btn{display:flex;}
+
+  /* Sidebar slides in as drawer */
+  .sidebar{
+    position:fixed;
+    top:var(--header-h);bottom:var(--tab-h);
+    right:0;
+    width:min(320px,92vw);
+    transform:translateX(100%);
+    box-shadow:-4px 0 24px rgba(0,0,0,.15);
+    z-index:160;
+    border-radius:0 0 0 16px;
+  }
+  .sidebar.open{transform:translateX(0);}
+  .overlay{display:block;}
+
+  /* Preview fills full width */
+  .preview-area{width:100%;}
+  .bottom-tabs{display:flex;}
+
+  /* Hide toolbar actions on mobile (use tab bar) */
+  .preview-toolbar-actions{display:none;}
+
+  .cert-scroll{padding:12px;}
+
+  /* Certificate scales down */
+  .tpl-1 .cert-body,.tpl-2 .cert-body,.tpl-3 .cert-body,
+  .tpl-4 .cert-body,.tpl-5 .cert-body,.tpl-6 .cert-body{padding:18px 16px;}
+  .tpl-1 .cert-header,.tpl-2 .cert-header,.tpl-4 .cert-header,
+  .tpl-5 .cert-header,.tpl-6 .cert-header{padding:12px 14px;gap:8px;}
+  .tpl-3 .cert-header{padding:12px 16px;}
+  .tpl-1 .cert-logo,.tpl-2 .cert-logo,.tpl-4 .cert-logo,
+  .tpl-5 .cert-logo,.tpl-6 .cert-logo{width:44px;height:44px;font-size:20px;}
+  .tpl-1 .cert-title-art,.tpl-4 .cert-title-art,.tpl-6 .cert-title-art{font-size:32px;}
+  .tpl-2 .cert-title-art,.tpl-5 .cert-title-art{font-size:28px;}
+  .tpl-3 .cert-header-title{font-size:20px;}
+  .tpl-3 .cert-header::before,.tpl-3 .cert-header::after{font-size:22px;right:14px;}
+  .tpl-3 .cert-header::after{left:14px;}
+  .cert-org-text .ministry{font-size:10px !important;}
+  .cert-org-text .org{font-size:11px !important;}
+  .cert-org-text .school{font-size:11px !important;}
+  .tpl-1 .cert-footer,.tpl-2 .cert-footer,.tpl-3 .cert-footer,
+  .tpl-4 .cert-footer,.tpl-5 .cert-footer,.tpl-6 .cert-footer{padding:12px 14px;font-size:11px;}
+  .tpl-1 .cert-main-text,.tpl-2 .cert-main-text,.tpl-3 .cert-main-text,
+  .tpl-4 .cert-main-text,.tpl-5 .cert-main-text,.tpl-6 .cert-main-text{font-size:.9em !important;}
+}
+
+/* ══════════════════════════════
+   PRINT
+══════════════════════════════ */
+@media print{
+  body{overflow:visible;}
+  .header,.sidebar,.preview-toolbar,.bottom-tabs,.overlay,.toast{display:none!important;}
+  .shell{position:static;top:0;}
+  .preview-area{background:white;}
+  .cert-scroll{padding:0;overflow:visible;}
+  #cert-wrapper{max-width:100%;border-radius:0;box-shadow:none;width:100%;}
+  html,body{height:auto;overflow:visible;}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+    <div class="header-icon">🏅</div>
+    <div class="header-text">
+      <h1>منصة شهادات الشكر والتقدير</h1>
+      <p>توليد وتخصيص الشهادات بسهولة تامة</p>
+    </div>
+  </div>
+  <div class="header-badge">📋 6 قوالب</div>
+  <button class="menu-btn" onclick="toggleSidebar()" aria-label="القائمة">☰</button>
+</div>
+
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- SHELL -->
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+
+    <div class="sidebar-section">
+      <div class="section-title">نوع الشهادة</div>
+      <div class="template-grid">
+        <div class="template-card active" onclick="selectTemplate(1)" id="tcard-1">
+          <div class="t-icon">🎓</div>
+          <div class="t-name">درس تطبيقي</div>
+          <div class="t-desc">للمعلمات</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate(2)" id="tcard-2">
+          <div class="t-icon">📜</div>
+          <div class="t-name">مكتب التعليم</div>
+          <div class="t-desc">رسمي أخضر</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate(3)" id="tcard-3">
+          <div class="t-icon">🌸</div>
+          <div class="t-name">لمسة وفاء</div>
+          <div class="t-desc">للأمهات</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate(4)" id="tcard-4">
+          <div class="t-icon">⭐</div>
+          <div class="t-name">ذهبي مميز</div>
+          <div class="t-desc">فاخر</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate(5)" id="tcard-5">
+          <div class="t-icon">📋</div>
+          <div class="t-name">أكاديمي فاتح</div>
+          <div class="t-desc">رسمي نظيف</div>
+        </div>
+        <div class="template-card" onclick="selectTemplate(6)" id="tcard-6">
+          <div class="t-icon">✏️</div>
+          <div class="t-name">ورشة عمل</div>
+          <div class="t-desc">للمعلمات</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-title">بيانات المستلم</div>
+      <div class="field-group">
+        <label>الاسم الكامل</label>
+        <input type="text" id="f-name" placeholder="أدخل الاسم هنا..." oninput="updateCert()">
+      </div>
+      <div class="field-group">
+        <label>الجنس</label>
+        <select id="f-gender" onchange="updateCert()">
+          <option value="female">معلمة / أنثى</option>
+          <option value="male">معلم / ذكر</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label>المدرسة / الجهة</label>
+        <input type="text" id="f-school" placeholder="اسم المدرسة..." oninput="updateCert()">
+      </div>
+    </div>
+
+    <div class="sidebar-section" id="dynamic-fields">
+      <div class="section-title">تفاصيل الشهادة</div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-title">بيانات المؤسسة</div>
+      <div class="field-group">
+        <label>الوزارة / الجهة العليا</label>
+        <input type="text" id="f-ministry" value="وزارة التعليم" oninput="updateCert()">
+      </div>
+      <div class="field-group">
+        <label>الإدارة / المنطقة</label>
+        <input type="text" id="f-region" placeholder="الإدارة العامة للتعليم بـ..." oninput="updateCert()">
+      </div>
+      <div class="field-group">
+        <label>مدير/ة المدرسة</label>
+        <input type="text" id="f-principal" placeholder="اسم المدير/ة" oninput="updateCert()">
+      </div>
+      <div class="field-group">
+        <label>المسمى الوظيفي</label>
+        <input type="text" id="f-principal-title" value="مديرة المدرسة" oninput="updateCert()">
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-title">التاريخ</div>
+      <div class="field-group">
+        <label>التاريخ الميلادي</label>
+        <input type="date" id="f-date" oninput="updateCert()">
+      </div>
+      <div class="field-group">
+        <label>التاريخ الهجري</label>
+        <input type="text" id="f-hijri" placeholder="مثال: 15 / 09 / 1446هـ" oninput="updateCert()">
+      </div>
+      <div class="field-group">
+        <label>اليوم</label>
+        <input type="text" id="f-day" placeholder="الأحد / الاثنين ..." oninput="updateCert()">
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-title">المظهر</div>
+      <div class="field-group">
+        <label>حجم الخط</label>
+        <div class="slider-row">
+          <input type="range" id="f-fontsize" min="13" max="26" value="19" oninput="updateFontSize(this.value)">
+          <span class="slider-val" id="fs-val">19</span>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">إظهار رقم الشهادة</span>
+        <button class="toggle" id="tog-num" onclick="toggleNum()"></button>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-label">إظهار ختم المؤسسة</span>
+        <button class="toggle" id="tog-seal" onclick="toggleSeal()"></button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-title">الإجراءات</div>
+      <button class="btn btn-primary" onclick="printCert()" style="margin-bottom:10px">🖨️ طباعة الشهادة</button>
+      <div class="btn-group">
+        <button class="btn btn-success" onclick="saveCert()">💾 حفظ</button>
+        <button class="btn btn-outline" onclick="resetForm()">🔄 مسح</button>
+      </div>
+    </div>
+
+    <div class="sidebar-footer">
+      <p>تصميم د/فواز</p>
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📲 تفضل للمزيد هنا</a>
+    </div>
+
+  </div><!-- /sidebar -->
+
+  <!-- PREVIEW AREA -->
+  <div class="preview-area">
+
+    <div class="preview-toolbar">
+      <div class="preview-toolbar-title">
+        👁️ معاينة الشهادة
+        <span class="tag" id="preview-tag">درس تطبيقي</span>
+      </div>
+      <div class="preview-toolbar-actions">
+        <button class="btn btn-accent" onclick="printCert()">🖨️ طباعة</button>
+        <button class="btn btn-success" onclick="saveCert()">💾 حفظ</button>
+      </div>
+    </div>
+
+    <div class="cert-scroll">
+      <div id="cert-wrapper">
+        <div id="certificate" class="tpl-1"></div>
+      </div>
+    </div>
+
+    <!-- Bottom tab bar (mobile) -->
+    <div class="bottom-tabs">
+      <button class="tab-btn" onclick="showTab('settings')" id="tab-settings">
+        <span class="tab-icon">⚙️</span>الإعدادات
+      </button>
+      <button class="tab-btn active" onclick="showTab('preview')" id="tab-preview">
+        <span class="tab-icon">👁️</span>المعاينة
+      </button>
+      <button class="tab-btn" onclick="printCert()" id="tab-print">
+        <span class="tab-icon">🖨️</span>طباعة
+      </button>
+      <button class="tab-btn" onclick="saveCert()" id="tab-save">
+        <span class="tab-icon">💾</span>حفظ
+      </button>
+    </div>
+
+  </div><!-- /preview-area -->
+
+</div><!-- /shell -->
+
+<div class="toast" id="toast">✅ تم الحفظ!</div>
+
+<script>
+// ===== STATE =====
+const state = {
+  template: 1,
+  showNum: false,
+  showSeal: false,
+  fontSize: 19,
+  certNum: Math.floor(Math.random()*900)+100,
+  sidebarOpen: false
+};
+
+const templateNames=['','درس تطبيقي','مكتب التعليم','لمسة وفاء','ذهبي مميز','أكاديمي فاتح','ورشة عمل'];
+
+document.getElementById('f-date').valueAsDate = new Date();
+
+// ===== MOBILE SIDEBAR =====
+function toggleSidebar(){
+  state.sidebarOpen ? closeSidebar() : openSidebar();
+}
+function openSidebar(){
+  state.sidebarOpen=true;
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+}
+function closeSidebar(){
+  state.sidebarOpen=false;
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// ===== BOTTOM TABS =====
+function showTab(t){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  if(t==='settings'){
+    document.getElementById('tab-settings').classList.add('active');
+    openSidebar();
+  } else {
+    document.getElementById('tab-preview').classList.add('active');
+    closeSidebar();
+  }
+}
+
+// ===== DYNAMIC FIELDS =====
+const dynamicFields={
+  1:`<div class="field-group"><label>عنوان الدرس التطبيقي</label><input type="text" id="df-lesson" placeholder="عنوان الدرس..." oninput="updateCert()"></div>`,
+  2:`<div class="field-group"><label>سبب الشكر</label><select id="df-reason" onchange="handleReasonChange()"><option value="درس">تقديم درس تطبيقي</option><option value="ورشة">إعداد ورشة عمل</option><option value="برنامج">تفعيل برنامج</option><option value="انضباط">الانضباط وعدم الغياب</option><option value="مشاركة">المشاركة الفاعلة</option><option value="custom">أخرى...</option></select></div><div class="field-group" id="df-reason-custom-wrap" style="display:none"><label>سبب مخصص</label><input type="text" id="df-reason-custom" placeholder="أدخل سبب الشكر..." oninput="updateCert()"></div><div class="field-group"><label>عنوان النشاط</label><input type="text" id="df-activity" placeholder="عنوان الدرس أو النشاط..." oninput="updateCert()"></div>`,
+  3:`<div class="field-group"><label>اسم الطفلة / الطفل</label><input type="text" id="df-child" placeholder="اسم الطفل/الطفلة..." oninput="updateCert()"></div><div class="field-group"><label>الجنس</label><select id="df-child-gender" onchange="updateCert()"><option value="female">طفلة</option><option value="male">طفل</option></select></div>`,
+  4:`<div class="field-group"><label>سبب التكريم</label><textarea id="df-reason4" placeholder="أدخل سبب الشكر والتقدير..." oninput="updateCert()"></textarea></div>`,
+  5:`<div class="field-group"><label>سبب الشكر</label><input type="text" id="df-reason5" placeholder="سبب الشكر والتقدير..." oninput="updateCert()"></div><div class="field-group"><label>عنوان النشاط</label><input type="text" id="df-activity5" placeholder="عنوان النشاط..." oninput="updateCert()"></div>`,
+  6:`<div class="field-group"><label>عنوان ورشة العمل</label><input type="text" id="df-workshop" placeholder="عنوان الورشة..." oninput="updateCert()"></div>`
+};
+
+function handleReasonChange(){
+  const v=document.getElementById('df-reason').value;
+  document.getElementById('df-reason-custom-wrap').style.display=v==='custom'?'block':'none';
+  updateCert();
+}
+
+// ===== SELECT TEMPLATE =====
+function selectTemplate(n){
+  state.template=n;
+  document.querySelectorAll('.template-card').forEach((c,i)=>c.classList.toggle('active',i+1===n));
+  document.getElementById('preview-tag').textContent=templateNames[n];
+  const df=document.getElementById('dynamic-fields');
+  df.innerHTML=`<div class="section-title">تفاصيل الشهادة</div>`+(dynamicFields[n]||'');
+  updateCert();
+  // close sidebar on mobile after selection
+  if(window.innerWidth<=640) closeSidebar();
+}
+
+function fv(id,fb=''){const e=document.getElementById(id);return e?e.value.trim()||fb:fb;}
+
+// ===== BUILD CERT =====
+function buildCert(){
+  const name=fv('f-name','...........................');
+  const school=fv('f-school','...........................');
+  const ministry=fv('f-ministry','وزارة التعليم');
+  const region=fv('f-region','');
+  const principal=fv('f-principal','...........................');
+  const principalTitle=fv('f-principal-title','مدير/ة المدرسة');
+  const hijri=fv('f-hijri','....../....../1446هـ');
+  const day=fv('f-day','...........');
+  const isFemale=fv('f-gender','female')==='female';
+
+  const numBadge=state.showNum?`<span style="font-size:11px;opacity:.7">#${state.certNum}</span>`:'';
+  const sealHtml=state.showSeal?`<div style="width:55px;height:55px;border-radius:50%;border:3px dashed currentColor;display:flex;align-items:center;justify-content:center;font-size:22px;opacity:.5;margin:0 auto 6px">🔏</div>`:'';
+
+  const makeHeader=(logo)=>`
+    <div class="cert-header">
+      <div class="cert-logo-area">
+        <div class="cert-logo">${logo}</div>
+        <div class="cert-org-text">
+          <div class="ministry">المملكة العربية السعودية | ${ministry}</div>
+          <div class="org">${region||'الإدارة العامة للتعليم'}</div>
+          <div class="school">${school}</div>
+        </div>
+      </div>
+      ${numBadge}
+    </div>`;
+
+  const makeFooter=()=>`
+    <div class="cert-footer">
+      <div class="sig-block">
+        ${sealHtml}
+        <div class="sig-title">${principalTitle}</div>
+        <div class="sig-name">${principal}</div>
+      </div>
+      <div style="font-size:12px;text-align:center;opacity:.75">
+        <div>${day!=='...........'?'يوم '+day:''}</div>
+        <div>${hijri}</div>
+      </div>
+      <div></div>
+    </div>`;
+
+  const t=state.template;
+
+  if(t===1){
+    const lesson=fv('df-lesson','..............................');
+    return `${makeHeader('🎓')}
+    <div class="cert-body">
+      <div class="cert-decoration"></div>
+      <div class="cert-title-art">شكر وتقدير</div>
+      <div class="cert-sub">وسام اعتزاز وتميز</div>
+      <div class="cert-divider"></div>
+      <div class="cert-main-text">
+        تشكر إدارة <span class="highlight">${school||'...............'}</span>
+        <br>${isFemale?'المعلمة':'المعلم'} / <span class="highlight">${name}</span>
+        <br>نظير ${isFemale?'جهودها':'جهوده'} المبذولة والمتميزة في إعداد درس تطبيقي
+        <br>بعنوان: <span class="highlight">${lesson}</span>
+        <br>والمنفذ في يوم <span class="highlight">${day}</span> الموافق <span class="highlight">${hijri}</span>
+        <br>داعين المولى لـ${isFemale?'ها':'ه'} المزيد من التوفيق والسداد
+      </div>
+      <div class="cert-divider"></div>
+    </div>${makeFooter()}`;
+  }
+
+  if(t===2){
+    const rs=document.getElementById('df-reason');
+    let reasonText='تقديم درس تطبيقي';
+    const activity=fv('df-activity','..............................');
+    if(rs){
+      const v=rs.value;
+      if(v==='custom') reasonText=fv('df-reason-custom','المشاركة الفاعلة');
+      else if(v==='درس') reasonText='إعداد درس تطبيقي';
+      else if(v==='ورشة') reasonText='إعداد ورشة عمل';
+      else if(v==='برنامج') reasonText='تفعيل البرنامج';
+      else if(v==='انضباط') reasonText='الانضباط وعدم الغياب';
+      else if(v==='مشاركة') reasonText='المشاركة الفاعلة';
+    }
+    return `${makeHeader('🏫')}
+    <div class="cert-body">
+      <div class="cert-decoration"></div>
+      <div class="cert-title-art">شكر وتقدير</div>
+      <div class="cert-sub">تقديراً للجهود المتميزة</div>
+      <div class="cert-divider"></div>
+      <div class="cert-main-text">
+        يطيب لـ${fv('f-principal-title','مديرة المدرسة')} <span class="highlight">${school||'...............'}</span>
+        <br>أن ${isFemale?'تتقدم':'يتقدم'} بجزيل الشكر وخالص التقدير
+        <br>لـ${isFemale?'لمعلمة':'لمعلم'} / <span class="highlight">${name}</span>
+        <br>نظير ${isFemale?'جهودها':'جهوده'} المبذولة في ${reasonText}
+        <br>بعنوان: <span class="highlight">${activity}</span>
+        <br>وذلك يوم / <span class="highlight">${day}</span> الموافق <span class="highlight">${hijri}</span>
+        <br>داعين المولى لـ${isFemale?'ها':'ه'} المزيد من التوفيق والسداد
+      </div>
+      <div class="cert-divider"></div>
+    </div>${makeFooter()}`;
+  }
+
+  if(t===3){
+    const child=fv('df-child','سيدة المكان');
+    const isCF=fv('df-child-gender','female')==='female';
+    return `
+    <div class="cert-header">
+      <div class="cert-header-title">لمسة وفاء 💝</div>
+      <div class="cert-header-sub">شهادة شكر وتقدير للأسرة الكريمة</div>
+    </div>
+    <div class="cert-body">
+      <div class="cert-title-art">إلى من شاركتني حمل الأمانة....<br>وأعانتني بعد الله على أداء رسالتي</div>
+      <div class="cert-divider">🌸 ✦ 🌸</div>
+      <div class="cert-main-text">
+        إلى والدة ${isCF?'الطفلة':'الطفل'} / <span class="highlight">${child}</span>
+        <br>دعائي لكِ وشكري وتقديري
+        <br>على ما تبذليه من جهد وعطاء ومتابعة مستمرة
+        <br>أسهمت في تقدم مستوى ${isCF?'طفلتكِ':'طفلكِ'} وتفوق${isCF?'ها':'ه'}
+        <br>جزاكِ الله خيراً .... ووفقكِ لكل خير
+        <br>وحفظ لكِ ${isCF?'ابنتكِ':'ابنكِ'} من كل مكروه
+      </div>
+      <div class="cert-divider">🌷 ✦ 🌷</div>
+    </div>${makeFooter()}`;
+  }
+
+  if(t===4){
+    const r4=fv('df-reason4','جهوده/جهودها المتميزة في خدمة العملية التعليمية');
+    return `${makeHeader('⭐')}
+    <div class="cert-body">
+      <div class="cert-title-art">شكر وتقدير</div>
+      <div class="cert-divider"><div class="cert-divider-line"></div><div class="cert-divider-star">✦</div><div class="cert-divider-line rev"></div></div>
+      <div class="cert-main-text">
+        تشرف إدارة <span class="highlight">${school||'...............'}</span>
+        <br>بتقديم أرقى آيات الشكر والتقدير
+        <br>لـ${isFemale?'لمعلمة المتميزة':'لمعلم المتميز'} / <span class="highlight">${name}</span>
+        <br>${r4}
+        <br>وذلك يوم <span class="highlight">${day}</span> الموافق <span class="highlight">${hijri}</span>
+        <br>سائلين المولى أن يجعل ذلك في ميزان حسنات${isFemale?'ها':'ه'}
+      </div>
+      <div class="cert-divider"><div class="cert-divider-line"></div><div class="cert-divider-star">✦</div><div class="cert-divider-line rev"></div></div>
+    </div>${makeFooter()}`;
+  }
+
+  if(t===5){
+    const r5=fv('df-reason5','جهوده/جهودها المتميزة');
+    const a5=fv('df-activity5','');
+    return `${makeHeader('📋')}
+    <div class="cert-body">
+      <div class="cert-title-art">شكر وتقدير</div>
+      <div class="cert-sub">شهادة تقدير رسمية</div>
+      <div class="cert-divider"></div>
+      <div class="cert-main-text">
+        تتقدم إدارة <span class="highlight">${school||'...............'}</span>
+        <br>بجزيل الشكر والتقدير
+        <br>لـ${isFemale?'لمعلمة':'لمعلم'} / <span class="highlight">${name}</span>
+        <br>نظير ${r5}
+        ${a5?`<br>بعنوان: <span class="highlight">${a5}</span>`:''}
+        <br>وذلك يوم <span class="highlight">${day}</span> الموافق <span class="highlight">${hijri}</span>
+        <br>ونتمنى لـ${isFemale?'ها':'ه'} التوفيق والسداد
+      </div>
+      <div class="cert-divider"></div>
+    </div>${makeFooter()}`;
+  }
+
+  if(t===6){
+    const ws=fv('df-workshop','..............................');
+    return `${makeHeader('🎓')}
+    <div class="cert-body">
+      <div class="cert-decoration"></div>
+      <div class="cert-title-art">شكر وتقدير</div>
+      <div class="cert-sub">تقديراً للجهود في ورشة العمل</div>
+      <div class="cert-divider"></div>
+      <div class="cert-main-text">
+        تشكر إدارة <span class="highlight">${school||'...............'}</span>
+        <br>${isFemale?'المعلمة':'المعلم'} / <span class="highlight">${name}</span>
+        <br>نظير ${isFemale?'جهودها':'جهوده'} المبذولة والمتميزة
+        <br>في إعداد ورشة بعنوان: <span class="highlight">${ws}</span>
+        <br>وذلك يوم / <span class="highlight">${day}</span> الموافق <span class="highlight">${hijri}</span>
+        <br>داعين المولى لـ${isFemale?'ها':'ه'} المزيد من التوفيق والسداد
+      </div>
+      <div class="cert-divider"></div>
+    </div>${makeFooter()}`;
+  }
+  return '';
+}
+
+function updateCert(){
+  const cert=document.getElementById('certificate');
+  for(let i=1;i<=6;i++) cert.classList.remove(`tpl-${i}`);
+  cert.classList.add(`tpl-${state.template}`);
+  cert.innerHTML=buildCert();
+  cert.style.fontSize=state.fontSize+'px';
+}
+
+function updateFontSize(v){
+  state.fontSize=parseInt(v);
+  document.getElementById('fs-val').textContent=v;
+  document.getElementById('certificate').style.fontSize=v+'px';
+}
+
+function toggleNum(){
+  state.showNum=!state.showNum;
+  document.getElementById('tog-num').classList.toggle('on',state.showNum);
+  updateCert();
+}
+
+function toggleSeal(){
+  state.showSeal=!state.showSeal;
+  document.getElementById('tog-seal').classList.toggle('on',state.showSeal);
+  updateCert();
+}
+
+function resetForm(){
+  ['f-name','f-school','f-region','f-principal','f-hijri','f-day'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.value='';
+  });
+  document.getElementById('f-date').valueAsDate=new Date();
+  updateCert();
+}
+
+function saveCert(){
+  const data={
+    template:state.template,
+    name:fv('f-name'),school:fv('f-school'),
+    ministry:fv('f-ministry'),region:fv('f-region'),
+    principal:fv('f-principal'),hijri:fv('f-hijri'),
+    day:fv('f-day'),gender:fv('f-gender'),
+    savedAt:new Date().toLocaleString('ar-SA')
+  };
+  try{
+    const saves=JSON.parse(localStorage.getItem('cert-saves')||'[]');
+    saves.unshift(data);
+    localStorage.setItem('cert-saves',JSON.stringify(saves.slice(0,50)));
+  }catch(e){}
+  showToast('✅ تم الحفظ بنجاح!');
+}
+
+function printCert(){window.print();}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+// Init
+selectTemplate(1);
+</script>
+</body>
+</html>

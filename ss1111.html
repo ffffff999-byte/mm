@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة شهادات الشكر والتقدير — تصميم د. فواز</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;900&family=Almarai:wght@300;400;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+/*─────────────────────────────────────────
+  RESET & VARIABLES
+─────────────────────────────────────────*/
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+:root {
+  --gold:#C9A84C; --gl:#D4AF37; --gd:#8B6A1A;
+  --bg:#F0F2F5;   --pn:#FFFFFF; --pn2:#F1F3F5;
+  --bd:rgba(201,168,76,.35); --bd2:rgba(201,168,76,.12);
+  --tx:#2C3E50;   --mu:#6C757D;
+  --ac:#6B4FA0;   --gr:#219150; --re:#b53030;
+  --sb:290px;
+}
+html,body { width:100%; height:100%; overflow:hidden; font-family:'Cairo',sans-serif; background:var(--bg); color:var(--tx); direction:rtl; }
+
+/*─────────────────────────────────────────
+  APP SHELL
+─────────────────────────────────────────*/
+.app {
+  display:grid;
+  grid-template-rows:54px 1fr;
+  grid-template-columns:var(--sb) 1fr;
+  width:100vw; height:100vh;
+}
+
+/*─────────────────────────────────────────
+  HEADER
+─────────────────────────────────────────*/
+.hdr {
+  grid-column:1/-1;
+  background:#FFFFFF;
+  border-bottom:2px solid var(--bd);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 18px; gap:10px; flex-shrink:0;
+  box-shadow:0 2px 8px rgba(201,168,76,.1);
+}
+.hlogo { display:flex; align-items:center; gap:10px; }
+.hico  { width:36px;height:36px;background:linear-gradient(135deg,var(--gold),var(--gd));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;box-shadow:0 2px 10px rgba(201,168,76,.4); }
+.htx h1 { font-size:14px;font-weight:800;background:linear-gradient(90deg,var(--gd),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:.3px; }
+.htx p  { font-size:9px;color:var(--mu);margin-top:1px; }
+.hright { display:flex;align-items:center;gap:8px; }
+.bdg { background:rgba(201,168,76,.12);border:1px solid var(--bd);color:var(--gd);padding:3px 10px;border-radius:20px;font-size:9px;font-weight:700;white-space:nowrap; }
+.hbtn { background:#FBF6EC;border:1px solid var(--bd);color:var(--gd);padding:5px 12px;border-radius:7px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:10px;font-weight:700;transition:.15s;display:flex;align-items:center;gap:5px; }
+.hbtn:hover { background:rgba(201,168,76,.2);border-color:var(--gold);color:#5a3a00; }
+
+/*─────────────────────────────────────────
+  SIDEBAR
+─────────────────────────────────────────*/
+.sb {
+  background:var(--pn);
+  border-left:1px solid var(--bd);
+  overflow-y:auto;
+  padding:10px;
+  display:flex; flex-direction:column; gap:8px;
+  box-shadow:-2px 0 10px rgba(0,0,0,.06);
+}
+.sb::-webkit-scrollbar { width:3px; }
+.sb::-webkit-scrollbar-thumb { background:rgba(201,168,76,.4);border-radius:2px; }
+
+.stit { font-size:9px;font-weight:800;color:var(--gd);letter-spacing:1.8px;display:flex;align-items:center;gap:5px;margin-bottom:6px;text-transform:uppercase; }
+.stit::before { content:'';width:3px;height:12px;background:linear-gradient(var(--gold),var(--gd));border-radius:2px;flex-shrink:0; }
+.card { background:#FDFBF6;border:1px solid rgba(201,168,76,.25);border-radius:10px;padding:11px; }
+.dv   { height:1px;background:linear-gradient(90deg,transparent,rgba(201,168,76,.3),transparent);flex-shrink:0; }
+
+/* Upload zone */
+.upz { border:2px dashed rgba(201,168,76,.45);border-radius:8px;padding:14px 8px;text-align:center;cursor:pointer;transition:.22s;background:rgba(201,168,76,.04); }
+.upz:hover { border-color:var(--gold);background:rgba(201,168,76,.1);transform:scale(1.01); }
+.upz .ui { font-size:22px;margin-bottom:4px; }
+.upz .ut { font-size:11px;color:var(--gd);font-weight:700; }
+.upz .us { font-size:9px;color:var(--mu); }
+
+/* Buttons */
+.btn { width:100%;display:flex;align-items:center;justify-content:center;gap:5px;padding:8px 10px;border-radius:7px;border:none;cursor:pointer;font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;transition:.18s;letter-spacing:.2px; }
+.bg  { background:linear-gradient(135deg,var(--gold),var(--gd));color:#fff; }
+.bg:hover  { filter:brightness(1.1);transform:translateY(-1px);box-shadow:0 4px 14px rgba(201,168,76,.4); }
+.bo  { background:#FBF6EC;border:1px solid var(--bd);color:var(--gd); }
+.bo:hover  { background:rgba(201,168,76,.18);border-color:var(--gold);color:#5a3a00; }
+.ba  { background:linear-gradient(135deg,#6B4FA0,#4a2e80);color:#fff;border:1px solid rgba(107,79,160,.3); }
+.ba:hover  { filter:brightness(1.12);transform:translateY(-1px); }
+.bgr { background:linear-gradient(135deg,#219150,#156835);color:#fff; }
+.bgr:hover { filter:brightness(1.1);transform:translateY(-1px); }
+.br  { background:#FFF0F0;border:1px solid rgba(181,48,48,.3);color:#b53030; }
+.br:hover  { background:#FFE0E0;border-color:rgba(181,48,48,.5); }
+.gc  { display:flex;flex-direction:column;gap:5px; }
+.gr2 { display:grid;grid-template-columns:1fr 1fr;gap:5px; }
+
+/* Template thumbnails */
+.tmpl-grid { display:grid;grid-template-columns:1fr 1fr;gap:6px; }
+.tmpl-card {
+  border:2px solid var(--bd); border-radius:7px; overflow:hidden;
+  cursor:pointer; transition:.2s; aspect-ratio:297/210; position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.tmpl-card:hover { border-color:var(--gold);transform:scale(1.03); }
+.tmpl-card.act   { border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.35); }
+.tmpl-card .tn   { font-size:8px;color:var(--gl);text-align:center;padding:3px; position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.6); }
+.tc0 { background:linear-gradient(135deg,#fef9ed,#f0dda0,#fef9ed); }
+.tc1 { background:linear-gradient(135deg,#e8f4e8,#a8d4a8,#e8f4e8); }
+.tc2 { background:linear-gradient(135deg,#e8eef8,#a0b8d8,#e8eef8); }
+.tc3 { background:linear-gradient(135deg,#f8e8f8,#d0a0d0,#f8e8f8); }
+.tc4 { background:linear-gradient(135deg,#fff8f0,#f0c888,#fff8f0); }
+.tc5 { background:linear-gradient(135deg,#f0f0f0,#c0c0c0,#f0f0f0); }
+
+/* Text items */
+.tl  { display:flex;flex-direction:column;gap:4px; }
+.ti  { background:#FAFAFA;border:1px solid rgba(201,168,76,.2);border-radius:7px;padding:7px 9px;cursor:pointer;transition:.14s; }
+.ti:hover { border-color:rgba(201,168,76,.5);background:#FDF8EE; }
+.ti.sl { border-color:var(--gold);background:#FBF4E0; }
+.ti-h { display:flex;align-items:center;justify-content:space-between;gap:4px;margin-bottom:2px; }
+.ti-l { font-size:9px;color:var(--gd);font-weight:800; }
+.ti-p { font-size:10px;color:var(--mu);overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+.ti-a { display:flex;gap:2px;flex-shrink:0; }
+.ib { width:20px;height:20px;border-radius:4px;border:1px solid rgba(201,168,76,.25);background:transparent;color:var(--mu);cursor:pointer;font-size:10px;display:flex;align-items:center;justify-content:center;transition:.12s; }
+.ib:hover { background:rgba(201,168,76,.15);color:var(--gd); }
+.ib.dl:hover { background:#FFE8E8;color:#b53030;border-color:rgba(181,48,48,.3); }
+.ib.dup:hover{ background:#E8F5EE;color:#219150;border-color:rgba(33,145,80,.3); }
+
+/* Control panel */
+.cp  { display:none;flex-direction:column;gap:6px;padding-top:7px;border-top:1px solid rgba(201,168,76,.2);margin-top:5px; }
+.cp.op { display:flex; }
+.cr  { display:flex;align-items:center;gap:5px; }
+.cl  { font-size:9px;color:var(--mu);min-width:42px;flex-shrink:0; }
+.ci  { flex:1;background:#F8F9FA;border:1px solid rgba(201,168,76,.3);border-radius:5px;color:var(--tx);padding:4px 7px;font-family:'Cairo',sans-serif;font-size:10px;outline:none;transition:border .12s;direction:rtl; }
+.ci:focus { border-color:var(--gold);background:#FFF; }
+.ci option { background:#fff;color:var(--tx); }
+.ci-r { -webkit-appearance:none;flex:1;height:3px;background:rgba(201,168,76,.25);border-radius:2px;outline:none; }
+.ci-r::-webkit-slider-thumb { -webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--gold);cursor:pointer;box-shadow:0 0 4px rgba(201,168,76,.5); }
+.cn  { width:30px;text-align:center;font-size:10px;color:var(--gd);font-weight:700; }
+.ab  { display:flex;gap:3px; }
+.abb { width:24px;height:22px;border-radius:4px;border:1px solid rgba(201,168,76,.3);background:#F8F6EE;color:var(--mu);cursor:pointer;font-size:11px;display:flex;align-items:center;justify-content:center;transition:.12s; }
+.abb:hover,.abb.on { background:#FBF0D0;color:var(--gd);border-color:var(--gold); }
+input[type=color] { width:26px;height:22px;border-radius:4px;border:1px solid rgba(201,168,76,.3);background:transparent;cursor:pointer;padding:1px; }
+.ci-ta { width:100%;min-height:42px;resize:vertical;direction:rtl; }
+
+/* layer move buttons */
+.layer-btns { display:flex;gap:3px;margin-right:4px; }
+.lbtn { width:20px;height:20px;border-radius:4px;border:1px solid var(--bd);background:transparent;color:var(--mu);cursor:pointer;font-size:9px;display:flex;align-items:center;justify-content:center;transition:.12s; }
+.lbtn:hover { background:rgba(201,168,76,.15);color:var(--gold); }
+
+/*─────────────────────────────────────────
+  MAIN CANVAS AREA
+─────────────────────────────────────────*/
+.mn {
+  background:#E9ECEF;
+  display:flex; align-items:center; justify-content:center;
+  overflow:auto; position:relative; padding:14px;
+}
+.mn::before { display:none; }
+
+/* Cert shell — sized by JS */
+.csh {
+  position:relative; flex-shrink:0;
+  box-shadow:0 8px 32px rgba(0,0,0,.18),0 0 0 1px rgba(201,168,76,.3);
+  border-radius:2px;
+}
+
+/* The cert itself — always 735×520 internally */
+#cert {
+  position:relative; width:735px; height:520px;
+  background:#fff; overflow:hidden;
+  transform-origin:top left;
+}
+#cbg { position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;display:none;z-index:1; }
+#cbg.v { display:block; }
+
+/* Default cert designs */
+.cdc {
+  position:absolute;inset:0;z-index:0;
+  transition:opacity .3s;
+}
+/* Draggable text */
+.ct {
+  position:absolute; cursor:grab; user-select:none;
+  padding:3px 5px; border:2px dashed transparent; border-radius:3px;
+  min-width:40px; white-space:pre-wrap; word-break:break-word;
+  line-height:1.4; direction:rtl; transition:border-color .1s;
+  z-index:10;
+}
+.ct:hover { border-color:rgba(201,168,76,.4); }
+.ct.sl { border-color:#C9A84C; }
+.ct.dg { cursor:grabbing; opacity:.8; }
+
+/* Resize handle */
+.ct.sl::after {
+  content:'⤡';
+  position:absolute; bottom:-2px; left:-2px;
+  width:16px; height:16px;
+  background:var(--gold); color:#000;
+  font-size:10px; border-radius:3px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:se-resize; line-height:1;
+}
+
+/* QR removed */
+
+/* Zoom bar */
+.zbar {
+  position:absolute; bottom:12px; right:12px;
+  display:flex; align-items:center; gap:5px;
+  background:#FFFFFF; border:1px solid var(--bd);
+  border-radius:20px; padding:4px 10px; z-index:20;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+.zbn { width:22px;height:22px;border-radius:50%;border:1px solid var(--bd);background:#FBF6EC;color:var(--gd);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:.12s; }
+.zbn:hover { background:rgba(201,168,76,.2); }
+.zlbl { font-size:10px;color:var(--mu);min-width:34px;text-align:center; }
+.zfit { padding:3px 8px;border-radius:10px;border:1px solid var(--bd);background:#FBF6EC;color:var(--gd);cursor:pointer;font-size:9px;font-family:'Cairo',sans-serif;transition:.12s; }
+.zfit:hover { background:rgba(201,168,76,.2);border-color:var(--gold); }
+
+/* Hint */
+.hnt { font-size:10px;color:var(--mu);text-align:center;padding:10px 0; }
+
+/* Toast */
+.tst {
+  position:fixed; bottom:18px; left:50%;
+  transform:translateX(-50%) translateY(10px);
+  background:#FFFFFF;
+  border:2px solid var(--gold); color:var(--gd);
+  padding:8px 24px; border-radius:30px;
+  font-size:11px; font-weight:700;
+  opacity:0; pointer-events:none; transition:all .25s; z-index:9999;
+  box-shadow:0 4px 20px rgba(201,168,76,.3);
+}
+.tst.on { opacity:1;transform:translateX(-50%) translateY(0); }
+
+/* Loader */
+.ldr {
+  position:fixed; inset:0;
+  background:rgba(240,242,245,.88);
+  display:none; align-items:center; justify-content:center;
+  flex-direction:column; gap:14px;
+  z-index:9998; backdrop-filter:blur(6px);
+}
+.ldr.on { display:flex; }
+.sp { width:42px;height:42px;border:3px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite; }
+@keyframes sp { to { transform:rotate(360deg); } }
+.ltx { color:var(--gd);font-size:13px;font-weight:700; }
+
+/* Context menu */
+.ctx {
+  position:fixed; background:#FFFFFF;
+  border:1px solid var(--bd); border-radius:8px;
+  padding:5px 0; min-width:155px; z-index:9990;
+  box-shadow:0 8px 24px rgba(0,0,0,.12);
+  display:none;
+}
+.ctx.on { display:block; }
+.ctx-item {
+  padding:7px 14px; font-size:11px; cursor:pointer;
+  display:flex; align-items:center; gap:7px;
+  transition:.12s; color:var(--tx);
+}
+.ctx-item:hover { background:#FBF6EC;color:var(--gd); }
+.ctx-sep { height:1px;background:rgba(201,168,76,.2);margin:3px 0; }
+}
+
+
+/* Logo on cert */
+#logoImg:hover{border-color:rgba(201,168,76,.5);}
+#logoImg.lsl{border-color:#C9A84C;}
+
+#logoImg:hover{border-color:rgba(201,168,76,.5);}
+#logoImg.lsl{border-color:#C9A84C;}
+
+/* ornament type buttons */
+.orn-type-btn {
+  padding:5px 4px; border-radius:6px;
+  border:1px solid rgba(201,168,76,.3);
+  background:#FBF6EC; color:var(--gd);
+  cursor:pointer; font-family:'Cairo',sans-serif;
+  font-size:9px; font-weight:700; transition:.15s;
+}
+.orn-type-btn:hover { background:rgba(201,168,76,.18); border-color:var(--gold); }
+.orn-type-btn.active { background:linear-gradient(135deg,var(--gold),var(--gd)); color:#fff; border-color:var(--gd); }
+
+.orn-shape-btn {
+  aspect-ratio:1; border-radius:6px;
+  border:1px solid rgba(201,168,76,.3);
+  background:#FBF6EC; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; transition:.15s;
+}
+.orn-shape-btn:hover { background:rgba(201,168,76,.2); border-color:var(--gold); transform:scale(1.05); }
+.orn-shape-btn.active { border-color:var(--gold); box-shadow:0 0 0 2px rgba(201,168,76,.4); background:#FBF0D0; }
+
+/* Print */
+@media print {
+  .sb,.hdr,.zbar { display:none!important; }
+  .mn { padding:0!important;background:none!important; }
+  .csh { box-shadow:none!important; }
+  #cert { transform:none!important;width:297mm!important;height:210mm!important; }
+  .ct { border:none!important; }
+  .ct::after { display:none!important; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!--══════════════════ HEADER ══════════════════-->
+<header class="hdr">
+  <div class="hlogo">
+    <div class="hico">🏅</div>
+    <div class="htx">
+      <h1>منصة شهادات الشكر والتقدير</h1>
+      <p>أداة احترافية لتصميم الشهادات التعليمية والإدارية</p>
+    </div>
+  </div>
+  <div class="hright">
+    <button class="hbtn" onclick="clearAll()">🗑️ مسح الكل</button>
+    <button class="hbtn" onclick="xPdf()">📄 PDF</button>
+    <button class="hbtn" onclick="xPng()">🖼️ PNG</button>
+    <button class="hbtn" onclick="xPrint()">🖨️ طباعة</button>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener" style="text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:1px;background:linear-gradient(135deg,var(--gold),var(--gd));border-radius:8px;padding:4px 12px;cursor:pointer;transition:.18s;box-shadow:0 2px 8px rgba(201,168,76,.35)">
+      <span style="font-size:8px;color:#fff;opacity:.9;font-family:'Cairo',sans-serif;font-weight:600;letter-spacing:.3px">تفضل للمزيد</span>
+      <span style="font-size:9px;color:#fff;font-family:'Cairo',sans-serif;font-weight:800;">تصميم د. فواز</span>
+    </a>
+  </div>
+</header>
+
+<!--══════════════════ SIDEBAR ══════════════════-->
+<aside class="sb">
+
+  <!-- ① الخلفية -->
+  <div class="card">
+    <div class="stit">الخلفية</div>
+    <div class="upz" onclick="document.getElementById('bgf').click()">
+      <div class="ui">🖼️</div>
+      <div class="ut">ارفع صورة خلفية</div>
+      <div class="us">JPG · PNG</div>
+    </div>
+    <input type="file" id="bgf" accept="image/jpeg,image/png" style="display:none" onchange="loadBg(event)">
+    <div style="margin-top:6px">
+      <button class="btn br" onclick="clearBg()">🗑️ إزالة الخلفية</button>
+    </div>
+  </div>
+
+  <!-- شعار المدرسة -->
+  <div class="card" style="border-color:rgba(107,79,160,.28);background:#faf7ff">
+    <div class="stit" style="color:#6B4FA0">شعار المدرسة</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div id="logoThumb" style="width:52px;height:52px;border:2px dashed rgba(107,79,160,.35);border-radius:8px;background:#f0ebff;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;font-size:22px">🏫</div>
+      <div class="gc" style="flex:1">
+        <button class="btn ba" onclick="document.getElementById('logoFile').click()">📥 استيراد شعار المدرسة</button>
+        <button class="btn br" onclick="removeLogo()" style="font-size:10px;padding:5px">🗑️ إزالة الشعار</button>
+      </div>
+    </div>
+    <input type="file" id="logoFile" accept="image/*" style="display:none" onchange="loadLogo(event)">
+    <div class="cr">
+      <span class="cl">الحجم</span>
+      <input type="range" class="ci-r" id="logoSzR" min="40" max="220" value="90" oninput="setLogoSize(+this.value)">
+      <span class="cn" id="logoSzN">90</span>
+    </div>
+  </div>
+
+  <div class="dv"></div>
+
+  <!-- ② القوالب الجاهزة -->
+  <div class="card">
+    <div class="stit">قوالب مزخرفة جاهزة</div>
+    <div class="tmpl-grid" id="tmplGrid"></div>
+  </div>
+
+  <div class="dv"></div>
+
+  <!-- زخارف الإطار -->
+  <div class="card" style="border-color:rgba(201,168,76,.4);background:#FFFDF5">
+    <div class="stit">زخارف وإطارات إضافية</div>
+
+    <!-- أنواع الزخرفة -->
+    <div style="margin-bottom:7px">
+      <div class="cl" style="margin-bottom:4px;font-size:9px;color:var(--mu)">نوع الزخرفة</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px" id="ornTypeBtns">
+        <button class="orn-type-btn active" onclick="setOrnType('corner',this)">🔲 زوايا</button>
+        <button class="orn-type-btn" onclick="setOrnType('frame',this)">🖼️ إطار كامل</button>
+        <button class="orn-type-btn" onclick="setOrnType('top',this)">⬆️ شريط علوي</button>
+        <button class="orn-type-btn" onclick="setOrnType('sides',this)">↔️ أعمدة جانبية</button>
+        <button class="orn-type-btn" onclick="setOrnType('floral',this)">🌸 زهري</button>
+        <button class="orn-type-btn" onclick="setOrnType('islamic',this)">✦ إسلامي</button>
+      </div>
+    </div>
+
+    <!-- اختيار الشكل -->
+    <div style="margin-bottom:7px" id="ornShapeRow">
+      <div class="cl" style="margin-bottom:4px;font-size:9px;color:var(--mu)">الشكل</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:3px" id="ornShapeBtns"></div>
+    </div>
+
+    <!-- اللون -->
+    <div class="cr" style="margin-bottom:6px">
+      <span class="cl">اللون</span>
+      <input type="color" id="ornColor" value="#C9A84C" onchange="applyOrnament()">
+      <span style="font-size:9px;color:var(--mu);margin-right:4px">لون الزخرفة</span>
+    </div>
+
+    <!-- الشفافية -->
+    <div class="cr" style="margin-bottom:7px">
+      <span class="cl">شفافية</span>
+      <input type="range" class="ci-r" id="ornOpacity" min="10" max="100" value="70" oninput="applyOrnament();document.getElementById('ornOpLbl').textContent=this.value+'%'">
+      <span class="cn" id="ornOpLbl">70%</span>
+    </div>
+
+    <!-- الحجم / السُمك -->
+    <div class="cr" style="margin-bottom:8px">
+      <span class="cl">الحجم</span>
+      <input type="range" class="ci-r" id="ornSize" min="1" max="10" value="4" oninput="applyOrnament();document.getElementById('ornSzLbl').textContent=this.value">
+      <span class="cn" id="ornSzLbl">4</span>
+    </div>
+
+    <div class="gr2">
+      <button class="btn bg" onclick="applyOrnament()">✅ تطبيق</button>
+      <button class="btn br" onclick="clearOrnament()">🗑️ إزالة</button>
+    </div>
+  </div>
+
+  <div class="dv"></div>
+
+  <!-- ③ إضافة نص -->
+  <div class="card">
+    <div class="stit">إضافة عنصر</div>
+    <div class="gc">
+      <button class="btn bg"  onclick="addEl('اسم الطالب / المعلم','name')">👤 اسم الطالب / المعلم</button>
+      <button class="btn bo"  onclick="addEl('شهادة شكر وتقدير','title')">🏆 عنوان الشهادة</button>
+      <button class="btn bo"  onclick="addEl('تقديراً لجهوده المتميزة وعطائه المثمر','body')">📜 نص الشهادة</button>
+      <button class="btn bo"  onclick="addEl(arDate(),'date')">📅 التاريخ</button>
+      <button class="btn bo"  onclick="addEl('التوقيع','sign')">✍️ التوقيع / المسمى</button>
+      <button class="btn ba"  onclick="customEl()">➕ نص مخصص…</button>
+    </div>
+  </div>
+
+  <div class="dv"></div>
+
+  <!-- ④ العناصر المضافة -->
+  <div class="card" style="flex:1;min-height:0;display:flex;flex-direction:column;">
+    <div class="stit">العناصر <span style="color:var(--mu);font-size:8px;margin-right:4px" id="elCount">(0)</span></div>
+    <div class="tl" id="tlist">
+      <div class="hnt">لم تُضَف أي نصوص بعد<br><span style="font-size:9px">اضغط فوق لإضافة عنصر</span></div>
+    </div>
+  </div>
+
+  <div class="dv"></div>
+
+  <!-- QR removed -->
+
+  <div class="dv"></div>
+  <div class="card">
+    <div class="stit">التصدير والطباعة</div>
+    <div class="gc">
+      <button class="btn bgr" onclick="xPdf()">📄 تصدير PDF عالي الجودة</button>
+      <div class="gr2">
+        <button class="btn bo" onclick="xPng()">🖼️ حفظ PNG</button>
+        <button class="btn ba" onclick="xPrint()">🖨️ طباعة مباشرة</button>
+      </div>
+    </div>
+  </div>
+
+</aside>
+
+<!--══════════════════ MAIN ══════════════════-->
+<main class="mn" id="mn">
+  <div class="csh" id="csh">
+    <div id="cert">
+      <div class="cdc" id="cdec"></div>
+      <img id="cbg" src="" alt="">
+      <svg id="ornLayer" xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:13"></svg>
+      <img id="logoImg" src="" alt="" draggable="false" style="display:none;position:absolute;z-index:12;cursor:grab;width:90px;height:90px;object-fit:contain;top:16px;right:20px;border:2px dashed transparent;border-radius:6px">
+    </div>
+  </div>
+
+  <!-- Zoom bar -->
+  <div class="zbar">
+    <button class="zbn" onclick="doZoom(-1)" title="تصغير">−</button>
+    <div class="zlbl" id="zlbl">65%</div>
+    <button class="zbn" onclick="doZoom(+1)" title="تكبير">+</button>
+    <button class="zfit" onclick="fitCert()" title="ملاءمة">⊡ ملاءمة</button>
+  </div>
+</main>
+</div>
+
+<!-- Context menu -->
+<div class="ctx" id="ctxMenu">
+  <div class="ctx-item" onclick="ctxDup()">📋 نسخ العنصر</div>
+  <div class="ctx-item" onclick="ctxToFront()">⬆️ إلى الأمام</div>
+  <div class="ctx-item" onclick="ctxToBack()">⬇️ إلى الخلف</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctxCenter('h')">↔️ توسيط أفقي</div>
+  <div class="ctx-item" onclick="ctxCenter('v')">↕️ توسيط عمودي</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctxDel()" style="color:#f08080">🗑️ حذف</div>
+</div>
+
+<!-- Toast & Loader -->
+<div class="tst" id="tst"></div>
+<div class="ldr" id="ldr"><div class="sp"></div><div class="ltx">جارٍ توليد العبارات…</div></div>
+
+<script>
+/*══════════════════════════════════════════
+  CONSTANTS & STATE
+══════════════════════════════════════════*/
+const CW=735, CH=520;
+let sc=0.65;
+let els=[], selId=null, drag=null, ctxTarget=null;
+const FONTS=['Cairo','Tajawal','Almarai','Amiri','Noto Naskh Arabic'];
+const DEF={ font:'Cairo',size:30,color:'#1a0e00',align:'center',bold:false,italic:false,opacity:100,letterSpacing:0 };
+
+/*──────────────────────────────────────────
+  BOOT
+──────────────────────────────────────────*/
+window.addEventListener('load',()=>{ fitCert(); seed(); });
+window.addEventListener('resize', fitCert);
+document.addEventListener('click', ()=>{ closeCtx(); });
+document.addEventListener('keydown', onKey);
+
+/*──────────────────────────────────────────
+  ZOOM & FIT
+──────────────────────────────────────────*/
+function fitCert(){
+  const mn=document.getElementById('mn');
+  const mW=mn.clientWidth-28, mH=mn.clientHeight-28;
+  sc=Math.min(mW/CW, mH/CH, 1);
+  sc=Math.max(sc,.15);
+  apSc();
+}
+function apSc(){
+  const cert=document.getElementById('cert');
+  const sh=document.getElementById('csh');
+  cert.style.transform=`scale(${sc})`;
+  cert.style.transformOrigin='top left';
+  sh.style.width=(CW*sc)+'px';
+  sh.style.height=(CH*sc)+'px';
+  document.getElementById('zlbl').textContent=Math.round(sc*100)+'%';
+}
+function doZoom(d){ sc=Math.max(.15,Math.min(2,sc+d*.05)); apSc(); }
+
+/*──────────────────────────────────────────
+  BACKGROUND
+──────────────────────────────────────────*/
+function loadBg(e){
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const bg=document.getElementById('cbg');
+    bg.src=ev.target.result; bg.classList.add('v');
+    document.getElementById('cdec').style.opacity='0';
+    toast('✅ تم رفع الخلفية');
+  };
+  r.readAsDataURL(f);
+}
+function clearBg(){
+  const bg = document.getElementById('cbg');
+  bg.src = ''; bg.classList.remove('v');
+  document.getElementById('bgf').value = '';
+  // restore the currently selected template
+  const t = TEMPLATES[currentTemplateIdx];
+  if(t){
+    document.getElementById('cdec').innerHTML = t.h;
+    document.getElementById('cdec').style.opacity = '1';
+  }
+  toast('🗑️ تمت إزالة الخلفية');
+}
+
+/*──────────────────────────────────────────
+  TEMPLATES
+──────────────────────────────────────────*/
+const TEMPLATES=[
+/* 0 ذهبي ملكي */
+{n:'ذهبي ملكي',c:['#fef9ed','#C9A84C'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T0bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fef9ed"/><stop offset="50%" stop-color="#f5e4a4"/><stop offset="100%" stop-color="#fef9ed"/></linearGradient></defs><rect width="735" height="520" fill="url(#T0bg)"/><rect x="12" y="12" width="711" height="496" fill="none" stroke="#C9A84C" stroke-width="2.5" stroke-opacity=".65"/><rect x="20" y="20" width="695" height="480" fill="none" stroke="#C9A84C" stroke-width="1" stroke-opacity=".3"/><path d="M12,12 l55,0 M12,12 l0,55" stroke="#C9A84C" stroke-width="2.5" fill="none" stroke-opacity=".9"/><path d="M723,12 l-55,0 M723,12 l0,55" stroke="#C9A84C" stroke-width="2.5" fill="none" stroke-opacity=".9"/><path d="M12,508 l55,0 M12,508 l0,-55" stroke="#C9A84C" stroke-width="2.5" fill="none" stroke-opacity=".9"/><path d="M723,508 l-55,0 M723,508 l0,-55" stroke="#C9A84C" stroke-width="2.5" fill="none" stroke-opacity=".9"/><polygon points="12,12 24,12 12,24" fill="#C9A84C" fill-opacity=".8"/><polygon points="723,12 711,12 723,24" fill="#C9A84C" fill-opacity=".8"/><polygon points="12,508 24,508 12,496" fill="#C9A84C" fill-opacity=".8"/><polygon points="723,508 711,508 723,496" fill="#C9A84C" fill-opacity=".8"/><text x="367" y="44" text-anchor="middle" font-size="20" fill="#C9A84C" fill-opacity=".6" font-family="serif">❧ ✦ ❧</text><text x="367" y="503" text-anchor="middle" font-size="18" fill="#C9A84C" fill-opacity=".55" font-family="serif">✦ ✦ ✦</text><line x1="12" y1="260" x2="55" y2="260" stroke="#C9A84C" stroke-width="1.5" stroke-opacity=".5"/><line x1="680" y1="260" x2="723" y2="260" stroke="#C9A84C" stroke-width="1.5" stroke-opacity=".5"/><text x="367" y="295" text-anchor="middle" font-size="200" fill="#C9A84C" fill-opacity=".04" font-family="serif">✦</text></svg>`},
+/* 1 أزرق ملكي */
+{n:'أزرق ملكي',c:['#EDF6FF','#1a5fa8'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T1bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EDF6FF"/><stop offset="60%" stop-color="#c8e4f8"/><stop offset="100%" stop-color="#EDF6FF"/></linearGradient><linearGradient id="T1bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1a5fa8" stop-opacity="0"/><stop offset="50%" stop-color="#1a5fa8" stop-opacity=".7"/><stop offset="100%" stop-color="#1a5fa8" stop-opacity="0"/></linearGradient></defs><rect width="735" height="520" fill="url(#T1bg)"/><rect x="0" y="0" width="735" height="10" fill="url(#T1bar)"/><rect x="0" y="510" width="735" height="10" fill="url(#T1bar)"/><rect x="14" y="14" width="707" height="492" fill="none" stroke="#1a5fa8" stroke-width="2" stroke-opacity=".4"/><rect x="22" y="22" width="691" height="476" fill="none" stroke="#4A90D9" stroke-width="1" stroke-opacity=".25"/><path d="M14,14 q22,0 22,22" stroke="#1a5fa8" stroke-width="2.5" fill="none" stroke-opacity=".7"/><path d="M721,14 q-22,0 -22,22" stroke="#1a5fa8" stroke-width="2.5" fill="none" stroke-opacity=".7"/><path d="M14,506 q22,0 22,-22" stroke="#1a5fa8" stroke-width="2.5" fill="none" stroke-opacity=".7"/><path d="M721,506 q-22,0 -22,-22" stroke="#1a5fa8" stroke-width="2.5" fill="none" stroke-opacity=".7"/><text x="367" y="46" text-anchor="middle" font-size="18" fill="#1a5fa8" fill-opacity=".5" font-family="serif">✦ ✦ ✦</text><text x="30" y="268" text-anchor="middle" font-size="18" fill="#4A90D9" fill-opacity=".5">★</text><text x="705" y="268" text-anchor="middle" font-size="18" fill="#4A90D9" fill-opacity=".5">★</text><text x="367" y="504" text-anchor="middle" font-size="18" fill="#1a5fa8" fill-opacity=".45" font-family="serif">✦ ✦ ✦</text><text x="367" y="295" text-anchor="middle" font-size="200" fill="#4A90D9" fill-opacity=".04" font-family="serif">★</text></svg>`},
+/* 2 أخضر زمردي */
+{n:'أخضر زمردي',c:['#edfef4','#1a7a4a'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T2bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#edfef4"/><stop offset="50%" stop-color="#c0efd4"/><stop offset="100%" stop-color="#edfef4"/></linearGradient></defs><rect width="735" height="520" fill="url(#T2bg)"/><rect x="0" y="0" width="735" height="8" fill="#1a7a4a" fill-opacity=".5"/><rect x="0" y="512" width="735" height="8" fill="#1a7a4a" fill-opacity=".5"/><rect x="0" y="0" width="8" height="520" fill="#1a7a4a" fill-opacity=".5"/><rect x="727" y="0" width="8" height="520" fill="#1a7a4a" fill-opacity=".5"/><rect x="16" y="16" width="703" height="488" fill="none" stroke="#1a7a4a" stroke-width="1.5" stroke-opacity=".35"/><rect x="24" y="24" width="687" height="472" fill="none" stroke="#1a7a4a" stroke-width="1" stroke-opacity=".2"/><text x="367" y="46" text-anchor="middle" font-size="20" fill="#1a7a4a" fill-opacity=".55" font-family="serif">❦ ✿ ❦</text><text x="367" y="504" text-anchor="middle" font-size="20" fill="#1a7a4a" fill-opacity=".5" font-family="serif">✿ ✿ ✿</text><text x="367" y="300" text-anchor="middle" font-size="200" fill="#1a7a4a" fill-opacity=".03" font-family="serif">✿</text></svg>`},
+/* 3 بنفسجي راقٍ */
+{n:'بنفسجي راقٍ',c:['#f5eeff','#6B4FA0'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T3bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f5eeff"/><stop offset="50%" stop-color="#ddc8f8"/><stop offset="100%" stop-color="#f5eeff"/></linearGradient><linearGradient id="T3top" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6B4FA0" stop-opacity=".8"/><stop offset="100%" stop-color="#6B4FA0" stop-opacity="0"/></linearGradient><linearGradient id="T3bot" x1="0" y1="1" x2="0" y2="0"><stop offset="0%" stop-color="#6B4FA0" stop-opacity=".8"/><stop offset="100%" stop-color="#6B4FA0" stop-opacity="0"/></linearGradient></defs><rect width="735" height="520" fill="url(#T3bg)"/><rect x="0" y="0" width="735" height="60" fill="url(#T3top)"/><rect x="0" y="460" width="735" height="60" fill="url(#T3bot)"/><rect x="14" y="14" width="707" height="492" fill="none" stroke="#6B4FA0" stroke-width="2" stroke-opacity=".5"/><rect x="22" y="22" width="691" height="476" fill="none" stroke="#6B4FA0" stroke-width="1" stroke-opacity=".25"/><rect x="14" y="14" width="30" height="4" fill="#6B4FA0" fill-opacity=".6"/><rect x="691" y="14" width="30" height="4" fill="#6B4FA0" fill-opacity=".6"/><rect x="14" y="14" width="4" height="30" fill="#6B4FA0" fill-opacity=".6"/><rect x="717" y="14" width="4" height="30" fill="#6B4FA0" fill-opacity=".6"/><rect x="14" y="502" width="30" height="4" fill="#6B4FA0" fill-opacity=".6"/><rect x="691" y="502" width="30" height="4" fill="#6B4FA0" fill-opacity=".6"/><rect x="14" y="476" width="4" height="30" fill="#6B4FA0" fill-opacity=".6"/><rect x="717" y="476" width="4" height="30" fill="#6B4FA0" fill-opacity=".6"/><text x="367" y="42" text-anchor="middle" font-size="18" fill="#fff" fill-opacity=".85" font-family="serif">✦ ✦ ✦</text><text x="367" y="508" text-anchor="middle" font-size="18" fill="#fff" fill-opacity=".8" font-family="serif">✦ ✦ ✦</text><text x="367" y="295" text-anchor="middle" font-size="180" fill="#6B4FA0" fill-opacity=".04" font-family="serif">✦</text></svg>`},
+/* 4 أحمر وذهبي */
+{n:'أحمر وذهبي',c:['#fff8f5','#b53030'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T4bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff8f5"/><stop offset="50%" stop-color="#fde8e0"/><stop offset="100%" stop-color="#fff8f5"/></linearGradient></defs><rect width="735" height="520" fill="url(#T4bg)"/><rect x="0" y="0" width="735" height="12" fill="#b53030" fill-opacity=".7"/><rect x="0" y="508" width="735" height="12" fill="#b53030" fill-opacity=".7"/><rect x="0" y="12" width="12" height="496" fill="#b53030" fill-opacity=".4"/><rect x="723" y="12" width="12" height="496" fill="#b53030" fill-opacity=".4"/><rect x="20" y="20" width="695" height="480" fill="none" stroke="#b53030" stroke-width="1.5" stroke-opacity=".3"/><rect x="28" y="28" width="679" height="464" fill="none" stroke="#C9A84C" stroke-width="1" stroke-opacity=".4"/><circle cx="12" cy="12" r="8" fill="#b53030" fill-opacity=".7"/><circle cx="723" cy="12" r="8" fill="#b53030" fill-opacity=".7"/><circle cx="12" cy="508" r="8" fill="#b53030" fill-opacity=".7"/><circle cx="723" cy="508" r="8" fill="#b53030" fill-opacity=".7"/><circle cx="12" cy="12" r="4" fill="#C9A84C" fill-opacity=".7"/><circle cx="723" cy="12" r="4" fill="#C9A84C" fill-opacity=".7"/><circle cx="12" cy="508" r="4" fill="#C9A84C" fill-opacity=".7"/><circle cx="723" cy="508" r="4" fill="#C9A84C" fill-opacity=".7"/><text x="367" y="48" text-anchor="middle" font-size="20" fill="#b53030" fill-opacity=".5" font-family="serif">❧ ✦ ❧</text><text x="367" y="504" text-anchor="middle" font-size="18" fill="#C9A84C" fill-opacity=".6" font-family="serif">✦ ✦ ✦</text><text x="367" y="295" text-anchor="middle" font-size="180" fill="#b53030" fill-opacity=".03" font-family="serif">✦</text></svg>`},
+/* 5 عثماني تراثي */
+{n:'عثماني تراثي',c:['#fdf4e3','#7a3a00'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T5bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fdf4e3"/><stop offset="50%" stop-color="#f5ddb0"/><stop offset="100%" stop-color="#fdf4e3"/></linearGradient><pattern id="T5pat" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M15,0 Q18,5 15,10 Q12,5 15,0Z" fill="#7a3a00" fill-opacity=".06"/><path d="M0,15 Q5,18 10,15 Q5,12 0,15Z" fill="#7a3a00" fill-opacity=".06"/></pattern></defs><rect width="735" height="520" fill="url(#T5bg)"/><rect width="735" height="520" fill="url(#T5pat)"/><rect x="0" y="0" width="735" height="14" fill="#7a3a00" fill-opacity=".55"/><rect x="0" y="506" width="735" height="14" fill="#7a3a00" fill-opacity=".55"/><rect x="0" y="0" width="14" height="520" fill="#7a3a00" fill-opacity=".35"/><rect x="721" y="0" width="14" height="520" fill="#7a3a00" fill-opacity=".35"/><rect x="20" y="20" width="695" height="480" fill="none" stroke="#7a3a00" stroke-width="2" stroke-opacity=".4"/><rect x="28" y="28" width="679" height="464" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-opacity=".5"/><text x="367" y="48" text-anchor="middle" font-size="22" fill="#7a3a00" fill-opacity=".6" font-family="serif">✦ ❧ ✦</text><text x="32" y="268" text-anchor="middle" font-size="20" fill="#7a3a00" fill-opacity=".5" font-family="serif">❧</text><text x="703" y="268" text-anchor="middle" font-size="20" fill="#7a3a00" fill-opacity=".5" font-family="serif">❧</text><text x="367" y="508" text-anchor="middle" font-size="18" fill="#C9A84C" fill-opacity=".7" font-family="serif">✦ ✦ ✦</text><text x="367" y="295" text-anchor="middle" font-size="170" fill="#7a3a00" fill-opacity=".04" font-family="serif">✦</text></svg>`},
+/* 6 وردي زهري */
+{n:'وردي زهري',c:['#fff0f6','#d63384'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T6bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff0f6"/><stop offset="50%" stop-color="#fcd0e8"/><stop offset="100%" stop-color="#fff0f6"/></linearGradient></defs><rect width="735" height="520" fill="url(#T6bg)"/><rect x="0" y="0" width="735" height="10" fill="#d63384" fill-opacity=".5"/><rect x="0" y="510" width="735" height="10" fill="#d63384" fill-opacity=".5"/><rect x="14" y="14" width="707" height="492" fill="none" stroke="#d63384" stroke-width="1.5" stroke-opacity=".4"/><circle cx="14" cy="14" r="12" fill="#d63384" fill-opacity=".35"/><circle cx="26" cy="14" r="6" fill="#d63384" fill-opacity=".25"/><circle cx="14" cy="26" r="6" fill="#d63384" fill-opacity=".25"/><circle cx="721" cy="14" r="12" fill="#d63384" fill-opacity=".35"/><circle cx="709" cy="14" r="6" fill="#d63384" fill-opacity=".25"/><circle cx="721" cy="26" r="6" fill="#d63384" fill-opacity=".25"/><circle cx="14" cy="506" r="12" fill="#d63384" fill-opacity=".35"/><circle cx="26" cy="506" r="6" fill="#d63384" fill-opacity=".25"/><circle cx="14" cy="494" r="6" fill="#d63384" fill-opacity=".25"/><circle cx="721" cy="506" r="12" fill="#d63384" fill-opacity=".35"/><circle cx="709" cy="506" r="6" fill="#d63384" fill-opacity=".25"/><circle cx="721" cy="494" r="6" fill="#d63384" fill-opacity=".25"/><text x="367" y="44" text-anchor="middle" font-size="22" fill="#d63384" fill-opacity=".5" font-family="serif">❀ ✿ ❀</text><text x="367" y="505" text-anchor="middle" font-size="22" fill="#d63384" fill-opacity=".45" font-family="serif">✿ ❀ ✿</text><text x="367" y="300" text-anchor="middle" font-size="200" fill="#d63384" fill-opacity=".04" font-family="serif">❀</text></svg>`},
+/* 7 لازوردي فاخر */
+{n:'لازوردي فاخر',c:['#f0f4ff','#1a3a8f'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T7bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f0f4ff"/><stop offset="50%" stop-color="#c8d8f8"/><stop offset="100%" stop-color="#f0f4ff"/></linearGradient><linearGradient id="T7bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#1a3a8f" stop-opacity="0"/><stop offset="30%" stop-color="#1a3a8f" stop-opacity=".75"/><stop offset="70%" stop-color="#1a3a8f" stop-opacity=".75"/><stop offset="100%" stop-color="#1a3a8f" stop-opacity="0"/></linearGradient></defs><rect width="735" height="520" fill="url(#T7bg)"/><rect x="0" y="0" width="735" height="52" fill="url(#T7bar)"/><rect x="0" y="468" width="735" height="52" fill="url(#T7bar)"/><line x1="0" y1="52" x2="735" y2="52" stroke="#C9A84C" stroke-width="1.5" stroke-opacity=".8"/><line x1="0" y1="468" x2="735" y2="468" stroke="#C9A84C" stroke-width="1.5" stroke-opacity=".8"/><rect x="14" y="58" width="707" height="404" fill="none" stroke="#1a3a8f" stroke-width="1.5" stroke-opacity=".3"/><path d="M14,58 l35,0 M14,58 l0,35" stroke="#C9A84C" stroke-width="2" fill="none" stroke-opacity=".7"/><path d="M721,58 l-35,0 M721,58 l0,35" stroke="#C9A84C" stroke-width="2" fill="none" stroke-opacity=".7"/><path d="M14,462 l35,0 M14,462 l0,-35" stroke="#C9A84C" stroke-width="2" fill="none" stroke-opacity=".7"/><path d="M721,462 l-35,0 M721,462 l0,-35" stroke="#C9A84C" stroke-width="2" fill="none" stroke-opacity=".7"/><text x="367" y="34" text-anchor="middle" font-size="18" fill="#fff" fill-opacity=".9" font-family="serif" letter-spacing="6">✦  ✦  ✦</text><text x="367" y="500" text-anchor="middle" font-size="18" fill="#fff" fill-opacity=".85" font-family="serif" letter-spacing="6">✦  ✦  ✦</text><text x="367" y="295" text-anchor="middle" font-size="180" fill="#1a3a8f" fill-opacity=".04" font-family="serif">✦</text></svg>`},
+/* 8 تيفاني أنيق */
+{n:'تيفاني أنيق',c:['#e8faf8','#008080'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T8bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8faf8"/><stop offset="50%" stop-color="#b8ebe8"/><stop offset="100%" stop-color="#e8faf8"/></linearGradient><pattern id="T8p" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="1" fill="#008080" fill-opacity=".12"/></pattern></defs><rect width="735" height="520" fill="url(#T8bg)"/><rect width="735" height="520" fill="url(#T8p)"/><rect x="8" y="8" width="719" height="504" fill="none" stroke="#008080" stroke-width="3" stroke-opacity=".5"/><rect x="14" y="14" width="707" height="492" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-opacity=".6"/><rect x="20" y="20" width="695" height="480" fill="none" stroke="#008080" stroke-width="1" stroke-opacity=".25"/><circle cx="8" cy="8" r="12" fill="none" stroke="#008080" stroke-width="2" stroke-opacity=".6"/><circle cx="727" cy="8" r="12" fill="none" stroke="#008080" stroke-width="2" stroke-opacity=".6"/><circle cx="8" cy="512" r="12" fill="none" stroke="#008080" stroke-width="2" stroke-opacity=".6"/><circle cx="727" cy="512" r="12" fill="none" stroke="#008080" stroke-width="2" stroke-opacity=".6"/><circle cx="8" cy="8" r="5" fill="#008080" fill-opacity=".55"/><circle cx="727" cy="8" r="5" fill="#008080" fill-opacity=".55"/><circle cx="8" cy="512" r="5" fill="#008080" fill-opacity=".55"/><circle cx="727" cy="512" r="5" fill="#008080" fill-opacity=".55"/><text x="367" y="44" text-anchor="middle" font-size="20" fill="#008080" fill-opacity=".55" font-family="serif">❧ ✦ ❧</text><text x="367" y="505" text-anchor="middle" font-size="20" fill="#C9A84C" fill-opacity=".65" font-family="serif">✦ ✦ ✦</text><text x="367" y="295" text-anchor="middle" font-size="190" fill="#008080" fill-opacity=".035" font-family="serif">✦</text></svg>`},
+/* 9 أرجواني ذهبي */
+{n:'أرجواني ذهبي',c:['#fdf8ff','#5b2d8e'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="T9bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fdf8ff"/><stop offset="50%" stop-color="#ecddf8"/><stop offset="100%" stop-color="#fdf8ff"/></linearGradient><linearGradient id="T9bar" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5b2d8e" stop-opacity=".9"/><stop offset="50%" stop-color="#5b2d8e" stop-opacity=".7"/><stop offset="100%" stop-color="#5b2d8e" stop-opacity=".9"/></linearGradient><linearGradient id="T9gld" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#C9A84C" stop-opacity="0"/><stop offset="50%" stop-color="#C9A84C"/><stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/></linearGradient></defs><rect width="735" height="520" fill="url(#T9bg)"/><rect x="0" y="0" width="735" height="48" fill="url(#T9bar)"/><rect x="0" y="472" width="735" height="48" fill="url(#T9bar)"/><rect x="0" y="48" width="735" height="3" fill="url(#T9gld)"/><rect x="0" y="469" width="735" height="3" fill="url(#T9gld)"/><rect x="0" y="54" width="735" height="1" fill="url(#T9gld)"/><rect x="0" y="465" width="735" height="1" fill="url(#T9gld)"/><rect x="16" y="62" width="703" height="396" fill="none" stroke="#5b2d8e" stroke-width="1.5" stroke-opacity=".25"/><rect x="16" y="62" width="30" height="3" fill="#C9A84C" fill-opacity=".6"/><rect x="16" y="62" width="3" height="30" fill="#C9A84C" fill-opacity=".6"/><rect x="689" y="62" width="30" height="3" fill="#C9A84C" fill-opacity=".6"/><rect x="716" y="62" width="3" height="30" fill="#C9A84C" fill-opacity=".6"/><rect x="16" y="455" width="30" height="3" fill="#C9A84C" fill-opacity=".6"/><rect x="16" y="428" width="3" height="30" fill="#C9A84C" fill-opacity=".6"/><rect x="689" y="455" width="30" height="3" fill="#C9A84C" fill-opacity=".6"/><rect x="716" y="428" width="3" height="30" fill="#C9A84C" fill-opacity=".6"/><text x="367" y="32" text-anchor="middle" font-size="18" fill="#fff" fill-opacity=".9" font-family="serif" letter-spacing="8">✦  ✦  ✦</text><text x="367" y="498" text-anchor="middle" font-size="18" fill="#fff" fill-opacity=".85" font-family="serif" letter-spacing="8">✦  ✦  ✦</text><text x="367" y="300" text-anchor="middle" font-size="190" fill="#5b2d8e" fill-opacity=".04" font-family="serif">✦</text></svg>`},
+/* 10 نيلي داكن */
+{n:'نيلي داكن',c:['#eef2ff','#2c3e8f'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="TAa" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#eef2ff"/><stop offset="100%" stop-color="#d4dcf8"/></linearGradient><linearGradient id="TAb" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#2c3e8f" stop-opacity=".9"/><stop offset="100%" stop-color="#2c3e8f" stop-opacity=".7"/></linearGradient></defs><rect width="735" height="520" fill="url(#TAa)"/><rect x="0" y="0" width="55" height="520" fill="url(#TAb)"/><rect x="680" y="0" width="55" height="520" fill="url(#TAb)"/><line x1="55" y1="0" x2="55" y2="520" stroke="#C9A84C" stroke-width="2" stroke-opacity=".7"/><line x1="680" y1="0" x2="680" y2="520" stroke="#C9A84C" stroke-width="2" stroke-opacity=".7"/><rect x="65" y="14" width="605" height="492" fill="none" stroke="#2c3e8f" stroke-width="1.5" stroke-opacity=".3"/><polygon points="27,248 30,256 39,256 32,262 35,270 27,265 19,270 22,262 15,256 24,256" fill="#C9A84C" fill-opacity=".7"/><polygon points="708,248 711,256 720,256 713,262 716,270 708,265 700,270 703,262 696,256 705,256" fill="#C9A84C" fill-opacity=".7"/><text x="367" y="44" text-anchor="middle" font-size="18" fill="#2c3e8f" fill-opacity=".5" font-family="serif">✦ ✦ ✦</text><text x="367" y="506" text-anchor="middle" font-size="18" fill="#C9A84C" fill-opacity=".6" font-family="serif">✦ ✦ ✦</text><text x="367" y="295" text-anchor="middle" font-size="200" fill="#2c3e8f" fill-opacity=".04" font-family="serif">✦</text></svg>`},
+/* 11 فيروزي راقٍ */
+{n:'فيروزي راقٍ',c:['#e8fffe','#00796b'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="TBa" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e8fffe"/><stop offset="50%" stop-color="#b2ebf2"/><stop offset="100%" stop-color="#e8fffe"/></linearGradient><pattern id="TBp" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse"><path d="M25,0 L50,25 L25,50 L0,25 Z" fill="none" stroke="#00796b" stroke-width=".4" stroke-opacity=".1"/></pattern></defs><rect width="735" height="520" fill="url(#TBa)"/><rect width="735" height="520" fill="url(#TBp)"/><rect x="8" y="8" width="719" height="504" fill="none" stroke="#00796b" stroke-width="3" stroke-opacity=".45"/><rect x="16" y="16" width="703" height="488" fill="none" stroke="#C9A84C" stroke-width="1.5" stroke-opacity=".55"/><polygon points="8,8 28,8 8,28" fill="#00796b" fill-opacity=".5"/><polygon points="727,8 707,8 727,28" fill="#00796b" fill-opacity=".5"/><polygon points="8,512 28,512 8,492" fill="#00796b" fill-opacity=".5"/><polygon points="727,512 707,512 727,492" fill="#00796b" fill-opacity=".5"/><polygon points="16,16 25,16 16,25" fill="#C9A84C" fill-opacity=".7"/><polygon points="719,16 710,16 719,25" fill="#C9A84C" fill-opacity=".7"/><polygon points="16,504 25,504 16,495" fill="#C9A84C" fill-opacity=".7"/><polygon points="719,504 710,504 719,495" fill="#C9A84C" fill-opacity=".7"/><text x="22" y="268" text-anchor="middle" font-size="18" fill="#00796b" fill-opacity=".5" font-family="serif">❦</text><text x="713" y="268" text-anchor="middle" font-size="18" fill="#00796b" fill-opacity=".5" font-family="serif">❦</text><text x="367" y="42" text-anchor="middle" font-size="20" fill="#00796b" fill-opacity=".55" font-family="serif">❦ ✦ ❦</text><text x="367" y="506" text-anchor="middle" font-size="20" fill="#C9A84C" fill-opacity=".65" font-family="serif">✦ ✦ ✦</text><text x="367" y="295" text-anchor="middle" font-size="190" fill="#00796b" fill-opacity=".035" font-family="serif">✦</text></svg>`},
+/* 12 رمادي ريادي */
+{n:'رمادي ريادي',c:['#f7f7f7','#444'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="TCa" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f8f8f8"/><stop offset="50%" stop-color="#e8e8e8"/><stop offset="100%" stop-color="#f8f8f8"/></linearGradient><pattern id="TCp" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M0,0 l20,20 M-5,5 l10,-10 M15,25 l10,-10" stroke="#999" stroke-width=".4" stroke-opacity=".2"/></pattern></defs><rect width="735" height="520" fill="url(#TCa)"/><rect width="735" height="520" fill="url(#TCp)"/><rect x="0" y="0" width="735" height="6" fill="#333" fill-opacity=".6"/><rect x="0" y="514" width="735" height="6" fill="#333" fill-opacity=".6"/><rect x="14" y="14" width="707" height="492" fill="none" stroke="#555" stroke-width="1.5" stroke-opacity=".4"/><rect x="22" y="22" width="691" height="476" fill="none" stroke="#888" stroke-width="1" stroke-opacity=".25"/><rect x="14" y="14" width="24" height="4" fill="#555" fill-opacity=".5"/><rect x="14" y="14" width="4" height="24" fill="#555" fill-opacity=".5"/><rect x="697" y="14" width="24" height="4" fill="#555" fill-opacity=".5"/><rect x="717" y="14" width="4" height="24" fill="#555" fill-opacity=".5"/><rect x="14" y="502" width="24" height="4" fill="#555" fill-opacity=".5"/><rect x="14" y="478" width="4" height="24" fill="#555" fill-opacity=".5"/><rect x="697" y="502" width="24" height="4" fill="#555" fill-opacity=".5"/><rect x="717" y="478" width="4" height="24" fill="#555" fill-opacity=".5"/><text x="367" y="44" text-anchor="middle" font-size="16" fill="#333" fill-opacity=".4" font-family="serif" letter-spacing="8">★  ★  ★</text><text x="367" y="506" text-anchor="middle" font-size="16" fill="#333" fill-opacity=".35" font-family="serif" letter-spacing="8">✦  ✦  ✦</text><text x="367" y="295" text-anchor="middle" font-size="200" fill="#333" fill-opacity=".03" font-family="serif">★</text></svg>`},
+/* 13 أبيض ناصع */
+{n:'أبيض ناصع',c:['#fff','#bbb'],h:`<svg xmlns="http://www.w3.org/2000/svg" width="735" height="520" style="position:absolute;inset:0;width:100%;height:100%"><defs><linearGradient id="TDa" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="50%" stop-color="#f5f5f5"/><stop offset="100%" stop-color="#ffffff"/></linearGradient><linearGradient id="TDb" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#999" stop-opacity="0"/><stop offset="50%" stop-color="#999"/><stop offset="100%" stop-color="#999" stop-opacity="0"/></linearGradient></defs><rect width="735" height="520" fill="url(#TDa)"/><rect x="10" y="10" width="715" height="500" fill="none" stroke="#ccc" stroke-width="1"/><rect x="16" y="16" width="703" height="488" fill="none" stroke="#ddd" stroke-width="3"/><rect x="19" y="19" width="697" height="482" fill="none" stroke="#bbb" stroke-width="1"/><rect x="10" y="10" width="715" height="4" fill="url(#TDb)"/><rect x="10" y="506" width="715" height="4" fill="url(#TDb)"/><path d="M10,10 l40,0 M10,10 l0,40" stroke="#999" stroke-width="1.5" fill="none"/><path d="M725,10 l-40,0 M725,10 l0,40" stroke="#999" stroke-width="1.5" fill="none"/><path d="M10,510 l40,0 M10,510 l0,-40" stroke="#999" stroke-width="1.5" fill="none"/><path d="M725,510 l-40,0 M725,510 l0,-40" stroke="#999" stroke-width="1.5" fill="none"/><text x="367" y="42" text-anchor="middle" font-size="16" fill="#999" fill-opacity=".6" font-family="serif" letter-spacing="10">✦  ✦  ✦</text><text x="367" y="508" text-anchor="middle" font-size="16" fill="#999" fill-opacity=".55" font-family="serif" letter-spacing="10">✦  ✦  ✦</text><text x="367" y="295" text-anchor="middle" font-size="200" fill="#ccc" fill-opacity=".15" font-family="serif">✦</text></svg>`},
+];
+
+let currentTemplateIdx = 0;
+
+function buildTemplateGrid(){
+  const g=document.getElementById('tmplGrid'); if(!g)return;
+  g.innerHTML='';
+  TEMPLATES.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='tmpl-card'+(i===0?' act':'');
+    d.onclick=()=>applyTemplate(i,d);
+    d.style.cssText=`background:linear-gradient(135deg,${t.c[0]},${t.c[1]}33,${t.c[0]});border-color:${t.c[1]}55`;
+    d.innerHTML=`<div class="tn">${t.n}</div>`;
+    g.appendChild(d);
+  });
+}
+
+function applyTemplate(idx, el){
+  currentTemplateIdx = idx;
+  document.querySelectorAll('.tmpl-card').forEach(c=>c.classList.remove('act'));
+  el.classList.add('act');
+  const t = TEMPLATES[idx];
+  document.getElementById('cdec').innerHTML = t.h;
+  document.getElementById('cdec').style.opacity = '1';
+  // hide uploaded bg but keep template
+  const bg = document.getElementById('cbg');
+  bg.src = ''; bg.classList.remove('v');
+  document.getElementById('bgf').value = '';
+  toast('✅ ' + t.n);
+}
+
+/*──────────────────────────────────────────
+  QR
+──────────────────────────────────────────*/
+/* QR removed */
+
+/*──────────────────────────────────────────
+  HELPERS
+──────────────────────────────────────────*/
+function arDate(){
+  try{return new Date().toLocaleDateString('ar-SA',{year:'numeric',month:'long',day:'numeric'});}
+  catch{return new Date().toLocaleDateString();}
+}
+function uid(){ return 'e'+Math.random().toString(36).slice(2,8); }
+function updCount(){ document.getElementById('elCount').textContent=`(${els.length})`; }
+
+/*──────────────────────────────────────────
+  ADD TEXT ELEMENT
+──────────────────────────────────────────*/
+function addEl(content, type){
+  const id=uid();
+  const c={id,content,...DEF, x:CW/2-180, y:CH/2-20};
+  if(type==='title') { c.font='Amiri';   c.size=44; c.color='#7a5010'; c.bold=true;  c.x=CW/2-180; c.y=38; }
+  if(type==='name')  { c.font='Tajawal'; c.size=40; c.color='#1a0e00'; c.bold=true;  c.x=CW/2-185; c.y=145; }
+  if(type==='body')  { c.font='Cairo';   c.size=17; c.color='#444444'; c.x=CW/2-260; c.y=215; }
+  if(type==='date')  { c.font='Cairo';   c.size=14; c.color='#777777'; c.x=CW-210;   c.y=CH-50; }
+  if(type==='sign')  { c.font='Amiri';   c.size=16; c.color='#555555'; c.x=50;        c.y=CH-50; }
+  els.push(c);
+  renderEl(c); renderSb(c); sel(id);
+  updCount();
+  toast('✅ تم إضافة النص');
+}
+function customEl(){
+  const t=prompt('أدخل النص المراد إضافته:');
+  if(t&&t.trim()) addEl(t.trim(),'custom');
+}
+
+/*──────────────────────────────────────────
+  RENDER ELEMENT ON CERT
+──────────────────────────────────────────*/
+function renderEl(c){
+  let d=document.getElementById(c.id);
+  if(!d){
+    d=document.createElement('div');
+    d.id=c.id; d.className='ct';
+    document.getElementById('cert').appendChild(d);
+    initDrag(d,c);
+    d.addEventListener('click',ev=>{ev.stopPropagation(); sel(c.id);});
+    d.addEventListener('contextmenu',ev=>{ev.preventDefault(); ctxTarget=c.id; openCtx(ev.clientX,ev.clientY);});
+  }
+  d.textContent=c.content;
+  Object.assign(d.style,{
+    fontFamily:`'${c.font}',sans-serif`,
+    fontSize:c.size+'px',
+    color:c.color,
+    textAlign:c.align,
+    fontWeight:c.bold?'700':'400',
+    fontStyle:c.italic?'italic':'normal',
+    opacity:(c.opacity||100)/100,
+    letterSpacing:(c.letterSpacing||0)+'px',
+    left:c.x+'px', top:c.y+'px',
+    direction:'rtl', maxWidth:'950px'
+  });
+}
+
+/*──────────────────────────────────────────
+  RENDER SIDEBAR ITEM
+──────────────────────────────────────────*/
+function renderSb(c){
+  const list=document.getElementById('tlist');
+  if(list.querySelector('.hnt')) list.innerHTML='';
+  if(document.getElementById('si'+c.id)){ sbUpd(c); return; }
+  const d=document.createElement('div');
+  d.className='ti'; d.id='si'+c.id;
+  d.innerHTML=`
+    <div class="ti-h">
+      <span class="ti-l">📝 نص</span>
+      <div class="ti-a">
+        <button class="ib dup" title="نسخ" onclick="dupEl('${c.id}',event)">⧉</button>
+        <button class="ib" title="إعدادات" onclick="togCP('${c.id}',event)">⚙</button>
+        <button class="ib dl" title="حذف" onclick="delEl('${c.id}',event)">✕</button>
+      </div>
+    </div>
+    <div class="ti-p" id="pv${c.id}">${c.content}</div>
+    <div class="cp" id="cp${c.id}">
+      <!-- النص -->
+      <div class="cr">
+        <span class="cl">النص</span>
+        <textarea class="ci ci-ta" oninput="prop('${c.id}','content',this.value)">${c.content}</textarea>
+      </div>
+      <!-- الخط -->
+      <div class="cr">
+        <span class="cl">الخط</span>
+        <select class="ci" onchange="prop('${c.id}','font',this.value)">
+          ${FONTS.map(f=>`<option value="${f}"${c.font===f?' selected':''}>${f}</option>`).join('')}
+        </select>
+      </div>
+      <!-- الحجم -->
+      <div class="cr">
+        <span class="cl">الحجم</span>
+        <input type="range" class="ci-r" min="8" max="140" value="${c.size}"
+          oninput="prop('${c.id}','size',+this.value);document.getElementById('sv${c.id}').textContent=this.value">
+        <span class="cn" id="sv${c.id}">${c.size}</span>
+      </div>
+      <!-- اللون -->
+      <div class="cr">
+        <span class="cl">اللون</span>
+        <input type="color" value="${c.color}" onchange="prop('${c.id}','color',this.value)">
+        <span style="font-size:9px;color:var(--mu);margin-right:4px">لون النص</span>
+      </div>
+      <!-- محاذاة -->
+      <div class="cr">
+        <span class="cl">محاذاة</span>
+        <div class="ab">
+          <button class="abb${c.align==='right'?' on':''}"  onclick="sAl('${c.id}','right',this)" title="يمين">⇒</button>
+          <button class="abb${c.align==='center'?' on':''}" onclick="sAl('${c.id}','center',this)" title="وسط">≡</button>
+          <button class="abb${c.align==='left'?' on':''}"   onclick="sAl('${c.id}','left',this)" title="يسار">⇐</button>
+        </div>
+      </div>
+      <!-- غامق / مائل -->
+      <div class="cr">
+        <span class="cl">النمط</span>
+        <div class="ab">
+          <button class="abb${c.bold?' on':''}" onclick="togBold('${c.id}',this)" title="غامق"><b>B</b></button>
+          <button class="abb${c.italic?' on':''}" onclick="togItalic('${c.id}',this)" title="مائل"><i>I</i></button>
+        </div>
+      </div>
+      <!-- الشفافية -->
+      <div class="cr">
+        <span class="cl">شفافية</span>
+        <input type="range" class="ci-r" min="10" max="100" value="${c.opacity||100}"
+          oninput="prop('${c.id}','opacity',+this.value);document.getElementById('op${c.id}').textContent=this.value+'%'">
+        <span class="cn" id="op${c.id}">${c.opacity||100}%</span>
+      </div>
+      <!-- تباعد الحروف -->
+      <div class="cr">
+        <span class="cl">تباعد</span>
+        <input type="range" class="ci-r" min="-5" max="20" value="${c.letterSpacing||0}"
+          oninput="prop('${c.id}','letterSpacing',+this.value);document.getElementById('ls${c.id}').textContent=this.value">
+        <span class="cn" id="ls${c.id}">${c.letterSpacing||0}</span>
+      </div>
+      <!-- موضع يدوي -->
+      <div class="cr">
+        <span class="cl">X</span>
+        <input type="number" class="ci" style="max-width:70px" value="${Math.round(c.x)}"
+          oninput="prop('${c.id}','x',+this.value)">
+        <span class="cl" style="min-width:14px;text-align:center">Y</span>
+        <input type="number" class="ci" style="max-width:70px" value="${Math.round(c.y)}"
+          oninput="prop('${c.id}','y',+this.value)">
+      </div>
+    </div>`;
+  d.addEventListener('click',()=>sel(c.id));
+  list.appendChild(d);
+}
+
+function sbUpd(c){
+  const p=document.getElementById('pv'+c.id); if(p) p.textContent=c.content;
+}
+function togCP(id,ev){
+  ev&&ev.stopPropagation();
+  document.getElementById('cp'+id)?.classList.toggle('op');
+  sel(id);
+}
+function prop(id,k,v){
+  const c=els.find(e=>e.id===id); if(!c)return;
+  c[k]=v; renderEl(c); sbUpd(c);
+}
+function sAl(id,a,btn){
+  prop(id,'align',a);
+  btn.closest('.ab').querySelectorAll('.abb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function togBold(id,btn){
+  const c=els.find(e=>e.id===id); if(!c)return;
+  c.bold=!c.bold; renderEl(c); btn.classList.toggle('on',c.bold);
+}
+function togItalic(id,btn){
+  const c=els.find(e=>e.id===id); if(!c)return;
+  c.italic=!c.italic; renderEl(c); btn.classList.toggle('on',c.italic);
+}
+
+function delEl(id,ev){
+  ev&&ev.stopPropagation();
+  els=els.filter(e=>e.id!==id);
+  document.getElementById(id)?.remove();
+  document.getElementById('si'+id)?.remove();
+  if(selId===id) selId=null;
+  if(!els.length) document.getElementById('tlist').innerHTML='<div class="hnt">لم تُضَف أي نصوص بعد<br><span style="font-size:9px">اضغط فوق لإضافة عنصر</span></div>';
+  updCount(); toast('🗑️ تم الحذف');
+}
+
+function dupEl(id,ev){
+  ev&&ev.stopPropagation();
+  const c=els.find(e=>e.id===id); if(!c)return;
+  const n={...c,id:uid(),x:c.x+20,y:c.y+20};
+  els.push(n); renderEl(n); renderSb(n); sel(n.id);
+  updCount(); toast('📋 تم النسخ');
+}
+
+function sel(id){
+  document.querySelectorAll('.ct').forEach(e=>e.classList.remove('sl'));
+  document.querySelectorAll('.ti').forEach(e=>e.classList.remove('sl'));
+  selId=id;
+  document.getElementById(id)?.classList.add('sl');
+  document.getElementById('si'+id)?.classList.add('sl');
+}
+
+document.getElementById('cert').addEventListener('click',e=>{
+  if(e.target.id==='cert'||e.target.classList.contains('cdc')||e.target.id==='cbg'||e.target.closest('.cdc')){
+    document.querySelectorAll('.ct').forEach(d=>d.classList.remove('sl'));
+    document.querySelectorAll('.ti').forEach(d=>d.classList.remove('sl'));
+    selId=null;
+  }
+});
+
+/*──────────────────────────────────────────
+  DRAG
+──────────────────────────────────────────*/
+function initDrag(dom,c){
+  dom.addEventListener('mousedown',e=>{
+    if(e.target.closest('input,select,button,textarea')) return;
+    if(e.button===2) return; // right click
+    e.preventDefault(); sel(c.id);
+    const cr=document.getElementById('cert').getBoundingClientRect();
+    drag={c,sx:e.clientX,sy:e.clientY,ox:c.x,oy:c.y,sc:CW/cr.width};
+    dom.classList.add('dg');
+    document.addEventListener('mousemove',onMv);
+    document.addEventListener('mouseup',onUp);
+  });
+}
+function onMv(e){
+  if(!drag)return;
+  const{c,sx,sy,ox,oy,sc:s}=drag;
+  c.x=Math.max(0,Math.min(CW-60, ox+(e.clientX-sx)*s));
+  c.y=Math.max(0,Math.min(CH-30, oy+(e.clientY-sy)*s));
+  const d=document.getElementById(c.id);
+  if(d){ d.style.left=c.x+'px'; d.style.top=c.y+'px'; }
+  // sync position inputs
+  const xIn=document.querySelector(`#cp${c.id} input[type=number]:nth-child(2)`);
+  const yIn=document.querySelector(`#cp${c.id} input[type=number]:last-child`);
+  // quick update without re-render
+}
+function onUp(){
+  if(!drag)return;
+  document.getElementById(drag.c.id)?.classList.remove('dg');
+  // update pos inputs after drop
+  const c=drag.c;
+  drag=null;
+  document.removeEventListener('mousemove',onMv);
+  document.removeEventListener('mouseup',onUp);
+}
+
+/*──────────────────────────────────────────
+  KEYBOARD
+──────────────────────────────────────────*/
+function onKey(e){
+  if(!selId) return;
+  if(e.target.closest('input,textarea,select')) return;
+  const c=els.find(x=>x.id===selId); if(!c)return;
+  const step=e.shiftKey?10:2;
+  if(e.key==='ArrowRight') { c.x=Math.min(CW-60,c.x+step); }
+  else if(e.key==='ArrowLeft')  { c.x=Math.max(0,c.x-step); }
+  else if(e.key==='ArrowDown')  { c.y=Math.min(CH-30,c.y+step); }
+  else if(e.key==='ArrowUp')    { c.y=Math.max(0,c.y-step); }
+  else if(e.key==='Delete'||e.key==='Backspace') { delEl(selId); return; }
+  else if(e.key==='+') { c.size=Math.min(140,c.size+1); }
+  else if(e.key==='-') { c.size=Math.max(8,c.size-1); }
+  else return;
+  e.preventDefault();
+  renderEl(c);
+}
+
+/*──────────────────────────────────────────
+  CONTEXT MENU
+──────────────────────────────────────────*/
+function openCtx(x,y){
+  const m=document.getElementById('ctxMenu');
+  m.style.left=x+'px'; m.style.top=y+'px';
+  m.classList.add('on');
+}
+function closeCtx(){ document.getElementById('ctxMenu').classList.remove('on'); }
+function ctxDup()  { if(ctxTarget) dupEl(ctxTarget); closeCtx(); }
+function ctxDel()  { if(ctxTarget) delEl(ctxTarget); closeCtx(); }
+function ctxToFront(){
+  if(!ctxTarget)return;
+  const d=document.getElementById(ctxTarget);
+  if(d){ d.style.zIndex=(+d.style.zIndex||10)+1; }
+  closeCtx();
+}
+function ctxToBack(){
+  if(!ctxTarget)return;
+  const d=document.getElementById(ctxTarget);
+  if(d){ d.style.zIndex=Math.max(10,(+d.style.zIndex||10)-1); }
+  closeCtx();
+}
+function ctxCenter(axis){
+  if(!ctxTarget)return;
+  const c=els.find(e=>e.id===ctxTarget); if(!c)return;
+  const d=document.getElementById(c.id);
+  if(!d)return;
+  const w=d.offsetWidth, h=d.offsetHeight;
+  if(axis==='h') c.x=Math.round((CW-w)/2);
+  if(axis==='v') c.y=Math.round((CH-h)/2);
+  renderEl(c);
+  closeCtx();
+  toast('✅ تم التوسيط');
+}
+
+/*──────────────────────────────────────────
+  CLEAR ALL
+──────────────────────────────────────────*/
+function clearAll(){
+  if(!confirm('هل تريد مسح جميع النصوص؟')) return;
+  [...els].forEach(c=>delEl(c.id));
+}
+
+/*──────────────────────────────────────────
+  SEED DEFAULT TEXTS — هيكل الشهادة الرسمي
+──────────────────────────────────────────*/
+function seed(){
+  const rows=[
+    // سطر 1 — جهة التقديم
+    { t:'تتقدم إدارة مدرسة ........................................',
+      ov:{font:'Cairo', size:20, color:'#2c1600', bold:true,  align:'center', x:CW/2-310, y:28}},
+    // سطر 2 — عبارة الشكر والمستلم
+    { t:'بالشكر والتقدير للطالب / ة ........................................',
+      ov:{font:'Cairo', size:20, color:'#2c1600', bold:true,  align:'center', x:CW/2-320, y:66}},
+    // سطر 3 — اسم صاحب الشهادة (بارز)
+    { t:'هنا يُكتب اسم صاحب الشهادة',
+      ov:{font:'Tajawal',size:38,color:'#7a3a00', bold:true, align:'center', x:CW/2-260, y:108}},
+    // سطر 4 — سبب التكريم
+    { t:'وذلك لمشاركته / ا في ........................................',
+      ov:{font:'Cairo', size:19, color:'#333333', bold:false, align:'center', x:CW/2-305, y:175}},
+    // سطر 5 — عبارة الشكر السطر الأول
+    { t:'هنا تكتب عبارة الشكر الخاصة بكم — السطر الأول ( اختياري )',
+      ov:{font:'Cairo', size:16, color:'#444444', bold:false, align:'center', x:CW/2-305, y:213}},
+    // سطر 6 — عبارة الشكر السطر الثاني
+    { t:'هنا تكتب عبارة الشكر الخاصة بكم — السطر الثاني ( اختياري )',
+      ov:{font:'Cairo', size:16, color:'#444444', bold:false, align:'center', x:CW/2-305, y:240}},
+    // سطر 7 — ختام التقدير
+    { t:'وتقديراً منا تم منحه هذه الشهادة',
+      ov:{font:'Amiri', size:20, color:'#2c1600', bold:true,  align:'center', x:CW/2-210, y:276}},
+    // توقيعات — يمين: رائد الصف
+    { t:'رائد / ة الصف',
+      ov:{font:'Cairo', size:15, color:'#333333', bold:false, align:'center', x:CW-230, y:CH-110}},
+    { t:'الأستاذ / ة ........................................',
+      ov:{font:'Cairo', size:14, color:'#555555', bold:false, align:'center', x:CW-240, y:CH-82}},
+    // توقيعات — يسار: مدير المدرسة
+    { t:'مدير / ة المدرسة',
+      ov:{font:'Cairo', size:15, color:'#333333', bold:false, align:'center', x:60, y:CH-110}},
+    { t:'الأستاذ / ة ........................................',
+      ov:{font:'Cairo', size:14, color:'#555555', bold:false, align:'center', x:50, y:CH-82}},
+    // التاريخ — وسط أسفل
+    { t:arDate(),
+      ov:{font:'Cairo', size:13, color:'#888888', bold:false, align:'center', x:CW/2-60, y:CH-50}},
+  ];
+  rows.forEach(({t,ov})=>{
+    const id=uid();
+    const c={id,content:t,...DEF,...ov};
+    els.push(c); renderEl(c); renderSb(c);
+  });
+  updCount();
+  buildTemplateGrid(); applyTemplate(0, document.getElementById('tmplGrid').children[0]);
+}
+
+/*──────────────────────────────────────────
+  CAPTURE (for export)
+──────────────────────────────────────────*/
+async function cap(){
+  document.querySelectorAll('.ct').forEach(e=>e.classList.remove('sl','dg'));
+  const cert=document.getElementById('cert');
+  const sh=document.getElementById('csh');
+  const ps=cert.style.transform;
+  const pw=sh.style.width, ph=sh.style.height;
+  cert.style.transform='scale(1)';
+  sh.style.width=CW+'px'; sh.style.height=CH+'px';
+  await new Promise(r=>setTimeout(r,120));
+  const cv=await html2canvas(cert,{
+    scale:2, useCORS:true, allowTaint:true,
+    backgroundColor:null, width:CW, height:CH, logging:false
+  });
+  cert.style.transform=ps;
+  sh.style.width=pw; sh.style.height=ph;
+  apSc();
+  return cv;
+}
+
+/*──────────────────────────────────────────
+  EXPORT PDF
+──────────────────────────────────────────*/
+async function xPdf(){
+  ldr(true);
+  try{
+    const cv=await cap();
+    const{jsPDF}=window.jspdf;
+    // 735×520 نسبة → على A4 landscape (297×210mm) نحسب الأبعاد مع الحفاظ على النسبة
+    const ratio=735/520;
+    let pw=297, ph=297/ratio;
+    if(ph>210){ ph=210; pw=210*ratio; }
+    const ox=(297-pw)/2, oy=(210-ph)/2;
+    const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+    pdf.addImage(cv.toDataURL('image/jpeg',.97),'JPEG',ox,oy,pw,ph);
+    pdf.save('شهادة.pdf');
+    toast('✅ تم تصدير PDF بنجاح');
+  }catch(err){ toast('❌ فشل التصدير'); console.error(err); }
+  ldr(false);
+}
+
+/*──────────────────────────────────────────
+  EXPORT PNG
+──────────────────────────────────────────*/
+async function xPng(){
+  ldr(true);
+  try{
+    const cv=await cap();
+    const a=document.createElement('a');
+    a.download='شهادة.png'; a.href=cv.toDataURL('image/png'); a.click();
+    toast('✅ تم حفظ الصورة بنجاح');
+  }catch(err){ toast('❌ فشل الحفظ'); }
+  ldr(false);
+}
+
+/*──────────────────────────────────────────
+  PRINT
+──────────────────────────────────────────*/
+function xPrint(){
+  document.querySelectorAll('.ct').forEach(e=>e.classList.remove('sl'));
+  setTimeout(()=>window.print(), 150);
+}
+
+/*──────────────────────────────────────────
+  UI HELPERS
+──────────────────────────────────────────*/
+function toast(m){
+  const t=document.getElementById('tst');
+  t.textContent=m; t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'), 2600);
+}
+function ldr(on){ document.getElementById('ldr').classList.toggle('on',on); }
+
+/*──────────────────────────────────────────
+  LOGO
+──────────────────────────────────────────*/
+let logoX=20, logoY=16, logoW=90;
+
+function loadLogo(e){
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const img=document.getElementById('logoImg');
+    img.src=ev.target.result;
+    img.style.display='block';
+    const th=document.getElementById('logoThumb');
+    th.innerHTML='';
+    const pi=document.createElement('img');
+    pi.src=ev.target.result;
+    pi.style.cssText='width:100%;height:100%;object-fit:contain;border-radius:6px';
+    th.appendChild(pi);
+    initLogoDrag();
+    toast('✅ تم إضافة شعار المدرسة');
+  };
+  r.readAsDataURL(f);
+}
+
+function removeLogo(){
+  const img=document.getElementById('logoImg');
+  img.src=''; img.style.display='none';
+  document.getElementById('logoThumb').innerHTML='🏫';
+  document.getElementById('logoFile').value='';
+  toast('🗑️ تم إزالة الشعار');
+}
+
+function setLogoSize(v){
+  logoW=v;
+  const img=document.getElementById('logoImg');
+  img.style.width=v+'px'; img.style.height=v+'px';
+  document.getElementById('logoSzN').textContent=v;
+}
+
+function initLogoDrag(){
+  const img=document.getElementById('logoImg');
+  img.onmousedown=function(e){
+    e.preventDefault();
+    img.classList.add('lsl');
+    const cr=document.getElementById('cert').getBoundingClientRect();
+    const s=735/cr.width;
+    const ox=logoX, oy=logoY, sx=e.clientX, sy=e.clientY;
+    function mv(ev){
+      logoX=Math.max(0,Math.min(735-logoW,ox+(ev.clientX-sx)*s));
+      logoY=Math.max(0,Math.min(520-logoW,oy+(ev.clientY-sy)*s));
+      img.style.right=''; img.style.left=logoX+'px'; img.style.top=logoY+'px';
+    }
+    function up(){
+      img.classList.remove('lsl');
+      document.removeEventListener('mousemove',mv);
+      document.removeEventListener('mouseup',up);
+    }
+    document.addEventListener('mousemove',mv);
+    document.addEventListener('mouseup',up);
+  };
+}
+/*══════════════════════════════════════════
+  ORNAMENT SYSTEM
+══════════════════════════════════════════*/
+
+const W=735, H=520;
+let ornType='corner', ornShape=0, ornActive=false;
+
+/* ── Shape libraries per type ── */
+const ORN_SHAPES = {
+
+  corner:[
+    {lbl:'◢',svg:(c,o,sz)=>`
+      <path d="M0,0 L${60+sz*8},0 L0,${60+sz*8} Z" fill="${c}" fill-opacity="${o}" transform="translate(0,0)"/>
+      <path d="M${W},0 L${W-(60+sz*8)},0 L${W},${60+sz*8} Z" fill="${c}" fill-opacity="${o}"/>
+      <path d="M0,${H} L${60+sz*8},${H} L0,${H-(60+sz*8)} Z" fill="${c}" fill-opacity="${o}"/>
+      <path d="M${W},${H} L${W-(60+sz*8)},${H} L${W},${H-(60+sz*8)} Z" fill="${c}" fill-opacity="${o}"/>`},
+    {lbl:'L',svg:(c,o,sz)=>{const s=35+sz*6;return`
+      <path d="M0,0 l${s},0 M0,0 l0,${s}" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}" fill="none"/>
+      <path d="M${W},0 l-${s},0 M${W},0 l0,${s}" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}" fill="none"/>
+      <path d="M0,${H} l${s},0 M0,${H} l0,-${s}" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}" fill="none"/>
+      <path d="M${W},${H} l-${s},0 M${W},${H} l0,-${s}" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}" fill="none"/>`;}},
+    {lbl:'◉',svg:(c,o,sz)=>{const r=18+sz*4;return`
+      <circle cx="0" cy="0" r="${r}" fill="${c}" fill-opacity="${o}"/>
+      <circle cx="${W}" cy="0" r="${r}" fill="${c}" fill-opacity="${o}"/>
+      <circle cx="0" cy="${H}" r="${r}" fill="${c}" fill-opacity="${o}"/>
+      <circle cx="${W}" cy="${H}" r="${r}" fill="${c}" fill-opacity="${o}"/>
+      <circle cx="0" cy="0" r="${r*.5}" fill="white" fill-opacity="${o*.7}"/>
+      <circle cx="${W}" cy="0" r="${r*.5}" fill="white" fill-opacity="${o*.7}"/>
+      <circle cx="0" cy="${H}" r="${r*.5}" fill="white" fill-opacity="${o*.7}"/>
+      <circle cx="${W}" cy="${H}" r="${r*.5}" fill="white" fill-opacity="${o*.7}"/>`;}},
+    {lbl:'✦',svg:(c,o,sz)=>{const s=sz+1;return`
+      <text x="6" y="20" font-size="${14+sz*4}" fill="${c}" fill-opacity="${o}" font-family="serif">✦</text>
+      <text x="${W-20-sz*4}" y="20" font-size="${14+sz*4}" fill="${c}" fill-opacity="${o}" font-family="serif">✦</text>
+      <text x="6" y="${H-4}" font-size="${14+sz*4}" fill="${c}" fill-opacity="${o}" font-family="serif">✦</text>
+      <text x="${W-20-sz*4}" y="${H-4}" font-size="${14+sz*4}" fill="${c}" fill-opacity="${o}" font-family="serif">✦</text>`;}},
+    {lbl:'❧',svg:(c,o,sz)=>`
+      <text x="4" y="22" font-size="${16+sz*4}" fill="${c}" fill-opacity="${o}" font-family="serif">❧</text>
+      <text x="${W-22-sz*4}" y="22" font-size="${16+sz*4}" fill="${c}" fill-opacity="${o}" font-family="serif" transform="scale(-1,1) translate(-${W},0)">❧</text>
+      <text x="4" y="${H-2}" font-size="${16+sz*4}" fill="${c}" fill-opacity="${o}" font-family="serif" transform="scale(1,-1) translate(0,-${H})">❧</text>
+      <text x="${W-22-sz*4}" y="${H-2}" font-size="${16+sz*4}" fill="${c}" fill-opacity="${o}" font-family="serif" transform="scale(-1,-1) translate(-${W},-${H})">❧</text>`},
+    {lbl:'◈',svg:(c,o,sz)=>{const s=16+sz*5;return`
+      <polygon points="0,${s} ${s},0 ${s*2},${s} ${s},${s*2}" fill="${c}" fill-opacity="${o}"/>
+      <polygon points="${W-s*2},0 ${W-s},${s} ${W},0 ${W-s},${-s}" fill="${c}" fill-opacity="${o}" transform="translate(0,${s})"/>
+      <polygon points="0,${H-s*2} ${s},${H-s} ${s*2},${H-s*2} ${s},${H-s*3}" fill="${c}" fill-opacity="${o}" transform="translate(0,${s})"/>
+      <polygon points="${W},${H-s} ${W-s},${H} ${W-s*2},${H-s} ${W-s},${H-s*2}" fill="${c}" fill-opacity="${o}"/>`;}},
+    {lbl:'🌿',svg:(c,o,sz)=>{const s=20+sz*5;return`
+      <ellipse cx="0" cy="0" rx="${s*1.5}" ry="${s*.6}" transform="rotate(45)" fill="${c}" fill-opacity="${o*.7}"/>
+      <ellipse cx="${W}" cy="0" rx="${s*1.5}" ry="${s*.6}" transform="rotate(-45,${W},0)" fill="${c}" fill-opacity="${o*.7}"/>
+      <ellipse cx="0" cy="${H}" rx="${s*1.5}" ry="${s*.6}" transform="rotate(-45,0,${H})" fill="${c}" fill-opacity="${o*.7}"/>
+      <ellipse cx="${W}" cy="${H}" rx="${s*1.5}" ry="${s*.6}" transform="rotate(45,${W},${H})" fill="${c}" fill-opacity="${o*.7}"/>`;}},
+    {lbl:'★',svg:(c,o,sz)=>{
+      function star(cx,cy,r){const pts=[];for(let i=0;i<10;i++){const a=i*Math.PI/5-Math.PI/2;const rr=i%2===0?r:r*.45;pts.push(`${cx+rr*Math.cos(a)},${cy+rr*Math.sin(a)}`);}return pts.join(' ');}
+      const r=14+sz*4;
+      return`<polygon points="${star(0,0,r)}" fill="${c}" fill-opacity="${o}"/>
+      <polygon points="${star(W,0,r)}" fill="${c}" fill-opacity="${o}"/>
+      <polygon points="${star(0,H,r)}" fill="${c}" fill-opacity="${o}"/>
+      <polygon points="${star(W,H,r)}" fill="${c}" fill-opacity="${o}"/>`;}},
+  ],
+
+  frame:[
+    {lbl:'═',svg:(c,o,sz)=>`
+      <rect x="8" y="8" width="${W-16}" height="${H-16}" fill="none" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}"/>
+      <rect x="16" y="16" width="${W-32}" height="${H-32}" fill="none" stroke="${c}" stroke-width="${Math.max(1,sz-1)}" stroke-opacity="${o*.7}"/>`},
+    {lbl:'┄',svg:(c,o,sz)=>`
+      <rect x="8" y="8" width="${W-16}" height="${H-16}" fill="none" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}" stroke-dasharray="${10+sz*3},${5+sz}"/>`},
+    {lbl:'◻',svg:(c,o,sz)=>`
+      <rect x="8" y="8" width="${W-16}" height="${H-16}" fill="none" stroke="${c}" stroke-width="${sz+2}" stroke-opacity="${o}"/>
+      <rect x="18" y="18" width="${W-36}" height="${H-36}" fill="none" stroke="${c}" stroke-width="${sz}" stroke-opacity="${o*.6}"/>
+      <rect x="28" y="28" width="${W-56}" height="${H-56}" fill="none" stroke="${c}" stroke-width="${Math.max(1,sz-1)}" stroke-opacity="${o*.4}"/>`},
+    {lbl:'꜈',svg:(c,o,sz)=>`
+      <rect x="8" y="8" width="${W-16}" height="${H-16}" fill="none" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}" rx="${10+sz*4}" ry="${10+sz*4}"/>`},
+    {lbl:'⬟',svg:(c,o,sz)=>{const m=8;return`
+      <path d="M${m+20},${m} L${W-m-20},${m} L${W-m},${m+20} L${W-m},${H-m-20} L${W-m-20},${H-m} L${m+20},${H-m} L${m},${H-m-20} L${m},${m+20} Z" fill="none" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}"/>
+      <path d="M${m+30},${m+10} L${W-m-30},${m+10} L${W-m-10},${m+30} L${W-m-10},${H-m-30} L${W-m-30},${H-m-10} L${m+30},${H-m-10} L${m+10},${H-m-30} L${m+10},${m+30} Z" fill="none" stroke="${c}" stroke-width="${Math.max(1,sz-1)}" stroke-opacity="${o*.5}"/>`;}},
+    {lbl:'🔷',svg:(c,o,sz)=>{const s=sz+1;return`
+      <rect x="8" y="8" width="${W-16}" height="${H-16}" fill="none" stroke="${c}" stroke-width="${s}" stroke-opacity="${o}"/>
+      <rect x="12" y="12" width="${W-24}" height="${H-24}" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="${o*.4}"/>
+      <line x1="8" y1="8" x2="${8+30}" y2="8" stroke="${c}" stroke-width="${s+1}" stroke-opacity="${o}"/>
+      <line x1="8" y1="8" x2="8" y2="${8+30}" stroke="${c}" stroke-width="${s+1}" stroke-opacity="${o}"/>
+      <line x1="${W-8}" y1="8" x2="${W-38}" y2="8" stroke="${c}" stroke-width="${s+1}" stroke-opacity="${o}"/>
+      <line x1="${W-8}" y1="8" x2="${W-8}" y2="${38}" stroke="${c}" stroke-width="${s+1}" stroke-opacity="${o}"/>
+      <line x1="8" y1="${H-8}" x2="${38}" y2="${H-8}" stroke="${c}" stroke-width="${s+1}" stroke-opacity="${o}"/>
+      <line x1="8" y1="${H-8}" x2="8" y2="${H-38}" stroke="${c}" stroke-width="${s+1}" stroke-opacity="${o}"/>
+      <line x1="${W-8}" y1="${H-8}" x2="${W-38}" y2="${H-8}" stroke="${c}" stroke-width="${s+1}" stroke-opacity="${o}"/>
+      <line x1="${W-8}" y1="${H-8}" x2="${W-8}" y2="${H-38}" stroke="${c}" stroke-width="${s+1}" stroke-opacity="${o}"/>`;}},
+    {lbl:'∿',svg:(c,o,sz)=>{const h=6+sz*2;return`
+      <path d="M0,${h} Q${W*.1},0 ${W*.2},${h} Q${W*.3},${h*2} ${W*.4},${h} Q${W*.5},0 ${W*.6},${h} Q${W*.7},${h*2} ${W*.8},${h} Q${W*.9},0 ${W},${h}" fill="none" stroke="${c}" stroke-width="${sz}" stroke-opacity="${o}"/>
+      <path d="M0,${H-h} Q${W*.1},${H} ${W*.2},${H-h} Q${W*.3},${H-h*2} ${W*.4},${H-h} Q${W*.5},${H} ${W*.6},${H-h} Q${W*.7},${H-h*2} ${W*.8},${H-h} Q${W*.9},${H} ${W},${H-h}" fill="none" stroke="${c}" stroke-width="${sz}" stroke-opacity="${o}"/>`;}},
+    {lbl:'꧁',svg:(c,o,sz)=>{const t=8+sz;return`
+      <rect x="${t}" y="${t}" width="${W-t*2}" height="${H-t*2}" fill="${c}" fill-opacity="${o*.12}" stroke="${c}" stroke-width="${sz}" stroke-opacity="${o}"/>
+      <rect x="${t+8}" y="${t+8}" width="${W-t*2-16}" height="${H-t*2-16}" fill="none" stroke="${c}" stroke-width="1" stroke-opacity="${o*.5}"/>`}},
+  ],
+
+  top:[
+    {lbl:'▬',svg:(c,o,sz)=>`
+      <rect x="0" y="0" width="${W}" height="${8+sz*3}" fill="${c}" fill-opacity="${o}"/>
+      <rect x="0" y="${H-(8+sz*3)}" width="${W}" height="${8+sz*3}" fill="${c}" fill-opacity="${o}"/>`},
+    {lbl:'▓',svg:(c,o,sz)=>{const h=10+sz*4;return`
+      <linearGradient id="Ob1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="${c}" stop-opacity="0"/><stop offset="50%" stop-color="${c}" stop-opacity="${o}"/><stop offset="100%" stop-color="${c}" stop-opacity="0"/></linearGradient>
+      <rect x="0" y="0" width="${W}" height="${h}" fill="url(#Ob1)"/>
+      <rect x="0" y="${H-h}" width="${W}" height="${h}" fill="url(#Ob1)"/>`;}},
+    {lbl:'◈',svg:(c,o,sz)=>{const h=12+sz*4;return`
+      <rect x="0" y="0" width="${W}" height="${h}" fill="${c}" fill-opacity="${o}"/>
+      <rect x="0" y="${H-h}" width="${W}" height="${h}" fill="${c}" fill-opacity="${o}"/>
+      <line x1="0" y1="${h}" x2="${W}" y2="${h}" stroke="${c}" stroke-width="${sz}" stroke-opacity="${o}"/>
+      <line x1="0" y1="${H-h}" x2="${W}" y2="${H-h}" stroke="${c}" stroke-width="${sz}" stroke-opacity="${o}"/>
+      <text x="${W/2}" y="${h*.75}" text-anchor="middle" font-size="${h*.7}" fill="white" fill-opacity="${o}" font-family="serif">✦ ✦ ✦</text>
+      <text x="${W/2}" y="${H-h*.2}" text-anchor="middle" font-size="${h*.7}" fill="white" fill-opacity="${o}" font-family="serif">✦ ✦ ✦</text>`;}},
+    {lbl:'🌊',svg:(c,o,sz)=>{const h=8+sz*3;return`
+      <path d="M0,${h} Q${W*.15},0 ${W*.3},${h} Q${W*.45},${h*2} ${W*.6},${h} Q${W*.75},0 ${W*.9},${h} L${W},${h} L${W},0 L0,0 Z" fill="${c}" fill-opacity="${o}"/>
+      <path d="M0,${H-h} Q${W*.15},${H} ${W*.3},${H-h} Q${W*.45},${H-h*2} ${W*.6},${H-h} Q${W*.75},${H} ${W*.9},${H-h} L${W},${H-h} L${W},${H} L0,${H} Z" fill="${c}" fill-opacity="${o}"/>`;}},
+    {lbl:'⌇',svg:(c,o,sz)=>{const h=6+sz*4;return`
+      <path d="M0,0 L${W},0 L${W},${h} L0,${h} Z M${W*.1},${h} L${W*.15},${h+h*.5} L${W*.2},${h} M${W*.3},${h} L${W*.35},${h+h*.5} L${W*.4},${h} M${W*.5},${h} L${W*.55},${h+h*.5} L${W*.6},${h} M${W*.7},${h} L${W*.75},${h+h*.5} L${W*.8},${h} M${W*.9},${h} L${W*.95},${h+h*.5} L${W},${h}" fill="${c}" fill-opacity="${o}"/>
+      <path d="M0,${H} L${W},${H} L${W},${H-h} L0,${H-h} Z" fill="${c}" fill-opacity="${o}"/>`;}},
+    {lbl:'☰',svg:(c,o,sz)=>{const h=sz+1;return`
+      <line x1="0" y1="${6}" x2="${W}" y2="${6}" stroke="${c}" stroke-width="${h*2}" stroke-opacity="${o}"/>
+      <line x1="0" y1="${14+sz*2}" x2="${W}" y2="${14+sz*2}" stroke="${c}" stroke-width="${h}" stroke-opacity="${o*.6}"/>
+      <line x1="0" y1="${H-6}" x2="${W}" y2="${H-6}" stroke="${c}" stroke-width="${h*2}" stroke-opacity="${o}"/>
+      <line x1="0" y1="${H-14-sz*2}" x2="${W}" y2="${H-14-sz*2}" stroke="${c}" stroke-width="${h}" stroke-opacity="${o*.6}"/>`;}},
+  ],
+
+  sides:[
+    {lbl:'║',svg:(c,o,sz)=>`
+      <rect x="0" y="0" width="${8+sz*3}" height="${H}" fill="${c}" fill-opacity="${o}"/>
+      <rect x="${W-(8+sz*3)}" y="0" width="${8+sz*3}" height="${H}" fill="${c}" fill-opacity="${o}"/>`},
+    {lbl:'▓',svg:(c,o,sz)=>{const w=10+sz*4;return`
+      <linearGradient id="Os1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${c}" stop-opacity="0"/><stop offset="50%" stop-color="${c}" stop-opacity="${o}"/><stop offset="100%" stop-color="${c}" stop-opacity="0"/></linearGradient>
+      <rect x="0" y="0" width="${w}" height="${H}" fill="url(#Os1)"/>
+      <rect x="${W-w}" y="0" width="${w}" height="${H}" fill="url(#Os1)"/>`;}},
+    {lbl:'⌇',svg:(c,o,sz)=>{const w=14+sz*4;return`
+      <rect x="0" y="0" width="${w}" height="${H}" fill="${c}" fill-opacity="${o*.15}"/>
+      <rect x="${W-w}" y="0" width="${w}" height="${H}" fill="${c}" fill-opacity="${o*.15}"/>
+      <line x1="${w}" y1="0" x2="${w}" y2="${H}" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}"/>
+      <line x1="${W-w}" y1="0" x2="${W-w}" y2="${H}" stroke="${c}" stroke-width="${sz+1}" stroke-opacity="${o}"/>`;}},
+    {lbl:'❧',svg:(c,o,sz)=>{const s=14+sz*3;return`
+      <text x="${4}" y="${H/2+s/3}" font-size="${s*2}" fill="${c}" fill-opacity="${o}" font-family="serif" transform="rotate(-90,${4+s*.6},${H/2})">❧</text>
+      <text x="${W-4-s}" y="${H/2+s/3}" font-size="${s*2}" fill="${c}" fill-opacity="${o}" font-family="serif" transform="rotate(90,${W-4-s*.4},${H/2})">❧</text>`;}},
+  ],
+
+  floral:[
+    {lbl:'❀',svg:(c,o,sz)=>{const s=20+sz*5;return`
+      <text x="${s/2}" y="${s}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">❀</text>
+      <text x="${W-s}" y="${s}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">❀</text>
+      <text x="${s/2}" y="${H-2}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">❀</text>
+      <text x="${W-s}" y="${H-2}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">❀</text>
+      <text x="${W/2-s/2}" y="${s}" font-size="${s*1.2}" fill="${c}" fill-opacity="${o*.8}" font-family="serif">❀</text>
+      <text x="${W/2-s/2}" y="${H-2}" font-size="${s*1.2}" fill="${c}" fill-opacity="${o*.8}" font-family="serif">❀</text>`;}},
+    {lbl:'✿',svg:(c,o,sz)=>{const s=18+sz*4;return`
+      <text x="${W/2-s/2}" y="${s+4}" font-size="${s*1.3}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">✿ ✿ ✿</text>
+      <text x="${W/2-s/2}" y="${H-6}" font-size="${s*1.3}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">✿ ✿ ✿</text>
+      <text x="${s/2}" y="${H/2+s/3}" font-size="${s}" fill="${c}" fill-opacity="${o*.7}" font-family="serif">✿</text>
+      <text x="${W-s}" y="${H/2+s/3}" font-size="${s}" fill="${c}" fill-opacity="${o*.7}" font-family="serif">✿</text>`;}},
+    {lbl:'🌹',svg:(c,o,sz)=>{const s=18+sz*4;return`
+      <text x="4" y="${s+2}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">✾</text>
+      <text x="${W-s-4}" y="${s+2}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">✾</text>
+      <text x="4" y="${H-4}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">✾</text>
+      <text x="${W-s-4}" y="${H-4}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">✾</text>
+      <text x="${W/2}" y="${s+2}" font-size="${s*.85}" fill="${c}" fill-opacity="${o*.5}" text-anchor="middle" font-family="serif">✾ ✾ ✾</text>
+      <text x="${W/2}" y="${H-4}" font-size="${s*.85}" fill="${c}" fill-opacity="${o*.5}" text-anchor="middle" font-family="serif">✾ ✾ ✾</text>`;}},
+    {lbl:'❦',svg:(c,o,sz)=>{const s=18+sz*4;return`
+      <text x="0" y="${s*1.2}" font-size="${s*1.5}" fill="${c}" fill-opacity="${o}" font-family="serif">❦</text>
+      <text x="${W-s*1.5}" y="${s*1.2}" font-size="${s*1.5}" fill="${c}" fill-opacity="${o}" font-family="serif" transform="scale(-1,1) translate(-${W},0)">❦</text>
+      <text x="0" y="${H}" font-size="${s*1.5}" fill="${c}" fill-opacity="${o}" font-family="serif" transform="scale(1,-1) translate(0,-${H})">❦</text>
+      <text x="${W-s*1.5}" y="${H}" font-size="${s*1.5}" fill="${c}" fill-opacity="${o}" font-family="serif" transform="scale(-1,-1) translate(-${W},-${H})">❦</text>`;}},
+  ],
+
+  islamic:[
+    {lbl:'✦',svg:(c,o,sz)=>{const s=20+sz*5;return`
+      <text x="${W/2}" y="${s+4}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">✦ ✦ ✦</text>
+      <text x="${W/2}" y="${H-6}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">✦ ✦ ✦</text>
+      <text x="${s}" y="${H/2+s/3}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">✦</text>
+      <text x="${W-s}" y="${H/2+s/3}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">✦</text>`;}},
+    {lbl:'☽',svg:(c,o,sz)=>{const s=18+sz*4;return`
+      <text x="4" y="${s+4}" font-size="${s*1.2}" fill="${c}" fill-opacity="${o}" font-family="serif">☽✦☾</text>
+      <text x="${W/2}" y="${s+4}" font-size="${s*1.2}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">☽✦☾</text>
+      <text x="${W-s*3.5}" y="${s+4}" font-size="${s*1.2}" fill="${c}" fill-opacity="${o}" font-family="serif">☽✦☾</text>
+      <text x="${W/2}" y="${H-4}" font-size="${s*1.2}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">☽✦☾</text>`;}},
+    {lbl:'⬡',svg:(c,o,sz)=>{
+      function hex(cx,cy,r){const pts=[];for(let i=0;i<6;i++){const a=i*Math.PI/3-Math.PI/6;pts.push(`${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`);}return pts.join(' ');}
+      const r=14+sz*4;
+      return`<polygon points="${hex(0,0,r)}" fill="${c}" fill-opacity="${o*.6}"/>
+      <polygon points="${hex(W,0,r)}" fill="${c}" fill-opacity="${o*.6}"/>
+      <polygon points="${hex(0,H,r)}" fill="${c}" fill-opacity="${o*.6}"/>
+      <polygon points="${hex(W,H,r)}" fill="${c}" fill-opacity="${o*.6}"/>
+      <polygon points="${hex(W/2,0,r*.7)}" fill="none" stroke="${c}" stroke-width="${sz}" stroke-opacity="${o}"/>
+      <polygon points="${hex(W/2,H,r*.7)}" fill="none" stroke="${c}" stroke-width="${sz}" stroke-opacity="${o}"/>`;}},
+    {lbl:'✤',svg:(c,o,sz)=>{const s=18+sz*4;return`
+      <text x="${W/2}" y="${s+4}" font-size="${s*1.3}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">✦ ✤ ✦</text>
+      <text x="${W/2}" y="${H-4}" font-size="${s*1.3}" fill="${c}" fill-opacity="${o}" font-family="serif" text-anchor="middle">✦ ✤ ✦</text>
+      <text x="8" y="${s+4}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">✤</text>
+      <text x="${W-s-8}" y="${s+4}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">✤</text>
+      <text x="8" y="${H-4}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">✤</text>
+      <text x="${W-s-8}" y="${H-4}" font-size="${s}" fill="${c}" fill-opacity="${o}" font-family="serif">✤</text>`;}},
+  ],
+};
+
+function setOrnType(type, btn){
+  ornType = type;
+  document.querySelectorAll('.orn-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  ornShape = 0;
+  buildShapeBtns();
+}
+
+function buildShapeBtns(){
+  const cont = document.getElementById('ornShapeBtns');
+  if(!cont) return;
+  cont.innerHTML = '';
+  const shapes = ORN_SHAPES[ornType] || [];
+  shapes.forEach((s,i)=>{
+    const b = document.createElement('button');
+    b.className = 'orn-shape-btn' + (i===ornShape?' active':'');
+    b.textContent = s.lbl;
+    b.title = s.lbl;
+    b.onclick = ()=>{
+      ornShape = i;
+      document.querySelectorAll('.orn-shape-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      applyOrnament();
+    };
+    cont.appendChild(b);
+  });
+}
+
+function applyOrnament(){
+  const svg = document.getElementById('ornLayer');
+  if(!svg) return;
+  ornActive = true;
+  const shapes = ORN_SHAPES[ornType] || [];
+  const shape = shapes[ornShape] || shapes[0];
+  if(!shape) return;
+  const color = document.getElementById('ornColor').value;
+  const opacity = (+document.getElementById('ornOpacity').value)/100;
+  const size = +document.getElementById('ornSize').value;
+  svg.innerHTML = shape.svg(color, opacity, size);
+}
+
+function clearOrnament(){
+  const svg = document.getElementById('ornLayer');
+  if(svg) svg.innerHTML = '';
+  ornActive = false;
+  toast('🗑️ تم إزالة الزخرفة');
+}
+
+// Init shape buttons on load
+window.addEventListener('load', ()=>{ buildShapeBtns(); });
+
+</script>
+</body>
+</html>

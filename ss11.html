@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة توليد شهادات الشكر والتقدير</title>
+<style>
+/* ========== المتغيرات الأساسية ========== */
+:root {
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dark: #8a6a1c;
+  --navy: #1a2744;
+  --navy-light: #2c3e6e;
+  --cream: #faf6ef;
+  --cream2: #f5ede0;
+  --green-sa: #1b5e20;
+  --border-color: #c9a84c;
+  --shadow: 0 8px 32px rgba(26,39,68,0.18);
+  --font-main: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font-main);
+  background: linear-gradient(135deg, #0d1b3e 0%, #1a2744 40%, #2c3e6e 100%);
+  min-height: 100vh;
+  color: #222;
+  direction: rtl;
+}
+
+/* ========== الهيدر ========== */
+.site-header {
+  background: linear-gradient(90deg, #0d1b3e, #1a2744, #0d1b3e);
+  border-bottom: 3px solid var(--gold);
+  padding: 18px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.site-header h1 {
+  color: var(--gold-light);
+  font-size: 1.7rem;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 8px rgba(201,168,76,0.4);
+}
+.site-header .subtitle {
+  color: #b0c0e0;
+  font-size: 0.85rem;
+  margin-top: 3px;
+}
+.header-logo {
+  width: 60px; height: 60px;
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem;
+  background: radial-gradient(circle, #2c3e6e, #0d1b3e);
+  box-shadow: 0 0 16px rgba(201,168,76,0.3);
+}
+
+/* ========== الحاوية الرئيسية ========== */
+.main-container {
+  display: flex;
+  gap: 0;
+  min-height: calc(100vh - 90px);
+}
+
+/* ========== الشريط الجانبي ========== */
+.sidebar {
+  width: 320px;
+  min-width: 280px;
+  background: linear-gradient(180deg, #0d1b3e 0%, #162040 100%);
+  border-left: 2px solid rgba(201,168,76,0.3);
+  padding: 20px 16px;
+  overflow-y: auto;
+  max-height: calc(100vh - 90px);
+  position: sticky;
+  top: 0;
+}
+
+.section-title {
+  color: var(--gold);
+  font-size: 0.95rem;
+  font-weight: bold;
+  border-bottom: 1px solid rgba(201,168,76,0.3);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ========== نوع الشهادة ========== */
+.cert-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.cert-type-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: #c0d0f0;
+  padding: 8px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  text-align: center;
+  transition: all 0.2s;
+  font-family: var(--font-main);
+}
+.cert-type-btn:hover, .cert-type-btn.active {
+  background: rgba(201,168,76,0.2);
+  border-color: var(--gold);
+  color: var(--gold-light);
+}
+
+/* ========== القوالب ========== */
+.templates-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+.template-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(201,168,76,0.25);
+  color: #c0d0f0;
+  padding: 10px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  text-align: center;
+  transition: all 0.2s;
+  font-family: var(--font-main);
+  line-height: 1.4;
+}
+.template-btn:hover, .template-btn.active {
+  background: linear-gradient(135deg, rgba(201,168,76,0.25), rgba(201,168,76,0.1));
+  border-color: var(--gold);
+  color: var(--gold-light);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(201,168,76,0.2);
+}
+
+/* ========== حقول النموذج ========== */
+.form-group {
+  margin-bottom: 12px;
+}
+.form-group label {
+  display: block;
+  color: #a0b0d0;
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: #e0ecff;
+  padding: 8px 10px;
+  border-radius: 7px;
+  font-size: 0.82rem;
+  font-family: var(--font-main);
+  direction: rtl;
+  transition: border 0.2s;
+  outline: none;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--gold);
+  background: rgba(255,255,255,0.1);
+}
+.form-group select option {
+  background: #1a2744;
+  color: #e0ecff;
+}
+.form-group textarea { height: 75px; resize: vertical; }
+
+/* ========== أزرار العبارات الجاهزة ========== */
+.phrases-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+.phrase-btn {
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: var(--gold-light);
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--font-main);
+}
+.phrase-btn:hover {
+  background: rgba(201,168,76,0.25);
+  border-color: var(--gold);
+}
+
+/* ========== أزرار التحكم ========== */
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+.ctrl-btn {
+  flex: 1; min-width: 70px;
+  padding: 8px 6px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-family: var(--font-main);
+  font-weight: bold;
+  transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 4px;
+}
+.btn-print { background: linear-gradient(135deg, #1565c0, #0d47a1); color: #fff; }
+.btn-print:hover { background: linear-gradient(135deg, #1976d2, #1565c0); transform: translateY(-1px); }
+.btn-new { background: linear-gradient(135deg, #2e7d32, #1b5e20); color: #fff; }
+.btn-new:hover { background: linear-gradient(135deg, #388e3c, #2e7d32); transform: translateY(-1px); }
+.btn-save { background: linear-gradient(135deg, #7b1fa2, #4a148c); color: #fff; }
+.btn-save:hover { background: linear-gradient(135deg, #8e24aa, #7b1fa2); transform: translateY(-1px); }
+.btn-load { background: linear-gradient(135deg, #e65100, #bf360c); color: #fff; }
+.btn-load:hover { background: linear-gradient(135deg, #f57c00, #e65100); transform: translateY(-1px); }
+.btn-clear { background: linear-gradient(135deg, #c62828, #b71c1c); color: #fff; }
+.btn-clear:hover { background: linear-gradient(135deg, #d32f2f, #c62828); transform: translateY(-1px); }
+.btn-bulk { background: linear-gradient(135deg, var(--gold-dark), #5a3e0a); color: #fff; }
+.btn-bulk:hover { background: linear-gradient(135deg, var(--gold), var(--gold-dark)); transform: translateY(-1px); }
+
+/* ========== خيارات التخصيص ========== */
+.customizer {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+.customizer .row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 8px; gap: 8px;
+}
+.customizer label { color: #a0b0d0; font-size: 0.78rem; min-width: 70px; }
+.customizer input[type="color"] {
+  width: 36px; height: 28px; border: none; border-radius: 4px;
+  cursor: pointer; background: none; padding: 0;
+}
+.customizer input[type="range"] { flex: 1; accent-color: var(--gold); }
+.customizer select {
+  flex: 1; background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(201,168,76,0.3); color: #e0ecff;
+  padding: 4px 8px; border-radius: 6px; font-size: 0.78rem;
+  font-family: var(--font-main); outline: none;
+}
+.toggle-row {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
+}
+.toggle-item {
+  display: flex; align-items: center; gap: 4px;
+  color: #a0b0d0; font-size: 0.75rem;
+}
+.toggle-item input[type="checkbox"] { accent-color: var(--gold); width: 14px; height: 14px; }
+
+/* ========== رفع الملفات ========== */
+.upload-btn {
+  display: block; width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px dashed rgba(201,168,76,0.4);
+  color: #a0b0d0; font-size: 0.78rem;
+  padding: 8px; border-radius: 8px;
+  text-align: center; cursor: pointer; margin-bottom: 8px;
+  transition: all 0.2s; font-family: var(--font-main);
+}
+.upload-btn:hover { border-color: var(--gold); color: var(--gold-light); background: rgba(201,168,76,0.1); }
+.upload-preview { 
+  width: 50px; height: 50px; object-fit: contain;
+  border: 1px solid rgba(201,168,76,0.3); border-radius: 6px;
+  display: none; margin: 4px auto;
+}
+
+/* ========== الطباعة الجماعية ========== */
+.bulk-section {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 10px; padding: 12px; margin-bottom: 14px;
+}
+.bulk-section textarea {
+  width: 100%; height: 80px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(201,168,76,0.3);
+  color: #e0ecff; padding: 8px 10px;
+  border-radius: 7px; font-size: 0.82rem;
+  font-family: var(--font-main); direction: rtl;
+  resize: vertical; outline: none;
+}
+.names-table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+.names-table th {
+  background: rgba(201,168,76,0.15); color: var(--gold-light);
+  font-size: 0.75rem; padding: 5px 8px; border-bottom: 1px solid rgba(201,168,76,0.3);
+}
+.names-table td {
+  color: #c0d0f0; font-size: 0.75rem;
+  padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.names-table .del-btn {
+  background: rgba(198,40,40,0.2); border: 1px solid #c62828;
+  color: #ff8a80; padding: 2px 8px; border-radius: 4px;
+  cursor: pointer; font-size: 0.7rem; font-family: var(--font-main);
+}
+
+/* ========== منطقة المعاينة ========== */
+.preview-area {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0,0,0,0.15);
+  overflow-y: auto;
+}
+.preview-label {
+  color: var(--gold-light);
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* ========== الشهادة الرئيسية ========== */
+.certificate-wrapper {
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  overflow: visible;
+}
+
+/* ============================================================
+   القوالب - Template Styles
+   ============================================================ */
+
+/* ---- 1. رسمي كلاسيكي ---- */
+.cert-classic {
+  width: 297mm; min-height: 210mm;
+  background: linear-gradient(145deg, #fdfaf3 0%, #f8f2e4 100%);
+  position: relative; padding: 0; overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  direction: rtl;
+}
+.cert-classic .cert-outer-border {
+  position: absolute; inset: 8px;
+  border: 3px solid #8a6a1c;
+  pointer-events: none; z-index: 2;
+}
+.cert-classic .cert-inner-border {
+  position: absolute; inset: 14px;
+  border: 1px solid #c9a84c;
+  pointer-events: none; z-index: 2;
+}
+.cert-classic .corner {
+  position: absolute; width: 60px; height: 60px;
+  background: radial-gradient(circle at center, #c9a84c33, transparent);
+  border-color: #8a6a1c; z-index: 3; pointer-events: none;
+}
+.cert-classic .corner-tl { top: 6px; right: 6px; border-top: 4px solid #8a6a1c; border-right: 4px solid #8a6a1c; border-radius: 0 12px 0 0; }
+.cert-classic .corner-tr { top: 6px; left: 6px; border-top: 4px solid #8a6a1c; border-left: 4px solid #8a6a1c; border-radius: 12px 0 0 0; }
+.cert-classic .corner-bl { bottom: 6px; right: 6px; border-bottom: 4px solid #8a6a1c; border-right: 4px solid #8a6a1c; border-radius: 0 0 0 12px; }
+.cert-classic .corner-br { bottom: 6px; left: 6px; border-bottom: 4px solid #8a6a1c; border-left: 4px solid #8a6a1c; border-radius: 0 0 12px 0; }
+.cert-classic .cert-content { padding: 30px 50px; position: relative; z-index: 4; height: 100%; }
+.cert-classic .cert-header { text-align: center; margin-bottom: 12px; border-bottom: 2px solid #c9a84c; padding-bottom: 12px; }
+.cert-classic .cert-header .org-name { font-size: 1.1rem; color: #1a2744; font-weight: bold; }
+.cert-classic .cert-title { font-size: 2.2rem; color: #8a6a1c; text-align: center; font-weight: bold; margin: 16px 0 8px; text-shadow: 1px 1px 3px rgba(201,168,76,0.3); }
+.cert-classic .cert-subtitle { text-align: center; color: #5a4010; font-size: 1rem; margin-bottom: 18px; }
+.cert-classic .cert-body { text-align: center; line-height: 2.1; color: #2a2a2a; font-size: 1.1rem; padding: 14px 20px; background: rgba(201,168,76,0.06); border-radius: 8px; margin-bottom: 14px; }
+.cert-classic .cert-name-line { font-size: 1.5rem; color: #1a2744; font-weight: bold; border-bottom: 1px dashed #c9a84c; display: inline-block; min-width: 250px; padding: 2px 10px; margin: 4px 0; cursor: text; }
+.cert-classic .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(201,168,76,0.4); }
+.cert-classic .sig-block { text-align: center; min-width: 130px; }
+.cert-classic .sig-block .sig-label { font-size: 0.85rem; color: #5a4010; margin-bottom: 4px; }
+.cert-classic .sig-line { border-bottom: 1px solid #8a6a1c; height: 30px; margin-bottom: 4px; }
+.cert-classic .sig-block .sig-name { font-size: 0.85rem; color: #1a2744; font-weight: bold; cursor: text; }
+.cert-classic .date-block { text-align: center; color: #5a4010; font-size: 0.9rem; }
+.cert-classic .stamp-area { width: 80px; height: 80px; border: 2px dashed rgba(201,168,76,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(201,168,76,0.4); font-size: 0.65rem; text-align: center; cursor: pointer; }
+
+/* ---- 2. ذهبي فاخر ---- */
+.cert-gold {
+  width: 297mm; min-height: 210mm;
+  background: linear-gradient(135deg, #1a0e00 0%, #2d1a00 30%, #1a0e00 100%);
+  position: relative; padding: 0; overflow: hidden; direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+.cert-gold::before {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(201,168,76,0.03) 40px, rgba(201,168,76,0.03) 41px);
+}
+.cert-gold .gold-border { position: absolute; inset: 12px; border: 2px solid #c9a84c; z-index: 2; pointer-events: none; }
+.cert-gold .gold-border2 { position: absolute; inset: 16px; border: 1px solid rgba(201,168,76,0.4); z-index: 2; pointer-events: none; }
+.cert-gold .corner-ornament { position: absolute; font-size: 2rem; color: var(--gold); z-index: 3; pointer-events: none; line-height: 1; }
+.cert-gold .corner-ornament.tl { top: 8px; right: 8px; }
+.cert-gold .corner-ornament.tr { top: 8px; left: 8px; }
+.cert-gold .corner-ornament.bl { bottom: 8px; right: 8px; transform: scaleY(-1); }
+.cert-gold .corner-ornament.br { bottom: 8px; left: 8px; transform: scale(-1,-1); }
+.cert-gold .cert-content { padding: 30px 55px; position: relative; z-index: 4; }
+.cert-gold .cert-header { text-align: center; margin-bottom: 16px; }
+.cert-gold .cert-header .org-name { color: var(--gold-light); font-size: 1rem; letter-spacing: 2px; }
+.cert-gold .cert-title { font-size: 2.4rem; background: linear-gradient(90deg, #e8c97a, #c9a84c, #e8c97a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-weight: bold; margin: 12px 0; }
+.cert-gold .cert-subtitle { color: #d4a843; text-align: center; font-size: 0.95rem; margin-bottom: 14px; }
+.cert-gold .cert-body { color: #f0e0c0; font-size: 1.05rem; line-height: 2.1; text-align: center; padding: 14px 20px; background: rgba(201,168,76,0.07); border: 1px solid rgba(201,168,76,0.2); border-radius: 8px; margin-bottom: 12px; }
+.cert-gold .cert-name-line { font-size: 1.5rem; color: var(--gold-light); font-weight: bold; border-bottom: 1px solid var(--gold); display: inline-block; min-width: 250px; padding: 2px 10px; cursor: text; }
+.cert-gold .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(201,168,76,0.3); }
+.cert-gold .sig-block { text-align: center; min-width: 120px; }
+.cert-gold .sig-block .sig-label { color: #d4a843; font-size: 0.8rem; }
+.cert-gold .sig-line { border-bottom: 1px solid #c9a84c; height: 28px; margin-bottom: 3px; }
+.cert-gold .sig-block .sig-name { color: var(--gold-light); font-size: 0.82rem; cursor: text; }
+.cert-gold .date-block { color: #d4a843; font-size: 0.88rem; text-align: center; }
+.cert-gold .stamp-area { width: 75px; height: 75px; border: 2px dashed rgba(201,168,76,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(201,168,76,0.3); font-size: 0.6rem; text-align: center; cursor: pointer; }
+
+/* ---- 3. مدرسي مبهج ---- */
+.cert-school {
+  width: 297mm; min-height: 210mm;
+  background: linear-gradient(135deg, #e8f5e9 0%, #fff9e6 50%, #e3f2fd 100%);
+  position: relative; overflow: hidden; direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+.cert-school .stars-bg { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+.cert-school .star { position: absolute; color: #ffd700; opacity: 0.25; font-size: 1.2rem; }
+.cert-school .cert-border { position: absolute; inset: 10px; border: 4px solid #f9a825; border-radius: 20px; z-index: 2; pointer-events: none; }
+.cert-school .cert-border2 { position: absolute; inset: 15px; border: 2px dashed #66bb6a; border-radius: 16px; z-index: 2; pointer-events: none; }
+.cert-school .cert-content { padding: 28px 50px; position: relative; z-index: 4; }
+.cert-school .cert-header { text-align: center; margin-bottom: 14px; }
+.cert-school .cert-header .org-name { color: #1565c0; font-size: 1.05rem; font-weight: bold; }
+.cert-school .cert-title { font-size: 2.2rem; color: #e65100; text-align: center; font-weight: bold; margin: 10px 0; text-shadow: 2px 2px 4px rgba(230,81,0,0.2); }
+.cert-school .cert-subtitle { color: #388e3c; text-align: center; font-size: 0.95rem; margin-bottom: 14px; }
+.cert-school .cert-body { color: #37474f; font-size: 1.05rem; line-height: 2.1; text-align: center; padding: 14px 20px; background: rgba(255,255,255,0.7); border-radius: 12px; border: 1px solid rgba(249,168,37,0.4); margin-bottom: 12px; }
+.cert-school .cert-name-line { font-size: 1.5rem; color: #1565c0; font-weight: bold; border-bottom: 2px dashed #f9a825; display: inline-block; min-width: 250px; padding: 2px 10px; cursor: text; }
+.cert-school .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding-top: 12px; border-top: 2px solid rgba(249,168,37,0.4); }
+.cert-school .sig-block { text-align: center; min-width: 120px; }
+.cert-school .sig-block .sig-label { color: #5d4037; font-size: 0.8rem; }
+.cert-school .sig-line { border-bottom: 2px dashed #f9a825; height: 28px; margin-bottom: 3px; }
+.cert-school .sig-block .sig-name { color: #1565c0; font-size: 0.82rem; font-weight: bold; cursor: text; }
+.cert-school .date-block { color: #5d4037; font-size: 0.88rem; text-align: center; }
+.cert-school .stamp-area { width: 75px; height: 75px; border: 2px dashed rgba(249,168,37,0.5); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(249,168,37,0.5); font-size: 0.6rem; text-align: center; cursor: pointer; }
+
+/* ---- 4. وطني سعودي ---- */
+.cert-national {
+  width: 297mm; min-height: 210mm;
+  background: linear-gradient(135deg, #f9fbe7 0%, #ffffff 50%, #f9fbe7 100%);
+  position: relative; overflow: hidden; direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+.cert-national .green-stripe-top { position: absolute; top: 0; left: 0; right: 0; height: 10px; background: linear-gradient(90deg, #1b5e20, #2e7d32, #1b5e20); }
+.cert-national .green-stripe-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 10px; background: linear-gradient(90deg, #1b5e20, #2e7d32, #1b5e20); }
+.cert-national .cert-border { position: absolute; inset: 14px; border: 2px solid #1b5e20; z-index: 2; pointer-events: none; }
+.cert-national .cert-border2 { position: absolute; inset: 18px; border: 1px solid rgba(27,94,32,0.4); z-index: 2; pointer-events: none; }
+.cert-national .corner-green { position: absolute; width: 40px; height: 40px; border-color: #1b5e20; z-index: 3; pointer-events: none; }
+.cert-national .corner-green.tl { top: 12px; right: 12px; border-top: 3px solid #1b5e20; border-right: 3px solid #1b5e20; }
+.cert-national .corner-green.tr { top: 12px; left: 12px; border-top: 3px solid #1b5e20; border-left: 3px solid #1b5e20; }
+.cert-national .corner-green.bl { bottom: 12px; right: 12px; border-bottom: 3px solid #1b5e20; border-right: 3px solid #1b5e20; }
+.cert-national .corner-green.br { bottom: 12px; left: 12px; border-bottom: 3px solid #1b5e20; border-left: 3px solid #1b5e20; }
+.cert-national .cert-content { padding: 28px 55px; position: relative; z-index: 4; }
+.cert-national .cert-header { text-align: center; margin-bottom: 14px; border-bottom: 2px solid #1b5e20; padding-bottom: 12px; }
+.cert-national .cert-header .org-name { color: #1b5e20; font-size: 1.1rem; font-weight: bold; }
+.cert-national .cert-title { font-size: 2.2rem; color: #1b5e20; text-align: center; font-weight: bold; margin: 14px 0 8px; }
+.cert-national .cert-subtitle { color: #2e7d32; text-align: center; font-size: 0.95rem; margin-bottom: 14px; }
+.cert-national .cert-body { color: #1a2a1a; font-size: 1.05rem; line-height: 2.1; text-align: center; padding: 14px 20px; background: rgba(27,94,32,0.05); border: 1px solid rgba(27,94,32,0.2); border-radius: 8px; margin-bottom: 12px; }
+.cert-national .cert-name-line { font-size: 1.5rem; color: #1b5e20; font-weight: bold; border-bottom: 1px solid #1b5e20; display: inline-block; min-width: 250px; padding: 2px 10px; cursor: text; }
+.cert-national .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(27,94,32,0.4); }
+.cert-national .sig-block { text-align: center; min-width: 120px; }
+.cert-national .sig-block .sig-label { color: #2e7d32; font-size: 0.8rem; }
+.cert-national .sig-line { border-bottom: 1px solid #1b5e20; height: 28px; margin-bottom: 3px; }
+.cert-national .sig-block .sig-name { color: #1b5e20; font-size: 0.82rem; font-weight: bold; cursor: text; }
+.cert-national .date-block { color: #2e7d32; font-size: 0.88rem; text-align: center; }
+.cert-national .stamp-area { width: 75px; height: 75px; border: 2px dashed rgba(27,94,32,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(27,94,32,0.4); font-size: 0.6rem; text-align: center; cursor: pointer; }
+
+/* ---- 5. بسيط للطباعة الاقتصادية ---- */
+.cert-simple {
+  width: 297mm; min-height: 210mm;
+  background: #fff;
+  position: relative; overflow: hidden; direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+.cert-simple .cert-border { position: absolute; inset: 10px; border: 2px solid #333; z-index: 2; pointer-events: none; }
+.cert-simple .cert-content { padding: 28px 50px; position: relative; z-index: 4; }
+.cert-simple .cert-header { text-align: center; margin-bottom: 14px; border-bottom: 2px solid #333; padding-bottom: 10px; }
+.cert-simple .cert-header .org-name { color: #222; font-size: 1.1rem; font-weight: bold; }
+.cert-simple .cert-title { font-size: 2.2rem; color: #222; text-align: center; font-weight: bold; margin: 12px 0 8px; }
+.cert-simple .cert-subtitle { color: #444; text-align: center; font-size: 0.95rem; margin-bottom: 14px; }
+.cert-simple .cert-body { color: #222; font-size: 1.05rem; line-height: 2.1; text-align: center; padding: 14px 20px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 12px; }
+.cert-simple .cert-name-line { font-size: 1.5rem; color: #222; font-weight: bold; border-bottom: 1px solid #555; display: inline-block; min-width: 250px; padding: 2px 10px; cursor: text; }
+.cert-simple .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding-top: 10px; border-top: 1px solid #ccc; }
+.cert-simple .sig-block { text-align: center; min-width: 120px; }
+.cert-simple .sig-block .sig-label { color: #555; font-size: 0.8rem; }
+.cert-simple .sig-line { border-bottom: 1px solid #555; height: 28px; margin-bottom: 3px; }
+.cert-simple .sig-block .sig-name { color: #222; font-size: 0.82rem; font-weight: bold; cursor: text; }
+.cert-simple .date-block { color: #444; font-size: 0.88rem; text-align: center; }
+.cert-simple .stamp-area { width: 75px; height: 75px; border: 2px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #aaa; font-size: 0.6rem; text-align: center; cursor: pointer; }
+
+/* ---- 6. تميز وإنجاز ---- */
+.cert-achievement {
+  width: 297mm; min-height: 210mm;
+  background: linear-gradient(135deg, #0d0d2e 0%, #1a0a3a 50%, #0d0d2e 100%);
+  position: relative; overflow: hidden; direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+.cert-achievement::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 50%, rgba(100,50,200,0.15), transparent 70%);
+}
+.cert-achievement .star-burst { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+.cert-achievement .a-star { position: absolute; color: rgba(255,215,0,0.15); }
+.cert-achievement .ribbon-top { position: absolute; top: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #7c4dff, #b39ddb, #7c4dff); }
+.cert-achievement .ribbon-bottom { position: absolute; bottom: 0; left: 0; right: 0; height: 8px; background: linear-gradient(90deg, #7c4dff, #b39ddb, #7c4dff); }
+.cert-achievement .cert-border { position: absolute; inset: 12px; border: 1px solid rgba(179,157,219,0.5); z-index: 2; pointer-events: none; }
+.cert-achievement .cert-content { padding: 28px 50px; position: relative; z-index: 4; }
+.cert-achievement .cert-header { text-align: center; margin-bottom: 14px; }
+.cert-achievement .cert-header .org-name { color: #b39ddb; font-size: 1rem; letter-spacing: 2px; }
+.cert-achievement .cert-title { font-size: 2.3rem; background: linear-gradient(90deg, #ffd700, #ffab00, #ffd700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; font-weight: bold; margin: 12px 0; }
+.cert-achievement .cert-subtitle { color: #b39ddb; text-align: center; font-size: 0.95rem; margin-bottom: 14px; }
+.cert-achievement .cert-body { color: #e8e0ff; font-size: 1.05rem; line-height: 2.1; text-align: center; padding: 14px 20px; background: rgba(124,77,255,0.08); border: 1px solid rgba(179,157,219,0.25); border-radius: 10px; margin-bottom: 12px; }
+.cert-achievement .cert-name-line { font-size: 1.5rem; color: #ffd700; font-weight: bold; border-bottom: 1px solid #ffd700; display: inline-block; min-width: 250px; padding: 2px 10px; cursor: text; }
+.cert-achievement .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(179,157,219,0.3); }
+.cert-achievement .sig-block { text-align: center; min-width: 120px; }
+.cert-achievement .sig-block .sig-label { color: #b39ddb; font-size: 0.8rem; }
+.cert-achievement .sig-line { border-bottom: 1px solid rgba(179,157,219,0.5); height: 28px; margin-bottom: 3px; }
+.cert-achievement .sig-block .sig-name { color: #ffd700; font-size: 0.82rem; cursor: text; }
+.cert-achievement .date-block { color: #b39ddb; font-size: 0.88rem; text-align: center; }
+.cert-achievement .stamp-area { width: 75px; height: 75px; border: 2px dashed rgba(179,157,219,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(179,157,219,0.3); font-size: 0.6rem; text-align: center; cursor: pointer; }
+
+/* ---- 7. شهادة الأم - زهري ---- */
+.cert-mother {
+  width: 297mm; min-height: 210mm;
+  background: linear-gradient(135deg, #fce4ec 0%, #fff3e0 50%, #fce4ec 100%);
+  position: relative; overflow: hidden; direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+.cert-mother .cert-border { position: absolute; inset: 10px; border: 3px solid #e91e63; border-radius: 16px; z-index: 2; pointer-events: none; }
+.cert-mother .cert-border2 { position: absolute; inset: 15px; border: 1px dashed rgba(233,30,99,0.4); border-radius: 13px; z-index: 2; pointer-events: none; }
+.cert-mother .floral-corner { position: absolute; font-size: 2.5rem; opacity: 0.4; pointer-events: none; z-index: 3; }
+.cert-mother .floral-corner.tl { top: 12px; right: 12px; }
+.cert-mother .floral-corner.tr { top: 12px; left: 12px; }
+.cert-mother .floral-corner.bl { bottom: 12px; right: 12px; }
+.cert-mother .floral-corner.br { bottom: 12px; left: 12px; }
+.cert-mother .cert-content { padding: 28px 55px; position: relative; z-index: 4; }
+.cert-mother .cert-header { text-align: center; margin-bottom: 12px; border-bottom: 2px solid rgba(233,30,99,0.3); padding-bottom: 10px; }
+.cert-mother .cert-header .org-name { color: #880e4f; font-size: 1.05rem; font-weight: bold; }
+.cert-mother .cert-title { font-size: 2.3rem; color: #e91e63; text-align: center; font-weight: bold; margin: 12px 0 8px; }
+.cert-mother .cert-subtitle { color: #ad1457; text-align: center; font-size: 0.95rem; margin-bottom: 14px; }
+.cert-mother .cert-body { color: #37474f; font-size: 1.05rem; line-height: 2.1; text-align: center; padding: 14px 20px; background: rgba(255,255,255,0.7); border-radius: 12px; border: 1px solid rgba(233,30,99,0.3); margin-bottom: 12px; }
+.cert-mother .cert-name-line { font-size: 1.5rem; color: #880e4f; font-weight: bold; border-bottom: 1px dashed #e91e63; display: inline-block; min-width: 250px; padding: 2px 10px; cursor: text; }
+.cert-mother .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(233,30,99,0.3); }
+.cert-mother .sig-block { text-align: center; min-width: 120px; }
+.cert-mother .sig-block .sig-label { color: #880e4f; font-size: 0.8rem; }
+.cert-mother .sig-line { border-bottom: 1px dashed #e91e63; height: 28px; margin-bottom: 3px; }
+.cert-mother .sig-block .sig-name { color: #880e4f; font-size: 0.82rem; font-weight: bold; cursor: text; }
+.cert-mother .date-block { color: #880e4f; font-size: 0.88rem; text-align: center; }
+.cert-mother .stamp-area { width: 75px; height: 75px; border: 2px dashed rgba(233,30,99,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(233,30,99,0.3); font-size: 0.6rem; text-align: center; cursor: pointer; }
+
+/* ---- 8. أزرق هادئ ---- */
+.cert-blue {
+  width: 297mm; min-height: 210mm;
+  background: linear-gradient(135deg, #e3f2fd 0%, #fff 50%, #e8eaf6 100%);
+  position: relative; overflow: hidden; direction: rtl;
+  font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+.cert-blue .cert-border { position: absolute; inset: 10px; border: 2px solid #1565c0; z-index: 2; pointer-events: none; }
+.cert-blue .cert-border2 { position: absolute; inset: 14px; border: 1px solid rgba(21,101,192,0.3); z-index: 2; pointer-events: none; }
+.cert-blue .cert-content { padding: 28px 55px; position: relative; z-index: 4; }
+.cert-blue .cert-header { text-align: center; margin-bottom: 14px; border-bottom: 2px solid rgba(21,101,192,0.4); padding-bottom: 10px; }
+.cert-blue .cert-header .org-name { color: #0d47a1; font-size: 1.1rem; font-weight: bold; }
+.cert-blue .cert-title { font-size: 2.2rem; color: #1565c0; text-align: center; font-weight: bold; margin: 12px 0 8px; }
+.cert-blue .cert-subtitle { color: #1976d2; text-align: center; font-size: 0.95rem; margin-bottom: 14px; }
+.cert-blue .cert-body { color: #1a237e; font-size: 1.05rem; line-height: 2.1; text-align: center; padding: 14px 20px; background: rgba(21,101,192,0.06); border: 1px solid rgba(21,101,192,0.2); border-radius: 8px; margin-bottom: 12px; }
+.cert-blue .cert-name-line { font-size: 1.5rem; color: #0d47a1; font-weight: bold; border-bottom: 1px solid #1565c0; display: inline-block; min-width: 250px; padding: 2px 10px; cursor: text; }
+.cert-blue .cert-footer { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(21,101,192,0.3); }
+.cert-blue .sig-block { text-align: center; min-width: 120px; }
+.cert-blue .sig-block .sig-label { color: #1565c0; font-size: 0.8rem; }
+.cert-blue .sig-line { border-bottom: 1px solid #1565c0; height: 28px; margin-bottom: 3px; }
+.cert-blue .sig-block .sig-name { color: #0d47a1; font-size: 0.82rem; font-weight: bold; cursor: text; }
+.cert-blue .date-block { color: #1565c0; font-size: 0.88rem; text-align: center; }
+.cert-blue .stamp-area { width: 75px; height: 75px; border: 2px dashed rgba(21,101,192,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: rgba(21,101,192,0.3); font-size: 0.6rem; text-align: center; cursor: pointer; }
+
+/* ---- مشترك لجميع القوالب ---- */
+.cert-logo-area { display: flex; justify-content: center; margin-bottom: 8px; }
+.cert-logo-area img { max-height: 60px; max-width: 120px; object-fit: contain; }
+.cert-logo-area .logo-placeholder { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; text-align: center; opacity: 0.6; }
+.cert-sig-img { max-height: 40px; max-width: 90px; object-fit: contain; margin: 2px auto; display: block; }
+.cert-stamp-img { max-width: 70px; max-height: 70px; object-fit: contain; border-radius: 50%; display: block; margin: auto; }
+
+[contenteditable] { outline: none; cursor: text; }
+[contenteditable]:hover { background: rgba(201,168,76,0.08); border-radius: 4px; }
+[contenteditable]:focus { background: rgba(201,168,76,0.15); border-radius: 4px; outline: 1px dashed rgba(201,168,76,0.5); }
+
+/* ========== الفوتر ========== */
+.site-footer {
+  background: #0a1228;
+  border-top: 2px solid rgba(201,168,76,0.3);
+  padding: 14px 30px;
+  display: flex; align-items: center; justify-content: center; gap: 20px;
+  color: #7090c0; font-size: 0.85rem; flex-wrap: wrap; text-align: center;
+}
+.site-footer a { color: var(--gold-light); text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+
+/* ========== الطباعة ========== */
+@media print {
+  * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
+  body { background: #fff !important; margin: 0 !important; padding: 0 !important; }
+  .site-header, .sidebar, .preview-label, .site-footer, .no-print { display: none !important; }
+  .main-container { display: block !important; }
+  .preview-area { padding: 0 !important; background: #fff !important; }
+  .certificate-wrapper { box-shadow: none !important; margin: 0 !important; border-radius: 0 !important; }
+  .cert-classic, .cert-gold, .cert-school, .cert-national, .cert-simple, .cert-achievement, .cert-mother, .cert-blue {
+    width: 297mm !important; min-height: 210mm !important; max-width: 297mm !important;
+    page-break-after: always;
+    margin: 0 !important; overflow: hidden !important;
+  }
+  .bulk-print-container .certificate-wrapper {
+    page-break-after: always;
+    margin: 0 !important;
+  }
+  .bulk-print-container .certificate-wrapper:last-child { page-break-after: avoid; }
+  @page { size: A4 landscape; margin: 0; }
+}
+
+/* ========== تأثيرات ========== */
+.fade-in { animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+.notification {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  background: #1b5e20; color: #fff; padding: 12px 28px;
+  border-radius: 30px; font-size: 0.9rem; z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  animation: notifAnim 0.3s ease;
+}
+@keyframes notifAnim { from { opacity: 0; top: -10px; } to { opacity: 1; top: 20px; } }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201,168,76,0.6); }
+
+.divider { height: 1px; background: rgba(201,168,76,0.2); margin: 14px 0; }
+</style>
+</head>
+<body>
+
+<!-- ====== الهيدر ====== -->
+<header class="site-header">
+  <div>
+    <h1>🏅 منصة توليد شهادات الشكر والتقدير</h1>
+    <div class="subtitle">أنشئ شهاداتك الرسمية بكل سهولة وأناقة — للمدارس السعودية</div>
+  </div>
+  <div class="header-logo">🎓</div>
+</header>
+
+<!-- ====== الحاوية الرئيسية ====== -->
+<div class="main-container">
+
+  <!-- ====== الشريط الجانبي ====== -->
+  <aside class="sidebar">
+
+    <!-- نوع الشهادة -->
+    <div class="section-title">📋 نوع الشهادة</div>
+    <div class="cert-types" id="certTypesContainer">
+      <button class="cert-type-btn active" onclick="setCertType(this,'student')" title="شهادة طالب/ة">🎒 طالب/ة</button>
+      <button class="cert-type-btn" onclick="setCertType(this,'teacher')" title="شهادة معلم/ة">👩‍🏫 معلم/ة</button>
+      <button class="cert-type-btn" onclick="setCertType(this,'parent')" title="ولي الأمر">👪 ولي أمر</button>
+      <button class="cert-type-btn" onclick="setCertType(this,'excellence')" title="شهادة تميز">⭐ تميز</button>
+      <button class="cert-type-btn" onclick="setCertType(this,'achievement')" title="شهادة إنجاز">🏆 إنجاز</button>
+      <button class="cert-type-btn" onclick="setCertType(this,'participation')" title="شهادة مشاركة">🤝 مشاركة</button>
+      <button class="cert-type-btn" onclick="setCertType(this,'attendance')" title="شهادة حضور">✅ حضور</button>
+      <button class="cert-type-btn" onclick="setCertType(this,'initiative')" title="شهادة مبادرة">💡 مبادرة</button>
+    </div>
+
+    <!-- القوالب -->
+    <div class="section-title">🎨 القالب</div>
+    <div class="templates-grid">
+      <button class="template-btn active" onclick="setTemplate(this,'classic')">🏛️<br>رسمي كلاسيكي</button>
+      <button class="template-btn" onclick="setTemplate(this,'gold')">✨<br>ذهبي فاخر</button>
+      <button class="template-btn" onclick="setTemplate(this,'school')">🌟<br>مدرسي مبهج</button>
+      <button class="template-btn" onclick="setTemplate(this,'national')">🇸🇦<br>وطني سعودي</button>
+      <button class="template-btn" onclick="setTemplate(this,'simple')">📄<br>اقتصادي</button>
+      <button class="template-btn" onclick="setTemplate(this,'achievement')">🏆<br>تميز وإنجاز</button>
+      <button class="template-btn" onclick="setTemplate(this,'mother')">🌸<br>شهادة الأم</button>
+      <button class="template-btn" onclick="setTemplate(this,'blue')">💙<br>أزرق هادئ</button>
+    </div>
+
+    <!-- النموذج -->
+    <div class="section-title">✏️ بيانات الشهادة</div>
+
+    <div class="form-group">
+      <label>🏫 اسم الجهة / المدرسة</label>
+      <input type="text" id="f_org" placeholder="مدرسة النور الابتدائية" oninput="updateCert()">
+    </div>
+    <div class="form-group">
+      <label>📌 عنوان الشهادة</label>
+      <input type="text" id="f_title" placeholder="شهادة شكر وتقدير" oninput="updateCert()">
+    </div>
+    <div class="form-group">
+      <label>👤 اسم المُكرَّم/ة</label>
+      <input type="text" id="f_name" placeholder="الاسم الكامل" oninput="updateCert()">
+    </div>
+    <div class="form-group">
+      <label>🎖️ الصفة</label>
+      <select id="f_role" onchange="updateCert()">
+        <option value="الطالبة المتميزة">الطالبة المتميزة</option>
+        <option value="الطالب المتميز">الطالب المتميز</option>
+        <option value="المعلمة الفاضلة">المعلمة الفاضلة</option>
+        <option value="المعلم الفاضل">المعلم الفاضل</option>
+        <option value="ولي الأمر الكريم">ولي الأمر الكريم</option>
+        <option value="القائدة الفاضلة">القائدة الفاضلة</option>
+        <option value="الموظفة المثالية">الموظفة المثالية</option>
+        <option value="الأم الفاضلة">الأم الفاضلة</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>📝 نص الشهادة</label>
+      <textarea id="f_body" placeholder="أكتب هنا نص الشهادة..." oninput="updateCert()"></textarea>
+    </div>
+    <!-- عبارات جاهزة -->
+    <div class="phrases-container">
+      <button class="phrase-btn" onclick="addPhrase('تقديرًا لتميزكم وعطائكم المبارك')">تقديرًا لتميزكم</button>
+      <button class="phrase-btn" onclick="addPhrase('نظير جهودكم المباركة وعطائكم المتميز')">نظير جهودكم</button>
+      <button class="phrase-btn" onclick="addPhrase('لمشاركتكم الفاعلة والمثمرة')">لمشاركتكم الفاعلة</button>
+      <button class="phrase-btn" onclick="addPhrase('لإبداعكم وتميزكم المشهود')">لإبداعكم وتميزكم</button>
+      <button class="phrase-btn" onclick="addPhrase('عرفانًا بجهودكم وتعاونكم الكريم')">عرفانًا بجهودكم</button>
+      <button class="phrase-btn" onclick="addPhrase('سائلين الله لكم دوام التوفيق والتميز')">دوام التوفيق</button>
+      <button class="phrase-btn" onclick="addPhrase('لحرصكم ومتابعتكم الدؤوبة')">لحرصكم ومتابعتكم</button>
+      <button class="phrase-btn" onclick="addPhrase('وقدرًا لما تبذلونه من جهد لا ينقطع')">لا ينقطع</button>
+    </div>
+
+    <div class="form-group">
+      <label>📅 التاريخ</label>
+      <input type="text" id="f_date" placeholder="١٤٤٦/٠٩/١٥ هـ" oninput="updateCert()">
+    </div>
+    <div class="form-group">
+      <label>🏅 اسم المدير/ة</label>
+      <input type="text" id="f_director" placeholder="اسم المدير/ة" oninput="updateCert()">
+    </div>
+    <div class="form-group">
+      <label>👩‍🏫 اسم المعلمة / المنسق/ة</label>
+      <input type="text" id="f_teacher" placeholder="اسم المعلمة / المنسق/ة" oninput="updateCert()">
+    </div>
+    <div class="form-group">
+      <label>📝 ملاحظات (اختياري)</label>
+      <input type="text" id="f_notes" placeholder="أي ملاحظات إضافية..." oninput="updateCert()">
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- خيارات الإظهار -->
+    <div class="section-title">👁️ إظهار / إخفاء</div>
+    <div class="toggle-row">
+      <label class="toggle-item"><input type="checkbox" id="show_logo" checked onchange="updateCert()"> الشعار</label>
+      <label class="toggle-item"><input type="checkbox" id="show_stamp" checked onchange="updateCert()"> الختم</label>
+      <label class="toggle-item"><input type="checkbox" id="show_sig" checked onchange="updateCert()"> التوقيع</label>
+      <label class="toggle-item"><input type="checkbox" id="show_date" checked onchange="updateCert()"> التاريخ</label>
+      <label class="toggle-item"><input type="checkbox" id="show_notes" checked onchange="updateCert()"> الملاحظات</label>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- التخصيص -->
+    <div class="section-title">🎨 التخصيص</div>
+    <div class="customizer">
+      <div class="row">
+        <label>لون الإطار</label>
+        <input type="color" id="border_color" value="#c9a84c" onchange="applyCustomBorder()">
+      </div>
+      <div class="row">
+        <label>حجم الخط</label>
+        <input type="range" id="font_size" min="80" max="130" value="100" oninput="applyFontSize()">
+      </div>
+      <div class="row">
+        <label>الخط</label>
+        <select id="font_family" onchange="applyFont()">
+          <option value="'Segoe UI',Tahoma,Arial,sans-serif">Segoe UI</option>
+          <option value="'Tahoma',Arial,sans-serif">Tahoma</option>
+          <option value="'Arial',sans-serif">Arial</option>
+          <option value="'Times New Roman',serif">Times New Roman</option>
+          <option value="'Courier New',monospace">Courier New</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- رفع الملفات -->
+    <div class="section-title">📁 رفع الملفات</div>
+    <label class="upload-btn" for="upload_logo">📤 رفع شعار المدرسة / الجهة</label>
+    <input type="file" id="upload_logo" accept="image/*" style="display:none" onchange="uploadLogo(this)">
+    <img id="logo_preview" class="upload-preview">
+
+    <label class="upload-btn" for="upload_stamp">🔵 رفع صورة الختم</label>
+    <input type="file" id="upload_stamp" accept="image/*" style="display:none" onchange="uploadStamp(this)">
+    <img id="stamp_preview" class="upload-preview">
+
+    <label class="upload-btn" for="upload_sig">✍️ رفع صورة التوقيع</label>
+    <input type="file" id="upload_sig" accept="image/*" style="display:none" onchange="uploadSig(this)">
+    <img id="sig_preview" class="upload-preview">
+
+    <div class="divider"></div>
+
+    <!-- أزرار التحكم -->
+    <div class="section-title">⚙️ أدوات</div>
+    <div class="controls-row">
+      <button class="ctrl-btn btn-print" onclick="printSingle()">🖨️ طباعة</button>
+      <button class="ctrl-btn btn-new" onclick="newCert()">➕ جديد</button>
+    </div>
+    <div class="controls-row">
+      <button class="ctrl-btn btn-save" onclick="saveLocal()">💾 حفظ</button>
+      <button class="ctrl-btn btn-load" onclick="loadLocal()">📂 استرجاع</button>
+      <button class="ctrl-btn btn-clear" onclick="clearAll()">🗑️ مسح</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- الطباعة الجماعية -->
+    <div class="section-title">👥 طباعة جماعية</div>
+    <div class="bulk-section">
+      <div class="form-group" style="margin-bottom:8px">
+        <label>أدخل الأسماء (كل اسم في سطر)</label>
+        <textarea id="bulk_names" placeholder="فاطمة أحمد&#10;نور محمد&#10;سارة علي"></textarea>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="ctrl-btn btn-bulk" style="min-width:50%" onclick="addBulkNames()">➕ إضافة</button>
+        <button class="ctrl-btn btn-print" style="min-width:50%" onclick="printBulk()">🖨️ طباعة الكل</button>
+      </div>
+      <table class="names-table" id="namesTable">
+        <thead><tr><th>#</th><th>الاسم</th><th>حذف</th></tr></thead>
+        <tbody id="namesTbody"></tbody>
+      </table>
+    </div>
+
+  </aside>
+
+  <!-- ====== منطقة المعاينة ====== -->
+  <main class="preview-area">
+    <div class="preview-label no-print">👁️ معاينة الشهادة — انقر على أي نص لتعديله مباشرة</div>
+    <div class="certificate-wrapper fade-in" id="certWrapper">
+      <!-- تُحقن الشهادة هنا بواسطة JS -->
+    </div>
+  </main>
+
+</div>
+
+<!-- ====== الفوتر ====== -->
+<footer class="site-footer">
+  <span>منصة شهادات الشكر والتقدير</span>
+  <span>|</span>
+  <span>تصميم د/ فواز</span>
+  <span>|</span>
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">📱 تفضل للمزيد: t.me/TAqhjT3MFVE1Yzk0</a>
+</footer>
+
+<script>
+/* ======================================================
+   متغيرات الحالة
+   ====================================================== */
+let currentTemplate = 'classic';
+let currentType = 'student';
+let logoDataUrl = '';
+let stampDataUrl = '';
+let sigDataUrl = '';
+let namesList = [];
+
+// نصوص جاهزة حسب نوع الشهادة
+const certTexts = {
+  student: {
+    title: 'شهادة شكر وتقدير',
+    subtitle: 'تُمنح هذه الشهادة لـ',
+    body: 'يسعدنا أن نُكرّم الطالب/ة المتميز/ة {اسم المكرّم} تقديرًا لتميزه/ا وجهوده/ا المباركة، وعرفانًا بحسن أخلاقه/ا وانضباطه/ا المشهود، سائلين المولى عز وجل أن يُوفّقه/ا ويُبارك في مسيرته/ا العلمية.',
+  },
+  teacher: {
+    title: 'شهادة شكر وتقدير',
+    subtitle: 'تُمنح هذه الشهادة للمعلمة الفاضلة',
+    body: 'نتقدم بخالص الشكر والتقدير والعرفان إلى المعلمة/المعلم القدير/ة {اسم المكرّم} نظير جهودها/جهوده المباركة وعطائها/عطائه المتميز في خدمة طلابها/طلابه، وما تبذله/يبذله من رسالة نبيلة في بناء الأجيال، سائلين الله أن يجزيها/يجزيه خير الجزاء.',
+  },
+  parent: {
+    title: 'شهادة شكر وتقدير',
+    subtitle: 'إلى',
+    body: 'بكل معاني الامتنان والعرفان، أتوجه بالشكر الجزيل والتقدير الصادق إلى {اسم المكرّم} على حسن متابعتها/متابعته ودعمها/دعمه المتواصل، فبفضل تعاونها/تعاونه المثمر وحضورها/حضوره الفاعل نرى هذا التميز والإبداع في مستوى أبنائنا الدراسي والسلوكي.',
+  },
+  excellence: {
+    title: 'شهادة تميز',
+    subtitle: 'تُمنح هذه الشهادة تقديرًا للتميز والإبداع لـ',
+    body: 'يسعدنا أن نُكرّم {اسم المكرّم} وذلك لتميزه/ا واجتهاده/ا ونبوغه/ا المشهود في مسيرته/ا العلمية، ولما أثبته/ا من قدرات ومهارات رفيعة تُعبّر عن همّة عالية وطموح واسع، نسأل الله أن يُديم عليه/ا نعمة التميز والتوفيق.',
+  },
+  achievement: {
+    title: 'شهادة إنجاز',
+    subtitle: 'تُمنح هذه الشهادة اعترافًا بالإنجاز المتميز لـ',
+    body: 'نُقدّم لـ {اسم المكرّم} شهادة الإنجاز المتميز تقديرًا لما حققه/ته من إنجاز رائع يُعكس مستوى الطموح والمثابرة، ولما بذله/ته من جهد مضني وتحمّل مسؤولية عالية في إتمام هذا الإنجاز المشهود، نسأل الله له/لها دوام النجاح والتوفيق.',
+  },
+  participation: {
+    title: 'شهادة مشاركة',
+    subtitle: 'تُمنح هذه الشهادة لـ',
+    body: 'نُقدّر مشاركة {اسم المكرّم} الفاعلة والمثمرة، ونثمّن حضوره/ها وإسهامه/ها الكريم، آملين أن تكون هذه المشاركة خطوة في مسيرة متألقة مليئة بالعطاء والإبداع، جزاه/ا الله خيرًا وبارك في مسيرته/ا.',
+  },
+  attendance: {
+    title: 'شهادة حضور',
+    subtitle: 'تُمنح لـ',
+    body: 'نشهد بحضور {اسم المكرّم} وانتظامه/ا، ونقدّر التزامه/ا وحرصه/ا على الاستفادة والإفادة، سائلين الله أن يُبارك في علمه/ا ووقته/ا ويُوفّقه/ا في مسيرته/ا.',
+  },
+  initiative: {
+    title: 'شهادة مبادرة',
+    subtitle: 'تقديرًا للمبادرة المتميزة من',
+    body: 'نُقدّر مبادرة {اسم المكرّم} الرائعة وروحه/ها الإيجابية، ونثمّن ما أبدى/أبدت من فكر خلاق وإحساس عالٍ بالمسؤولية، نسأل الله أن يُديم عليه/ا نعمة العطاء ويُوفّقه/ا في مبادراته/ا القادمة.',
+  }
+};
+
+/* ======================================================
+   توليد محتوى الشهادة
+   ====================================================== */
+function getCertContent(name) {
+  const org = document.getElementById('f_org').value || 'اسم الجهة / المدرسة';
+  const title = document.getElementById('f_title').value || certTexts[currentType]?.title || 'شهادة شكر وتقدير';
+  const recipientName = name || document.getElementById('f_name').value || 'اسم المُكرَّم/ة';
+  const role = document.getElementById('f_role').value || 'الطالبة المتميزة';
+  let body = document.getElementById('f_body').value || (certTexts[currentType]?.body || '').replace('{اسم المكرّم}', recipientName);
+  const date = document.getElementById('f_date').value || new Date().toLocaleDateString('ar-SA-u-ca-islamic');
+  const director = document.getElementById('f_director').value || 'اسم المدير/ة';
+  const teacher = document.getElementById('f_teacher').value || 'اسم المعلمة / المنسق/ة';
+  const notes = document.getElementById('f_notes').value || '';
+  const showLogo = document.getElementById('show_logo').checked;
+  const showStamp = document.getElementById('show_stamp').checked;
+  const showSig = document.getElementById('show_sig').checked;
+  const showDate = document.getElementById('show_date').checked;
+  const showNotes = document.getElementById('show_notes').checked;
+  const subtitle = certTexts[currentType]?.subtitle || 'تُمنح هذه الشهادة لـ';
+
+  const logoHtml = showLogo ? (logoDataUrl 
+    ? `<img src="${logoDataUrl}" style="max-height:60px;max-width:120px;object-fit:contain;display:block;margin:0 auto 6px;">`
+    : `<div class="logo-placeholder" style="width:60px;height:60px;border-radius:50%;border:1px dashed rgba(150,150,150,0.4);display:flex;align-items:center;justify-content:center;font-size:0.65rem;color:rgba(150,150,150,0.5);margin:0 auto 6px;">شعار<br>المدرسة</div>`)
+    : '';
+
+  const stampHtml = showStamp ? (stampDataUrl
+    ? `<img src="${stampDataUrl}" class="cert-stamp-img">`
+    : `<div style="width:70px;height:70px;border:2px dashed rgba(150,150,150,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.55rem;text-align:center;color:rgba(150,150,150,0.4);margin:auto;">الختم</div>`)
+    : '<div style="width:70px;height:70px;"></div>';
+
+  const sigImgHtml = showSig && sigDataUrl 
+    ? `<img src="${sigDataUrl}" style="max-height:38px;max-width:90px;object-fit:contain;display:block;margin:2px auto;">`
+    : '';
+
+  const dateHtml = showDate ? `<div class="date-block"><div style="font-size:0.78rem;opacity:0.7;">التاريخ</div><div contenteditable="true" style="font-weight:bold;">${date}</div></div>` : '';
+  const notesHtml = showNotes && notes ? `<div style="margin-top:8px;font-size:0.82rem;opacity:0.7;text-align:center;">ملاحظة: ${notes}</div>` : '';
+
+  return { org, title, recipientName, role, body, date, director, teacher, 
+           notes, logoHtml, stampHtml, sigImgHtml, dateHtml, notesHtml, subtitle };
+}
+
+/* ======================================================
+   بناء القوالب HTML
+   ====================================================== */
+function buildCertHTML(template, data, single=true) {
+  const { org, title, recipientName, role, body, director, teacher, 
+          logoHtml, stampHtml, sigImgHtml, dateHtml, notesHtml, subtitle } = data;
+  const wrapStart = single ? '' : '';
+  const wrapEnd = single ? '' : '';
+
+  const templates = {
+    classic: `
+      <div class="cert-classic">
+        <div class="cert-outer-border"></div>
+        <div class="cert-inner-border"></div>
+        <div class="corner corner-tl"></div><div class="corner corner-tr"></div>
+        <div class="corner corner-bl"></div><div class="corner corner-br"></div>
+        <div class="cert-content">
+          <div class="cert-header">
+            <div class="cert-logo-area">${logoHtml}</div>
+            <div class="org-name" contenteditable="true">${org}</div>
+            <div style="font-size:0.8rem;color:#8a6a1c;margin-top:3px;">بسم الله الرحمن الرحيم</div>
+          </div>
+          <div class="cert-title" contenteditable="true">${title}</div>
+          <div class="cert-subtitle" contenteditable="true">${subtitle} <strong>${role}</strong></div>
+          <div class="cert-body">
+            <div contenteditable="true" class="cert-name-line">${recipientName}</div>
+            <br>
+            <div contenteditable="true">${body}</div>
+          </div>
+          ${notesHtml}
+          <div class="cert-footer">
+            <div class="sig-block">
+              <div class="sig-label">المدير/ة</div>
+              <div class="sig-line">${sigImgHtml}</div>
+              <div class="sig-name" contenteditable="true">${director}</div>
+            </div>
+            ${dateHtml}
+            <div style="text-align:center;">
+              <div style="font-size:0.78rem;color:#5a4010;margin-bottom:4px;">الختم</div>
+              ${stampHtml}
+            </div>
+            <div class="sig-block">
+              <div class="sig-label">المعلمة / المنسق/ة</div>
+              <div class="sig-line"></div>
+              <div class="sig-name" contenteditable="true">${teacher}</div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+
+    gold: `
+      <div class="cert-gold">
+        <div class="gold-border"></div><div class="gold-border2"></div>
+        <div class="corner-ornament tl">❧</div><div class="corner-ornament tr">❧</div>
+        <div class="corner-ornament bl">❧</div><div class="corner-ornament br">❧</div>
+        <div class="cert-content">
+          <div class="cert-header">
+            <div class="cert-logo-area">${logoHtml}</div>
+            <div class="org-name" contenteditable="true">${org}</div>
+          </div>
+          <div class="cert-title" contenteditable="true">${title}</div>
+          <div class="cert-subtitle" contenteditable="true">${subtitle}</div>
+          <div class="cert-body">
+            <div contenteditable="true" class="cert-name-line">${recipientName}</div>
+            <div style="font-size:0.85rem;color:rgba(240,224,192,0.7);margin:4px 0;">${role}</div>
+            <br>
+            <div contenteditable="true">${body}</div>
+          </div>
+          ${notesHtml}
+          <div class="cert-footer">
+            <div class="sig-block">
+              <div class="sig-label">المدير/ة</div>
+              <div class="sig-line">${sigImgHtml}</div>
+              <div class="sig-name" contenteditable="true">${director}</div>
+            </div>
+            ${dateHtml}
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem;color:#d4a843;margin-bottom:3px;">الختم الرسمي</div>
+              ${stampHtml}
+            </div>
+            <div class="sig-block">
+              <div class="sig-label">المعلمة / المنسق/ة</div>
+              <div class="sig-line"></div>
+              <div class="sig-name" contenteditable="true">${teacher}</div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+
+    school: `
+      <div class="cert-school">
+        <div class="stars-bg" id="starsDiv">${generateStars()}</div>
+        <div class="cert-border"></div><div class="cert-border2"></div>
+        <div class="cert-content">
+          <div class="cert-header">
+            <div class="cert-logo-area">${logoHtml}</div>
+            <div class="org-name" contenteditable="true">${org}</div>
+          </div>
+          <div class="cert-title" contenteditable="true">⭐ ${title} ⭐</div>
+          <div class="cert-subtitle" contenteditable="true">${subtitle}</div>
+          <div class="cert-body">
+            <div contenteditable="true" class="cert-name-line">${recipientName}</div>
+            <div style="font-size:0.85rem;color:#388e3c;margin:4px 0;">${role}</div>
+            <br>
+            <div contenteditable="true">${body}</div>
+          </div>
+          ${notesHtml}
+          <div class="cert-footer">
+            <div class="sig-block">
+              <div class="sig-label">المدير/ة</div>
+              <div class="sig-line">${sigImgHtml}</div>
+              <div class="sig-name" contenteditable="true">${director}</div>
+            </div>
+            ${dateHtml}
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem;color:#e65100;margin-bottom:3px;">الختم</div>
+              ${stampHtml}
+            </div>
+            <div class="sig-block">
+              <div class="sig-label">المعلمة المحبة</div>
+              <div class="sig-line"></div>
+              <div class="sig-name" contenteditable="true">${teacher}</div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+
+    national: `
+      <div class="cert-national">
+        <div class="green-stripe-top"></div><div class="green-stripe-bottom"></div>
+        <div class="cert-border"></div><div class="cert-border2"></div>
+        <div class="corner-green tl"></div><div class="corner-green tr"></div>
+        <div class="corner-green bl"></div><div class="corner-green br"></div>
+        <div class="cert-content">
+          <div class="cert-header">
+            <div class="cert-logo-area">${logoHtml}</div>
+            <div style="font-size:0.8rem;color:#2e7d32;margin-bottom:4px;">المملكة العربية السعودية — وزارة التعليم</div>
+            <div class="org-name" contenteditable="true">${org}</div>
+          </div>
+          <div class="cert-title" contenteditable="true">${title}</div>
+          <div class="cert-subtitle" contenteditable="true">${subtitle}</div>
+          <div class="cert-body">
+            <div contenteditable="true" class="cert-name-line">${recipientName}</div>
+            <div style="font-size:0.85rem;color:#2e7d32;margin:4px 0;">${role}</div>
+            <br>
+            <div contenteditable="true">${body}</div>
+          </div>
+          ${notesHtml}
+          <div class="cert-footer">
+            <div class="sig-block">
+              <div class="sig-label">مديرة/مدير المدرسة</div>
+              <div class="sig-line">${sigImgHtml}</div>
+              <div class="sig-name" contenteditable="true">${director}</div>
+            </div>
+            ${dateHtml}
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem;color:#2e7d32;margin-bottom:3px;">الختم الرسمي</div>
+              ${stampHtml}
+            </div>
+            <div class="sig-block">
+              <div class="sig-label">المعلمة / المنسق/ة</div>
+              <div class="sig-line"></div>
+              <div class="sig-name" contenteditable="true">${teacher}</div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+
+    simple: `
+      <div class="cert-simple">
+        <div class="cert-border"></div>
+        <div class="cert-content">
+          <div class="cert-header">
+            <div class="cert-logo-area">${logoHtml}</div>
+            <div class="org-name" contenteditable="true">${org}</div>
+          </div>
+          <div class="cert-title" contenteditable="true">${title}</div>
+          <div class="cert-subtitle" contenteditable="true">${subtitle}</div>
+          <div class="cert-body">
+            <div contenteditable="true" class="cert-name-line">${recipientName}</div>
+            <div style="font-size:0.85rem;color:#555;margin:4px 0;">${role}</div>
+            <br>
+            <div contenteditable="true">${body}</div>
+          </div>
+          ${notesHtml}
+          <div class="cert-footer">
+            <div class="sig-block">
+              <div class="sig-label">المدير/ة</div>
+              <div class="sig-line">${sigImgHtml}</div>
+              <div class="sig-name" contenteditable="true">${director}</div>
+            </div>
+            ${dateHtml}
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem;color:#555;margin-bottom:3px;">الختم</div>
+              ${stampHtml}
+            </div>
+            <div class="sig-block">
+              <div class="sig-label">المعلمة / المنسق/ة</div>
+              <div class="sig-line"></div>
+              <div class="sig-name" contenteditable="true">${teacher}</div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+
+    achievement: `
+      <div class="cert-achievement">
+        <div class="ribbon-top"></div><div class="ribbon-bottom"></div>
+        <div class="star-burst">${generateAchievStars()}</div>
+        <div class="cert-border"></div>
+        <div class="cert-content">
+          <div class="cert-header">
+            <div class="cert-logo-area">${logoHtml}</div>
+            <div class="org-name" contenteditable="true">${org}</div>
+            <div style="color:#b39ddb;font-size:0.8rem;margin-top:3px;">🏆 شهادة التميز والإنجاز 🏆</div>
+          </div>
+          <div class="cert-title" contenteditable="true">${title}</div>
+          <div class="cert-subtitle" contenteditable="true">${subtitle}</div>
+          <div class="cert-body">
+            <div contenteditable="true" class="cert-name-line">${recipientName}</div>
+            <div style="font-size:0.85rem;color:#b39ddb;margin:4px 0;">${role}</div>
+            <br>
+            <div contenteditable="true">${body}</div>
+          </div>
+          ${notesHtml}
+          <div class="cert-footer">
+            <div class="sig-block">
+              <div class="sig-label">المدير/ة</div>
+              <div class="sig-line">${sigImgHtml}</div>
+              <div class="sig-name" contenteditable="true">${director}</div>
+            </div>
+            ${dateHtml}
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem;color:#b39ddb;margin-bottom:3px;">الختم</div>
+              ${stampHtml}
+            </div>
+            <div class="sig-block">
+              <div class="sig-label">المعلمة / المنسق/ة</div>
+              <div class="sig-line"></div>
+              <div class="sig-name" contenteditable="true">${teacher}</div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+
+    mother: `
+      <div class="cert-mother">
+        <div class="cert-border"></div><div class="cert-border2"></div>
+        <div class="floral-corner tl">🌸</div><div class="floral-corner tr">🌸</div>
+        <div class="floral-corner bl">🌺</div><div class="floral-corner br">🌺</div>
+        <div class="cert-content">
+          <div class="cert-header">
+            <div class="cert-logo-area">${logoHtml}</div>
+            <div class="org-name" contenteditable="true">${org}</div>
+          </div>
+          <div class="cert-title" contenteditable="true">${title}</div>
+          <div class="cert-subtitle" contenteditable="true">إلى كل أم سهرت وتعبت وحرصت على أن يرى ابنها أو ابنتها النور في طريق العلم</div>
+          <div class="cert-body">
+            <div contenteditable="true" class="cert-name-line">${recipientName}</div>
+            <div style="font-size:0.85rem;color:#ad1457;margin:4px 0;">${role}</div>
+            <br>
+            <div contenteditable="true">${body}</div>
+          </div>
+          ${notesHtml}
+          <div class="cert-footer">
+            <div class="sig-block">
+              <div class="sig-label">المديرة/المعلمة</div>
+              <div class="sig-line">${sigImgHtml}</div>
+              <div class="sig-name" contenteditable="true">${director}</div>
+            </div>
+            ${dateHtml}
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem;color:#880e4f;margin-bottom:3px;">الختم</div>
+              ${stampHtml}
+            </div>
+            <div class="sig-block">
+              <div class="sig-label">معلمتك المحبة</div>
+              <div class="sig-line"></div>
+              <div class="sig-name" contenteditable="true">${teacher}</div>
+            </div>
+          </div>
+        </div>
+      </div>`,
+
+    blue: `
+      <div class="cert-blue">
+        <div class="cert-border"></div><div class="cert-border2"></div>
+        <div class="cert-content">
+          <div class="cert-header">
+            <div class="cert-logo-area">${logoHtml}</div>
+            <div class="org-name" contenteditable="true">${org}</div>
+          </div>
+          <div class="cert-title" contenteditable="true">${title}</div>
+          <div class="cert-subtitle" contenteditable="true">${subtitle}</div>
+          <div class="cert-body">
+            <div contenteditable="true" class="cert-name-line">${recipientName}</div>
+            <div style="font-size:0.85rem;color:#1976d2;margin:4px 0;">${role}</div>
+            <br>
+            <div contenteditable="true">${body}</div>
+          </div>
+          ${notesHtml}
+          <div class="cert-footer">
+            <div class="sig-block">
+              <div class="sig-label">المدير/ة</div>
+              <div class="sig-line">${sigImgHtml}</div>
+              <div class="sig-name" contenteditable="true">${director}</div>
+            </div>
+            ${dateHtml}
+            <div style="text-align:center;">
+              <div style="font-size:0.75rem;color:#1565c0;margin-bottom:3px;">الختم</div>
+              ${stampHtml}
+            </div>
+            <div class="sig-block">
+              <div class="sig-label">المعلمة / المنسق/ة</div>
+              <div class="sig-line"></div>
+              <div class="sig-name" contenteditable="true">${teacher}</div>
+            </div>
+          </div>
+        </div>
+      </div>`
+  };
+
+  return templates[template] || templates['classic'];
+}
+
+function generateStars() {
+  let html = '';
+  const positions = [[5,5],[15,10],[25,3],[35,8],[45,5],[55,12],[65,4],[75,7],[85,9],[95,3],
+                     [8,90],[20,85],[30,92],[40,88],[50,95],[60,87],[70,91],[80,86],[92,93],
+                     [2,45],[10,30],[18,60],[88,25],[96,55],[92,40],[4,75]];
+  positions.forEach(([x,y]) => {
+    html += `<span class="star" style="left:${x}%;top:${y}%;">⭐</span>`;
+  });
+  return html;
+}
+
+function generateAchievStars() {
+  let html = '';
+  for(let i = 0; i < 20; i++) {
+    const x = Math.random() * 100;
+    const y = Math.random() * 100;
+    const size = 0.6 + Math.random() * 1.2;
+    html += `<span class="a-star" style="left:${x}%;top:${y}%;font-size:${size}rem;">★</span>`;
+  }
+  return html;
+}
+
+/* ======================================================
+   تحديث الشهادة
+   ====================================================== */
+function updateCert(name) {
+  const data = getCertContent(name);
+  const html = buildCertHTML(currentTemplate, data);
+  document.getElementById('certWrapper').innerHTML = html;
+  applyCustomizations();
+}
+
+function applyCustomizations() {
+  applyCustomBorder();
+  applyFontSize();
+  applyFont();
+}
+
+function applyCustomBorder() {
+  const color = document.getElementById('border_color').value;
+  const cert = document.querySelector('#certWrapper > div');
+  if (!cert) return;
+  const borders = cert.querySelectorAll('.cert-border, .cert-outer-border, .cert-inner-border, .cert-border2, .gold-border, .gold-border2');
+  borders.forEach(b => b.style.borderColor = color);
+  cert.querySelectorAll('.corner').forEach(c => {
+    c.style.borderColor = color;
+  });
+}
+
+function applyFontSize() {
+  const size = document.getElementById('font_size').value;
+  const cert = document.querySelector('#certWrapper > div');
+  if (cert) cert.style.fontSize = (size / 100) + 'rem';
+}
+
+function applyFont() {
+  const font = document.getElementById('font_family').value;
+  const cert = document.querySelector('#certWrapper > div');
+  if (cert) cert.style.fontFamily = font;
+}
+
+/* ======================================================
+   تعيين القالب والنوع
+   ====================================================== */
+function setTemplate(btn, tmpl) {
+  document.querySelectorAll('.template-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTemplate = tmpl;
+  updateCert();
+}
+
+function setCertType(btn, type) {
+  document.querySelectorAll('.cert-type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentType = type;
+  const ct = certTexts[type];
+  if (ct) {
+    const titleEl = document.getElementById('f_title');
+    const bodyEl = document.getElementById('f_body');
+    if (!titleEl.value || titleEl.dataset.auto === '1') { 
+      titleEl.value = ct.title; 
+      titleEl.dataset.auto = '1';
+    }
+    if (!bodyEl.value || bodyEl.dataset.auto === '1') { 
+      bodyEl.value = ct.body.replace('{اسم المكرّم}', document.getElementById('f_name').value || 'الاسم الكريم');
+      bodyEl.dataset.auto = '1';
+    }
+  }
+  updateCert();
+}
+
+/* ======================================================
+   العبارات الجاهزة
+   ====================================================== */
+function addPhrase(phrase) {
+  const el = document.getElementById('f_body');
+  el.value = (el.value ? el.value + '\n' : '') + phrase;
+  el.dataset.auto = '0';
+  updateCert();
+}
+
+/* ======================================================
+   رفع الملفات
+   ====================================================== */
+function uploadLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    logoDataUrl = e.target.result;
+    const prev = document.getElementById('logo_preview');
+    prev.src = logoDataUrl; prev.style.display = 'block';
+    updateCert();
+  };
+  reader.readAsDataURL(file);
+}
+
+function uploadStamp(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    stampDataUrl = e.target.result;
+    const prev = document.getElementById('stamp_preview');
+    prev.src = stampDataUrl; prev.style.display = 'block';
+    updateCert();
+  };
+  reader.readAsDataURL(file);
+}
+
+function uploadSig(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    sigDataUrl = e.target.result;
+    const prev = document.getElementById('sig_preview');
+    prev.src = sigDataUrl; prev.style.display = 'block';
+    updateCert();
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ======================================================
+   أزرار التحكم
+   ====================================================== */
+function printSingle() {
+  window.print();
+}
+
+function newCert() {
+  clearAll();
+  showNotif('✅ تم إنشاء شهادة جديدة');
+}
+
+function clearAll() {
+  ['f_org','f_title','f_name','f_body','f_date','f_director','f_teacher','f_notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.value = ''; el.dataset.auto = '0'; }
+  });
+  updateCert();
+  showNotif('🗑️ تم مسح البيانات');
+}
+
+function saveLocal() {
+  const data = {
+    org: document.getElementById('f_org').value,
+    title: document.getElementById('f_title').value,
+    name: document.getElementById('f_name').value,
+    role: document.getElementById('f_role').value,
+    body: document.getElementById('f_body').value,
+    date: document.getElementById('f_date').value,
+    director: document.getElementById('f_director').value,
+    teacher: document.getElementById('f_teacher').value,
+    notes: document.getElementById('f_notes').value,
+    template: currentTemplate,
+    type: currentType,
+    logoDataUrl, stampDataUrl, sigDataUrl,
+    namesList,
+    border_color: document.getElementById('border_color').value,
+    font_size: document.getElementById('font_size').value,
+    font_family: document.getElementById('font_family').value
+  };
+  try {
+    localStorage.setItem('cert_data', JSON.stringify(data));
+    showNotif('💾 تم حفظ البيانات بنجاح!');
+  } catch(e) { showNotif('⚠️ فشل الحفظ (تأكد من السماح بالتخزين)'); }
+}
+
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem('cert_data');
+    if (!raw) { showNotif('⚠️ لا توجد بيانات محفوظة'); return; }
+    const data = JSON.parse(raw);
+    document.getElementById('f_org').value = data.org || '';
+    document.getElementById('f_title').value = data.title || '';
+    document.getElementById('f_name').value = data.name || '';
+    document.getElementById('f_role').value = data.role || '';
+    document.getElementById('f_body').value = data.body || '';
+    document.getElementById('f_date').value = data.date || '';
+    document.getElementById('f_director').value = data.director || '';
+    document.getElementById('f_teacher').value = data.teacher || '';
+    document.getElementById('f_notes').value = data.notes || '';
+    document.getElementById('border_color').value = data.border_color || '#c9a84c';
+    document.getElementById('font_size').value = data.font_size || '100';
+    document.getElementById('font_family').value = data.font_family || "'Segoe UI',Tahoma,Arial,sans-serif";
+    if (data.logoDataUrl) { logoDataUrl = data.logoDataUrl; const p = document.getElementById('logo_preview'); p.src = logoDataUrl; p.style.display='block'; }
+    if (data.stampDataUrl) { stampDataUrl = data.stampDataUrl; const p = document.getElementById('stamp_preview'); p.src = stampDataUrl; p.style.display='block'; }
+    if (data.sigDataUrl) { sigDataUrl = data.sigDataUrl; const p = document.getElementById('sig_preview'); p.src = sigDataUrl; p.style.display='block'; }
+    if (data.namesList) { namesList = data.namesList; renderNamesTable(); }
+    if (data.template) {
+      currentTemplate = data.template;
+      document.querySelectorAll('.template-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('onclick').includes("'"+data.template+"'"));
+      });
+    }
+    if (data.type) {
+      currentType = data.type;
+      document.querySelectorAll('.cert-type-btn').forEach(b => {
+        b.classList.toggle('active', b.getAttribute('onclick').includes("'"+data.type+"'"));
+      });
+    }
+    updateCert();
+    showNotif('📂 تم استرجاع البيانات بنجاح!');
+  } catch(e) { showNotif('⚠️ خطأ في الاسترجاع'); }
+}
+
+/* ======================================================
+   الطباعة الجماعية
+   ====================================================== */
+function addBulkNames() {
+  const raw = document.getElementById('bulk_names').value.trim();
+  if (!raw) { showNotif('⚠️ أدخل الأسماء أولاً'); return; }
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  lines.forEach(name => {
+    if (!namesList.includes(name)) namesList.push(name);
+  });
+  document.getElementById('bulk_names').value = '';
+  renderNamesTable();
+  showNotif(`✅ تمت إضافة ${lines.length} اسم/أسماء`);
+}
+
+function renderNamesTable() {
+  const tbody = document.getElementById('namesTbody');
+  tbody.innerHTML = '';
+  namesList.forEach((name, idx) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${idx+1}</td><td contenteditable="true" onblur="editName(${idx},this.textContent)">${name}</td><td><button class="del-btn" onclick="deleteName(${idx})">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function editName(idx, newName) {
+  namesList[idx] = newName.trim();
+}
+
+function deleteName(idx) {
+  namesList.splice(idx, 1);
+  renderNamesTable();
+}
+
+function printBulk() {
+  if (namesList.length === 0) { showNotif('⚠️ أضف أسماء أولاً'); return; }
+  const wrapper = document.getElementById('certWrapper');
+  let allHTML = '';
+  namesList.forEach((name, idx) => {
+    const data = getCertContent(name);
+    const certHTML = buildCertHTML(currentTemplate, data);
+    allHTML += `<div class="certificate-wrapper bulk-cert" style="page-break-after:${idx < namesList.length-1 ? 'always' : 'avoid'};">${certHTML}</div>`;
+  });
+  const originalContent = wrapper.innerHTML;
+  wrapper.innerHTML = allHTML;
+  setTimeout(() => {
+    window.print();
+    wrapper.innerHTML = originalContent;
+    applyCustomizations();
+  }, 200);
+}
+
+/* ======================================================
+   إشعار
+   ====================================================== */
+function showNotif(msg) {
+  const existing = document.querySelector('.notification');
+  if (existing) existing.remove();
+  const notif = document.createElement('div');
+  notif.className = 'notification';
+  notif.textContent = msg;
+  document.body.appendChild(notif);
+  setTimeout(() => notif.remove(), 2500);
+}
+
+/* ======================================================
+   التهيئة
+   ====================================================== */
+window.addEventListener('DOMContentLoaded', () => {
+  // تاريخ اليوم
+  const today = new Date();
+  const opts = { year:'numeric', month:'long', day:'numeric', calendar:'islamic' };
+  try {
+    document.getElementById('f_date').value = today.toLocaleDateString('ar-SA-u-ca-islamic', opts);
+  } catch {
+    document.getElementById('f_date').value = today.toLocaleDateString('ar-SA');
+  }
+
+  // تحميل النص الافتراضي
+  const ct = certTexts[currentType];
+  if (ct) {
+    document.getElementById('f_title').value = ct.title;
+    document.getElementById('f_title').dataset.auto = '1';
+    document.getElementById('f_body').value = ct.body.replace('{اسم المكرّم}', 'الاسم الكريم');
+    document.getElementById('f_body').dataset.auto = '1';
+  }
+
+  updateCert();
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة شهادات الشكر والتقدير</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8cc7a;
+    --gold-dark: #8b6914;
+    --deep-navy: #0d1b2a;
+    --navy: #1b2a3b;
+    --cream: #fdf8f0;
+    --white: #ffffff;
+    --panel-bg: #f0ede8;
+    --border: #d4c5a0;
+    --text-primary: #1a1208;
+    --text-muted: #6b5d3f;
+    --accent-emerald: #1a5c3a;
+    --accent-burgundy: #6b1a2a;
+    --accent-royal: #1a2a6b;
+    --accent-rose: #8b3a5c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: linear-gradient(135deg, #1a1208 0%, #2d1f08 40%, #0d1b2a 100%);
+    min-height: 100vh;
+    color: var(--text-primary);
+    direction: rtl;
+  }
+
+  /* ===== HEADER ===== */
+  .app-header {
+    background: linear-gradient(90deg, var(--deep-navy), #1a1208, var(--deep-navy));
+    border-bottom: 2px solid var(--gold);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.2);
+  }
+  .app-header h1 {
+    font-family: 'Amiri', serif;
+    font-size: clamp(16px, 3vw, 22px);
+    color: var(--gold-light);
+    letter-spacing: 1px;
+  }
+  .header-badge {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    color: var(--deep-navy);
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ===== LAYOUT ===== */
+  .app-layout {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    min-height: calc(100vh - 56px);
+    gap: 0;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    background: linear-gradient(180deg, #f5f0e8 0%, #ede7d9 100%);
+    border-left: 2px solid var(--gold);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-section {
+    padding: 16px;
+    border-bottom: 1px solid #ddd0b0;
+  }
+  .sidebar-section:last-of-type { border-bottom: none; }
+
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gold-dark);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .section-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 14px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  /* Template Grid */
+  .template-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .template-card {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .template-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+  .template-card.active { border-color: var(--gold); box-shadow: 0 0 0 1px var(--gold); }
+  .template-card .thumb {
+    width: 100%;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    padding: 8px;
+    line-height: 1.4;
+    position: relative;
+  }
+  .template-card .thumb::after {
+    content: attr(data-label);
+    position: absolute;
+    bottom: 4px;
+    right: 4px;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 9px;
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+
+  /* Form Controls */
+  label { font-size: 12px; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 4px; margin-top: 10px; }
+  label:first-of-type { margin-top: 0; }
+  input[type="text"], textarea, select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    background: white;
+    color: var(--text-primary);
+    direction: rtl;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px rgba(201,168,76,0.15);
+  }
+  textarea { resize: vertical; min-height: 70px; line-height: 1.6; }
+
+  /* Color Swatches */
+  .color-swatches {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .swatch {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .swatch:hover { transform: scale(1.1); }
+  .swatch.active::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .swatch.active { border-color: var(--gold); }
+
+  /* Font size slider */
+  input[type="range"] {
+    width: 100%;
+    accent-color: var(--gold);
+    margin-top: 4px;
+  }
+
+  /* Action Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 8px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    width: 100%;
+    margin-bottom: 6px;
+  }
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: var(--deep-navy);
+    box-shadow: 0 3px 10px rgba(201,168,76,0.3);
+  }
+  .btn-gold:hover { background: linear-gradient(135deg, var(--gold-light), var(--gold)); transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+  .btn-navy {
+    background: var(--navy);
+    color: var(--gold-light);
+  }
+  .btn-navy:hover { background: var(--deep-navy); }
+
+  /* Footer credit */
+  .sidebar-credit {
+    margin-top: auto;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, var(--deep-navy), #1a2540);
+    text-align: center;
+    border-top: 1px solid var(--gold);
+  }
+  .sidebar-credit p {
+    color: var(--gold-light);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .sidebar-credit a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: white;
+    text-decoration: none;
+    font-size: 12px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 6px 14px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  .sidebar-credit a:hover {
+    background: rgba(201,168,76,0.3);
+    border-color: var(--gold);
+    color: var(--gold-light);
+  }
+
+  /* ===== PREVIEW AREA ===== */
+  .preview-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 24px;
+    gap: 20px;
+    background: repeating-conic-gradient(#1a1208 0% 25%, #1e1508 25% 50%) 0 0 / 30px 30px;
+    min-height: 600px;
+  }
+
+  .preview-toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 900px;
+  }
+  .preview-toolbar .btn {
+    width: auto;
+    margin-bottom: 0;
+    font-size: 12px;
+    padding: 7px 14px;
+  }
+
+  /* ===== CERTIFICATE WRAPPER ===== */
+  #cert-wrapper {
+    width: 100%;
+    max-width: 860px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,168,76,0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  /* ===== CERTIFICATE TEMPLATES ===== */
+  .certificate {
+    width: 100%;
+    aspect-ratio: 1.414 / 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    font-family: 'Amiri', serif;
+    direction: rtl;
+  }
+
+  /* ---- TEMPLATE 1: Royal Gold ---- */
+  .tpl-royal {
+    background: linear-gradient(160deg, #fdf8f0 0%, #f5edd8 50%, #ede0c0 100%);
+  }
+  .tpl-royal .cert-border-outer {
+    position: absolute;
+    inset: 12px;
+    border: 2.5px solid var(--gold);
+    pointer-events: none;
+  }
+  .tpl-royal .cert-border-inner {
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(201,168,76,0.5);
+    pointer-events: none;
+  }
+  .tpl-royal .corner-ornament {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    opacity: 0.8;
+  }
+  .tpl-royal .corner-ornament.tl { top: 10px; right: 10px; }
+  .tpl-royal .corner-ornament.tr { top: 10px; left: 10px; transform: scaleX(-1); }
+  .tpl-royal .corner-ornament.bl { bottom: 10px; right: 10px; transform: scaleY(-1); }
+  .tpl-royal .corner-ornament.br { bottom: 10px; left: 10px; transform: scale(-1); }
+
+  /* ---- TEMPLATE 2: Emerald ---- */
+  .tpl-emerald {
+    background: linear-gradient(160deg, #f0f7f4 0%, #e0f0e8 50%, #d0e8db 100%);
+  }
+  .tpl-emerald .cert-border-outer {
+    position: absolute;
+    inset: 12px;
+    border: 2.5px solid #1a5c3a;
+    pointer-events: none;
+  }
+  .tpl-emerald .cert-border-inner {
+    position: absolute;
+    inset: 18px;
+    border: 1px solid rgba(26,92,58,0.4);
+    pointer-events: none;
+  }
+
+  /* ---- TEMPLATE 3: Royal Blue ---- */
+  .tpl-royal-blue {
+    background: linear-gradient(160deg, #f0f3fa 0%, #e0e8f5 50%, #d0ddf0 100%);
+  }
+  .tpl-royal-blue .cert-border-outer {
+    position: absolute;
+    inset: 12px;
+    border: 2.5px solid #1a2a6b;
+    pointer-events: none;
+  }
+
+  /* ---- TEMPLATE 4: Dark Navy ---- */
+  .tpl-dark {
+    background: linear-gradient(160deg, #0d1b2a 0%, #1b2a3b 50%, #0d1b2a 100%);
+  }
+  .tpl-dark .cert-border-outer {
+    position: absolute;
+    inset: 12px;
+    border: 2px solid var(--gold);
+    pointer-events: none;
+  }
+  .tpl-dark .cert-border-inner {
+    position: absolute;
+    inset: 20px;
+    border: 1px solid rgba(201,168,76,0.3);
+    pointer-events: none;
+  }
+
+  /* ---- TEMPLATE 5: Burgundy ---- */
+  .tpl-burgundy {
+    background: linear-gradient(160deg, #faf0f3 0%, #f5e0e8 50%, #edd0db 100%);
+  }
+  .tpl-burgundy .cert-border-outer {
+    position: absolute;
+    inset: 12px;
+    border: 2.5px solid #6b1a2a;
+    pointer-events: none;
+  }
+
+  /* ---- TEMPLATE 6: Islamic Geometric ---- */
+  .tpl-islamic {
+    background: #fdf9f4;
+  }
+  .tpl-islamic::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(201,168,76,0.05) 0px, rgba(201,168,76,0.05) 1px, transparent 1px, transparent 20px),
+      repeating-linear-gradient(-45deg, rgba(201,168,76,0.05) 0px, rgba(201,168,76,0.05) 1px, transparent 1px, transparent 20px);
+    pointer-events: none;
+  }
+  .tpl-islamic .cert-border-outer {
+    position: absolute;
+    inset: 12px;
+    border: 3px double var(--gold);
+    pointer-events: none;
+  }
+
+  /* ===== CERTIFICATE CONTENT ===== */
+  .cert-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 60px;
+  }
+
+  .cert-logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 4px;
+  }
+  .cert-logo-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--cert-accent, var(--gold));
+  }
+  .cert-logo-placeholder {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 2px dashed var(--cert-accent, var(--gold));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    opacity: 0.5;
+    color: var(--cert-accent, var(--gold));
+    cursor: pointer;
+  }
+  .cert-org-name {
+    font-family: 'Amiri', serif;
+    font-size: clamp(13px, 2vw, 18px);
+    font-weight: 700;
+    color: var(--cert-accent, var(--gold-dark));
+    line-height: 1.4;
+  }
+
+  .cert-divider {
+    width: 60%;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--cert-accent, var(--gold)), transparent);
+    margin: 4px 0;
+  }
+  .cert-divider-sm {
+    width: 40%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cert-accent, var(--gold)), transparent);
+    margin: 2px 0;
+    opacity: 0.5;
+  }
+
+  .cert-title {
+    font-family: 'Amiri', serif;
+    font-size: clamp(22px, 4.5vw, 40px);
+    font-weight: 700;
+    color: var(--cert-accent, var(--gold-dark));
+    line-height: 1.3;
+    letter-spacing: 2px;
+  }
+  .cert-subtitle {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(11px, 1.8vw, 15px);
+    color: var(--cert-text, #5a4a2a);
+    letter-spacing: 1px;
+    opacity: 0.8;
+  }
+
+  .cert-intro {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(12px, 1.8vw, 15px);
+    color: var(--cert-text, #5a4a2a);
+    margin-top: 6px;
+  }
+
+  .cert-name-box {
+    border-bottom: 1.5px solid var(--cert-accent, var(--gold));
+    padding: 4px 30px;
+    min-width: 220px;
+  }
+  .cert-name {
+    font-family: 'Scheherazade New', serif;
+    font-size: clamp(18px, 3.5vw, 30px);
+    font-weight: 700;
+    color: var(--cert-accent, var(--gold-dark));
+    line-height: 1.4;
+  }
+
+  .cert-body {
+    font-family: 'Amiri', serif;
+    font-size: clamp(12px, 1.8vw, 15px);
+    color: var(--cert-text, #4a3a1a);
+    line-height: 1.9;
+    max-width: 80%;
+    text-align: center;
+  }
+
+  .cert-reason {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(11px, 1.7vw, 14px);
+    color: var(--cert-accent, var(--gold-dark));
+    font-weight: 700;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08), rgba(201,168,76,0.15));
+    border: 1px solid rgba(201,168,76,0.3);
+    padding: 6px 20px;
+    border-radius: 4px;
+    max-width: 70%;
+    line-height: 1.6;
+  }
+
+  .cert-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    padding: 0 40px;
+    margin-top: 10px;
+    gap: 20px;
+  }
+  .cert-sig-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+  }
+  .cert-sig-line {
+    width: 100px;
+    height: 1px;
+    background: var(--cert-accent, var(--gold));
+    opacity: 0.6;
+  }
+  .cert-sig-label {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(9px, 1.3vw, 11px);
+    color: var(--cert-text, #6b5d3f);
+    text-align: center;
+    line-height: 1.4;
+  }
+  .cert-seal {
+    width: 60px;
+    height: 60px;
+    border: 2px solid var(--cert-accent, var(--gold));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--cert-accent, var(--gold));
+    opacity: 0.4;
+    font-family: 'Amiri', serif;
+  }
+  .cert-date {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(10px, 1.4vw, 12px);
+    color: var(--cert-text, #6b5d3f);
+    opacity: 0.8;
+  }
+
+  /* Dark template overrides */
+  .tpl-dark .cert-title { color: var(--gold-light); }
+  .tpl-dark .cert-org-name { color: var(--gold-light); }
+  .tpl-dark .cert-subtitle { color: rgba(255,255,255,0.6); }
+  .tpl-dark .cert-intro { color: rgba(255,255,255,0.75); }
+  .tpl-dark .cert-body { color: rgba(255,255,255,0.8); }
+  .tpl-dark .cert-name { color: var(--gold-light); }
+  .tpl-dark .cert-reason {
+    color: var(--gold-light);
+    background: rgba(201,168,76,0.1);
+    border-color: rgba(201,168,76,0.3);
+  }
+  .tpl-dark .cert-sig-label { color: rgba(255,255,255,0.6); }
+  .tpl-dark .cert-date { color: rgba(255,255,255,0.5); }
+
+  /* ===== MOBILE RESPONSIVE ===== */
+  @media (max-width: 768px) {
+    .app-layout {
+      grid-template-columns: 1fr;
+    }
+    .sidebar {
+      border-left: none;
+      border-bottom: 2px solid var(--gold);
+      max-height: none;
+    }
+    .preview-area {
+      padding: 16px;
+    }
+    .cert-footer {
+      padding: 0 20px;
+    }
+    .cert-content {
+      padding: 10px 30px;
+    }
+    .mobile-toggle {
+      display: block !important;
+    }
+    .sidebar-collapsible {
+      display: none;
+    }
+    .sidebar-collapsible.open {
+      display: block;
+    }
+  }
+
+  .mobile-toggle {
+    display: none;
+    width: 100%;
+    background: var(--deep-navy);
+    color: var(--gold-light);
+    border: none;
+    padding: 10px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 1px solid var(--gold);
+  }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    body { background: none !important; }
+    .app-header, .sidebar, .preview-toolbar { display: none !important; }
+    .preview-area {
+      padding: 0 !important;
+      background: none !important;
+      min-height: unset !important;
+    }
+    #cert-wrapper {
+      max-width: 100% !important;
+      box-shadow: none !important;
+      width: 100% !important;
+      page-break-inside: avoid;
+    }
+    .certificate {
+      aspect-ratio: 1.414 / 1 !important;
+      width: 100% !important;
+    }
+    .cert-border-outer, .cert-border-inner { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  }
+
+  /* Logo Upload hidden */
+  #logo-upload { display: none; }
+
+  /* Tooltip */
+  .hint { font-size: 11px; color: var(--text-muted); margin-top: 3px; font-style: italic; }
+
+  /* Stamp overlay */
+  .cert-stamp-img {
+    position: absolute;
+    bottom: 60px;
+    left: 80px;
+    width: 80px;
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 3;
+  }
+
+  /* ---- TEMPLATE 7: شهادة حضور (من PPTX) ---- */
+  .tpl-hudoor, .tpl-shukr {
+    background: #ffffff;
+    font-family: 'Tajawal', sans-serif;
+  }
+  .tpl-hudoor .cert-border-outer, .tpl-shukr .cert-border-outer {
+    position: absolute;
+    inset: 10px;
+    border: 1.5px solid #e0e0e0;
+    pointer-events: none;
+  }
+  .pptx-oval-tl {
+    position: absolute;
+    top: 14px; right: 28px;
+    width: 80px; height: 36px;
+    border: 2.5px solid #13A09F;
+    border-radius: 50%;
+    opacity: 0.65;
+    pointer-events: none;
+    transform: rotate(-15deg);
+  }
+  .pptx-oval-br {
+    position: absolute;
+    bottom: 52px; left: 28px;
+    width: 60px; height: 28px;
+    border: 2px solid #13A09F;
+    border-radius: 50%;
+    opacity: 0.5;
+    pointer-events: none;
+    transform: rotate(15deg);
+  }
+  .pptx-dots-bottom {
+    position: absolute;
+    bottom: 14px;
+    left: 20px; right: 20px;
+    height: 6px;
+    background-image: radial-gradient(circle, #3078A6 1.5px, transparent 1.5px);
+    background-size: 12px 6px;
+    opacity: 0.35;
+    pointer-events: none;
+  }
+  .cert-pptx-title-box {
+    background: #ececec;
+    border-radius: 6px 6px 6px 0;
+    padding: 7px 44px 7px 44px;
+    display: inline-block;
+    margin-bottom: 4px;
+  }
+  .cert-pptx-title {
+    font-family: 'Tajawal', sans-serif;
+    font-size: clamp(18px, 3.2vw, 30px);
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  .cert-pptx-underline {
+    width: 50%;
+    height: 2.5px;
+    margin: 0 auto 8px;
+    border-radius: 2px;
+  }
+  .cert-pptx-mukaram {
+    font-size: clamp(12px, 1.7vw, 14px);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .cert-pptx-mukaram strong { font-weight: 700; }
+  .cert-pptx-body-main {
+    font-size: clamp(13px, 2vw, 17px);
+    font-weight: 700;
+    margin: 6px 0 2px;
+    line-height: 1.7;
+  }
+  .cert-pptx-body-sub {
+    font-size: clamp(11px, 1.5vw, 13px);
+    font-weight: 400;
+    margin-bottom: 2px;
+  }
+  .cert-pptx-event {
+    font-size: clamp(12px, 1.8vw, 15px);
+    font-weight: 700;
+    margin: 6px 0;
+  }
+  .cert-pptx-date-line {
+    font-size: clamp(11px, 1.4vw, 13px);
+    margin: 4px 0;
+    color: #3078A6;
+  }
+  .cert-pptx-tawfeeq {
+    font-size: clamp(12px, 1.7vw, 15px);
+    font-weight: 700;
+    margin: 4px 0 6px;
+    color: #5BAFD1;
+  }
+  .cert-pptx-footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    padding: 4px 30px 0;
+    flex-direction: column;
+    text-align: right;
+  }
+  .cert-pptx-sig-title {
+    font-size: clamp(10px, 1.4vw, 13px);
+    font-weight: 700;
+    line-height: 1.5;
+    color: #351375;
+  }
+  .cert-pptx-sig-dots {
+    font-size: clamp(10px, 1.3vw, 12px);
+    color: #888;
+    direction: ltr;
+    display: block;
+    margin-top: 2px;
+  }
+
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>🏅 منصة شهادات الشكر والتقدير</h1>
+  <span class="header-badge">✦ إصدار احترافي</span>
+</header>
+
+<div class="app-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+
+    <button class="mobile-toggle" onclick="toggleSidebar()">⚙️ إعدادات الشهادة — اضغط للتوسيع</button>
+    <div class="sidebar-collapsible" id="sidebar-content">
+
+    <!-- Template Selection -->
+    <div class="sidebar-section">
+      <div class="section-title">نوع الشهادة</div>
+      <div class="template-grid">
+        <div class="template-card active" onclick="setTemplate('royal')" id="tpl-btn-royal">
+          <div class="thumb" style="background:linear-gradient(135deg,#c9a84c,#8b6914)" data-label="ذهبي ملكي">شهادة شكر<br>ذهبية</div>
+        </div>
+        <div class="template-card" onclick="setTemplate('emerald')" id="tpl-btn-emerald">
+          <div class="thumb" style="background:linear-gradient(135deg,#1a5c3a,#0d3320)" data-label="زمردي">شهادة شكر<br>زمردية</div>
+        </div>
+        <div class="template-card" onclick="setTemplate('royal-blue')" id="tpl-btn-royal-blue">
+          <div class="thumb" style="background:linear-gradient(135deg,#1a2a6b,#0d1540)" data-label="أزرق ملكي">شهادة شكر<br>كحلية</div>
+        </div>
+        <div class="template-card" onclick="setTemplate('dark')" id="tpl-btn-dark">
+          <div class="thumb" style="background:linear-gradient(135deg,#0d1b2a,#c9a84c30)" data-label="داكن فاخر">شهادة شكر<br>داكنة</div>
+        </div>
+        <div class="template-card" onclick="setTemplate('burgundy')" id="tpl-btn-burgundy">
+          <div class="thumb" style="background:linear-gradient(135deg,#6b1a2a,#3d0d18)" data-label="بورغندي">شهادة شكر<br>عنابية</div>
+        </div>
+        <div class="template-card" onclick="setTemplate('islamic')" id="tpl-btn-islamic">
+          <div class="thumb" style="background:linear-gradient(135deg,#8b6914,#c9a84c)" data-label="إسلامي">شهادة شكر<br>هندسي</div>
+        </div>
+        <div class="template-card" onclick="setTemplate('hudoor')" id="tpl-btn-hudoor">
+          <div class="thumb" style="background:linear-gradient(135deg,#3078A6,#351375)" data-label="حضور">شهادة<br>حضور</div>
+        </div>
+        <div class="template-card" onclick="setTemplate('shukr')" id="tpl-btn-shukr">
+          <div class="thumb" style="background:linear-gradient(135deg,#351375,#5BAED1)" data-label="شكر">شهادة<br>شكر</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Text Content -->
+    <div class="sidebar-section">
+      <div class="section-title">نصوص الشهادة</div>
+
+      <label>اسم المؤسسة / الجهة المانحة</label>
+      <input type="text" id="org-name" value="اسم المؤسسة / الجهة المانحة" oninput="updateCert()">
+
+      <label>عنوان الشهادة / عنوان الفعالية</label>
+      <input type="text" id="cert-title" value="شهادة شكر وتقدير" oninput="updateCert()">
+      <p class="hint">في نموذجَي الحضور والشكر يُعرض كعنوان الفعالية</p>
+
+      <label>العنوان الفرعي (اختياري)</label>
+      <input type="text" id="cert-subtitle" value="تُقدَّم إلى" oninput="updateCert()">
+
+      <label>اسم المستلم</label>
+      <input type="text" id="recipient-name" value="الاسم الكريم" oninput="updateCert()">
+
+      <label>نص المناسبة / سبب التكريم</label>
+      <textarea id="cert-body" oninput="updateCert()">لما أبداه من جهد متميز وعطاء مستمر، وإسهاماته الفعّالة في خدمة هذه المؤسسة</textarea>
+      <p class="hint">في نموذج الشكر يظهر بعد "نشكر لكم"</p>
+
+      <label>سبب التقدير / نوع الفعالية</label>
+      <input type="text" id="cert-reason" value="التميز والإنجاز المتميز" oninput="updateCert()">
+      <p class="hint">في نموذج الحضور يظهر كنوع الفعالية: لقاء / ورشة / دورة...</p>
+
+      <label>التاريخ</label>
+      <input type="text" id="cert-date" value="" oninput="updateCert()">
+
+      <label>اسم المسؤول الأول (توقيع)</label>
+      <input type="text" id="sig1-name" value="مديرة المدرسة" oninput="updateCert()">
+
+      <label>اسم المسؤول الثاني (توقيع)</label>
+      <input type="text" id="sig2-name" value="الوكيلة الأكاديمية" oninput="updateCert()">
+    </div>
+
+    <!-- Logo -->
+    <div class="sidebar-section">
+      <div class="section-title">الشعار والختم</div>
+      <button class="btn btn-outline" onclick="document.getElementById('logo-upload').click()">📁 رفع شعار المؤسسة</button>
+      <input type="file" id="logo-upload" accept="image/*" onchange="uploadLogo(this)">
+      <button class="btn btn-outline" onclick="removeLogo()" style="margin-top:0">✕ إزالة الشعار</button>
+      <p class="hint">PNG شفاف أو JPG — يُعرض في أعلى الشهادة</p>
+    </div>
+
+    <!-- Colors -->
+    <div class="sidebar-section">
+      <div class="section-title">لون التأكيد</div>
+      <div class="color-swatches">
+        <div class="swatch active" style="background:#c9a84c" onclick="setAccent('#c9a84c','#8b6914','#4a3a1a')" title="ذهبي"></div>
+        <div class="swatch" style="background:#1a5c3a" onclick="setAccent('#1a5c3a','#0d3320','#1a3a2a')" title="زمردي"></div>
+        <div class="swatch" style="background:#1a2a6b" onclick="setAccent('#1a2a6b','#0d1540','#1a2040')" title="أزرق"></div>
+        <div class="swatch" style="background:#6b1a2a" onclick="setAccent('#6b1a2a','#3d0d18','#3a1020')" title="عنابي"></div>
+        <div class="swatch" style="background:#8b3a5c" onclick="setAccent('#8b3a5c','#5a1a38','#3a1020')" title="وردي"></div>
+        <div class="swatch" style="background:#4a1a6b" onclick="setAccent('#4a1a6b','#2d0d40','#1a0a30')" title="بنفسجي"></div>
+        <div class="swatch" style="background:#1a4a5c" onclick="setAccent('#1a4a5c','#0d2830','#0a2030')" title="فيروزي"></div>
+        <div class="swatch" style="background:#5c3a1a" onclick="setAccent('#5c3a1a','#3a2008','#2a1408')" title="بني"></div>
+        <div class="swatch" style="background:#2d2d2d" onclick="setAccent('#2d2d2d','#1a1a1a','#1a1a1a')" title="رمادي"></div>
+        <div class="swatch" style="background:#1a5c1a" onclick="setAccent('#1a5c1a','#0d3010','#0a2008')" title="أخضر"></div>
+      </div>
+    </div>
+
+    <!-- Font Size -->
+    <div class="sidebar-section">
+      <div class="section-title">حجم الخط</div>
+      <label>حجم الخط: <span id="font-size-val">100</span>%</label>
+      <input type="range" id="font-size-range" min="70" max="130" value="100" oninput="adjustFontSize(this.value)">
+    </div>
+
+    <!-- Actions -->
+    <div class="sidebar-section">
+      <div class="section-title">الإجراءات</div>
+      <button class="btn btn-gold" onclick="window.print()">🖨️ طباعة الشهادة</button>
+      <button class="btn btn-navy" id="export-btn-2" onclick="exportPNG()">💾 حفظ كصورة PNG</button>
+      <button class="btn btn-outline" onclick="resetFields()">🔄 إعادة تعيين</button>
+    </div>
+
+    </div><!-- end sidebar-collapsible -->
+
+    <!-- CREDIT - Always visible, outside print -->
+    <div class="sidebar-credit">
+      <p>✦ تصميم د/فواز ✦</p>
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+        تفضل للمزيد هنا
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- ===== PREVIEW ===== -->
+  <main class="preview-area" id="preview-main">
+
+    <div class="preview-toolbar">
+      <button class="btn btn-gold" onclick="window.print()" style="flex:1;min-width:120px">🖨️ طباعة</button>
+      <button class="btn btn-navy" id="export-btn" onclick="exportPNG()" style="flex:1;min-width:120px">💾 حفظ PNG</button>
+      <button class="btn btn-outline" onclick="toggleOrientation()" style="flex:1;min-width:120px">↕️ تدوير الاتجاه</button>
+    </div>
+
+    <div id="cert-wrapper">
+      <!-- CERTIFICATE RENDERED HERE BY JS -->
+    </div>
+
+  </main>
+</div>
+
+<!-- html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+// ===== STATE =====
+const state = {
+  template: 'royal',
+  orgName: 'اسم المؤسسة / الجهة المانحة',
+  certTitle: 'شهادة شكر وتقدير',
+  certSubtitle: 'تُقدَّم إلى',
+  recipientName: 'الاسم الكريم',
+  certBody: 'لما أبداه من جهد متميز وعطاء مستمر، وإسهاماته الفعّالة في خدمة هذه المؤسسة',
+  certReason: 'التميز والإنجاز المتميز',
+  certDate: '',
+  sig1: 'مديرة المدرسة',
+  sig2: 'الوكيلة الأكاديمية',
+  logoSrc: null,
+  accent: '#c9a84c',
+  accentDark: '#8b6914',
+  textColor: '#4a3a1a',
+  fontSize: 100,
+};
+
+// Auto-set today's date
+const today = new Date();
+const months = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+const todayStr = today.getDate() + ' ' + months[today.getMonth()] + ' ' + today.getFullYear() + 'م';
+state.certDate = todayStr;
+document.getElementById('cert-date').value = todayStr;
+
+// ===== TEMPLATE CONFIGS =====
+const tplConfigs = {
+  royal:      { accent: '#c9a84c', accentDark: '#8b6914', text: '#4a3a1a', bg: 'tpl-royal' },
+  emerald:    { accent: '#1a5c3a', accentDark: '#0d3320', text: '#1a3a2a', bg: 'tpl-emerald' },
+  'royal-blue': { accent: '#1a2a6b', accentDark: '#0d1540', text: '#1a2040', bg: 'tpl-royal-blue' },
+  dark:       { accent: '#c9a84c', accentDark: '#8b6914', text: '#e8d5a0', bg: 'tpl-dark' },
+  burgundy:   { accent: '#6b1a2a', accentDark: '#3d0d18', text: '#3a1020', bg: 'tpl-burgundy' },
+  islamic:    { accent: '#c9a84c', accentDark: '#8b6914', text: '#4a3a1a', bg: 'tpl-islamic' },
+  hudoor:     { accent: '#3078A6', accentDark: '#351375', text: '#3078A6', bg: 'tpl-hudoor' },
+  shukr:      { accent: '#351375', accentDark: '#3078A6', text: '#351375', bg: 'tpl-shukr' },
+};
+
+function setTemplate(t) {
+  state.template = t;
+  const cfg = tplConfigs[t];
+  state.accent = cfg.accent;
+  state.accentDark = cfg.accentDark;
+  state.textColor = cfg.text;
+  // update active card
+  document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('tpl-btn-' + t).classList.add('active');
+  renderCert();
+}
+
+function setAccent(a, ad, tc) {
+  state.accent = a;
+  state.accentDark = ad;
+  state.textColor = tc;
+  document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  renderCert();
+}
+
+function updateCert() {
+  state.orgName = document.getElementById('org-name').value;
+  state.certTitle = document.getElementById('cert-title').value;
+  state.certSubtitle = document.getElementById('cert-subtitle').value;
+  state.recipientName = document.getElementById('recipient-name').value;
+  state.certBody = document.getElementById('cert-body').value;
+  state.certReason = document.getElementById('cert-reason').value;
+  state.certDate = document.getElementById('cert-date').value;
+  state.sig1 = document.getElementById('sig1-name').value;
+  state.sig2 = document.getElementById('sig2-name').value;
+  renderCert();
+}
+
+function adjustFontSize(v) {
+  state.fontSize = parseInt(v);
+  document.getElementById('font-size-val').textContent = v;
+  renderCert();
+}
+
+function uploadLogo(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => { state.logoSrc = e.target.result; renderCert(); };
+  reader.readAsDataURL(file);
+}
+
+function removeLogo() {
+  state.logoSrc = null;
+  renderCert();
+}
+
+// ===== CORNER SVG =====
+function cornerSVG(color) {
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+    <path d="M5,5 L30,5 L5,30 Z" fill="${color}" opacity="0.7"/>
+    <path d="M5,5 L5,50" stroke="${color}" stroke-width="1.5" opacity="0.5"/>
+    <path d="M5,5 L50,5" stroke="${color}" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="5" cy="5" r="3" fill="${color}" opacity="0.8"/>
+    <path d="M20,5 L5,20" stroke="${color}" stroke-width="1" opacity="0.4"/>
+    <path d="M35,5 L5,35" stroke="${color}" stroke-width="0.8" opacity="0.3"/>
+  </svg>`;
+}
+
+// ===== RENDER =====
+function renderCert() {
+  const cfg = tplConfigs[state.template];
+  const tplClass = cfg.bg;
+  const a = state.accent;
+  const ad = state.accentDark;
+  const tc = state.textColor;
+  const fs = state.fontSize / 100;
+
+  const logoHTML = state.logoSrc
+    ? `<img class="cert-logo-img" src="${state.logoSrc}" style="border-color:${a}">`
+    : `<div class="cert-logo-placeholder" style="border-color:${a};color:${a}">🏫</div>`;
+
+  const cornerHTML = `
+    <div class="corner-ornament tl">${cornerSVG(a)}</div>
+    <div class="corner-ornament tr">${cornerSVG(a)}</div>
+    <div class="corner-ornament bl">${cornerSVG(a)}</div>
+    <div class="corner-ornament br">${cornerSVG(a)}</div>
+  `;
+
+  const wrapper = document.getElementById('cert-wrapper');
+
+  // ---- نماذج PPTX الجديدة: حضور وشكر ----
+  if (state.template === 'hudoor' || state.template === 'shukr') {
+    const isHudoor = state.template === 'hudoor';
+    const titleText = isHudoor ? 'شهادة حضور' : 'شهادة شكر';
+    const titleColor = isHudoor ? '#351375' : '#351375';
+    const lineColor = '#5BAED1';
+    const bodyColor = '#3078A6';
+
+    // body text الحضور له نص مختلف قليلاً
+    const bodyMain = isHudoor
+      ? `نشكــر لكـم حضوركـم المميّز ومشاركتكـم الفاعلة`
+      : `نشكـر لكـم ${escHtml(state.certBody)}`;
+    const bodySub = isHudoor
+      ? `في | ${escHtml(state.certReason)} |`
+      : '';
+
+    wrapper.innerHTML = `
+      <div class="certificate ${tplClass}" style="font-size:${fs}em">
+        <div class="cert-border-outer"></div>
+        <div class="pptx-oval-tl"></div>
+        <div class="pptx-oval-br"></div>
+        <div class="pptx-dots-bottom"></div>
+
+        <div class="cert-content" style="gap:5px;padding:8px 50px">
+
+          ${state.logoSrc ? `<div class="cert-logo-area">${logoHTML}<div class="cert-org-name" style="color:#351375">${escHtml(state.orgName)}</div></div>` :
+            `<div class="cert-org-name" style="color:#351375;font-size:clamp(12px,1.8vw,16px);margin-bottom:4px">${escHtml(state.orgName)}</div>`}
+
+          <div class="cert-pptx-title-box">
+            <div class="cert-pptx-title" style="color:${titleColor}">${titleText}</div>
+          </div>
+          <div class="cert-pptx-underline" style="background:${lineColor}"></div>
+
+          <div class="cert-pptx-mukaram" style="color:#3078A6">
+            <strong>المكـرم:</strong>
+            <span style="color:#555;font-size:0.95em">${escHtml(state.recipientName)}</span>
+          </div>
+
+          <div class="cert-pptx-body-main" style="color:${bodyColor}">${bodyMain}</div>
+          ${bodySub ? `<div class="cert-pptx-body-sub" style="color:#5BAFD1">${bodySub}</div>` : ''}
+
+          <div class="cert-pptx-event" style="color:#351375">
+            عنوان | ${escHtml(state.certTitle)} |
+          </div>
+
+          <div class="cert-pptx-date-line">
+            والذي نفّذته الإدارة .................... يوم ${escHtml(state.certDate)}
+          </div>
+
+          <div class="cert-pptx-tawfeeq">راجين لكم دوام التوفيق ،،،</div>
+
+          <div class="cert-pptx-footer">
+            <div class="cert-pptx-sig-title">${escHtml(state.sig1)}</div>
+            <span class="cert-pptx-sig-dots">${escHtml(state.sig2)}</span>
+          </div>
+
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  // ---- النماذج الأصلية ----
+  wrapper.innerHTML = `
+    <div class="certificate ${tplClass}" style="--cert-accent:${a};--cert-accent-dark:${ad};--cert-text:${tc};font-size:${fs}em">
+      <div class="cert-border-outer"></div>
+      <div class="cert-border-inner"></div>
+      ${tplClass !== 'tpl-dark' ? cornerHTML : ''}
+
+      <div class="cert-content">
+
+        <div class="cert-logo-area">
+          ${logoHTML}
+          <div>
+            <div class="cert-org-name" style="color:${a}">${escHtml(state.orgName)}</div>
+          </div>
+        </div>
+
+        <div class="cert-divider" style="background:linear-gradient(90deg,transparent,${a},transparent)"></div>
+
+        <div class="cert-title" style="color:${a}">${escHtml(state.certTitle)}</div>
+        <div class="cert-subtitle" style="color:${tc}">${escHtml(state.certSubtitle)}</div>
+
+        <div class="cert-divider-sm" style="background:linear-gradient(90deg,transparent,${a},transparent)"></div>
+
+        <div class="cert-name-box" style="border-color:${a}">
+          <div class="cert-name" style="color:${a}">${escHtml(state.recipientName)}</div>
+        </div>
+
+        <div class="cert-body" style="color:${tc}">${escHtml(state.certBody)}</div>
+
+        <div class="cert-reason" style="color:${a};border-color:${a}20;background:${a}15">
+          ✦ ${escHtml(state.certReason)} ✦
+        </div>
+
+        <div class="cert-divider" style="background:linear-gradient(90deg,transparent,${a},transparent)"></div>
+
+        <div class="cert-footer">
+          <div class="cert-sig-block">
+            <div class="cert-sig-line" style="background:${a}"></div>
+            <div class="cert-sig-label" style="color:${tc}">${escHtml(state.sig1)}</div>
+          </div>
+
+          <div class="cert-seal" style="border-color:${a};color:${a}">
+            <span style="font-size:10px;line-height:1.3;padding:4px">ختم<br>المدرسة</span>
+          </div>
+
+          <div class="cert-sig-block">
+            <div class="cert-sig-line" style="background:${a}"></div>
+            <div class="cert-sig-label" style="color:${tc}">${escHtml(state.sig2)}</div>
+          </div>
+        </div>
+
+        <div class="cert-date" style="color:${tc}">${escHtml(state.certDate)}</div>
+
+      </div>
+    </div>
+  `;
+}
+
+function escHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+// ===== EXPORT PNG =====
+async function exportPNG() {
+  const cert = document.querySelector('#cert-wrapper .certificate');
+  if (!cert) return;
+
+  const btn = document.getElementById('export-btn');
+  const origText = btn ? btn.innerHTML : '';
+  if (btn) btn.innerHTML = '⏳ جارٍ التصدير...';
+
+  try {
+    const canvas = await html2canvas(cert, {
+      scale: 3,
+      useCORS: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      imageTimeout: 0,
+      removeContainer: true,
+    });
+
+    const dataURL = canvas.toDataURL('image/png');
+
+    // iOS Safari: open image in new tab so user can long-press to save
+    const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+    if (isIOS || isSafari) {
+      // Show image in overlay for save
+      showSaveOverlay(dataURL);
+    } else {
+      // Desktop / Android: direct download
+      const link = document.createElement('a');
+      link.download = 'شهادة-تقدير.png';
+      link.href = dataURL;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  } catch(e) {
+    console.error('Export error:', e);
+    alert('تعذّر التصدير. استخدم زر الطباعة واحفظ كـ PDF.');
+  } finally {
+    if (btn) btn.innerHTML = origText;
+  }
+}
+
+function showSaveOverlay(dataURL) {
+  // Remove existing overlay
+  const existing = document.getElementById('save-overlay');
+  if (existing) existing.remove();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'save-overlay';
+  overlay.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:20px;gap:14px;
+  `;
+  overlay.innerHTML = `
+    <p style="color:#e8cc7a;font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;text-align:center;margin:0">
+      📥 اضغط مطولاً على الصورة ثم اختر "حفظ الصورة"
+    </p>
+    <img src="${dataURL}" style="max-width:100%;max-height:70vh;border-radius:6px;box-shadow:0 8px 30px rgba(0,0,0,0.5)">
+    <button onclick="document.getElementById('save-overlay').remove()"
+      style="background:#c9a84c;color:#1a1208;border:none;padding:10px 28px;border-radius:8px;
+             font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;cursor:pointer">
+      ✕ إغلاق
+    </button>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// ===== TOGGLE ORIENTATION =====
+let isLandscape = true;
+function toggleOrientation() {
+  isLandscape = !isLandscape;
+  const cert = document.querySelector('#cert-wrapper .certificate');
+  if (!cert) return;
+  cert.style.aspectRatio = isLandscape ? '1.414 / 1' : '1 / 1.414';
+}
+
+// ===== MOBILE TOGGLE =====
+function toggleSidebar() {
+  const el = document.getElementById('sidebar-content');
+  el.classList.toggle('open');
+}
+
+// ===== RESET =====
+function resetFields() {
+  if (!confirm('هل تريد إعادة تعيين جميع الحقول؟')) return;
+  document.getElementById('org-name').value = 'اسم المؤسسة / الجهة المانحة';
+  document.getElementById('cert-title').value = 'شهادة شكر وتقدير';
+  document.getElementById('cert-subtitle').value = 'تُقدَّم إلى';
+  document.getElementById('recipient-name').value = 'الاسم الكريم';
+  document.getElementById('cert-body').value = 'لما أبداه من جهد متميز وعطاء مستمر، وإسهاماته الفعّالة في خدمة هذه المؤسسة';
+  document.getElementById('cert-reason').value = 'التميز والإنجاز المتميز';
+  document.getElementById('cert-date').value = todayStr;
+  document.getElementById('sig1-name').value = 'مديرة المدرسة';
+  document.getElementById('sig2-name').value = 'الوكيلة الأكاديمية';
+  document.getElementById('font-size-range').value = 100;
+  document.getElementById('font-size-val').textContent = 100;
+  updateCert();
+}
+
+// ===== INIT =====
+renderCert();
+
+// Mobile: open sidebar by default
+if (window.innerWidth > 768) {
+  document.getElementById('sidebar-content').classList.add('open');
+} else {
+  document.getElementById('sidebar-content').classList.remove('open');
+}
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768) {
+    document.getElementById('sidebar-content').classList.add('open');
+  }
+});
+</script>
+</body>
+</html>

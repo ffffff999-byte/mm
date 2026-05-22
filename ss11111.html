@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة توليد شهادات الشكر والتقدير</title>
+    
+    <!-- الخطوط العربية -->
+    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700&family=Amiri:wght@400;700&family=Cairo:wght@400;700&family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- مكتبة الأيقونات FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- مكتبات التصدير -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #1abc9c;
+            --bg-color: #ecf0f1;
+            --text-color: #34495e;
+            --border-color: #bdc3c7;
+            --danger: #e74c3c;
+            --ai-color: #9b59b6;
+            --gold: #d4af37;
+            /* ألوان وزارة التعليم التقريبية */
+            --moe-blue: #112154;
+            --moe-green: #0cb892;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-color);
+        }
+
+        /* --- الشريط الجانبي --- */
+        .sidebar {
+            width: 380px;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .sidebar h2 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            text-align: center;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 10px;
+            margin-bottom: 5px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #fdfdfd;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: 0.3s;
+        }
+
+        .control-group:hover { border-color: var(--secondary); }
+
+        .control-group label {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input[type="file"], select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+            background: #fff;
+        }
+
+        .premium-select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid var(--ai-color) !important;
+            border-radius: 8px !important;
+            font-weight: bold;
+            color: var(--primary);
+            background-color: #fcf9ff !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .premium-select:focus {
+            outline: none;
+            border-color: var(--secondary) !important;
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+        }
+        
+        textarea { resize: vertical; }
+        input[type="range"] { width: 100%; cursor: pointer; }
+
+        .color-picker {
+            width: 100%;
+            height: 40px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* --- الأزرار وشبكة الأيقونات --- */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+            gap: 8px;
+        }
+
+        .tool-icon-btn {
+            background-color: #fff;
+            color: var(--primary);
+            border: 2px solid var(--border-color);
+            padding: 10px 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 0.75rem;
+            width: 100%;
+            text-align: center;
+        }
+
+        .tool-icon-btn:hover { border-color: var(--secondary); color: var(--secondary); background-color: #f0fdfa; transform: translateY(-2px); }
+        .tool-icon-btn.ai-btn { border-color: var(--ai-color); color: var(--ai-color); background-color: #f9f0ff; }
+        .tool-icon-btn.ai-btn:hover { background-color: #f3e5f5; box-shadow: 0 4px 10px rgba(155, 89, 182, 0.2); }
+        .tool-icon-btn.danger-btn { border-color: var(--danger); color: var(--danger); background-color: #fdedec; }
+        .tool-icon-btn.danger-btn:hover { background-color: #fadbd8; box-shadow: 0 4px 10px rgba(231, 76, 60, 0.2); }
+        .tool-icon-btn i { font-size: 1.4rem; margin-bottom: 5px; }
+
+        .btn-general {
+            background-color: var(--primary); color: #fff; border: none; padding: 10px; border-radius: 5px; cursor: pointer;
+            font-family: inherit; font-weight: bold; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+        }
+        .btn-general:hover { filter: brightness(1.1); transform: translateY(-1px); }
+        .btn-general:active { transform: translateY(1px); }
+        .btn-export { background-color: var(--primary); }
+        .btn-print { background-color: #2980b9; }
+        .btn-danger { background-color: var(--danger); }
+        
+        .btn-group { display: flex; gap: 5px; flex-wrap: wrap; }
+        .btn-group button {
+            background-color: #ecf0f1; color: var(--text-color); border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; cursor: pointer; flex-grow: 1; transition: 0.2s;
+        }
+        .btn-group button:hover { background-color: #e0e6ed; color: var(--secondary); }
+
+        /* --- منطقة العمل والأبعاد --- */
+        .workspace {
+            flex-grow: 1; display: flex; justify-content: center; align-items: center; padding: 40px; overflow: auto;
+            background-image: radial-gradient(#bdc3c7 1px, transparent 1px); background-size: 20px 20px;
+        }
+
+        .certificate-container {
+            width: 735px; /* العرض المعتمد */
+            height: 520px; /* الارتفاع المعتمد */
+            background-color: #fff; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background-size: 100% 100%; background-position: center; background-repeat: no-repeat; overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* ========================================= */
+        /* --- جميع الزخارف والخلفيات الجاهزة (15 خلفية) --- */
+        /* ========================================= */
+        
+        .bg-none { background: #fff !important; border: none !important; }
+        
+        .bg-moe-identity {
+            background-color: #ffffff !important;
+            background-image: 
+                linear-gradient(to right, var(--moe-blue) 0%, var(--moe-blue) 40%, var(--moe-green) 40%, var(--moe-green) 100%),
+                linear-gradient(to right, var(--moe-green) 0%, var(--moe-green) 60%, var(--moe-blue) 60%, var(--moe-blue) 100%) !important;
+            background-size: 100% 12px, 100% 12px !important;
+            background-position: top, bottom !important;
+            background-repeat: no-repeat !important;
+            border-left: 1px solid #e2e8f0 !important;
+            border-right: 1px solid #e2e8f0 !important;
+        }
+
+        .bg-classic-gold {
+            background-color: #fff !important;
+            border: 15px solid var(--gold) !important;
+            box-shadow: inset 0 0 0 8px #fff, inset 0 0 0 12px var(--gold) !important;
+        }
+        
+        .bg-elegant-blue {
+            background-color: #f8f9fa !important;
+            border: 20px solid #2c3e50 !important;
+            box-shadow: inset 0 0 0 4px var(--gold) !important;
+        }
+        
+        .bg-modern-green {
+            background-color: #ffffff !important;
+            border-right: 30px solid var(--secondary) !important;
+            border-left: 30px solid var(--secondary) !important;
+            border-top: 8px solid #2c3e50 !important;
+            border-bottom: 8px solid #2c3e50 !important;
+        }
+        
+        .bg-pattern-dots {
+            background-color: #fff !important;
+            background-image: radial-gradient(#bdc3c7 2px, transparent 2px) !important;
+            background-size: 25px 25px !important;
+            border: 12px solid #ecf0f1 !important;
+        }
+
+        .bg-islamic-pattern {
+            background-color: #fdf9f1 !important;
+            background-image: 
+                linear-gradient(45deg, #e8dcb9 25%, transparent 25%, transparent 75%, #e8dcb9 75%, #e8dcb9), 
+                linear-gradient(-45deg, #e8dcb9 25%, transparent 25%, transparent 75%, #e8dcb9 75%, #e8dcb9) !important;
+            background-size: 60px 60px !important;
+            border: 20px solid #8e6b2e !important;
+            box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 10px #8e6b2e !important;
+        }
+
+        .bg-royal-border {
+            background-color: #fff !important;
+            border: 25px solid #1a1a2e !important;
+            box-shadow: inset 0 0 0 5px var(--gold), inset 0 0 0 10px #1a1a2e, inset 0 0 0 14px var(--gold) !important;
+        }
+
+        .bg-pastel-gradient {
+            background: linear-gradient(135deg, #f6f8fd 0%, #f1f6f9 100%) !important;
+            border: 20px solid #a8c0ff !important;
+            box-shadow: inset 0 0 0 6px #fff, inset 0 0 0 10px #a8c0ff !important;
+        }
+
+        .bg-geometric-modern {
+            background-color: #ffffff !important;
+            background-image: 
+                linear-gradient(135deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(225deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(45deg, #f8f9fa 25%, transparent 25%), 
+                linear-gradient(315deg, #f8f9fa 25%, #ffffff 25%) !important;
+            background-position: 30px 0, 30px 0, 0 0, 0 0 !important;
+            background-size: 60px 60px !important;
+            background-repeat: repeat !important;
+            border-top: 20px solid #3498db !important;
+            border-bottom: 20px solid #2ecc71 !important;
+            box-shadow: inset 0 0 0 4px #fff !important;
+        }
+
+        .bg-nature-frame {
+            background-color: #fdfdfd !important;
+            border: 20px solid #27ae60 !important;
+            box-shadow: inset 0 0 0 8px #fdfdfd, inset 0 0 0 12px #2ecc71 !important;
+        }
+
+        .bg-luxury-purple {
+            background-color: #faf9fc !important;
+            border: 25px solid #4a235a !important;
+            box-shadow: inset 0 0 0 6px var(--gold), inset 0 0 0 10px #4a235a !important;
+        }
+
+        .bg-soft-rose {
+            background-color: #fffcfd !important;
+            border: 20px solid #eebbcc !important;
+            box-shadow: inset 0 0 0 8px #fff, inset 0 0 0 12px #d5809b !important;
+        }
+
+        .bg-elegant-silver {
+            background: linear-gradient(135deg, #ffffff, #f4f6f7) !important;
+            border: 20px solid #bdc3c7 !important;
+            box-shadow: inset 0 0 0 5px #ffffff, inset 0 0 0 8px #7f8c8d !important;
+        }
+
+        .bg-autumn-vibes {
+            background-color: #fffdf9 !important;
+            border-top: 25px solid #d35400 !important;
+            border-bottom: 25px solid #d35400 !important;
+            border-left: 15px solid #f39c12 !important;
+            border-right: 15px solid #f39c12 !important;
+            box-shadow: inset 0 0 0 5px #fff !important;
+        }
+
+        .bg-tech-blue {
+            background-color: #ffffff !important;
+            border: 15px solid #2980b9 !important;
+            background-image: 
+                linear-gradient(0deg, transparent 24%, rgba(41, 128, 185, .05) 25%, rgba(41, 128, 185, .05) 26%, transparent 27%, transparent 74%, rgba(41, 128, 185, .05) 75%, rgba(41, 128, 185, .05) 76%, transparent 77%, transparent), 
+                linear-gradient(90deg, transparent 24%, rgba(41, 128, 185, .05) 25%, rgba(41, 128, 185, .05) 26%, transparent 27%, transparent 74%, rgba(41, 128, 185, .05) 75%, rgba(41, 128, 185, .05) 76%, transparent 77%, transparent) !important;
+            background-size: 50px 50px !important;
+            box-shadow: inset 0 0 0 8px #fff, inset 0 0 0 12px #3498db !important;
+        }
+
+        /* --- العناصر القابلة للسحب --- */
+        .draggable {
+            position: absolute; cursor: move; padding: 5px; border: 2px dashed transparent; min-width: 50px; min-height: 30px; z-index: 1; border-radius: 4px;
+        }
+        .draggable:hover { border-color: rgba(0,0,0,0.2); }
+        .draggable.active { border-color: var(--secondary); background-color: rgba(26, 188, 156, 0.05); box-shadow: 0 0 10px rgba(26, 188, 156, 0.2); }
+
+        .text-element { font-size: 22px; font-family: 'Cairo', sans-serif; color: #000; white-space: nowrap; outline: none; text-align: center; line-height: 1.5; cursor: text; }
+        .img-element img { pointer-events: none; width: 100px; height: auto; } 
+
+        #element-controls { display: none; border: 2px solid var(--secondary); background-color: #f4fbf9; }
+
+        /* تنسيق حقوق التصميم في الأسفل */
+        .sidebar-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            font-weight: bold;
+        }
+
+        .sidebar-footer a {
+            color: var(--secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .sidebar-footer a:hover {
+            color: var(--primary);
+        }
+
+        /* --- الطباعة --- */
+        @media print {
+            body { background: none; margin: 0; padding: 0; }
+            .sidebar { display: none !important; }
+            .workspace { padding: 0; background: none; overflow: visible; display: block; }
+            .certificate-container { box-shadow: none; margin: 0; }
+            .draggable { border: none !important; background: transparent !important; box-shadow: none !important; }
+            @page { size: A4 landscape; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- لوحة التحكم -->
+    <aside class="sidebar">
+        <h2><i class="fas fa-tools"></i> أدوات التصميم</h2>
+
+        <div class="control-group">
+            <label><i class="fas fa-image"></i> زخرفة الخلفية</label>
+            <select id="ready-bg" onchange="applyReadyBackground(this.value)">
+                <option value="none">أبيض سادة (بدون إطار)</option>
+                <option value="moe-identity" style="font-weight:bold; color: #112154;">هوية وزارة التعليم 🇸🇦</option>
+                <optgroup label="خلفيات وإطارات رسمية">
+                    <option value="elegant-blue">إطار أزرق رسمي 🏛️</option>
+                    <option value="classic-gold">إطار ذهبي كلاسيكي 🏆</option>
+                    <option value="elegant-silver">إطار فضي أنيق 🥈</option>
+                    <option value="luxury-purple">إطار بنفسجي ملكي 💜</option>
+                    <option value="royal-border">إطار ملكي فخم 👑</option>
+                </optgroup>
+                <optgroup label="خلفيات ناعمة وحديثة">
+                    <option value="soft-rose">زخرفة وردية ناعمة 🌸</option>
+                    <option value="pastel-gradient">تدرج مائي ناعم 🎨</option>
+                    <option value="modern-green">زخرفة جانبية عصرية ✨</option>
+                    <option value="nature-frame">إطار طبيعي هادئ 🌿</option>
+                    <option value="autumn-vibes">لمسة خريفية دافئة 🍂</option>
+                </optgroup>
+                <optgroup label="خلفيات منقوشة وهندسية">
+                    <option value="islamic-pattern">زخرفة إسلامية تراثية 🕌</option>
+                    <option value="tech-blue">تصميم تقني (مربعات) 🌐</option>
+                    <option value="geometric-modern">أشكال هندسية حديثة 💠</option>
+                    <option value="pattern-dots">خلفية منقطة هادئة 🎯</option>
+                </optgroup>
+            </select>
+            
+            <div style="text-align: center; font-size: 0.8rem; margin: 2px 0;">أو</div>
+            
+            <button class="btn-general" onclick="document.getElementById('bg-upload').click()" style="background-color: #7f8c8d; padding: 8px;">
+                <i class="fas fa-upload"></i> رفع خلفية مقاس 735×520
+            </button>
+            <input type="file" id="bg-upload" accept="image/png, image/jpeg" style="display: none;">
+        </div>
+
+        <div class="control-group">
+            <label><i class="fas fa-layer-group"></i> إدراج العناصر (مساعد القوالب)</label>
+            
+            <!-- القائمة المنسدلة الشاملة لجميع الفئات -->
+            <select id="template-type" class="premium-select">
+                <option value="student">🎓 قوالب الطلاب (5 نماذج)</option>
+                <option value="teacher">👨‍🏫 قوالب المعلمين (5 نماذج)</option>
+                <option value="parent">🤝 قوالب أولياء الأمور (3 نماذج)</option>
+                <option value="course">📜 قوالب الدورات التدريبية (نموذجان)</option>
+                <option value="admin">💻 قوالب الكادر الإداري والموجهين (3 نماذج)</option>
+                <option value="principal">🏢 قوالب لمديري المدارس والقيادات (3 نماذج)</option>
+                <option value="partner">🏅 قوالب شركاء النجاح والداعمين (3 نماذج)</option>
+            </select>
+            <div style="text-align: center; font-size: 0.75rem; color: var(--ai-color); margin-top: 5px;">*اضغط "توليد" بشكل متكرر لاستعراض النماذج</div>
+
+            <div class="tools-grid" style="margin-top: 10px;">
+                <button class="tool-icon-btn ai-btn" onclick="generateSmartTemplate()" title="توليد وتغيير القالب المختار">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                    <span>توليد القالب</span>
+                </button>
+                <button class="tool-icon-btn" onclick="addText()" title="إضافة مربع نص جديد">
+                    <i class="fas fa-font"></i>
+                    <span>نص حر</span>
+                </button>
+                <button class="tool-icon-btn" onclick="document.getElementById('logo-upload').click()" title="إدراج شعار المدرسة">
+                    <i class="fas fa-stamp"></i>
+                    <span>إدراج شعار</span>
+                </button>
+                <input type="file" id="logo-upload" accept="image/png, image/jpeg" style="display: none;">
+                
+                <button class="tool-icon-btn danger-btn" onclick="deleteSmartTemplate()" title="حذف القالب المدرج فقط">
+                    <i class="fas fa-eraser"></i>
+                    <span>مسح القالب</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- لوحة تحكم العنصر المحدد -->
+        <div class="control-group" id="element-controls">
+            <label style="color: var(--secondary);"><i class="fas fa-sliders-h"></i> خصائص العنصر المحدد</label>
+            
+            <div id="text-controls-wrapper" style="display: flex; flex-direction: column; gap: 10px;">
+                <label style="font-size: 0.8rem;"><i class="fas fa-pen"></i> محتوى النص:</label>
+                <textarea id="text-edit-box" rows="2" placeholder="اكتب النص هنا..." oninput="updateTextContent(this.value)"></textarea>
+
+                <select id="font-family" onchange="updateProperty('fontFamily', this.value)">
+                    <option value="'Cairo', sans-serif">خط كايرو (Cairo)</option>
+                    <option value="'Tajawal', sans-serif">خط تجوال (Tajawal)</option>
+                    <option value="'Almarai', sans-serif">خط المراعي (Almarai)</option>
+                    <option value="'Amiri', serif">خط أميري (Amiri)</option>
+                </select>
+
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="color" class="color-picker" id="text-color" value="#000000" onchange="updateProperty('color', this.value)" title="تغيير لون النص">
+                    
+                    <div class="btn-group" style="width: 100%;">
+                        <button onclick="updateProperty('textAlign', 'right')" title="محاذاة لليمين"><i class="fas fa-align-right"></i></button>
+                        <button onclick="updateProperty('textAlign', 'center')" title="توسيط"><i class="fas fa-align-center"></i></button>
+                        <button onclick="updateProperty('textAlign', 'left')" title="محاذاة لليسار"><i class="fas fa-align-left"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <label style="font-size: 0.8rem; margin-top: 5px;"><i class="fas fa-expand-arrows-alt"></i> الحجم:</label>
+            <input type="range" id="element-size" min="10" max="200" value="22" oninput="updateSize(this.value)">
+
+            <button onclick="centerActiveElement()" class="btn-general" style="background-color: #34495e; margin-top: 5px;"><i class="fas fa-arrows-alt-h"></i> توسيط العنصر في الشهادة</button>
+
+            <label style="font-size: 0.8rem; margin-top: 5px;"><i class="fas fa-layer-group"></i> ترتيب الطبقات:</label>
+            <div class="btn-group">
+                <button onclick="changeLayer(1)"><i class="fas fa-arrow-up"></i> للأمام</button>
+                <button onclick="changeLayer(-1)"><i class="fas fa-arrow-down"></i> للخلف</button>
+            </div>
+
+            <button onclick="removeActiveElement()" class="btn-general btn-danger" style="margin-top: 10px;"><i class="fas fa-trash-alt"></i> حذف العنصر</button>
+        </div>
+
+        <div class="control-group" style="margin-top: auto;">
+            <label><i class="fas fa-save"></i> التصدير والطباعة</label>
+            <button class="btn-general btn-export" onclick="exportPDF()"><i class="fas fa-file-pdf"></i> حفظ كـ PDF</button>
+            <button class="btn-general btn-export" onclick="exportImage()"><i class="fas fa-file-image"></i> حفظ كصورة (PNG)</button>
+            <button class="btn-general btn-print" onclick="window.print()"><i class="fas fa-print"></i> طباعة مباشرة</button>
+            <button class="btn-general btn-danger" onclick="clearWorkspace()" style="margin-top: 10px; background-color: #95a5a6;"><i class="fas fa-trash"></i> مسح كامل الشاشة</button>
+        </div>
+
+        <!-- حقوق التصميم ورابط القروب -->
+        <div class="sidebar-footer">
+            <div>تصميم د/فواز</div>
+            <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="display: inline-block; margin-top: 5px; font-size: 0.85rem;">
+                <i class="fab fa-telegram"></i> تفضل للمزيد
+            </a>
+        </div>
+    </aside>
+
+    <main class="workspace">
+        <div class="certificate-container bg-moe-identity" id="certificate"></div>
+    </main>
+
+    <script>
+        // تحديد الهوية كقيمة افتراضية
+        document.getElementById('ready-bg').value = 'moe-identity';
+
+        const certificate = document.getElementById('certificate');
+        const elementControls = document.getElementById('element-controls');
+        const textControlsWrapper = document.getElementById('text-controls-wrapper');
+        const sizeSlider = document.getElementById('element-size');
+        const textEditBox = document.getElementById('text-edit-box');
+        
+        // الأبعاد
+        const CERT_WIDTH = 735; 
+        
+        let activeElement = null;
+        let isDragging = false;
+        let startX, startY, initialRight, initialTop;
+
+        // --- 1. إدارة الخلفيات والزخارف ---
+        function applyReadyBackground(val) {
+            certificate.className = 'certificate-container';
+            certificate.style.backgroundImage = 'none';
+            document.getElementById('bg-upload').value = '';
+            
+            if(val !== 'none') {
+                certificate.classList.add('bg-' + val);
+            }
+        }
+
+        document.getElementById('bg-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) { 
+                    certificate.className = 'certificate-container';
+                    document.getElementById('ready-bg').value = 'none';
+                    certificate.style.backgroundImage = `url(${event.target.result})`; 
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // --- 2. إدراج الشعار وتوسيطه ---
+        document.getElementById('logo-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.className = 'draggable img-element';
+                    imgDiv.style.top = '35px'; 
+                    imgDiv.style.zIndex = '5';
+                    
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    imgDiv.appendChild(img);
+                    certificate.appendChild(imgDiv);
+                    
+                    img.onload = function() {
+                        const width = img.getBoundingClientRect().width || 100;
+                        imgDiv.style.right = (CERT_WIDTH - width) / 2 + 'px';
+                    }
+                    imgDiv.style.right = '300px'; 
+
+                    makeDraggable(imgDiv);
+                    setActiveElement(imgDiv);
+                };
+                reader.readAsDataURL(file);
+                this.value = ''; 
+            }
+        });
+
+        // --- 3. إضافة النص الحر ---
+        function addText() {
+            const textDiv = document.createElement('div');
+            textDiv.className = 'draggable text-element';
+            textDiv.contentEditable = "true";
+            textDiv.innerText = "اكتب النص هنا...";
+            textDiv.style.top = '220px'; 
+            textDiv.style.zIndex = '3';
+            textDiv.style.fontFamily = document.getElementById('font-family').value;
+            textDiv.style.fontSize = '22px'; 
+            textDiv.style.color = '#000000';
+
+            attachTextEvents(textDiv);
+            certificate.appendChild(textDiv);
+            
+            const width = textDiv.getBoundingClientRect().width;
+            textDiv.style.right = (CERT_WIDTH - width) / 2 + 'px';
+            
+            makeDraggable(textDiv);
+            setActiveElement(textDiv);
+        }
+
+        // --- 4. مكتبة النماذج الشاملة الدقيقة ---
+        const aiTemplates = {
+            student: [
+                // 1. التميز والانضباط السلوكي
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بشهادة شكر وتقدير للطالب / ة المتميز أخلاقياً:", top: '150px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "...................................................", top: '200px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "لتميزه وانضباطه السلوكي، ومبادرته بالخير وتعاونه مع زملائه ومعلميه", top: '260px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "مما يعكس صورة إيجابية محترمة تعزز من جودة البيئة المدرسية", top: '300px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "الموجه الطلابي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 2. المواظبة والحضور المبكر
+                [
+                    { text: "يسر إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "أن تمنح شهادة (التميز في المواظبة والحضور) للطالب / ة:", top: '150px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "...................................................", top: '200px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "نظير التزامه التام واهتمامه بقيمة الوقت، وعدم تسجيل أي غياب أو تأخر", top: '260px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "سائلين الله له التوفيق والنجاح الدائم", top: '300px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "رائد الصف", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 3. التفوق الأكاديمي
+                [
+                    { text: "بكل فخر واعتزاز، تمنح مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "شهادة (التفوق الأكاديمي) للطالب / ة المتميز:", top: '150px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "...................................................", top: '200px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "نظير تفوقه العلمي، وحصوله على أعلى الدرجات، وشغفه بالتعلم", top: '260px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "متمنين له مستقبلاً مشرقاً ومزيداً من التألق", top: '300px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "رائد الصف", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 4. التحسن الملحوظ
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بشهادة شكر وتشجيع (للتحسن الملحوظ) للطالب / ة المثابر:", top: '150px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "...................................................", top: '200px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "تقديراً لتقدمه الكبير والملموس في مستواه الدراسي والسلوكي", top: '260px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "مما يحفزنا لدعمه وتشجيعه للاستمرار في مسيرة النجاح", top: '300px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "الموجه الطلابي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 5. التميز في الأنشطة اللامنهجية
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بشهادة شكر وتقدير للطالب / ة المبدع:", top: '150px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "...................................................", top: '200px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "نظير مشاركته الفاعلة في الأنشطة اللامنهجية والبرامج الثقافية والتطوعية", top: '260px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وإسهامه الإيجابي المتميز داخل البيئة المدرسية", top: '300px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "مشرف النشاط", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ]
+            ],
+            teacher: [
+                // 1. التميز في الإدارة الصفية
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بجزيل الشكر والامتنان للمعلم الفاضل / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "لتميزه البارز في الإدارة الصفية، وخلق بيئة تعليمية جاذبة ومحفزة", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "تسودها روح الانضباط والمحبة والاحترام بين الطلاب", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "سائلين المولى له دوام التوفيق والنجاح", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "الوكيل التعليمي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 2. توظيف التقنية والابتكار
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بوافر الشكر وعظيم الامتنان للمعلم المبدع / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "لتميزه في توظيف التقنية والابتكار، واستخدام أدوات حديثة في التعليم", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "مما أسهم بفعالية في تسهيل إيصال المعلومة ورفع جودة المخرجات التعليمية", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "سائلين المولى له دوام التوفيق والنجاح", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "المشرف التربوي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 3. معلم الشهر
+                [
+                    { text: "بكل فخر واعتزاز، تمنح مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "شهادة (معلم الشهر) للأستاذ القدير / ...................................", top: '160px', fontSize: '24px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "تقديراً لتحقيقه أعلى معايير الأداء والالتزام في الحضور والتدريس", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وتعاونه الإداري المثمر الذي يجعله نموذجاً يُحتذى به", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "بارك الله في جهوده وأثابه خير الجزاء", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وكيل المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 4. المبادرات والنمو المهني
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بشهادة شكر وتقدير للمعلم المبادر / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "على أفكاره التطويرية ومبادراته التي تخدم البيئة المدرسية", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وإسهاماته البارزة في نقل الخبرات المهنية لزملائه المعلمين", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "متمنين له دوام التقدم والارتقاء", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "الموجه التربوي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 5. دعم الطلاب ورعايتهم
+                [
+                    { text: "رسالة شكر وامتنان من إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "إلى المعلم المخلص والمربي الفاضل / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "لجهوده الاستثنائية في تخصيص وقت إضافي لمتابعة الطلاب ورعايتهم", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "ومساهمته في حل مشكلاتهم السلوكية والأكاديمية باحترافية وأبوة صادقة", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "جزاكم الله خير الجزاء ورفع قدركم", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "الموجه الطلابي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ]
+            ],
+            parent: [
+                // 1. الشراكة التعليمية الفاعلة
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بخالص الشكر لولي الأمر المكرم / ...................................", top: '160px', fontSize: '24px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "تقديراً لجهوده في تعزيز الشراكة التعليمية الفاعلة مع المدرسة", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وتواصله الدائم والمثمر للمساهمة في حل أي تحديات تواجه ابنه / ابنته", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "سائلين المولى عز وجل لكم التوفيق والسداد", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "الموجه الطلابي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 2. المتابعة المستمرة والمثمرة
+                [
+                    { text: "شكر وتقدير لشريك النجاح", top: '100px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "إلى ولي الأمر الفاضل / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "نثمن لكم متابعتكم المستمرة التي انعكست بوضوح وتميز", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "على التفوق الدراسي والانضباط السلوكي والمظهر العام للطالب", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "شكراً لعطائكم، وبارك الله في جهودكم", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "رائد الصف", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 3. دعم برامج وأنشطة المدرسة
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بأسمى آيات الشكر لولي الأمر المعطاء / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "تقديراً لدعمه اللامحدود ومشاركته الفاعلة بخبراته في أنشطة المدرسة", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وإسهاماته القيمة التي تدعم مبادرات المدرسة المعرفية والتربوية", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "مع خالص تمنياتنا لكم بدوام التوفيق", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وكيل الشؤون المدرسية", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ]
+            ],
+            course: [
+                // 1. قالب اجتياز دورة
+                [
+                    { text: "تشهد إدارة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بأن المتدرب / ة : ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "قد اجتاز / ت بنجاح البرنامج التدريبي بعنوان:", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "...........................................................", top: '270px', fontSize: '22px', color: '#1abc9c', weight: 'bold', align: 'center' },
+                    { text: "بواقع (.....) ساعة تدريبية، خلال الفترة من ..... إلى .....", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "مدرب البرنامج", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المركز / المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 2. قالب مشاركة وتفاعل في دورة
+                [
+                    { text: "شهادة شكر وتفاعل", top: '100px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "تتقدم إدارة التدريب بالشكر الجزيل للمشارك / ة:", top: '160px', fontSize: '20px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "...................................................", top: '220px', fontSize: '24px', color: '#1abc9c', weight: 'bold', align: 'center' },
+                    { text: "على تفاعله الإيجابي ومشاركته الفعالة في البرنامج التدريبي (........)", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "متمنين له دوام التقدم والنجاح المهني", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "منسق البرنامج", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "إدارة التدريب", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ]
+            ],
+            admin: [
+                // 1. الإداري المتميز
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بوافر الشكر والتقدير للإداري المتميز / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "نظير جهوده الكبيرة وتفانيه في إنجاز المهام الإدارية بدقة واحترافية", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "مما كان له الأثر البالغ في تنظيم وسير العمل المدرسي", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "سائلين المولى له دوام التوفيق والنجاح", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "الوكيل الإداري", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 2. الموجه الطلابي
+                [
+                    { text: "رسالة شكر وامتنان", top: '100px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "إلى الموجه الطلابي الفاضل / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "تقديراً لدوره البارز في توجيه الطلاب وحل مشكلاتهم باحترافية", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وخلق بيئة مدرسية آمنة ومحفزة للجميع", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "بارك الله في جهوده وأثابه خير الجزاء", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وكيل شؤون الطلاب", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 3. شكر على إنجاز ملفات
+                [
+                    { text: "شهادة شكر وتقدير", top: '100px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "للأستاذ / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "تقديراً لجهوده المخلصة وعطائه المستمر في خدمة المدرسة", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وتعاونه الدائم مع زملائه بروح الفريق الواحد لإنجاز الأعمال", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "متمنين له دوام التقدم والارتقاء المهني", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "الوكيل الإداري", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ]
+            ],
+            principal: [
+                // 1. شكر من المشرف التربوي
+                [
+                    { text: "يتقدم المشرف التربوي بمكتب التعليم بـ ........................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بوافر الشكر وعظيم الامتنان لمدير المدرسة الأستاذ / ........................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "نظير قيادته الحكيمة، وإدارته الناجحة التي أسهمت في رفع مستوى التحصيل", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "وتوفير بيئة تعليمية جاذبة ومحفزة للطلاب والمعلمين", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "سائلين المولى له دوام التوفيق والنجاح", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "المشرف المنسق", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير مكتب التعليم", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 2. تفعيل البرامج
+                [
+                    { text: "شهادة تميز في القيادة المدرسية", top: '100px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "إلى قائد صرحنا التعليمي الأستاذ / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "تقديراً لجهوده البارزة في تفعيل البرامج والأنشطة المدرسية", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "ودعمه المستمر لتطوير العملية التعليمية والارتقاء بها", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "بارك الله في جهوده وجعلها في موازين حسناته", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "المشرف التربوي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "رئيس قسم القيادة المدرسية", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 3. معايير الجودة
+                [
+                    { text: "رسالة شكر وتقدير", top: '100px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "لمدير المدرسة الفاضل / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "على جهوده المتميزة في تطبيق معايير الجودة والتميز المدرسي", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "والتزامه العالي بتحقيق الأهداف التربوية والتعليمية بنجاح", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "متمنين له دوام التقدم والارتقاء", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "فريق التقويم", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "المشرف التربوي", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ]
+            ],
+            partner: [
+                // 1. جهة داعمة
+                [
+                    { text: "تتقدم إدارة مدرسة ...................................", top: '100px', fontSize: '20px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "بأسمى آيات الشكر والتقدير لـ / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "نظير دعمهم السخي ورعايتهم الكريمة لبرامج وأنشطة المدرسة", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "والذي يعكس شراكة مجتمعية فاعلة تخدم أبناءنا الطلاب", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "سائلين الله لكم التوفيق والنجاح الدائم", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "رائد النشاط", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 2. مساهمة فعالة
+                [
+                    { text: "شهادة شكر لشركاء النجاح", top: '100px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "إلى الجهة الداعمة / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "تقديراً لمساهمتكم الفعالة في إنجاح فعاليات المدرسة المتميزة", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "مما كان له بالغ الأثر في تحقيق الأهداف المرجوة", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "شاكرين لكم تعاونكم المخلص", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "المنسق العام", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ],
+                // 3. ضيف شرف
+                [
+                    { text: "رسالة شكر وامتنان", top: '100px', fontSize: '24px', color: '#112154', weight: 'bold', align: 'center' },
+                    { text: "إلى ضيف الشرف الكريم / ...................................", top: '160px', fontSize: '22px', color: '#0cb892', weight: 'bold', align: 'center' },
+                    { text: "على تلبية الدعوة ومشاركتكم القيمة التي أثرت اللقاء المدرسي", top: '220px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "والتي تركت بصمة إيجابية في نفوس الحاضرين", top: '270px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "سائلين الله لكم دوام التوفيق والسداد", top: '320px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'center' },
+                    { text: "منسق البرنامج", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'right' },
+                    { text: "مدير المدرسة", top: '380px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' },
+                    { text: "........................", top: '420px', fontSize: '18px', color: '#000000', weight: 'bold', align: 'left' }
+                ]
+            ]
+        };
+
+        // متتبع لتسلسل النماذج (يشمل جميع الفئات)
+        const templateTracker = { student: 0, teacher: 0, parent: 0, course: 0, admin: 0, principal: 0, partner: 0 };
+
+        function generateSmartTemplate() {
+            deleteSmartTemplate(); 
+            
+            const templateType = document.getElementById('template-type').value;
+            const currentFont = document.getElementById('font-family').value;
+            
+            const availableTemplates = aiTemplates[templateType];
+            const currentIndex = templateTracker[templateType];
+            const selectedTemplate = availableTemplates[currentIndex];
+            
+            // تحديث المتتبع للنموذج القادم بشكل متسلسل
+            templateTracker[templateType] = (currentIndex + 1) % availableTemplates.length;
+
+            selectedTemplate.forEach(item => {
+                const textDiv = document.createElement('div');
+                textDiv.className = 'draggable text-element smart-template-item'; 
+                textDiv.contentEditable = "true";
+                textDiv.innerText = item.text;
+                
+                textDiv.style.top = item.top;
+                textDiv.style.fontSize = item.fontSize;
+                textDiv.style.color = item.color;
+                textDiv.style.fontWeight = item.weight;
+                textDiv.style.zIndex = '3';
+                textDiv.style.fontFamily = currentFont;
+
+                attachTextEvents(textDiv);
+                certificate.appendChild(textDiv);
+                
+                const width = textDiv.getBoundingClientRect().width;
+                if(item.align === 'center') {
+                    textDiv.style.right = (CERT_WIDTH - width) / 2 + 'px'; 
+                } else if (item.align === 'right') {
+                    textDiv.style.right = '80px'; 
+                } else if (item.align === 'left') {
+                    textDiv.style.right = (CERT_WIDTH - width - 80) + 'px'; 
+                }
+
+                makeDraggable(textDiv);
+            });
+        }
+
+        function deleteSmartTemplate() {
+            const templateItems = document.querySelectorAll('.smart-template-item');
+            if (templateItems.length > 0) {
+                templateItems.forEach(item => item.remove());
+                removeActiveState(); 
+            }
+        }
+
+        // --- 5. دالة التوسيط اليدوي ---
+        function centerActiveElement() {
+            if (activeElement) {
+                const width = activeElement.getBoundingClientRect().width;
+                activeElement.style.right = (CERT_WIDTH - width) / 2 + 'px';
+            }
+        }
+
+        function attachTextEvents(element) {
+            element.addEventListener('input', function() {
+                if (activeElement === this) {
+                    textEditBox.value = this.innerText;
+                }
+            });
+            element.addEventListener('dblclick', function(e) {
+                this.focus();
+                document.execCommand('selectAll', false, null);
+            });
+        }
+
+        // --- 6. السحب والإفلات ---
+        function makeDraggable(element) {
+            element.addEventListener('mousedown', function(e) {
+                setActiveElement(element);
+                if (!element.classList.contains('text-element')) { e.preventDefault(); }
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+                const rect = element.getBoundingClientRect();
+                const parentRect = certificate.getBoundingClientRect();
+                initialRight = parentRect.right - rect.right;
+                initialTop = rect.top - parentRect.top;
+            });
+        }
+
+        document.addEventListener('mousemove', function(e) {
+            if (isDragging && activeElement) {
+                const dx = startX - e.clientX;
+                const dy = e.clientY - startY;
+                activeElement.style.right = (initialRight + dx) + 'px';
+                activeElement.style.top = (initialTop + dy) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', () => isDragging = false);
+        certificate.addEventListener('mousedown', (e) => { if (e.target === certificate) removeActiveState(); });
+
+        // --- 7. التحكم بالعناصر ---
+        function setActiveElement(element) {
+            removeActiveState();
+            activeElement = element;
+            activeElement.classList.add('active');
+            elementControls.style.display = 'flex';
+            
+            if(activeElement.classList.contains('text-element')) {
+                textControlsWrapper.style.display = 'flex';
+                textEditBox.value = activeElement.innerText;
+                document.getElementById('font-family').value = activeElement.style.fontFamily || "'Cairo', sans-serif";
+                
+                let color = activeElement.style.color || '#000000';
+                if(color.startsWith('rgb')) color = rgbToHex(color);
+                document.getElementById('text-color').value = color;
+
+                sizeSlider.value = parseInt(activeElement.style.fontSize) || 22;
+            } else if (activeElement.classList.contains('img-element')) {
+                textControlsWrapper.style.display = 'none';
+                const img = activeElement.querySelector('img');
+                sizeSlider.value = parseInt(window.getComputedStyle(img).width) || 100;
+            }
+        }
+
+        function removeActiveState() {
+            if (activeElement) {
+                activeElement.classList.remove('active');
+                if(activeElement.blur) activeElement.blur();
+            }
+            activeElement = null;
+            elementControls.style.display = 'none';
+        }
+
+        function updateTextContent(value) {
+            if (activeElement && activeElement.classList.contains('text-element')) {
+                activeElement.innerText = value;
+            }
+        }
+
+        function updateProperty(property, value) {
+            if (activeElement && activeElement.classList.contains('text-element')) {
+                activeElement.style[property] = value;
+            }
+        }
+
+        function updateSize(value) {
+            if (!activeElement) return;
+            if (activeElement.classList.contains('text-element')) {
+                activeElement.style.fontSize = value + 'px';
+            } else if (activeElement.classList.contains('img-element')) {
+                const img = activeElement.querySelector('img');
+                img.style.width = value + 'px';
+            }
+        }
+
+        function changeLayer(step) {
+            if (!activeElement) return;
+            let currentZ = parseInt(window.getComputedStyle(activeElement).zIndex) || 1;
+            let newZ = currentZ + step;
+            if (newZ < 1) newZ = 1;
+            activeElement.style.zIndex = newZ;
+        }
+
+        function removeActiveElement() {
+            if (activeElement) {
+                activeElement.remove();
+                removeActiveState();
+            }
+        }
+
+        function clearWorkspace() {
+            if(confirm("هل أنت متأكد أنك تريد مسح جميع النصوص والشعارات؟")) {
+                const elements = document.querySelectorAll('.draggable');
+                elements.forEach(el => el.remove());
+                certificate.style.backgroundImage = 'none';
+                certificate.className = 'certificate-container';
+                document.getElementById('ready-bg').value = 'none';
+                document.getElementById('bg-upload').value = '';
+                document.getElementById('logo-upload').value = '';
+                removeActiveState();
+            }
+        }
+
+        function rgbToHex(rgb) {
+            const rgbArr = rgb.match(/\d+/g);
+            if (!rgbArr) return '#000000';
+            return "#" + ((1 << 24) + (parseInt(rgbArr[0]) << 16) + (parseInt(rgbArr[1]) << 8) + parseInt(rgbArr[2])).toString(16).slice(1);
+        }
+
+        // --- 8. التصدير ---
+        function exportPDF() {
+            removeActiveState(); 
+            const element = document.getElementById('certificate');
+            const opt = {
+                margin: 0,
+                filename: 'شهادة_شكر.pdf',
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2, useCORS: true, logging: false },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' } 
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        function exportImage() {
+            removeActiveState(); 
+            const element = document.getElementById('certificate');
+            html2canvas(element, { scale: 2, useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'شهادة_شكر.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

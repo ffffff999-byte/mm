@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>منصة توليد شهادات الشكر والتقدير</title>
+<style id="dynamicPageStyle">
+  @page{size:A4 landscape;margin:0}
+</style>
+<style>
+  :root{
+    --teal:#138f8b;--teal2:#0b7285;--gold:#c8ad62;--ink:#263238;--muted:#667085;--bg:#eef3f6;--paper:#fff;
+    --font:'Tajawal','Segoe UI',Arial,sans-serif;
+    --cert-w:277mm; --cert-h:190mm; --safe:14mm;
+  }
+  *{box-sizing:border-box} html,body{margin:0;min-height:100%;font-family:var(--font);background:var(--bg);color:var(--ink)}
+  body{overflow-x:hidden}.app{display:grid;grid-template-columns:340px 1fr;gap:18px;padding:18px;min-height:100vh}
+  .settings{background:#fff;border-radius:24px;padding:18px;box-shadow:0 12px 35px #10182818;align-self:start;position:sticky;top:14px;max-height:calc(100vh - 28px);overflow:auto;border:1px solid #e7edf2}
+  .settings h1{font-size:21px;margin:0 0 8px;color:var(--teal2)}.settings p{font-size:13px;color:var(--muted);line-height:1.7;margin:0 0 12px}
+  .group{border:1px solid #e6e9ee;border-radius:18px;padding:12px;margin:10px 0;background:linear-gradient(180deg,#fff,#fafafa)}.group h2{font-size:15px;margin:0 0 10px;color:#344054}.field{margin:8px 0}label{display:block;font-size:12px;color:#475467;margin-bottom:5px;font-weight:700}
+  input,textarea,select{width:100%;border:1px solid #d0d5dd;border-radius:12px;padding:10px 11px;font-family:var(--font);font-size:13px;background:#fff;outline:none} textarea{min-height:82px;resize:vertical;line-height:1.65}
+  input:focus,textarea:focus,select:focus{border-color:var(--teal);box-shadow:0 0 0 3px #13a3a322}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.btn{border:0;border-radius:14px;padding:11px 9px;font-weight:800;font-family:var(--font);cursor:pointer;background:#e8f6f5;color:#08776f}.btn.primary{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff}.btn.warn{background:#fff4e5;color:#9a6700}.btn.gray{background:#f2f4f7;color:#344054}.credit{font-size:13px;line-height:1.8;margin-top:14px;padding:12px;border-radius:16px;background:#f8fafc;color:#344054;border:1px dashed #cbd5e1}.credit a{color:var(--teal2);font-weight:800;text-decoration:none}
+  .workspace{display:flex;align-items:flex-start;justify-content:center;overflow:auto;padding:8px 0 30px}.stage-wrap{width:min(100%,1100px)}.toolbar-note{font-size:13px;color:#667085;text-align:center;margin:0 0 10px}
+  .certificate{position:relative;width:var(--cert-w);height:var(--cert-h);background:var(--paper);overflow:hidden;margin:auto;box-shadow:0 18px 45px #10182826;border-radius:2mm;page-break-inside:avoid;break-inside:avoid;isolation:isolate;transform-origin:top center;contain:layout paint;}
+  .inner{position:absolute;inset:var(--safe);display:flex;flex-direction:column;align-items:center;text-align:center;z-index:3;page-break-inside:avoid;break-inside:avoid;overflow:hidden;max-width:calc(100% - (var(--safe) * 2));max-height:calc(100% - (var(--safe) * 2));}
+  .logoBox{position:absolute;top:12mm;right:15mm;width:36mm;height:20mm;display:flex;align-items:center;justify-content:center;color:var(--teal);font-weight:900;font-size:11px;line-height:1.25;z-index:4;overflow:hidden}.logoBox img{max-width:100%;max-height:100%;object-fit:contain}.logoText:before{content:'••••••••••••••••••';display:block;letter-spacing:2px;font-size:15px;color:var(--teal)}
+  .top-small{margin-top:8mm;font-weight:700;color:#4b5563;font-size:13pt;line-height:1.45;max-width:82%;overflow-wrap:anywhere}.title{margin:11mm 0 3mm;font-size:35pt;font-weight:900;color:var(--teal);letter-spacing:-1px;line-height:1.05;max-width:92%;overflow-wrap:anywhere}.title.calligraphy{font-size:44pt;font-family:'Diwani Letter','Aref Ruqaa','Tajawal',serif;font-weight:900}.recipient{min-width:82mm;max-width:72%;padding:3mm 9mm;margin:3mm auto;background:linear-gradient(135deg,#d7c47f,#b79d4e);color:white;border-radius:2mm;font-size:22pt;font-weight:900;line-height:1.2;overflow-wrap:anywhere;white-space:normal}.bodyText{max-width:82%;font-size:17.5pt;line-height:1.55;font-weight:700;color:#3f3f46;white-space:pre-line;overflow-wrap:anywhere;word-break:normal}.subline{color:var(--teal2);font-weight:900}.signatures{margin-top:auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:14mm;padding:0 13mm 4mm;align-items:end}.sigTitle{font-size:15pt;font-weight:900;color:#344054;line-height:1.2;overflow-wrap:anywhere}.sigName{font-size:13pt;margin-top:3mm;color:#475467;border-top:1.5px solid #98a2b3;padding-top:2mm;line-height:1.2;overflow-wrap:anywhere}
+  .editable{outline:0;border-radius:6px}.editable:focus{box-shadow:0 0 0 3px #13a3a32f;background:#f0fffc}.noName{color:#0f766e}
+  .t1{border:7mm solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#eef2f4 0 12%,var(--teal) 12% 28%,#fff 28% 74%,var(--gold) 74% 82%,var(--teal) 82%) border-box}.t1:before{content:'';position:absolute;inset:8mm;border:1.2mm solid #e5e7eb;box-shadow:0 0 14px #0001 inset}.t1:after{content:'';position:absolute;inset:13mm;border:1.4mm solid var(--teal);opacity:.85}.t1 .title{margin-top:14mm}.t1 .inner{inset:18mm 18mm 12mm}.t1 .bodyText{max-width:78%}
+  .t2:before{content:'';position:absolute;inset:0 0 0 auto;width:72mm;background:repeating-linear-gradient(135deg,#09a7b8 0 24mm,#63cad8 24mm 38mm,#d8f1f5 38mm 50mm);clip-path:polygon(20% 0,100% 0,100% 100%,0 100%,45% 50%,0 0)}.t2 .title{font-size:40pt;color:var(--teal2);font-family:'Aref Ruqaa','Tajawal',serif;margin-top:15mm}.t2 .bodyText{font-size:15.8pt;max-width:66%}.t2 .inner{align-items:center;text-align:center;padding-left:58mm}.t2 .recipient{background:transparent;color:#d92d20;padding:0;margin:2mm auto;font-size:18pt}.t2 .top-small{margin-top:5mm;font-size:10pt;color:#0b7285}.t2 .signatures{padding-left:36mm;gap:12mm}.t2 .logoBox{right:18mm;top:10mm}
+  .t3{border:4mm solid #f3f4f6}.t3:before,.t3:after{content:'';position:absolute;width:78mm;height:1.2mm;background:linear-gradient(90deg,transparent,var(--teal),transparent);opacity:.75}.t3:before{top:28mm;left:80mm}.t3:after{bottom:18mm;right:80mm}.t3 .title{background:#ededed;padding:3mm 15mm;font-size:22pt;color:#3f2b83;margin-top:8mm}.t3 .bodyText{font-size:16pt;color:#28748b;max-width:74%}.t3 .recipient{background:transparent;color:#334155;font-size:15pt;padding:0}.t3 .signatures{grid-template-columns:1fr;padding-left:110mm;padding-right:20mm}.t3 .sigTitle{font-size:13pt;color:#3f2b83}.t3 .sigName{font-size:11pt;text-align:right}.t3 .top-small{font-size:11pt}
+  .t4:before{content:'';position:absolute;top:0;right:0;width:100%;height:100%;background:linear-gradient(160deg,#075985 0 12%,transparent 12% 83%,#075985 83% 100%)}.t4:after{content:'';position:absolute;inset:7mm;border:1px solid #d0d5dd}.t4 .title{font-size:42pt;color:#0b0b0b;margin-top:7mm}.t4 .recipient{background:transparent;color:#0e7490;border-bottom:2px solid #64748b;border-radius:0;font-size:24pt;max-width:62%}.t4 .bodyText{font-size:17pt;color:#111827;line-height:1.42;max-width:78%}.t4 .signatures{grid-template-columns:1fr 1fr 1fr;gap:8mm}.t4 .sigTitle{font-size:14pt;color:#111827}.t4 .sigName{font-size:11pt}.t4 .top-small{font-size:18pt;color:#111827}
+  .t5:before{content:'';position:absolute;inset:8mm;border:1px solid #b8b99b;border-radius:3mm}.t5:after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--teal) 0 7%,transparent 7% 82%,#d7f3ef 82% 91%,var(--teal) 91% 100%);opacity:.95}.t5 .title{font-size:46pt;font-family:'Aref Ruqaa','Tajawal',serif;margin-top:11mm}.t5 .recipient{background:transparent;color:var(--teal);font-size:23pt}.t5 .bodyText{font-size:18pt;line-height:1.5;max-width:74%}.t5 .signatures{padding-bottom:9mm}
+  body.portrait{--cert-w:190mm;--cert-h:277mm;--safe:16mm}body.portrait .certificate{max-width:190mm}body.portrait .top-small{margin-top:16mm;font-size:15pt}body.portrait .title{font-size:38pt;margin-top:20mm}body.portrait .recipient{max-width:80%;font-size:22pt}body.portrait .bodyText{max-width:82%;font-size:18pt;line-height:1.7}body.portrait .t2 .inner{padding-left:42mm}body.portrait .t2:before{width:55mm}body.portrait .t4 .bodyText{line-height:1.55}
+  @media(max-width:900px){.app{grid-template-columns:1fr;padding:10px}.settings{position:relative;max-height:none;border-radius:18px}.workspace{padding:4px}.stage-wrap{width:100%;overflow:hidden}.certificate{width:96vw;height:calc(96vw * 190 / 277);box-shadow:0 8px 24px #10182822}.portrait .certificate{width:94vw;height:calc(94vw * 277 / 190)}.row,.buttons{grid-template-columns:1fr}.settings h1{font-size:19px}.toolbar-note{font-size:12px}}
+  @media(min-width:901px) and (max-width:1300px){.certificate{transform:scale(.72);margin-bottom:calc(var(--cert-h) * -0.28)}.stage-wrap{height:calc(var(--cert-h) * .72 + 30px)}}
+  @media print{
+    *{print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}.settings,.toolbar-note{display:none!important} html,body{margin:0!important;padding:0!important;background:#fff!important;overflow:hidden!important;width:297mm!important;height:210mm!important}.portrait{width:210mm!important;height:297mm!important}.app{display:block!important;padding:0!important;margin:0!important;width:100%!important;height:100%!important;overflow:hidden!important}.workspace,.stage-wrap{display:block!important;padding:0!important;margin:0!important;width:100%!important;height:100%!important;overflow:hidden!important}.certificate{width:100%!important;height:100%!important;margin:0!important;box-shadow:none!important;border-radius:0!important;transform:none!important;page-break-before:avoid!important;page-break-after:avoid!important;page-break-inside:avoid!important;break-inside:avoid!important;overflow:hidden!important}.inner{overflow:hidden!important}.bodyText{font-size:15.5pt!important;line-height:1.42!important}.title{font-size:34pt!important;margin-top:9mm!important}.title.calligraphy{font-size:40pt!important}.recipient{font-size:20pt!important;margin:2.5mm auto!important}.top-small{font-size:12pt!important;margin-top:7mm!important}.signatures{padding-bottom:3mm!important}.sigTitle{font-size:13pt!important}.sigName{font-size:11.5pt!important;margin-top:3mm!important}.portrait .bodyText{font-size:15pt!important;line-height:1.55!important}.portrait .title{margin-top:15mm!important}.portrait .top-small{margin-top:12mm!important}
+  }
+</style>
+</head>
+<body class="landscape">
+<div class="app">
+  <aside class="settings">
+    <h1>منصة توليد شهادات شكر وتقدير</h1>
+    <p>تم ضبط الطباعة لتكون صفحة واحدة، مع حدود آمنة حتى لا تخرج العبارات من أطراف الورقة.</p>
+    <div class="group"><h2>إعدادات القالب</h2>
+      <div class="field"><label>اتجاه ورقة الطباعة</label><select id="orientation"><option value="landscape" selected>أفقي A4 صفحة واحدة</option><option value="portrait">عمودي A4 صفحة واحدة</option></select></div>
+      <div class="field"><label>نوع الشهادة</label><select id="template"><option value="t1">حضور رسمي بإطار ذهبي تركوازي</option><option value="t2">شكر وتقدير بنمط هندسي</option><option value="t3">حضور بسيط وخفيف</option><option value="t4">حضور حديث أزرق</option><option value="t5">شهادة تخرج / تهنئة</option></select></div>
+      <div class="field"><label>رفع شعار الجهة</label><input type="file" id="logoInput" accept="image/*"></div>
+      <div class="row"><div class="field"><label>العنوان الرئيس</label><input id="titleInput" value="شهادة حضور"></div><div class="field"><label>اسم المدرسة / الجهة</label><input id="schoolInput" value="[اسم المدرسة]"></div></div>
+    </div>
+    <div class="group"><h2>بيانات الشهادة</h2>
+      <div class="field"><label>اسم المستفيد</label><input id="nameInput" value="اسم المستفيد"></div>
+      <div class="field"><label>النص الرئيس</label><textarea id="bodyInput">تشهد إدارة [اسم المدرسة] بأن المذكور/ة أعلاه قد حضر البرنامج التدريبي بعنوان: [اسم الدورة أو البرنامج التدريبي]، وذلك خلال الفترة المحددة، ولمدة (25) ساعة تدريبية. نسأل الله له/لها التوفيق والسداد.</textarea></div>
+      <div class="row"><div class="field"><label>التاريخ</label><input id="dateInput" value="1446/12/11 هـ"></div><div class="field"><label>المدة</label><input id="hoursInput" value="25 ساعة تدريبية"></div></div>
+    </div>
+    <div class="group"><h2>التواقيع</h2>
+      <div class="row"><div class="field"><label>توقيع 1</label><input id="sig1Title" value="مدير المدرسة"><input id="sig1Name" value="الاسم" style="margin-top:6px"></div><div class="field"><label>توقيع 2</label><input id="sig2Title" value="منفذ الدورة"><input id="sig2Name" value="الاسم" style="margin-top:6px"></div></div>
+      <div class="field"><label>توقيع ثالث اختياري</label><input id="sig3Title" value=""><input id="sig3Name" value="" style="margin-top:6px"></div>
+    </div>
+    <div class="buttons"><button class="btn primary" onclick="printOnePage()">طباعة / حفظ PDF</button><button class="btn" onclick="saveData()">حفظ البيانات</button><button class="btn gray" onclick="loadData()">استرجاع</button><button class="btn warn" onclick="resetData()">تفريغ</button></div>
+    <div class="credit">تصميم د/فواز<br>تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a></div>
+  </aside>
+  <main class="workspace"><div class="stage-wrap"><p class="toolbar-note">المعاينة متجاوبة، والطباعة/الحفظ PDF للورقة فقط دون قائمة الإعدادات.</p>
+    <section id="cert" class="certificate t1">
+      <div class="logoBox" id="logoBox"><div class="logoText">وزارة التعليم<br><small>Ministry of Education</small></div></div>
+      <div class="inner" id="inner">
+        <div class="top-small" id="topLine">تشهد إدارة <span id="schoolOut">[اسم المدرسة]</span> بأن:</div>
+        <div class="title" id="titleOut">شهادة حضور</div>
+        <div class="recipient editable" id="nameOut" contenteditable="true">اسم المستفيد</div>
+        <div class="bodyText editable" id="bodyOut" contenteditable="true"></div>
+        <div class="bodyText subline" id="dateOut" style="font-size:14pt;margin-top:2mm"></div>
+        <div class="signatures" id="signatures">
+          <div><div class="sigTitle editable" id="sig1TitleOut" contenteditable="true">مدير المدرسة</div><div class="sigName editable" id="sig1NameOut" contenteditable="true">الاسم</div></div>
+          <div><div class="sigTitle editable" id="sig2TitleOut" contenteditable="true">منفذ الدورة</div><div class="sigName editable" id="sig2NameOut" contenteditable="true">الاسم</div></div>
+          <div id="sig3Block" style="display:none"><div class="sigTitle editable" id="sig3TitleOut" contenteditable="true">الختم</div><div class="sigName editable" id="sig3NameOut" contenteditable="true"></div></div>
+        </div>
+      </div>
+    </section></div></main>
+</div>
+<script>
+const $=id=>document.getElementById(id); 
+const fields=['orientation','template','titleInput','schoolInput','nameInput','bodyInput','dateInput','hoursInput','sig1Title','sig1Name','sig2Title','sig2Name','sig3Title','sig3Name'];
+function setPageStyle(){const o=$('orientation').value; document.body.className=o; $('dynamicPageStyle').textContent='@page{size:A4 '+(o==='portrait'?'portrait':'landscape')+';margin:0}';}
+function apply(){setPageStyle();const cert=$('cert');cert.className='certificate '+$('template').value; $('titleOut').textContent=$('titleInput').value||'شهادة'; $('schoolOut').textContent=$('schoolInput').value||'[اسم المدرسة]'; $('nameOut').textContent=$('nameInput').value||'اسم المستفيد'; $('bodyOut').textContent=$('bodyInput').value||''; $('dateOut').textContent=(($('dateInput').value||'')+'  •  '+($('hoursInput').value||'')).replace(/^\s*•\s*|\s*•\s*$/g,''); ['1','2','3'].forEach(n=>{ $('sig'+n+'TitleOut').textContent=$('sig'+n+'Title').value||''; $('sig'+n+'NameOut').textContent=$('sig'+n+'Name').value||''; }); $('sig3Block').style.display=($('sig3Title').value||$('sig3Name').value)?'block':'none'; $('signatures').style.gridTemplateColumns=$('sig3Block').style.display==='block'?'1fr 1fr 1fr':'1fr 1fr'; $('titleOut').classList.toggle('calligraphy',['t2','t5'].includes($('template').value)); fitText(false);}
+function fitText(finalPass=true){
+  const inner=$('inner'), body=$('bodyOut'), title=$('titleOut'), rec=$('nameOut');
+  [body,title,rec].forEach(el=>{el.style.fontSize=''; el.style.lineHeight='';});
+  let tries=0;
+  while((inner.scrollHeight>inner.clientHeight || inner.scrollWidth>inner.clientWidth) && tries<18){
+    [body,title,rec].forEach(el=>{const cs=getComputedStyle(el); const fs=parseFloat(cs.fontSize); el.style.fontSize=Math.max(fs*0.94, 12)+'px';});
+    const bcs=getComputedStyle(body); body.style.lineHeight=Math.max(parseFloat(bcs.lineHeight)*0.96, 18)+'px';
+    tries++;
+  }
+  if(finalPass){document.querySelectorAll('.bodyText,.recipient,.title,.top-small,.sigTitle,.sigName').forEach(el=>{el.style.overflowWrap='anywhere'; el.style.maxWidth=el.style.maxWidth||'';});}
+}
+fields.forEach(id=>$(id).addEventListener('input',apply)); $('template').addEventListener('change',apply); $('orientation').addEventListener('change',apply);
+$('logoInput').addEventListener('change',e=>{const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{$('logoBox').innerHTML='<img alt="الشعار" src="'+r.result+'">'; localStorage.setItem('certLogo',r.result)}; r.readAsDataURL(f)});
+function printOnePage(){apply(); fitText(true); setTimeout(()=>window.print(),80)}
+function saveData(){const data={}; fields.forEach(id=>data[id]=$(id).value); localStorage.setItem('certDataV2',JSON.stringify(data)); alert('تم الحفظ بنجاح');}
+function loadData(){const raw=localStorage.getItem('certDataV2')||localStorage.getItem('certData'); if(raw){const data=JSON.parse(raw); fields.forEach(id=>{if(data[id]!==undefined)$(id).value=data[id]});} const logo=localStorage.getItem('certLogo'); if(logo)$('logoBox').innerHTML='<img alt="الشعار" src="'+logo+'">'; apply();}
+function resetData(){if(confirm('هل تريد تفريغ البيانات؟')){localStorage.removeItem('certDataV2'); location.reload();}}
+window.addEventListener('beforeprint',()=>{apply();fitText(true);});
+window.addEventListener('load',()=>{loadData();apply();}); apply();
+</script>
+</body>
+</html>

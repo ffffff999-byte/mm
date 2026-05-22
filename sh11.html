@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>منصة توليد شهادات الشكر والتقدير</title>
+<style>
+:root{--teal:#178f8a;--teal2:#0a7189;--gold:#c7ad63;--ink:#2f3337;--muted:#eef4f5;--blue:#0a4f78;--violet:#3d2c73;--shadow:0 18px 45px rgba(0,0,0,.16)}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#e9f5f5,#f7f7f2);font-family:"Arial","Tahoma",sans-serif;color:var(--ink)}
+.app{display:grid;grid-template-columns:330px 1fr;min-height:100vh}.sidebar{background:#0f2330;color:white;padding:18px;position:sticky;top:0;height:100vh;overflow:auto;box-shadow:var(--shadow)}
+.brand{border:1px solid rgba(255,255,255,.15);border-radius:22px;padding:16px;background:linear-gradient(135deg,#17394d,#0b6f75)}.brand h1{font-size:22px;margin:0 0 8px}.brand p{font-size:13px;line-height:1.8;margin:0;color:#d7eeee}.group{margin-top:14px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:14px}.group h2{font-size:15px;margin:0 0 12px;color:#fff}
+label{display:block;font-size:12px;color:#dbe9ec;margin:10px 0 5px}input,textarea,select{width:100%;border:1px solid #d7e1e3;border-radius:12px;padding:10px;font-size:14px;font-family:inherit;background:#fff;color:#1d2a31}textarea{min-height:76px;resize:vertical}.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.btn{width:100%;border:0;border-radius:14px;padding:11px 12px;margin-top:8px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,var(--teal),#20b8a7);color:white;box-shadow:0 8px 18px rgba(0,0,0,.18)}.btn.secondary{background:#e8eff1;color:#14313c}.btn.gold{background:linear-gradient(135deg,#b99b45,#dbc779);color:#1c2327}.btn.danger{background:#bd3a3a}.credit{font-size:12px;line-height:1.8;color:#dbe9ec;margin-top:12px;padding:12px;border-radius:14px;background:rgba(255,255,255,.08)}.credit a{color:#fff}
+.stage{padding:22px;overflow:auto}.topbar{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:16px}.topbar h2{margin:0;color:#153544}.hint{background:white;border-radius:16px;padding:10px 14px;box-shadow:0 7px 24px rgba(0,0,0,.08);font-size:13px;color:#60727b}.paper-wrap{display:flex;justify-content:center;align-items:flex-start}.cert{width:1123px;height:794px;background:#fff;position:relative;overflow:hidden;box-shadow:var(--shadow);border-radius:2px;transform-origin:top center}.cert *{position:relative;z-index:2}.editable{outline:0;border-radius:8px;padding:2px 8px}.editable:hover{background:rgba(23,143,138,.08);box-shadow:0 0 0 1px rgba(23,143,138,.2)}.moe{position:absolute;top:54px;left:70px;text-align:center;color:var(--teal);font-weight:700;font-size:20px;z-index:4}.moe:before{content:"";display:block;width:98px;height:42px;margin:auto;background:radial-gradient(circle,var(--teal) 2.6px,transparent 3px);background-size:15px 12px;clip-path:polygon(0 0,100% 0,85% 70%,50% 45%,15% 70%)}.logoImg{max-width:130px;max-height:90px;object-fit:contain;display:none}.useLogo .moe:before,.useLogo .moe span{display:none}.useLogo .logoImg{display:block}.sig{display:flex;justify-content:space-around;margin-top:65px;font-size:24px;font-weight:700}.sig small{display:block;font-size:20px;margin-top:18px;font-weight:500}.line{border-top:2px solid currentColor;display:inline-block;min-width:210px;margin-top:10px}
+.t1{padding:78px 105px;text-align:center}.t1:before{content:"";position:absolute;inset:48px;border:16px solid #e8e8e8;box-shadow:0 16px 25px rgba(0,0,0,.18);z-index:0}.t1:after{content:"";position:absolute;inset:70px;border:7px solid var(--teal);z-index:1}.corner{position:absolute;background:linear-gradient(135deg,var(--teal),#34b5aa);width:360px;height:52px;transform:rotate(0deg);z-index:0}.c1{top:0;right:0}.c2{bottom:0;left:0}.t1 .slash1,.t1 .slash2{position:absolute;background:var(--gold);width:210px;height:28px;transform:rotate(-38deg);z-index:1}.t1 .slash1{top:52px;right:620px}.t1 .slash2{bottom:126px;left:25px}.t1 h1{font-size:54px;color:#258d95;margin:90px 0 20px}.t1 .name{display:inline-block;min-width:690px;background:linear-gradient(90deg,#c7a956,#d5bf79,#b99a49);color:#fff;border-radius:9px;font-size:36px;padding:17px;margin:14px 0}.bodyText{font-size:29px;line-height:1.85;font-weight:600;max-width:820px;margin:auto}.school{font-size:28px;font-weight:600;margin-top:8px}
+.t2{padding:42px 520px 35px 55px;text-align:center}.t2:before{content:"";position:absolute;right:0;top:0;width:455px;height:100%;background:repeating-linear-gradient(135deg,#08a7bd 0 70px,#36c4d2 70px 150px,#dff5f7 150px 230px);clip-path:polygon(18% 0,100% 0,100% 100%,18% 100%,52% 50%);opacity:.95;z-index:0}.vision{position:absolute;top:55px;right:55px;color:#888;font-size:24px;text-align:right}.t2 h1{font-size:55px;color:var(--teal);font-family:serif;margin:120px 0 28px}.t2 .bodyText{color:#157577;font-size:26px}.t2 .name{color:#b53737;font-size:28px;font-weight:800}.t2 .sig{font-size:19px;color:#157577;margin-top:65px}.t2 .moe{right:205px;left:auto;top:55px;font-size:16px}
+.t3{padding:72px 115px;text-align:center}.t3:before{content:"";position:absolute;inset:16px;border:1px solid #e3e3e3;box-shadow:inset 0 0 0 10px #fafafa;z-index:0}.t3 h1{display:inline-block;background:#e9e9e9;color:var(--violet);font-size:32px;padding:12px 64px;border-bottom:3px solid #67bdd1;margin:0 0 58px}.t3 .bodyText{font-size:22px;color:#1d6990;max-width:740px}.t3 .dots{position:absolute;bottom:62px;right:200px;left:80px;border-bottom:8px dotted #0088be}.paperclip{position:absolute;border:2px solid #92dfc9;border-radius:30px;width:46px;height:140px;top:-40px;right:165px;transform:rotate(45deg);z-index:1}.t3 .sig{font-size:16px;margin-top:82px;color:#2b2f5f}.t3 .moe{left:70px;top:54px;font-size:15px}
+.t4{padding:48px 90px;text-align:center}.t4:before{content:"";position:absolute;right:-75px;top:-80px;width:270px;height:280px;background:#075b84;transform:rotate(13deg);z-index:0}.t4:after{content:"";position:absolute;left:-55px;bottom:-88px;width:280px;height:220px;background:#075b84;transform:rotate(13deg);z-index:0}.t4 h1{font-size:60px;color:#000;margin:10px 0 45px}.t4 .name{font-size:42px;color:#126b91;border-bottom:3px solid #555;display:inline-block;padding:8px 90px;font-weight:800}.t4 .bodyText{font-size:28px;color:#000;max-width:820px;line-height:1.45}.t4 .sig{margin-top:80px;color:#000;font-size:23px}.t4 .moe{left:78px;top:40px;font-size:15px}
+.t5{padding:78px 105px;text-align:center}.t5:before{content:"";position:absolute;inset:45px;border:2px solid #b4b79a;border-radius:8px;box-shadow:0 0 0 12px #fff,0 0 0 13px #b4b79a;z-index:0}.t5:after{content:"";position:absolute;right:-90px;top:-10px;width:250px;height:50px;background:var(--teal);transform:rotate(-45deg);box-shadow:0 36px 0 rgba(199,173,99,.8),0 74px 0 rgba(23,143,138,.18);z-index:1}.t5 .ribbon{position:absolute;left:-72px;bottom:20px;width:340px;height:58px;background:var(--teal);transform:rotate(-45deg);box-shadow:0 -40px 0 rgba(199,173,99,.85),0 42px 0 rgba(23,143,138,.13);z-index:1}.t5 h1{font-family:serif;font-size:76px;color:var(--teal);margin:25px 0 35px}.t5 .name{font-size:34px;color:var(--teal);font-weight:800}.t5 .bodyText{font-size:30px;line-height:1.75}.t5 .sig{font-size:25px;margin-top:58px}.t5 .moe{left:86px;top:90px;font-size:18px}
+@media(max-width:1000px){.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.cert{transform:scale(.55);margin-bottom:-350px}.stage{padding:12px}.topbar{display:block}}@media(max-width:600px){.cert{transform:scale(.34);margin-bottom:-515px}}
+
+
+
+/* ===== ضبط A4 عمودي: عرض ومعاينة وطباعة صفحة واحدة ===== */
+html,body{max-width:100%;}
+.stage{min-height:100vh;}
+.paper-wrap{padding:8px 0 28px;}
+.cert{
+  width:794px;
+  height:1123px;
+  aspect-ratio:210/297;
+  max-width:calc(100vw - 390px);
+  max-height:none;
+  display:block;
+  page-break-inside:avoid;
+  break-inside:avoid;
+}
+.cert,.cert *{
+  -webkit-print-color-adjust:exact!important;
+  print-color-adjust:exact!important;
+}
+.t1,.t2,.t3,.t4,.t5{padding:62px 58px;text-align:center;}
+.t1:before{inset:32px;border-width:12px;box-shadow:0 10px 18px rgba(0,0,0,.14)}
+.t1:after{inset:52px;border-width:5px}.corner{width:285px;height:42px}.t1 .slash1{top:38px;right:390px;width:170px}.t1 .slash2{bottom:90px;left:15px;width:165px}
+.moe{top:58px;left:54px;font-size:15px}.moe:before{width:78px;height:34px;background-size:12px 10px}.logoImg{max-width:105px;max-height:70px}
+.t1 h1{font-size:48px;margin:145px 0 22px}.t1 .name{min-width:520px;font-size:31px;padding:15px;margin:18px 0}.bodyText{font-size:26px;line-height:1.78;max-width:640px}.school{font-size:25px}.sig{margin-top:78px;font-size:22px}.sig small{font-size:18px}.line{min-width:170px}
+.t2{padding:64px 270px 45px 42px}.t2:before{width:255px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,48% 50%)}.vision{top:56px;right:42px;font-size:18px}.t2 .moe{right:130px;top:52px;font-size:13px}.t2 h1{font-size:48px;margin:185px 0 30px}.t2 .bodyText{font-size:23px;max-width:450px}.t2 .name{font-size:26px}.t2 .sig{font-size:17px;margin-top:80px}
+.t3{padding:75px 62px}.t3:before{inset:18px;box-shadow:inset 0 0 0 8px #fafafa}.t3 h1{font-size:30px;padding:10px 58px;margin:48px 0 80px}.t3 .bodyText{font-size:22px;max-width:560px;line-height:1.9}.t3 .sig{font-size:15px;margin-top:115px}.t3 .dots{bottom:75px;right:115px;left:70px}.paperclip{right:100px}.t3 .moe{left:55px;top:58px;font-size:13px}
+.t4{padding:72px 55px}.t4:before{right:-92px;top:-72px;width:230px;height:250px}.t4:after{left:-65px;bottom:-72px;width:245px;height:205px}.t4 h1{font-size:55px;margin:68px 0 70px}.t4 .name{font-size:38px;padding:8px 72px}.t4 .bodyText{font-size:25px;max-width:640px;line-height:1.65}.t4 .sig{margin-top:115px;font-size:21px}.t4 .moe{left:54px;top:54px;font-size:13px}
+.t5{padding:70px 58px}.t5:before{inset:42px;border-radius:8px;box-shadow:0 0 0 9px #fff,0 0 0 10px #b4b79a}.t5:after{right:-105px;top:0;width:245px;height:44px}.t5 .ribbon{left:-90px;bottom:35px;width:285px;height:50px}.t5 h1{font-size:68px;margin:115px 0 42px}.t5 .name{font-size:32px}.t5 .bodyText{font-size:27px;line-height:1.75;max-width:600px}.t5 .sig{font-size:23px;margin-top:85px}.t5 .moe{left:62px;top:90px;font-size:15px}
+@media(max-width:1180px){.cert{max-width:100%;transform:scale(.68);transform-origin:top center;margin-bottom:-360px}.paper-wrap{overflow:hidden}.app{grid-template-columns:300px 1fr}}
+@media(max-width:1000px){.cert{max-width:none;transform:scale(.58);margin-bottom:-470px}.app{grid-template-columns:1fr}.sidebar{position:relative;height:auto}.stage{padding:12px}.topbar{display:block}}
+@media(max-width:600px){.cert{transform:scale(.42);margin-bottom:-650px}}
+
+@media print{
+  @page{size:A4 portrait;margin:10mm;}
+  html,body{
+    width:210mm!important;
+    height:297mm!important;
+    margin:0!important;
+    padding:0!important;
+    overflow:hidden!important;
+    background:#fff!important;
+  }
+  *{box-sizing:border-box!important;}
+  .sidebar,.topbar{display:none!important;}
+  .app{display:block!important;width:210mm!important;height:297mm!important;min-height:0!important;overflow:hidden!important;background:#fff!important;}
+  .stage{width:210mm!important;height:297mm!important;padding:0!important;margin:0!important;overflow:hidden!important;background:#fff!important;display:block!important;}
+  .paper-wrap{width:190mm!important;height:277mm!important;margin:0 auto!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;}
+  .cert{
+    width:190mm!important;
+    height:277mm!important;
+    max-width:190mm!important;
+    max-height:277mm!important;
+    min-width:0!important;
+    min-height:0!important;
+    margin:0!important;
+    box-shadow:none!important;
+    border-radius:0!important;
+    transform:none!important;
+    overflow:hidden!important;
+    page-break-before:avoid!important;
+    page-break-after:avoid!important;
+    page-break-inside:avoid!important;
+    break-inside:avoid!important;
+  }
+  .cert *{page-break-inside:avoid!important;break-inside:avoid!important;}
+  .editable:hover{background:transparent!important;box-shadow:none!important;}
+  .t1,.t2,.t3,.t4,.t5{padding:12mm 11mm!important;}
+  .bodyText{font-size:16pt!important;line-height:1.55!important;max-width:150mm!important;}
+  .school{font-size:15pt!important}.sig{font-size:14pt!important;margin-top:16mm!important}.sig small{font-size:12pt!important;margin-top:5mm!important}
+  .t1 h1{font-size:31pt!important;margin:34mm 0 6mm!important}.t1 .name{min-width:132mm!important;font-size:20pt!important;padding:4mm!important;margin:4mm 0!important}.t1:before{inset:8mm!important;border-width:3mm!important}.t1:after{inset:13mm!important;border-width:1.2mm!important}
+  .t2{padding-right:68mm!important}.t2:before{width:62mm!important}.t2 h1{font-size:30pt!important;margin:48mm 0 10mm!important}.t2 .bodyText{font-size:14.5pt!important;max-width:105mm!important}.t2 .sig{margin-top:18mm!important}
+  .t3 h1{font-size:21pt!important;margin:16mm 0 20mm!important}.t3 .bodyText{font-size:14.5pt!important;max-width:135mm!important}.t3 .sig{margin-top:24mm!important}.t3 .dots{bottom:18mm!important}
+  .t4 h1{font-size:34pt!important;margin:22mm 0 18mm!important}.t4 .name{font-size:23pt!important;padding:2mm 18mm!important}.t4 .bodyText{font-size:15pt!important;max-width:145mm!important}.t4 .sig{margin-top:24mm!important}
+  .t5 h1{font-size:40pt!important;margin:34mm 0 10mm!important}.t5 .name{font-size:20pt!important}.t5 .bodyText{font-size:16pt!important;max-width:145mm!important}.t5 .sig{margin-top:18mm!important}
+}
+
+</style>
+</head><body>
+<div class="app">
+<aside class="sidebar">
+ <div class="brand"><h1>منصة توليد شهادات شكر وتقدير</h1><p>اختر النموذج، عدّل النصوص، ارفع الشعار، ثم اطبع أو احفظ. الشهادة لا تحتوي أي أسماء شخصية مسبقة.</p></div>
+ <div class="group"><h2>إعدادات النموذج</h2><label>نوع الشهادة</label><select id="template"><option value="t1">شهادة حضور رسمية</option><option value="t2">شهادة حضور بواجهة هندسية</option><option value="t3">شهادة لقاء/ورشة بسيطة</option><option value="t4">شهادة حضور للمعلمين</option><option value="t5">شهادة تخرج/شكر فاخرة</option></select><label>رفع شعار المدرسة/الوزارة</label><input id="logo" type="file" accept="image/*"><button class="btn secondary" onclick="removeLogo()">إزالة الشعار المرفوع</button></div>
+ <div class="group"><h2>بيانات الشهادة</h2><label>اسم الجهة / المدرسة</label><input id="school" value="[اسم المدرسة]"><label>اسم المستفيد</label><input id="person" value="اسم المستفيد"><label>عنوان البرنامج / المناسبة</label><input id="course" value="[اسم الدورة أو البرنامج التدريبي]"><div class="row"><div><label>اليوم / المدة</label><input id="day" value="[اليوم]"></div><div><label>التاريخ</label><input id="date" value="1447/12/12 هـ"></div></div><label>عدد الساعات / العام</label><input id="hours" value="25 ساعة تدريبية"><label>نص الشهادة</label><textarea id="text">قد حضر البرنامج التدريبي بعنوان</textarea></div>
+ <div class="group"><h2>التواقيع</h2><div class="row"><div><label>المنفذ / المسؤول</label><input id="sig1" value="منفذ الدورة"></div><div><label>المدير / القائد</label><input id="sig2" value="مدير المدرسة"></div></div><div class="row"><div><label>اسم المنفذ</label><input id="sig1n" value="الاسم"></div><div><label>اسم المدير</label><input id="sig2n" value="الاسم"></div></div></div>
+ <div class="group"><h2>الأوامر</h2><button class="btn" onclick="applyData()">تحديث الشهادة</button><button class="btn gold" onclick="window.print()">طباعة / حفظ PDF</button><button class="btn secondary" onclick="saveData()">حفظ البيانات محليًا</button><button class="btn secondary" onclick="downloadHTML()">حفظ نسخة HTML</button><button class="btn danger" onclick="clearData()">تفريغ الحقول</button><div class="credit">تصميم د/فواز<br>تفضل للمزيد هنا<br><a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a></div></div>
+</aside>
+<main class="stage"><div class="topbar"><h2>معاينة الشهادة</h2><div class="hint">يمكنك التعديل مباشرة داخل الورقة أو من لوحة الإعدادات. عبارة التصميم تظهر هنا فقط ولا تُطبع.</div></div><div class="paper-wrap"><section id="cert" class="cert t1"><div class="moe"><img id="logoImg" class="logoImg"><span>وزارة التعليم<br><small>Ministry of Education</small></span></div><div class="corner c1"></div><div class="corner c2"></div><div class="slash1"></div><div class="slash2"></div><div class="paperclip"></div><div class="vision">رؤية 2030</div><div class="ribbon"></div><h1 id="title" class="editable" contenteditable>شهادة حضور</h1><div id="schoolOut" class="school editable" contenteditable>تشهد إدارة [اسم المدرسة] بأن:</div><div id="nameOut" class="name editable" contenteditable>اسم المستفيد</div><div id="bodyOut" class="bodyText editable" contenteditable>قد حضر البرنامج التدريبي بعنوان<br>[اسم الدورة أو البرنامج التدريبي]<br>وذلك يوم [اليوم] بتاريخ 1447/12/12 هـ<br>ولمدة 25 ساعة تدريبية، نسأل الله له التوفيق والسداد</div><div class="sig"><div><span id="sig1Out" class="editable" contenteditable>منفذ الدورة</span><small id="sig1nOut" class="editable" contenteditable>الاسم</small></div><div><span id="sig2Out" class="editable" contenteditable>مدير المدرسة</span><small id="sig2nOut" class="editable" contenteditable>الاسم</small></div></div><div class="dots"></div></section></div></main>
+</div>
+<script>
+const ids=['school','person','course','day','date','hours','text','sig1','sig2','sig1n','sig2n'];
+function $(id){return document.getElementById(id)}
+function applyData(){const c=$('cert'); c.className='cert '+$('template').value+(c.classList.contains('useLogo')?' useLogo':''); const titles={t1:'شهادة حضور',t2:'شهادة حضور',t3:'شهادة حضور',t4:'شهادة حضور',t5:'شهادة شكر وتقدير'}; $('title').innerText=titles[$('template').value]; $('schoolOut').innerText='تشهد إدارة '+$('school').value+' بأن:'; $('nameOut').innerText=$('person').value; let txt=$('text').value||'تتقدم بالشكر والتقدير'; if($('template').value==='t5'){$('bodyOut').innerHTML=`تتقدم مدرسة ${$('school').value}<br>بالتهنئة والتقدير إلى<br><span style="color:var(--teal);font-weight:800">${$('person').value}</span><br>وذلك بمناسبة ${$('course').value} خلال ${$('hours').value}<br>سائلين الله له التوفيق والسداد، مع خالص تمنياتنا له بمزيد من التميز.`}else{$('bodyOut').innerHTML=`${txt}<br>${$('course').value}<br>وذلك يوم ${$('day').value} بتاريخ ${$('date').value}<br>ولمدة ${$('hours').value}، نسأل الله له التوفيق والسداد`} $('sig1Out').innerText=$('sig1').value; $('sig2Out').innerText=$('sig2').value; $('sig1nOut').innerText=$('sig1n').value; $('sig2nOut').innerText=$('sig2n').value;}
+$('template').addEventListener('change',applyData); ids.forEach(id=>$(id).addEventListener('input',applyData));
+$('logo').addEventListener('change',e=>{const f=e.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{$('logoImg').src=r.result; $('cert').classList.add('useLogo'); localStorage.certLogo=r.result}; r.readAsDataURL(f)});
+function removeLogo(){$('cert').classList.remove('useLogo');$('logoImg').src='';delete localStorage.certLogo}
+function saveData(){const data={template:$('template').value}; ids.forEach(id=>data[id]=$(id).value); localStorage.certData=JSON.stringify(data); alert('تم حفظ البيانات محليًا')}
+function loadData(){try{const data=JSON.parse(localStorage.certData||'{}'); Object.keys(data).forEach(k=>{if($(k))$(k).value=data[k]}); if(localStorage.certLogo){$('logoImg').src=localStorage.certLogo;$('cert').classList.add('useLogo')}}catch(e){} applyData()}
+function clearData(){ids.forEach(id=>$(id).value=''); applyData()}
+function downloadHTML(){const blob=new Blob([document.documentElement.outerHTML],{type:'text/html;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='منصة-توليد-الشهادات.html'; a.click(); URL.revokeObjectURL(a.href)}
+loadData();
+</script>
+</body></html>

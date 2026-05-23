@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة تحليل نتائج الطلاب</title>
+
+<!-- Fonts: IBM Plex Sans Arabic — Medium & SemiBold فقط -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Chart.js & XLSX -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+:root{
+  --ink:#0a1d36;
+  --ink-2:#11315c;
+  --gold:#c9a14a;
+  --gold-2:#a87f1f;
+  --gold-3:#856216;
+  --bg:#f4eede;
+  --paper:#fffdf7;
+  --line:#c9a14a;
+  --line-soft:#e8d8a0;
+  --excellent:#15803d;
+  --vgood:#1d4ed8;
+  --good:#c2410c;
+  --pass:#6d28d9;
+  --weak:#b91c1c;
+  --soft:#fff7e1;
+  --soft-2:#fdf3d4;
+
+  /* خطوط احترافية بحدة عالية للطباعة */
+  --font-display: 'IBM Plex Sans Arabic', sans-serif;
+  --font-body: 'IBM Plex Sans Arabic', sans-serif;
+  --font-numbers: 'IBM Plex Sans Arabic', sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html,body{
+  background:#dcd5b8;
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  font-weight:500;
+  color:var(--ink);
+  min-height:100vh;
+  /* تحسينات الحدة للنصوص العربية - 300 DPI ready */
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:geometricPrecision;
+  font-feature-settings:"kern" 1, "liga" 1, "calt" 1, "ss01" 1;
+  font-kerning:normal;
+  font-variant-ligatures:common-ligatures contextual;
+}
+
+/* تطبيق خط IBM Plex Sans Arabic Medium على كل عناصر الصفحة */
+.page, .page *,
+.toolbar, .toolbar *,
+.settings-bar, .settings-bar *,
+.students-panel, .students-panel *,
+.credit-bar, .credit-bar *,
+button, input, select, label, td, th, h1, h2, h3, div, span, p{
+  font-family:'IBM Plex Sans Arabic', sans-serif !important;
+  text-rendering:geometricPrecision;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:"kern" 1, "liga" 1, "calt" 1;
+}
+
+/* ========== شريط التحكم ========== */
+.toolbar{
+  background:linear-gradient(135deg,#0b1f3a 0%,#11315c 100%);
+  color:#fff;padding:14px 22px;
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  position:sticky;top:0;z-index:50;
+  border-bottom:3px solid var(--gold);
+}
+.toolbar-title{
+  font-family:'IBM Plex Sans Arabic',sans-serif;
+  font-weight:600;font-size:19px;
+  display:flex;align-items:center;gap:10px;
+  letter-spacing:-0.3px;
+}
+.toolbar-title .crest{
+  width:34px;height:34px;border-radius:50%;
+  background:radial-gradient(circle,var(--gold) 0%,var(--gold-2) 100%);
+  display:grid;place-items:center;color:var(--ink);font-weight:600;font-family:'IBM Plex Sans Arabic'
+}
+.toolbar-actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{
+  background:var(--paper);color:var(--ink);border:none;padding:9px 16px;border-radius:8px;
+  font-family:inherit;font-weight:600;font-size:14px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px;
+  transition:transform .15s, box-shadow .15s;
+  box-shadow:0 2px 6px rgba(0,0,0,.15);
+}
+.btn:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.25)}
+.btn.gold{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-2) 100%);color:var(--ink)}
+.btn.danger{background:#fff;color:#9b1c1c}
+.btn.success{background:#dcfce7;color:#065f46}
+.btn svg{width:16px;height:16px}
+
+/* ========== شريط الإعدادات ========== */
+.settings-bar{
+  background:var(--paper);
+  border-bottom:2px solid var(--line);
+  padding:14px 22px;
+}
+.settings-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  gap:10px;
+}
+.field{display:flex;flex-direction:column;gap:4px}
+.field label{font-size:12px;font-weight:600;color:var(--ink-2)}
+.field input,.field select{
+  border:1.5px solid var(--line);background:#fff;color:var(--ink);
+  padding:7px 10px;border-radius:7px;font-family:inherit;font-size:13px;font-weight:600;
+}
+.field input:focus,.field select:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,161,74,.25)}
+
+.credit-bar{
+  background:linear-gradient(90deg,#0b1f3a,#11315c);
+  color:#fff;padding:10px 22px;text-align:center;
+  font-family:'IBM Plex Sans Arabic';font-weight:600;font-size:14px;
+  border-bottom:3px solid var(--gold);
+  display:flex;justify-content:center;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.credit-bar a{
+  background:var(--gold);color:var(--ink);padding:5px 14px;border-radius:20px;
+  text-decoration:none;font-weight:600;font-size:13px;transition:transform .15s;
+}
+.credit-bar a:hover{transform:scale(1.05)}
+
+/* ========== ورقة A4 — جاهزة للطباعة 300 DPI ========== */
+.page{
+  width:210mm;
+  min-height:297mm;
+  background:var(--paper);
+  margin:18px auto;
+  padding:13mm 11mm 12mm 11mm;
+  box-shadow:0 10px 50px rgba(0,0,0,.22);
+  position:relative;
+  /* خلفية ناعمة بنسيج خفيف للطباعة الفاخرة */
+  background-image:
+    radial-gradient(circle at 0% 0%,rgba(201,161,74,.06) 0%,transparent 35%),
+    radial-gradient(circle at 100% 100%,rgba(10,29,54,.05) 0%,transparent 35%),
+    repeating-linear-gradient(45deg,transparent 0,transparent 2px,rgba(201,161,74,.012) 2px,rgba(201,161,74,.012) 4px);
+  color-adjust:exact;
+  -webkit-print-color-adjust:exact;
+  print-color-adjust:exact;
+}
+/* إطار ذهبي مزدوج كلاسيكي */
+.page::before{
+  content:"";position:absolute;inset:5mm;
+  border:2px solid var(--gold);
+  border-radius:3px;pointer-events:none;
+}
+.page::after{
+  content:"";position:absolute;inset:6.5mm;
+  border:0.75px solid var(--gold-2);
+  border-radius:2px;pointer-events:none;
+}
+
+/* ========== رأس التقرير ========== */
+.report-header{
+  display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;
+  padding:8px 8px 14px 8px;border-bottom:3px double var(--gold);margin-bottom:14px;
+}
+.school-crest{
+  width:90px;height:90px;border-radius:50%;
+  background:
+    radial-gradient(circle at 30% 30%,#fffaeb 0%,#e8c577 40%,#a87f1f 75%,#6e4e0d 100%);
+  display:grid;place-items:center;color:var(--ink);
+  font-family:var(--font-display);font-weight:600;font-size:13px;
+  box-shadow:
+    0 4px 16px rgba(138,98,22,.4),
+    inset 0 -4px 10px rgba(0,0,0,.20),
+    inset 0 2px 4px rgba(255,255,255,.5);
+  border:3px solid var(--gold-3);
+  text-align:center;line-height:1.15;padding:6px;
+  letter-spacing:-0.3px;
+}
+.header-center{text-align:center}
+.header-center .ministry{
+  font-size:12.5px;color:var(--ink-2);font-weight:600;letter-spacing:0.3px;
+  font-family:var(--font-body);
+}
+.header-center .school-name{
+  font-family:var(--font-display);font-size:24px;font-weight:600;
+  color:var(--ink);margin:3px 0;letter-spacing:-0.5px;
+  line-height:1.2;
+}
+.header-center .subtitle{
+  font-size:14px;color:var(--gold-2);font-weight:600;
+  font-family:var(--font-body);letter-spacing:0.2px;
+}
+.header-right{
+  background:linear-gradient(135deg,var(--ink) 0%,var(--ink-2) 100%);color:#fff;
+  padding:10px 18px;border-radius:12px;text-align:center;min-width:100px;
+  border:2.5px solid var(--gold);
+  box-shadow:0 3px 10px rgba(10,29,54,.3);
+}
+.header-right .label{font-size:11px;opacity:.95;letter-spacing:0.5px;font-weight:600}
+.header-right .year{
+  font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--gold);
+  margin-top:2px;letter-spacing:-0.5px;
+}
+
+/* ========== عنوان التقرير ========== */
+.report-title{
+  text-align:center;margin:8px 0 16px 0;
+  position:relative;
+}
+.report-title h1{
+  display:inline-block;
+  font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--ink);
+  background:linear-gradient(180deg,var(--soft) 0%,var(--soft-2) 70%,transparent 100%);
+  padding:10px 36px;border-radius:10px;
+  border-top:4px solid var(--gold);border-bottom:4px solid var(--gold);
+  position:relative;
+  letter-spacing:-0.5px;
+  text-shadow:0 1px 0 rgba(255,255,255,.6);
+}
+.report-title h1::before,.report-title h1::after{
+  content:"❖";color:var(--gold);font-size:16px;
+  position:absolute;top:50%;transform:translateY(-50%);
+}
+.report-title h1::before{right:10px}
+.report-title h1::after{left:10px}
+
+/* ========== قسم البيانات الأساسية ========== */
+.info-section{
+  background:linear-gradient(180deg,var(--soft),#fff);
+  border:2px solid var(--line);border-radius:12px;
+  padding:11px 13px;margin-bottom:14px;
+  box-shadow:0 2px 6px rgba(0,0,0,.04);
+}
+.section-h{
+  background:linear-gradient(90deg,var(--ink) 0%,var(--ink-2) 100%);
+  color:#fff;padding:9px 16px;border-radius:8px;
+  font-family:var(--font-display);font-weight:600;font-size:16px;
+  margin-bottom:11px;display:flex;align-items:center;gap:10px;
+  border-right:5px solid var(--gold);
+  letter-spacing:-0.3px;
+  box-shadow:0 2px 6px rgba(10,29,54,.2);
+}
+.section-h .num{
+  background:var(--gold);color:var(--ink);width:26px;height:26px;border-radius:50%;
+  display:grid;place-items:center;font-size:14px;font-weight:600;
+  font-family:var(--font-numbers);
+  box-shadow:inset 0 -2px 4px rgba(0,0,0,.15);
+}
+
+.info-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:9px;
+}
+.info-item{
+  background:#fff;border:1.5px solid var(--line-soft);border-radius:8px;
+  padding:9px 10px;text-align:center;
+  border-top:4px solid var(--gold);
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.info-item .lbl{
+  font-size:12px;color:var(--ink-2);font-weight:600;margin-bottom:4px;
+  letter-spacing:0.2px;
+}
+.info-item .val{
+  font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--ink);
+  letter-spacing:-0.3px;
+}
+
+/* ========== بطاقات الإحصائيات ========== */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:14px;
+}
+.stat-card{
+  background:#fff;border-radius:10px;padding:10px 6px;text-align:center;
+  border-top:5px solid var(--ink-2);
+  border:1.5px solid var(--line-soft);
+  border-top:5px solid var(--ink-2);
+  box-shadow:0 2px 8px rgba(11,31,58,.08);
+  position:relative;overflow:hidden;
+}
+.stat-card .ic{
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-2));
+  margin:0 auto 6px;display:grid;place-items:center;color:var(--ink);
+  box-shadow:0 2px 4px rgba(168,127,31,.3), inset 0 -2px 4px rgba(0,0,0,.15);
+}
+.stat-card .ic svg{width:19px;height:19px;stroke-width:2.5}
+.stat-card .lbl{
+  font-size:11.5px;color:var(--ink-2);font-weight:600;margin-bottom:3px;
+  letter-spacing:0.2px;
+}
+.stat-card .val{
+  font-family:var(--font-numbers);font-size:20px;font-weight:600;color:var(--ink);
+  letter-spacing:-0.5px;line-height:1.1;
+}
+.stat-card .val .small{font-size:12px;color:var(--ink-2);font-weight:600}
+
+/* ========== جدول الفصول ========== */
+.classes-table{
+  width:100%;border-collapse:separate;border-spacing:0;font-size:13px;
+  background:#fff;border-radius:10px;overflow:hidden;
+  box-shadow:0 3px 10px rgba(0,0,0,.10);margin-bottom:14px;
+  border:1.5px solid var(--line);
+}
+.classes-table thead th{
+  background:linear-gradient(180deg,var(--ink),var(--ink-2));color:#fff;
+  padding:10px 6px;font-family:var(--font-display);font-weight:600;font-size:13.5px;
+  border-bottom:4px solid var(--gold);
+  letter-spacing:-0.2px;
+}
+.classes-table thead th:first-child{
+  background:linear-gradient(180deg,var(--gold-2),var(--gold));color:var(--ink);
+}
+.classes-table tbody td{
+  padding:9px 6px;text-align:center;border-bottom:1.5px solid #f0e6c8;
+  font-weight:600;font-family:var(--font-numbers);font-size:13px;
+  letter-spacing:-0.3px;
+}
+.classes-table tbody tr:nth-child(even){background:#fbf6e6}
+.classes-table tbody tr td:first-child{
+  background:linear-gradient(90deg,var(--soft),#fff);
+  font-family:var(--font-display);font-weight:600;color:var(--ink);
+  text-align:right;padding-right:16px;font-size:13.5px;
+  border-left:4px solid var(--gold);
+  letter-spacing:-0.3px;
+}
+.classes-table tbody tr:last-child{
+  background:linear-gradient(90deg,var(--ink),var(--ink-2)) !important;
+  color:#fff;font-weight:600;
+}
+.classes-table tbody tr:last-child td{
+  color:#fff !important;font-family:var(--font-display);font-weight:600;font-size:14px;
+}
+.classes-table tbody tr:last-child td:first-child{
+  background:linear-gradient(90deg,var(--gold-2),var(--gold)) !important;
+  color:var(--ink) !important;
+}
+
+/* ========== التقديرات ========== */
+.grades-section{
+  display:grid;grid-template-columns:1.2fr 1fr;gap:12px;margin-bottom:14px;
+}
+.grades-table{
+  width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;
+  background:#fff;border-radius:10px;overflow:hidden;
+  box-shadow:0 3px 10px rgba(0,0,0,.10);
+  border:1.5px solid var(--line);
+}
+.grades-table thead th{
+  background:linear-gradient(180deg,var(--ink),var(--ink-2));color:#fff;
+  padding:9px;font-family:var(--font-display);font-weight:600;font-size:13.5px;
+  border-bottom:4px solid var(--gold);
+  letter-spacing:-0.2px;
+}
+.grades-table tbody td{
+  padding:9px;text-align:center;font-weight:600;border-bottom:1.5px solid #f0e6c8;
+  font-family:var(--font-numbers);font-size:14px;letter-spacing:-0.3px;
+}
+.grade-cell{
+  display:flex;align-items:center;gap:9px;justify-content:flex-start;
+  padding-right:14px !important;font-family:var(--font-display) !important;
+  font-size:14.5px !important;letter-spacing:-0.3px;
+}
+.grade-dot{
+  width:13px;height:13px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 0 0 2.5px #fff,0 0 0 4px currentColor;
+}
+.row-excellent{color:var(--excellent)}
+.row-vgood{color:var(--vgood)}
+.row-good{color:var(--good)}
+.row-pass{color:var(--pass)}
+.row-weak{color:var(--weak)}
+.grades-table tbody tr.total-row{
+  background:linear-gradient(90deg,var(--ink),var(--ink-2));color:#fff !important;
+}
+.grades-table tbody tr.total-row td{
+  color:#fff !important;font-family:var(--font-display);font-weight:600;font-size:15px;
+}
+
+.chart-card{
+  background:#fff;border:1.5px solid var(--line);border-radius:10px;
+  padding:10px;display:flex;flex-direction:column;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+.chart-card .ch-title{
+  text-align:center;font-family:var(--font-display);font-weight:600;
+  color:var(--ink);font-size:13.5px;
+  padding:6px;border-bottom:2px solid var(--line-soft);margin-bottom:6px;
+  letter-spacing:-0.3px;
+}
+.chart-card canvas{flex:1;max-height:180px}
+
+/* ========== الرسم البياني للفصول ========== */
+.chart-section{
+  background:#fff;border:1.5px solid var(--line);border-radius:10px;
+  padding:12px;margin-bottom:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,.08);
+}
+.chart-section .ch-title{
+  text-align:center;font-family:var(--font-display);font-weight:600;
+  color:var(--ink);font-size:14.5px;
+  padding-bottom:8px;border-bottom:2px solid var(--line-soft);margin-bottom:8px;
+  letter-spacing:-0.3px;
+}
+.chart-section canvas{max-height:210px}
+
+/* ========== التوقيعات ========== */
+.signatures{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:16px;
+}
+.sig-box{
+  text-align:center;padding:11px 8px;border:2px dashed var(--gold);border-radius:10px;
+  background:linear-gradient(180deg,var(--soft) 0%,transparent 100%);
+}
+.sig-box .role{
+  font-family:var(--font-display);font-weight:600;color:var(--ink);
+  font-size:14px;margin-bottom:18px;letter-spacing:-0.3px;
+  outline:none;border-radius:4px;padding:2px 4px;
+  transition:background .2s;
+}
+.sig-box .sig-line{
+  border-top:2px solid var(--ink-2);margin:0 18px;padding-top:5px;
+  font-size:11.5px;color:var(--ink-2);font-weight:600;letter-spacing:0.2px;
+  outline:none;border-radius:4px;
+  transition:background .2s;
+}
+/* تمييز الحقول القابلة للتعديل عند تمرير الماوس */
+.sig-box [contenteditable="true"]:hover{
+  background:rgba(201,161,74,.12);
+  cursor:text;
+}
+.sig-box [contenteditable="true"]:focus{
+  background:rgba(201,161,74,.20);
+  box-shadow:0 0 0 2px var(--gold);
+}
+/* إخفاء مؤشرات التحرير عند الطباعة */
+@media print{
+  .sig-box [contenteditable="true"]:hover,
+  .sig-box [contenteditable="true"]:focus{
+    background:transparent !important;
+    box-shadow:none !important;
+  }
+}
+
+/* ========== تذييل ========== */
+.page-footer{
+  position:absolute;bottom:7mm;left:13mm;right:13mm;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:11px;color:var(--ink-2);font-weight:600;
+  border-top:2px solid var(--line);padding-top:6px;
+  letter-spacing:0.2px;
+}
+.page-footer .center{
+  font-family:var(--font-display);color:var(--gold-2);font-weight:600;
+  font-size:11.5px;letter-spacing:-0.3px;
+}
+
+/* ========== إدارة الطلاب ========== */
+.students-panel{
+  width:210mm;margin:14px auto;background:var(--paper);border-radius:12px;
+  padding:14px;box-shadow:0 4px 20px rgba(0,0,0,.12);
+  border:1.5px solid var(--line);
+}
+.students-panel h3{
+  font-family:'IBM Plex Sans Arabic';color:var(--ink);font-size:16px;margin-bottom:10px;
+  padding-bottom:7px;border-bottom:2px solid var(--gold);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.students-panel h3 .actions{display:flex;gap:6px}
+.students-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:6px;
+  max-height:300px;overflow-y:auto;padding:4px;
+}
+.student-input{
+  display:flex;flex-direction:column;gap:3px;background:#fff;border:1px solid var(--line);
+  border-radius:6px;padding:5px;
+}
+.student-input label{font-size:10.5px;font-weight:600;color:var(--ink-2);text-align:center}
+.student-input input{
+  border:1px solid var(--line);border-radius:4px;padding:4px;text-align:center;
+  font-weight:600;font-family:'IBM Plex Sans Arabic';font-size:13px;color:var(--ink);
+}
+.student-input input:focus{outline:none;border-color:var(--gold);background:var(--soft)}
+
+/* ========== الطباعة — جاهز للطباعة بدقة 300 DPI ========== */
+@media print{
+  @page{
+    size:A4 portrait;
+    margin:0;
+  }
+  html,body{
+    background:#fff !important;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:geometricPrecision;
+    image-rendering:-webkit-optimize-contrast;
+    image-rendering:crisp-edges;
+  }
+  .toolbar,.settings-bar,.credit-bar,.students-panel{display:none !important}
+  .page{
+    box-shadow:none !important;margin:0 !important;
+    width:210mm;height:297mm;page-break-after:always;
+    -webkit-print-color-adjust:exact;
+    print-color-adjust:exact;
+    color-adjust:exact;
+  }
+  .page:last-child{page-break-after:auto}
+
+  /* الحفاظ على وضوح النصوص العربية عند الطباعة */
+  .page *{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+    text-rendering:geometricPrecision !important;
+  }
+
+  /* تحسين الرسوم البيانية للطباعة */
+  canvas{
+    image-rendering:-webkit-optimize-contrast;
+    image-rendering:crisp-edges;
+  }
+}
+
+/* ========== رسائل التنبيه ========== */
+.toast{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:#fff;padding:12px 22px;border-radius:8px;
+  font-weight:600;z-index:100;box-shadow:0 8px 24px rgba(0,0,0,.3);
+  border:2px solid var(--gold);opacity:0;transition:opacity .3s;
+}
+.toast.show{opacity:1}
+.toast.success{background:#065f46}
+.toast.error{background:#9b1c1c}
+
+/* ========== رابط تيليجرام في الإعدادات ========== */
+.designer-credit{
+  margin-top:12px;padding:10px;background:linear-gradient(135deg,#0b1f3a,#11315c);
+  border-radius:8px;color:#fff;text-align:center;
+  border:2px solid var(--gold);
+}
+.designer-credit .name{font-family:'IBM Plex Sans Arabic';font-weight:600;font-size:14px}
+.designer-credit a{
+  display:inline-block;margin-top:6px;background:var(--gold);color:var(--ink);
+  padding:6px 14px;border-radius:20px;text-decoration:none;font-weight:600;font-size:12px;
+  transition:transform .15s;
+}
+.designer-credit a:hover{transform:scale(1.05)}
+</style>
+</head>
+<body>
+
+<!-- ========== شريط الأدوات الرئيسي ========== -->
+<div class="toolbar">
+  <div class="toolbar-title">
+    <div class="crest">ص</div>
+    <span>منصة تحليل نتائج الطلاب</span>
+  </div>
+  <div class="toolbar-actions">
+    <button class="btn success" onclick="document.getElementById('xlsxFile').click()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+      استيراد من Excel
+    </button>
+    <input type="file" id="xlsxFile" accept=".xlsx,.xls" style="display:none" onchange="importExcel(event)">
+    <button class="btn" onclick="saveData()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>
+      حفظ
+    </button>
+    <button class="btn gold" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+      طباعة
+    </button>
+    <button class="btn danger" onclick="clearAll()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+      مسح وتفريغ
+    </button>
+  </div>
+</div>
+
+<!-- ========== شريط الإعدادات ========== -->
+<div class="settings-bar">
+  <div class="settings-grid">
+    <div class="field"><label>المدرسة</label>
+      <select id="i_school">
+        <option>الروضة</option><option>المرحلة الابتدائية</option>
+        <option>المتوسطة</option><option>الثانوية</option>
+      </select>
+    </div>
+    <div class="field"><label>المرحلة</label>
+      <select id="i_stage">
+        <option>ابتدائي</option><option>متوسط</option><option>ثانوي</option>
+      </select>
+    </div>
+    <div class="field"><label>العام الدراسي</label>
+      <select id="i_year">
+        <option>١٤٤٥ هـ</option><option selected>١٤٤٦ هـ</option><option>١٤٤٧ هـ</option>
+      </select>
+    </div>
+    <div class="field"><label>الفصل الدراسي</label>
+      <select id="i_semester">
+        <option>الأول</option><option>الثاني</option><option selected>الثالث</option>
+      </select>
+    </div>
+    <div class="field"><label>نوع القياس</label>
+      <select id="i_test_type">
+        <option>منتصف الفصل</option><option selected>نهاية الفصل</option>
+        <option>قياس</option><option>تجريبي</option>
+      </select>
+    </div>
+    <div class="field"><label>المادة</label>
+      <input id="i_subject" value="لغتي ">
+    </div>
+    <div class="field"><label>الصف</label>
+      <select id="i_grade">
+        <option>الأول</option><option>الثاني</option><option>الثالث</option>
+        <option>الرابع</option><option>الخامس</option><option selected>السادس</option>
+      </select>
+    </div>
+    <div class="field"><label>درجة التصحيح</label>
+      <input id="i_max_score" type="number" value="20" min="1" max="100">
+    </div>
+  </div>
+
+  <div class="designer-credit">
+    <div class="name">تصميم د/فواز</div>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد هنا</a>
+  </div>
+</div>
+
+<!-- ========== لوحة إدخال الطلاب ========== -->
+<div class="students-panel">
+  <h3>
+    <span>إدخال درجات الطلاب — الفصول الستة</span>
+    <span class="actions">
+      <button class="btn" onclick="setupStudents()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+        إعادة بناء الجدول
+      </button>
+    </span>
+  </h3>
+
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-bottom:10px">
+    <div class="field"><label>عدد طلاب الفصل 1</label><input type="number" id="cnt1" value="16" min="0" max="60"></div>
+    <div class="field"><label>عدد طلاب الفصل 2</label><input type="number" id="cnt2" value="0" min="0" max="60"></div>
+    <div class="field"><label>عدد طلاب الفصل 3</label><input type="number" id="cnt3" value="0" min="0" max="60"></div>
+    <div class="field"><label>عدد طلاب الفصل 4</label><input type="number" id="cnt4" value="0" min="0" max="60"></div>
+    <div class="field"><label>عدد طلاب الفصل 5</label><input type="number" id="cnt5" value="0" min="0" max="60"></div>
+    <div class="field"><label>عدد طلاب الفصل 6</label><input type="number" id="cnt6" value="0" min="0" max="60"></div>
+  </div>
+
+  <div id="studentsContainer"></div>
+</div>
+
+<!-- ========== صفحة التقرير A4 ========== -->
+<div class="page" id="reportPage">
+
+  <!-- رأس التقرير -->
+  <div class="report-header">
+    <div class="school-crest">تحليل<br>النتائج</div>
+    <div class="header-center">
+      <div class="ministry">المملكة العربية السعودية — وزارة التعليم</div>
+      <div class="school-name" id="h_school_name">منصة تحليل نتائج الطلاب</div>
+      <div class="subtitle">إدارة التقويم والتحليل التربوي</div>
+    </div>
+    <div class="header-right">
+      <div class="label">العام الدراسي</div>
+      <div class="year" id="h_year">١٤٤٦ هـ</div>
+    </div>
+  </div>
+
+  <!-- عنوان التقرير -->
+  <div class="report-title">
+    <h1>نتيجة دراسة وتحليل اختبار</h1>
+  </div>
+
+  <!-- البيانات الأساسية -->
+  <div class="info-section">
+    <div class="section-h"><span class="num">1</span>البيانات الأساسية للاختبار</div>
+    <div class="info-grid">
+      <div class="info-item"><div class="lbl">المدرسة</div><div class="val" id="r_school">الروضة</div></div>
+      <div class="info-item"><div class="lbl">المرحلة</div><div class="val" id="r_stage">ابتدائي</div></div>
+      <div class="info-item"><div class="lbl">الفصل الدراسي</div><div class="val" id="r_semester">الثالث</div></div>
+      <div class="info-item"><div class="lbl">نوع القياس</div><div class="val" id="r_test">نهاية الفصل</div></div>
+      <div class="info-item"><div class="lbl">المادة</div><div class="val" id="r_subject">لغتي</div></div>
+      <div class="info-item"><div class="lbl">الصف</div><div class="val" id="r_grade">السادس</div></div>
+      <div class="info-item"><div class="lbl">درجة التصحيح</div><div class="val" id="r_max">20</div></div>
+      <div class="info-item"><div class="lbl">إجمالي الطلاب</div><div class="val" id="r_total_students">16</div></div>
+    </div>
+  </div>
+
+  <!-- بطاقات الإحصاءات العامة -->
+  <div>
+    <div class="section-h"><span class="num">2</span>المؤشرات العامة للأداء</div>
+    <div class="stats-grid">
+      <div class="stat-card" style="border-top-color:var(--ink-2)">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3 8-8M20 12v6a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div class="lbl">المجموع الكلي</div><div class="val" id="s_total">٣٠٩</div>
+      </div>
+      <div class="stat-card" style="border-top-color:var(--vgood)">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M9 11a4 4 0 100-8 4 4 0 000 8z"/></svg></div>
+        <div class="lbl">عدد الطلاب</div><div class="val" id="s_count">١٦</div>
+      </div>
+      <div class="stat-card" style="border-top-color:var(--gold-2)">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div>
+        <div class="lbl">متوسط الدرجات</div><div class="val" id="s_avg">١٩٫٣١</div>
+      </div>
+      <div class="stat-card" style="border-top-color:var(--excellent)">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 1l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg></div>
+        <div class="lbl">نسبة التحصيل</div><div class="val" id="s_rate">٩٦٫٥٦<span class="small">%</span></div>
+      </div>
+      <div class="stat-card" style="border-top-color:var(--excellent)">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l9 4-9 4-9-4 9-4zM3 14l9 4 9-4M3 10l9 4 9-4"/></svg></div>
+        <div class="lbl">أعلى درجة</div><div class="val" id="s_max">٢٠</div>
+      </div>
+      <div class="stat-card" style="border-top-color:var(--weak)">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22V12M5 12V2M19 12V2M2 12h20"/></svg></div>
+        <div class="lbl">أدنى درجة</div><div class="val" id="s_min">١٥</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- جدول الفصول التفصيلي -->
+  <div style="margin-top:6px">
+    <div class="section-h"><span class="num">3</span>نتائج الفصول التفصيلية</div>
+    <table class="classes-table">
+      <thead>
+        <tr>
+          <th style="width:24%">البيان</th>
+          <th>الفصل ١</th><th>الفصل ٢</th><th>الفصل ٣</th>
+          <th>الفصل ٤</th><th>الفصل ٥</th><th>الفصل ٦</th>
+          <th style="background:linear-gradient(180deg,var(--gold-2),var(--gold)) !important;color:var(--ink)">الإجمالي</th>
+        </tr>
+      </thead>
+      <tbody id="classesTableBody">
+        <!-- يُملأ ديناميكياً -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- التقديرات والرسم البياني -->
+  <div>
+    <div class="section-h"><span class="num">4</span>توزيع التقديرات والنسب</div>
+    <div class="grades-section">
+      <table class="grades-table">
+        <thead>
+          <tr><th style="width:38%">التقدير</th><th>عدد الطلاب</th><th>النسبة المئوية</th></tr>
+        </thead>
+        <tbody>
+          <tr class="row-excellent">
+            <td class="grade-cell"><span class="grade-dot"></span>ممتاز</td>
+            <td id="g_excellent_n">١٤</td><td id="g_excellent_p">٨٧٫٥%</td>
+          </tr>
+          <tr class="row-vgood">
+            <td class="grade-cell"><span class="grade-dot"></span>جيد جداً</td>
+            <td id="g_vgood_n">٢</td><td id="g_vgood_p">١٢٫٥%</td>
+          </tr>
+          <tr class="row-good">
+            <td class="grade-cell"><span class="grade-dot"></span>جيد</td>
+            <td id="g_good_n">٠</td><td id="g_good_p">٠%</td>
+          </tr>
+          <tr class="row-pass">
+            <td class="grade-cell"><span class="grade-dot"></span>مقبول</td>
+            <td id="g_pass_n">٠</td><td id="g_pass_p">٠%</td>
+          </tr>
+          <tr class="row-weak">
+            <td class="grade-cell"><span class="grade-dot"></span>ضعيف</td>
+            <td id="g_weak_n">٠</td><td id="g_weak_p">٠%</td>
+          </tr>
+          <tr class="total-row">
+            <td>المجموع</td><td id="g_total_n">١٦</td><td id="g_total_p">١٠٠%</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="chart-card">
+        <div class="ch-title">رسم بياني — نسب التقديرات</div>
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- رسم بياني للفصول -->
+  <div class="chart-section">
+    <div class="ch-title">رسم بياني — متوسط درجات ونسب التحصيل لكل فصل</div>
+    <canvas id="barChart"></canvas>
+  </div>
+
+  <!-- التوقيعات -->
+  <div class="signatures">
+    <div class="sig-box">
+      <div class="role" contenteditable="true" spellcheck="false">معلمة المادة</div>
+      <div class="sig-line" contenteditable="true" spellcheck="false">الاسم والتوقيع</div>
+    </div>
+    <div class="sig-box">
+      <div class="role" contenteditable="true" spellcheck="false">مديرة المدرسة</div>
+      <div class="sig-line" contenteditable="true" spellcheck="false">الاسم والتوقيع — الختم الرسمي</div>
+    </div>
+  </div>
+
+  <!-- تذييل الصفحة -->
+  <div class="page-footer">
+    <div id="f_school">تقرير تحليل نتائج</div>
+    <div class="center">تقرير تحليل النتائج — وثيقة رسمية</div>
+    <div id="f_date">تاريخ الإصدار: <span id="reportDate"></span></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ التحويل للأرقام العربية ============ */
+const arDigits=['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+const toArDigits = (n) => String(n).replace(/[0-9]/g,d=>arDigits[d]);
+
+/* ============ التخزين المحلي ============ */
+const STORAGE_KEY = 'salhia_analysis_v1';
+
+function gatherSettings(){
+  const sigs=document.querySelectorAll('.sig-box');
+  const signatures=[];
+  sigs.forEach(box=>{
+    const role=box.querySelector('.role');
+    const line=box.querySelector('.sig-line');
+    signatures.push({
+      role:role?role.textContent.trim():'',
+      line:line?line.textContent.trim():''
+    });
+  });
+  return {
+    school:document.getElementById('i_school').value,
+    stage:document.getElementById('i_stage').value,
+    year:document.getElementById('i_year').value,
+    semester:document.getElementById('i_semester').value,
+    test_type:document.getElementById('i_test_type').value,
+    subject:document.getElementById('i_subject').value,
+    grade:document.getElementById('i_grade').value,
+    max_score:+document.getElementById('i_max_score').value,
+    counts:[1,2,3,4,5,6].map(i=>+document.getElementById('cnt'+i).value),
+    scores:gatherStudentScores(),
+    signatures:signatures
+  };
+}
+
+function gatherStudentScores(){
+  const data=[[],[],[],[],[],[]];
+  for(let c=1;c<=6;c++){
+    const cnt=+document.getElementById('cnt'+c).value;
+    for(let s=1;s<=cnt;s++){
+      const el=document.getElementById(`sc_${c}_${s}`);
+      if(el){
+        const v=parseFloat(el.value);
+        data[c-1].push(isNaN(v)?null:v);
+      }
+    }
+  }
+  return data;
+}
+
+function saveData(){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(gatherSettings()));
+    showToast('تم حفظ البيانات بنجاح ✓','success');
+  }catch(e){
+    showToast('تعذّر الحفظ: '+e.message,'error');
+  }
+}
+
+function loadData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw)return false;
+    const d=JSON.parse(raw);
+    if(d.school)document.getElementById('i_school').value=d.school;
+    if(d.stage)document.getElementById('i_stage').value=d.stage;
+    if(d.year)document.getElementById('i_year').value=d.year;
+    if(d.semester)document.getElementById('i_semester').value=d.semester;
+    if(d.test_type)document.getElementById('i_test_type').value=d.test_type;
+    if(d.subject)document.getElementById('i_subject').value=d.subject;
+    if(d.grade)document.getElementById('i_grade').value=d.grade;
+    if(d.max_score)document.getElementById('i_max_score').value=d.max_score;
+    if(d.counts)d.counts.forEach((c,i)=>document.getElementById('cnt'+(i+1)).value=c);
+    setupStudents();
+    if(d.scores){
+      d.scores.forEach((cl,ci)=>{
+        cl.forEach((v,si)=>{
+          const el=document.getElementById(`sc_${ci+1}_${si+1}`);
+          if(el && v!=null)el.value=v;
+        });
+      });
+    }
+    // استرجاع نصوص التوقيعات
+    if(d.signatures && Array.isArray(d.signatures)){
+      const sigs=document.querySelectorAll('.sig-box');
+      d.signatures.forEach((s,i)=>{
+        if(sigs[i]){
+          const role=sigs[i].querySelector('.role');
+          const line=sigs[i].querySelector('.sig-line');
+          if(role && s.role)role.textContent=s.role;
+          if(line && s.line)line.textContent=s.line;
+        }
+      });
+    }
+    refreshAll();
+    return true;
+  }catch(e){return false}
+}
+
+function clearAll(){
+  if(!confirm('هل أنت متأكد من مسح جميع البيانات؟ لا يمكن التراجع.'))return;
+  localStorage.removeItem(STORAGE_KEY);
+  [1,2,3,4,5,6].forEach(i=>document.getElementById('cnt'+i).value=0);
+  document.getElementById('cnt1').value=16;
+  document.getElementById('i_subject').value='لغتي';
+  setupStudents();
+  refreshAll();
+  showToast('تم تفريغ جميع البيانات','success');
+}
+
+/* ============ بناء حقول إدخال الطلاب ============ */
+function setupStudents(){
+  const container=document.getElementById('studentsContainer');
+  container.innerHTML='';
+  for(let c=1;c<=6;c++){
+    const cnt=+document.getElementById('cnt'+c).value;
+    if(cnt<=0)continue;
+    const max=+document.getElementById('i_max_score').value || 20;
+    const groupTitle=document.createElement('div');
+    groupTitle.style.cssText='grid-column:1/-1;background:linear-gradient(90deg,#0b1f3a,#11315c);color:#fff;padding:6px 12px;border-radius:6px;margin:8px 0 4px;font-family:IBM Plex Sans Arabic;font-weight:600;font-size:13px;border-right:4px solid var(--gold)';
+    groupTitle.textContent=`الفصل ${toArDigits(c)} — ${toArDigits(cnt)} طالبة`;
+    const wrap=document.createElement('div');
+    wrap.className='students-grid';
+    wrap.style.gridColumn='1/-1';
+    if(container.lastChild)container.appendChild(groupTitle);
+    else container.appendChild(groupTitle);
+    container.appendChild(wrap);
+    for(let s=1;s<=cnt;s++){
+      const div=document.createElement('div');
+      div.className='student-input';
+      div.innerHTML=`<label>طالبة ${toArDigits(s)}</label>
+        <input type="number" id="sc_${c}_${s}" min="0" max="${max}" step="0.5" 
+               placeholder="${toArDigits(0)}" oninput="refreshAll()">`;
+      wrap.appendChild(div);
+    }
+  }
+  refreshAll();
+}
+
+/* ============ حساب الإحصاءات ============ */
+function calculate(){
+  const max=+document.getElementById('i_max_score').value || 20;
+  const allClasses=gatherStudentScores();
+  let totalSum=0,totalCount=0,allMax=-Infinity,allMin=Infinity;
+  const classStats=[];
+
+  allClasses.forEach(scores=>{
+    const valid=scores.filter(v=>v!=null && !isNaN(v));
+    const sum=valid.reduce((a,b)=>a+b,0);
+    const cnt=valid.length;
+    const avg=cnt?sum/cnt:0;
+    const rate=cnt?(avg/max)*100:0;
+    const mx=cnt?Math.max(...valid):0;
+    const mn=cnt?Math.min(...valid):0;
+    classStats.push({sum,cnt,avg,rate,mx,mn});
+    totalSum+=sum;
+    totalCount+=cnt;
+    if(cnt){
+      allMax=Math.max(allMax,mx);
+      allMin=Math.min(allMin,mn);
+    }
+  });
+
+  const totalAvg=totalCount?totalSum/totalCount:0;
+  const totalRate=totalCount?(totalAvg/max)*100:0;
+
+  // التقديرات
+  const grades={excellent:0,vgood:0,good:0,pass:0,weak:0};
+  allClasses.flat().filter(v=>v!=null && !isNaN(v)).forEach(v=>{
+    const pct=(v/max)*100;
+    if(pct>=90)grades.excellent++;
+    else if(pct>=80)grades.vgood++;
+    else if(pct>=70)grades.good++;
+    else if(pct>=60)grades.pass++;
+    else grades.weak++;
+  });
+
+  return {
+    classStats,totalSum,totalCount,totalAvg,totalRate,
+    allMax:totalCount?allMax:0,allMin:totalCount?allMin:0,
+    grades,max
+  };
+}
+
+/* ============ تحديث الواجهة كاملة ============ */
+let pieChart=null, barChart=null;
+
+function refreshAll(){
+  // البيانات الأساسية في التقرير
+  document.getElementById('r_school').textContent=document.getElementById('i_school').value;
+  document.getElementById('r_stage').textContent=document.getElementById('i_stage').value;
+  document.getElementById('r_semester').textContent=document.getElementById('i_semester').value;
+  document.getElementById('r_test').textContent=document.getElementById('i_test_type').value;
+  document.getElementById('r_subject').textContent=document.getElementById('i_subject').value.trim();
+  document.getElementById('r_grade').textContent=document.getElementById('i_grade').value;
+  document.getElementById('r_max').textContent=toArDigits(document.getElementById('i_max_score').value);
+  document.getElementById('h_year').textContent=document.getElementById('i_year').value;
+
+  const r=calculate();
+
+  document.getElementById('r_total_students').textContent=toArDigits(r.totalCount);
+  document.getElementById('s_total').textContent=toArDigits(r.totalSum.toFixed(0));
+  document.getElementById('s_count').textContent=toArDigits(r.totalCount);
+  document.getElementById('s_avg').textContent=toArDigits(r.totalAvg.toFixed(2));
+  document.getElementById('s_rate').innerHTML=toArDigits(r.totalRate.toFixed(2))+'<span class="small">%</span>';
+  document.getElementById('s_max').textContent=toArDigits(r.allMax.toFixed(0));
+  document.getElementById('s_min').textContent=toArDigits(r.allMin.toFixed(0));
+
+  // جدول الفصول
+  const tbody=document.getElementById('classesTableBody');
+  const rows=[
+    {label:'مجموع الدرجات',key:'sum',dec:0},
+    {label:'عدد الطلاب',key:'cnt',dec:0},
+    {label:'متوسط الدرجات',key:'avg',dec:2},
+    {label:'نسبة التحصيل %',key:'rate',dec:2,suffix:'%'},
+    {label:'أعلى درجة',key:'mx',dec:0},
+    {label:'أدنى درجة',key:'mn',dec:0}
+  ];
+  tbody.innerHTML='';
+  rows.forEach(row=>{
+    const tr=document.createElement('tr');
+    let html=`<td>${row.label}</td>`;
+    let totalVal=0,cnt=0;
+    r.classStats.forEach(cs=>{
+      const v=cs[row.key];
+      html+=`<td>${cs.cnt?toArDigits(v.toFixed(row.dec))+(row.suffix||''):'—'}</td>`;
+      if(cs.cnt){totalVal+=v;cnt++}
+    });
+    let final='—';
+    if(row.key==='sum')final=toArDigits(r.totalSum.toFixed(0));
+    else if(row.key==='cnt')final=toArDigits(r.totalCount);
+    else if(row.key==='avg')final=toArDigits(r.totalAvg.toFixed(2));
+    else if(row.key==='rate')final=toArDigits(r.totalRate.toFixed(2))+'%';
+    else if(row.key==='mx')final=toArDigits(r.allMax.toFixed(0));
+    else if(row.key==='mn')final=toArDigits(r.allMin.toFixed(0));
+    html+=`<td>${final}</td>`;
+    tr.innerHTML=html;
+    tbody.appendChild(tr);
+  });
+
+  // التقديرات
+  const totalG=Object.values(r.grades).reduce((a,b)=>a+b,0) || 1;
+  const pct=v=>((v/totalG)*100).toFixed(1);
+  document.getElementById('g_excellent_n').textContent=toArDigits(r.grades.excellent);
+  document.getElementById('g_vgood_n').textContent=toArDigits(r.grades.vgood);
+  document.getElementById('g_good_n').textContent=toArDigits(r.grades.good);
+  document.getElementById('g_pass_n').textContent=toArDigits(r.grades.pass);
+  document.getElementById('g_weak_n').textContent=toArDigits(r.grades.weak);
+  document.getElementById('g_excellent_p').textContent=toArDigits(pct(r.grades.excellent))+'%';
+  document.getElementById('g_vgood_p').textContent=toArDigits(pct(r.grades.vgood))+'%';
+  document.getElementById('g_good_p').textContent=toArDigits(pct(r.grades.good))+'%';
+  document.getElementById('g_pass_p').textContent=toArDigits(pct(r.grades.pass))+'%';
+  document.getElementById('g_weak_p').textContent=toArDigits(pct(r.grades.weak))+'%';
+  document.getElementById('g_total_n').textContent=toArDigits(r.totalCount);
+  document.getElementById('g_total_p').textContent=toArDigits(100)+'%';
+
+  drawCharts(r);
+}
+
+function drawCharts(r){
+  if(pieChart)pieChart.destroy();
+  if(barChart)barChart.destroy();
+
+  // تفعيل الدقة الفائقة للطباعة 300 DPI
+  Chart.defaults.devicePixelRatio = Math.max(window.devicePixelRatio || 1, 3);
+  Chart.defaults.font.family = "'IBM Plex Sans Arabic',sans-serif";
+  Chart.defaults.font.weight = '700';
+  Chart.defaults.color = '#0a1d36';
+
+  const colors=['#15803d','#1d4ed8','#c2410c','#6d28d9','#b91c1c'];
+  const labels=['ممتاز','جيد جداً','جيد','مقبول','ضعيف'];
+  const values=[r.grades.excellent,r.grades.vgood,r.grades.good,r.grades.pass,r.grades.weak];
+
+  // الرسم الدائري
+  pieChart=new Chart(document.getElementById('pieChart'),{
+    type:'doughnut',
+    data:{labels,datasets:[{
+      data:values,backgroundColor:colors,
+      borderColor:'#fff',borderWidth:3,
+      hoverOffset:6
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      devicePixelRatio:3,
+      animation:false,
+      plugins:{
+        legend:{
+          position:'bottom',
+          labels:{
+            font:{family:"'IBM Plex Sans Arabic'",size:12,weight:'500'},
+            padding:8,boxWidth:12,boxHeight:12,
+            color:'#0a1d36'
+          }
+        },
+        datalabels:{
+          color:'#fff',
+          font:{family:"'IBM Plex Sans Arabic'",weight:'600',size:13},
+          textStrokeColor:'rgba(0,0,0,0.4)',textStrokeWidth:2,
+          formatter:(v,ctx)=>{
+            const total=ctx.dataset.data.reduce((a,b)=>a+b,0);
+            if(!v||!total)return '';
+            return toArDigits(((v/total)*100).toFixed(0))+'%';
+          }
+        }
+      }
+    },
+    plugins:[ChartDataLabels]
+  });
+
+  // الرسم الشريطي
+  const classLabels=['الفصل ١','الفصل ٢','الفصل ٣','الفصل ٤','الفصل ٥','الفصل ٦'];
+  const avgData=r.classStats.map(cs=>cs.avg.toFixed(2));
+  const rateData=r.classStats.map(cs=>cs.rate.toFixed(2));
+
+  barChart=new Chart(document.getElementById('barChart'),{
+    type:'bar',
+    data:{
+      labels:classLabels,
+      datasets:[
+        {
+          label:'متوسط الدرجات',data:avgData,
+          backgroundColor:'#11315c',borderColor:'#0a1d36',borderWidth:1.5,
+          yAxisID:'y',borderRadius:4,
+          barPercentage:0.7,categoryPercentage:0.8
+        },
+        {
+          label:'نسبة التحصيل %',data:rateData,type:'line',
+          borderColor:'#a87f1f',backgroundColor:'rgba(201,161,74,0.15)',
+          borderWidth:3.5,tension:0.4,yAxisID:'y1',
+          pointRadius:6,pointBackgroundColor:'#c9a14a',
+          pointBorderColor:'#856216',pointBorderWidth:2,fill:false
+        }
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      devicePixelRatio:3,
+      animation:false,
+      plugins:{
+        legend:{
+          position:'top',
+          labels:{
+            font:{family:"'IBM Plex Sans Arabic'",size:12,weight:'500'},
+            padding:10,boxWidth:14,boxHeight:14,
+            color:'#0a1d36'
+          }
+        },
+        datalabels:{
+          color:ctx=>ctx.dataset.type==='line'?'#856216':'#fff',
+          anchor:ctx=>ctx.dataset.type==='line'?'end':'center',
+          align:ctx=>ctx.dataset.type==='line'?'top':'center',
+          font:{family:"'IBM Plex Sans Arabic'",weight:'600',size:11},
+          textStrokeColor:ctx=>ctx.dataset.type==='line'?'rgba(255,255,255,0.8)':'rgba(0,0,0,0.3)',
+          textStrokeWidth:ctx=>ctx.dataset.type==='line'?3:1.5,
+          formatter:v=>toArDigits(v)
+        }
+      },
+      scales:{
+        x:{
+          ticks:{font:{family:"'IBM Plex Sans Arabic'",weight:'500',size:12},color:'#0a1d36'},
+          grid:{color:'rgba(217,201,138,0.3)'}
+        },
+        y:{
+          position:'right',beginAtZero:true,
+          ticks:{font:{family:"'IBM Plex Sans Arabic'",size:11,weight:'500'},callback:v=>toArDigits(v),color:'#0a1d36'},
+          title:{display:true,text:'متوسط الدرجات',font:{family:"'IBM Plex Sans Arabic'",weight:'500',size:12},color:'#0a1d36'},
+          grid:{color:'rgba(217,201,138,0.3)'}
+        },
+        y1:{
+          position:'left',beginAtZero:true,max:100,
+          grid:{drawOnChartArea:false},
+          ticks:{font:{family:"'IBM Plex Sans Arabic'",size:11,weight:'500'},callback:v=>toArDigits(v)+'%',color:'#0a1d36'},
+          title:{display:true,text:'نسبة التحصيل',font:{family:"'IBM Plex Sans Arabic'",weight:'500',size:12},color:'#0a1d36'}
+        }
+      }
+    },
+    plugins:[ChartDataLabels]
+  });
+}
+
+/* ============ استيراد من Excel ============ */
+function importExcel(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=evt=>{
+    try{
+      const data=new Uint8Array(evt.target.result);
+      const wb=XLSX.read(data,{type:'array'});
+      let imported=false;
+
+      // محاولة قراءة ورقة "البيانات"
+      const dataSheet=wb.Sheets['البيانات']||wb.Sheets[wb.SheetNames[0]];
+      const grid=XLSX.utils.sheet_to_json(dataSheet,{header:1,defval:null});
+
+      // استخراج الإعدادات
+      const find=(label)=>{
+        for(let i=0;i<grid.length;i++){
+          for(let j=0;j<(grid[i]||[]).length;j++){
+            if(String(grid[i][j]||'').trim()===label){
+              // ابحث عن قيمة في الصف التالي نفس العمود
+              for(let k=i+1;k<grid.length;k++){
+                const v=grid[k]?.[j];
+                if(v!=null && String(v).trim()!=='')return v;
+              }
+            }
+          }
+        }
+        return null;
+      };
+
+      const school=find('المدرسة')||find('المدرسة ');
+      const stage=find('المرحلة');
+      const year=find('العام الدراسي');
+      const sem=find('الفصل الدراسي');
+      const test=find('نوع القياس');
+      const subj=find('المادة');
+      const gr=find('الصف');
+      const maxS=find('درجة التصحيح');
+
+      if(school){const sel=document.getElementById('i_school');[...sel.options].forEach(o=>{if(o.value.includes(String(school).trim())||String(school).includes(o.value))sel.value=o.value});imported=true;}
+      if(stage){const sel=document.getElementById('i_stage');[...sel.options].forEach(o=>{if(o.value===String(stage).trim())sel.value=o.value});imported=true;}
+      if(year){const sel=document.getElementById('i_year');const ys=String(year).trim();[...sel.options].forEach(o=>{if(o.value.includes(ys)||ys.includes(o.value.replace(/\s*هـ\s*/g,'')))sel.value=o.value});imported=true;}
+      if(sem){const sel=document.getElementById('i_semester');[...sel.options].forEach(o=>{if(o.value===String(sem).trim())sel.value=o.value});imported=true;}
+      if(test){const sel=document.getElementById('i_test_type');[...sel.options].forEach(o=>{if(o.value===String(test).trim())sel.value=o.value});imported=true;}
+      if(subj){document.getElementById('i_subject').value=String(subj).trim();imported=true;}
+      if(gr){const sel=document.getElementById('i_grade');[...sel.options].forEach(o=>{if(o.value===String(gr).trim())sel.value=o.value});imported=true;}
+      if(maxS){document.getElementById('i_max_score').value=+maxS;imported=true;}
+
+      // استخراج درجات الطلاب من الفصول الستة
+      // البنية: العمود F (index 5) = رقم الطالب، الأعمدة G,I,K,M,O,Q (7,9,11,13,15,17) = درجات الفصول 1..6
+      const scoresByClass={1:[],2:[],3:[],4:[],5:[],6:[]};
+      const classColumns={1:6, 2:8, 3:10, 4:12, 5:14, 6:16}; // الأعمدة 0-indexed للدرجات
+
+      // ابحث عن صف بداية بيانات الطلاب (أول صف يحتوي رقم طالب في العمود F)
+      let startRow=-1;
+      for(let i=0;i<grid.length;i++){
+        const row=grid[i]||[];
+        const numCell=row[5];
+        const scoreCell=row[6];
+        if(typeof numCell==='number' && numCell>=1 && numCell<=60 && typeof scoreCell==='number'){
+          startRow=i;
+          break;
+        }
+      }
+
+      if(startRow>=0){
+        for(let i=startRow;i<grid.length;i++){
+          const row=grid[i]||[];
+          const studentNum=row[5];
+          if(typeof studentNum!=='number' || studentNum<1) break; // انتهت قائمة الطلاب
+          // اقرأ درجة كل فصل في عموده المخصص
+          for(let c=1;c<=6;c++){
+            const score=row[classColumns[c]];
+            if(typeof score==='number' && score>=0){
+              scoresByClass[c].push(score);
+            }
+          }
+        }
+      }
+
+      // تعيين عدد الطلاب وملء الحقول
+      for(let c=1;c<=6;c++){
+        document.getElementById('cnt'+c).value=scoresByClass[c].length;
+      }
+
+      setupStudents();
+      for(let c=1;c<=6;c++){
+        scoresByClass[c].forEach((v,idx)=>{
+          const el=document.getElementById(`sc_${c}_${idx+1}`);
+          if(el)el.value=v;
+        });
+      }
+
+      refreshAll();
+      showToast('تم استيراد البيانات من Excel بنجاح ✓','success');
+    }catch(err){
+      showToast('خطأ في قراءة الملف: '+err.message,'error');
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+/* ============ التنبيهات ============ */
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='toast show '+(type||'');
+  setTimeout(()=>t.className='toast',2800);
+}
+
+/* ============ التشغيل الأولي ============ */
+['i_school','i_stage','i_year','i_semester','i_test_type','i_subject','i_grade','i_max_score'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',refreshAll);
+  document.getElementById(id).addEventListener('change',refreshAll);
+});
+['cnt1','cnt2','cnt3','cnt4','cnt5','cnt6'].forEach(id=>{
+  document.getElementById(id).addEventListener('change',setupStudents);
+});
+
+// تاريخ الإصدار
+const today=new Date();
+const arDate=today.toLocaleDateString('ar-SA-u-nu-arab',{year:'numeric',month:'long',day:'numeric'});
+document.getElementById('reportDate').textContent=arDate;
+
+// تحميل البيانات المحفوظة أو إعداد جدول الطلاب الافتراضي
+if(!loadData()){
+  // بيانات تجريبية من الإكسل الأصلي
+  document.getElementById('cnt1').value=16;
+  setupStudents();
+  const demoScores=[20,20,20,20,20,20,20,16,20,15,20,20,20,18,20,20];
+  demoScores.forEach((v,i)=>{
+    const el=document.getElementById(`sc_1_${i+1}`);
+    if(el)el.value=v;
+  });
+  refreshAll();
+}
+
+// حفظ تلقائي عند الإغلاق
+window.addEventListener('beforeunload',()=>{
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(gatherSettings()))}catch(e){}
+});
+</script>
+</body>
+</html>

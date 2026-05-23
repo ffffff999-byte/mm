@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محلل نتائج الطلاب | تصميم د/فواز</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --dt: #1B4F72;
+    --mt: #1A7A6E;
+    --lt: #A8D5CF;
+    --vl: #D6EEF2;
+    --gr: #1E8449;
+    --or: #E67E22;
+    --rd: #C0392B;
+    --pu: #6C3483;
+    --bl: #1A5276;
+    --gd: #B7950B;
+    --wh: #ffffff;
+    --bg: #F0F4F8;
+    --card: #ffffff;
+    --text: #1a2332;
+    --muted: #6b7a8d;
+    --border: #d0dce8;
+    --shadow: 0 4px 24px rgba(27,79,114,0.10);
+    --shadow-lg: 0 8px 40px rgba(27,79,114,0.18);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Tajawal', 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ── HEADER ─────────────────────────────────────────── */
+  .header {
+    background: linear-gradient(135deg, #1B4F72 0%, #1A7A6E 60%, #16a085 100%);
+    padding: 28px 40px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content:'';
+    position:absolute; inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .header-inner { position:relative; max-width:1300px; margin:auto; }
+  .header h1 {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.5px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .header p {
+    color: rgba(255,255,255,0.82);
+    font-size: 0.95rem;
+    margin-top: 4px;
+  }
+  .header-badge {
+    display:inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: #fff;
+    font-size: 0.8rem;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-top: 10px;
+    backdrop-filter: blur(6px);
+  }
+  .designer-tag {
+    position:absolute; left:0; top:50%; transform:translateY(-50%);
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color:#fff;
+    padding: 8px 18px;
+    border-radius: var(--radius-sm);
+    font-size:0.85rem; font-weight:700;
+    backdrop-filter:blur(4px);
+  }
+
+  /* ── MAIN LAYOUT ────────────────────────────────────── */
+  .main { max-width:1300px; margin:32px auto; padding: 0 20px; }
+
+  /* ── UPLOAD ZONE ─────────────────────────────────────── */
+  .upload-section {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px;
+    text-align: center;
+    border: 2px dashed var(--border);
+    transition: all .3s ease;
+    margin-bottom: 28px;
+  }
+  .upload-section.dragover {
+    border-color: var(--mt);
+    background: #f0faf8;
+    transform: scale(1.01);
+  }
+  .upload-icon {
+    width: 80px; height: 80px;
+    background: linear-gradient(135deg, var(--vl), var(--lt));
+    border-radius: 50%;
+    display: flex; align-items:center; justify-content:center;
+    margin: 0 auto 20px;
+    font-size: 2.2rem;
+  }
+  .upload-section h2 { font-size:1.5rem; font-weight:800; color:var(--dt); margin-bottom:8px; }
+  .upload-section p { color:var(--muted); font-size:0.95rem; margin-bottom:20px; }
+  .upload-btn {
+    background: linear-gradient(135deg, var(--dt), var(--mt));
+    color:#fff; border:none; padding:14px 36px;
+    border-radius: 50px; font-size:1rem; font-weight:700;
+    font-family:inherit; cursor:pointer;
+    box-shadow: 0 4px 16px rgba(27,79,114,0.3);
+    transition: all .25s ease;
+  }
+  .upload-btn:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(27,79,114,0.4); }
+  #fileInput { display:none; }
+
+  /* ── INFO FIELDS ────────────────────────────────────── */
+  .info-bar {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap:12px; margin-bottom:28px;
+  }
+  .info-field label {
+    display:block; font-size:0.8rem; font-weight:700;
+    color:var(--muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:.5px;
+  }
+  .info-field input {
+    width:100%; padding:10px 14px;
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    font-family:inherit; font-size:0.95rem; color:var(--text);
+    background: var(--card); transition: border .2s;
+  }
+  .info-field input:focus { outline:none; border-color:var(--mt); box-shadow:0 0 0 3px rgba(26,122,110,.1); }
+
+  /* ── SECTION HEADER ─────────────────────────────────── */
+  .section-hdr {
+    display:flex; align-items:center; gap:10px;
+    margin-bottom:18px; margin-top:32px;
+  }
+  .section-hdr .dot {
+    width:10px; height:10px; border-radius:50%;
+    background: linear-gradient(135deg, var(--dt), var(--mt));
+  }
+  .section-hdr h3 {
+    font-size:1.15rem; font-weight:800; color:var(--dt);
+  }
+
+  /* ── KPI CARDS ──────────────────────────────────────── */
+  .kpi-grid {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+    gap:16px; margin-bottom:28px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 20px 18px 16px;
+    box-shadow: var(--shadow);
+    border-top: 4px solid transparent;
+    position: relative; overflow:hidden;
+    transition: transform .2s, box-shadow .2s;
+  }
+  .kpi-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+  .kpi-card::after {
+    content:''; position:absolute; bottom:-20px; left:-20px;
+    width:80px; height:80px; border-radius:50%;
+    background: currentColor; opacity:.05;
+  }
+  .kpi-label { font-size:0.78rem; font-weight:700; color:var(--muted); margin-bottom:8px; }
+  .kpi-value { font-size:2rem; font-weight:900; line-height:1; }
+  .kpi-sub { font-size:0.75rem; color:var(--muted); margin-top:6px; }
+
+  /* ── LEVEL DISTRIBUTION ─────────────────────────────── */
+  .dist-grid {
+    display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap:12px; margin-bottom:28px;
+  }
+  .dist-card {
+    background:var(--card); border-radius:var(--radius-sm);
+    padding:16px; box-shadow:var(--shadow);
+    display:flex; align-items:center; gap:14px;
+  }
+  .dist-icon {
+    width:48px; height:48px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.4rem; flex-shrink:0;
+  }
+  .dist-info .count { font-size:1.8rem; font-weight:900; line-height:1; }
+  .dist-info .label { font-size:0.8rem; color:var(--muted); font-weight:600; }
+  .dist-info .pct { font-size:0.75rem; color:var(--muted); }
+
+  /* progress bar */
+  .bar-track {
+    height:8px; background:#eee; border-radius:4px;
+    overflow:hidden; margin-top:6px;
+  }
+  .bar-fill { height:100%; border-radius:4px; transition:width 1s cubic-bezier(.4,0,.2,1); }
+
+  /* ── STATS TABLE ────────────────────────────────────── */
+  .stats-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px;
+  }
+  @media(max-width:700px){ .stats-grid{grid-template-columns:1fr;} }
+
+  .stats-card {
+    background:var(--card); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden;
+  }
+  .stats-card-hdr {
+    background: linear-gradient(135deg,var(--dt),var(--bl));
+    color:#fff; padding:14px 18px;
+    font-weight:800; font-size:0.95rem;
+  }
+  .stats-table { width:100%; border-collapse:collapse; }
+  .stats-table tr:nth-child(even) td { background:#f8fbfd; }
+  .stats-table td {
+    padding:10px 16px; font-size:0.88rem;
+    border-bottom:1px solid var(--border);
+  }
+  .stats-table td:last-child { font-weight:800; color:var(--dt); text-align:left; }
+
+  /* ── QUESTION ANALYSIS ──────────────────────────────── */
+  .q-table-wrap {
+    background:var(--card); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden; margin-bottom:28px;
+  }
+  .q-table-hdr {
+    background:linear-gradient(135deg,var(--dt),var(--mt));
+    color:#fff; padding:16px 20px;
+    font-weight:800; font-size:1rem;
+  }
+  .q-table { width:100%; border-collapse:collapse; }
+  .q-table th {
+    background: #f0f6fa; padding:10px 12px;
+    font-size:0.8rem; font-weight:700; color:var(--bl);
+    border-bottom:2px solid var(--border); text-align:center;
+  }
+  .q-table td {
+    padding:10px 12px; font-size:0.87rem;
+    border-bottom:1px solid var(--border); text-align:center;
+  }
+  .q-table tr:hover td { background:#f5fbfd; }
+  .badge {
+    display:inline-block; padding:3px 10px; border-radius:20px;
+    font-size:0.75rem; font-weight:700; color:#fff;
+  }
+
+  /* ── STUDENT TABLE ──────────────────────────────────── */
+  .student-wrap {
+    background:var(--card); border-radius:var(--radius);
+    box-shadow:var(--shadow); overflow:hidden; margin-bottom:28px;
+  }
+  .student-hdr {
+    background:linear-gradient(135deg,var(--pu),var(--dt));
+    color:#fff; padding:16px 20px;
+    font-weight:800; font-size:1rem;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .search-box {
+    padding:8px 14px; border-radius:20px; border:none;
+    font-family:inherit; font-size:0.85rem; width:220px;
+    background:rgba(255,255,255,.15); color:#fff;
+    outline:none; placeholder-color:#fff;
+  }
+  .search-box::placeholder { color:rgba(255,255,255,0.6); }
+  .student-table { width:100%; border-collapse:collapse; }
+  .student-table th {
+    background:#f0f6fa; padding:10px 10px;
+    font-size:0.78rem; font-weight:700; color:var(--bl);
+    border-bottom:2px solid var(--border); position:sticky; top:0;
+  }
+  .student-table td {
+    padding:9px 10px; font-size:0.84rem;
+    border-bottom:1px solid #eef2f6; text-align:center;
+  }
+  .student-table tr:hover td { background:#f5fbfd; }
+  .student-table td:nth-child(2) { text-align:right; font-weight:600; }
+  .table-scroll { max-height:420px; overflow-y:auto; }
+
+  /* ── LEVEL BADGE COLORS ─────────────────────────────── */
+  .lv-ممتاز    { background:var(--gr); }
+  .lv-جيد      { background:var(--gd); }
+  .lv-مقبول    { background:var(--or); }
+  .lv-ضعيف     { background:var(--rd); }
+  .lv-جيد-جداً { background:#2E86C1; }
+
+  .diff-مناسب  { background:var(--gr); }
+  .diff-صعب    { background:var(--rd); }
+  .diff-سهل    { background:var(--or); }
+  .disc-ممتاز  { background:var(--gr); }
+  .disc-جيد    { background:#2E86C1; }
+  .disc-مقبول  { background:var(--gd); }
+  .disc-يراجع  { background:var(--rd); }
+
+  /* ── HIDDEN / LOADING ────────────────────────────────── */
+  .hidden { display:none !important; }
+  #results { animation: fadeUp .6s ease; }
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0);  }
+  }
+
+  .loader {
+    text-align:center; padding:60px;
+    color:var(--mt); font-size:1.1rem; font-weight:700;
+  }
+  .spinner {
+    width:44px; height:44px; border:4px solid var(--vl);
+    border-top:4px solid var(--mt);
+    border-radius:50%; animation:spin .8s linear infinite;
+    margin:0 auto 16px;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* ── PRINT BUTTON ────────────────────────────────────── */
+  .action-bar {
+    display:flex; gap:12px; flex-wrap:wrap;
+    margin-bottom:24px; justify-content:flex-end;
+  }
+  .act-btn {
+    padding:10px 22px; border-radius:50px; border:none;
+    font-family:inherit; font-size:0.88rem; font-weight:700;
+    cursor:pointer; display:flex; align-items:center; gap:6px;
+    transition:all .2s;
+  }
+  .act-btn.primary { background:var(--dt); color:#fff; box-shadow:0 3px 12px rgba(27,79,114,0.25); }
+  .act-btn.primary:hover { background:var(--mt); }
+  .act-btn.secondary { background:#fff; color:var(--dt); border:2px solid var(--border); }
+  .act-btn.secondary:hover { border-color:var(--dt); }
+
+  /* ── FOOTER ─────────────────────────────────────────── */
+  .footer {
+    text-align:center; padding:28px 20px;
+    color:var(--muted); font-size:0.85rem;
+  }
+  .footer strong { color:var(--dt); font-size:1rem; }
+  .footer a { color:var(--mt); text-decoration:none; font-weight:700; }
+  .footer a:hover { text-decoration:underline; }
+
+  /* ── TOOLTIP ────────────────────────────────────────── */
+  [title] { cursor:help; }
+
+  /* ── PRINT ──────────────────────────────────────────── */
+  @media print {
+    .upload-section, .action-bar, .footer, .search-box { display:none; }
+    body { background:#fff; }
+    .kpi-card, .stats-card, .q-table-wrap, .student-wrap, .dist-card { break-inside:avoid; }
+  }
+
+  /* ── RESPONSIVE ─────────────────────────────────────── */
+  @media(max-width:600px){
+    .header { padding:20px; }
+    .header h1 { font-size:1.4rem; }
+    .designer-tag { display:none; }
+    .kpi-grid { grid-template-columns:repeat(2,1fr); }
+    .dist-grid { grid-template-columns:repeat(2,1fr); }
+    .main { padding:0 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-inner">
+    <div class="designer-tag">✦ تصميم د / فواز ✦</div>
+    <h1>🎓 محلل نتائج الطلاب</h1>
+    <p>تحليل إحصائي شامل لنتائج الاختبارات — المجموع الكلي 40 درجة</p>
+    <span class="header-badge">📊 مقاييس النزعة المركزية • التشتت • تحليل الفقرات</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- UPLOAD -->
+  <div class="upload-section" id="dropZone">
+    <div class="upload-icon">📂</div>
+    <h2>ارفع ملف Excel الخاص بدرجات الطلاب</h2>
+    <p>يجب أن يحتوي الملف على: <strong>اسم الطالب</strong> في العمود الأول، ثم <strong>درجات الأسئلة</strong> في الأعمدة التالية</p>
+    <p style="font-size:0.83rem;color:#999;margin-bottom:16px;">الصف الأول = عناوين | الصف الثاني فصاعدًا = بيانات الطلاب | يدعم: .xlsx .xls .csv</p>
+    <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+      📤 اختر الملف
+    </button>
+    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+    <p style="margin-top:14px;font-size:0.8rem;color:#bbb;">أو اسحب الملف وأفلته هنا</p>
+  </div>
+
+  <!-- INFO BAR -->
+  <div class="info-bar" id="infoBar">
+    <div class="info-field">
+      <label>اسم المعلم</label>
+      <input type="text" id="teacherName" placeholder="أدخل اسم المعلم">
+    </div>
+    <div class="info-field">
+      <label>المادة الدراسية</label>
+      <input type="text" id="subject" placeholder="مثال: الرياضيات">
+    </div>
+    <div class="info-field">
+      <label>الفصل الدراسي</label>
+      <input type="text" id="classname" placeholder="مثال: 3/1">
+    </div>
+    <div class="info-field">
+      <label>المجموع الكلي للاختبار</label>
+      <input type="number" id="totalMarks" value="40" min="1" max="500" onchange="recompute()">
+    </div>
+    <div class="info-field">
+      <label>التاريخ</label>
+      <input type="date" id="examDate">
+    </div>
+  </div>
+
+  <!-- LOADER -->
+  <div id="loader" class="loader hidden">
+    <div class="spinner"></div>
+    جاري التحليل...
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results" class="hidden">
+
+    <!-- Action Bar -->
+    <div class="action-bar">
+      <button class="act-btn secondary" onclick="document.getElementById('fileInput').click()">📂 رفع ملف آخر</button>
+      <button class="act-btn primary" onclick="window.print()">🖨️ طباعة التقرير</button>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="section-hdr"><div class="dot"></div><h3>المؤشرات الرئيسية للأداء</h3></div>
+    <div class="kpi-grid" id="kpiGrid"></div>
+
+    <!-- LEVEL DISTRIBUTION -->
+    <div class="section-hdr"><div class="dot"></div><h3>توزيع مستويات الأداء</h3></div>
+    <div class="dist-grid" id="distGrid"></div>
+
+    <!-- STATS TABLES -->
+    <div class="section-hdr"><div class="dot"></div><h3>التحليل الإحصائي التفصيلي</h3></div>
+    <div class="stats-grid">
+      <div class="stats-card">
+        <div class="stats-card-hdr">📐 مقاييس النزعة المركزية</div>
+        <table class="stats-table" id="centralTable"></table>
+      </div>
+      <div class="stats-card">
+        <div class="stats-card-hdr">📊 مقاييس التشتت</div>
+        <table class="stats-table" id="dispersionTable"></table>
+      </div>
+    </div>
+
+    <!-- QUESTION ANALYSIS -->
+    <div class="section-hdr"><div class="dot"></div><h3>تحليل فقرات الاختبار</h3></div>
+    <div class="q-table-wrap">
+      <div class="q-table-hdr">معاملا الصعوبة والتمييز لكل فقرة | الفئة العليا/الدنيا: 27% من الطلاب | معامل الصعوبة المثالي: 30%–70% | معامل التمييز المقبول ≥ 0.20</div>
+      <div style="overflow-x:auto">
+        <table class="q-table" id="qTable">
+          <thead><tr>
+            <th>#</th><th>السؤال</th><th>الدرجة القصوى</th>
+            <th>مجموع الدرجات</th><th>معامل الصعوبة %</th><th>تفسير الصعوبة</th>
+            <th>مجموع الفئة العليا</th><th>مجموع الفئة الدنيا</th>
+            <th>معامل التمييز</th><th>تفسير التمييز</th>
+          </tr></thead>
+          <tbody id="qTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- STUDENT TABLE -->
+    <div class="section-hdr"><div class="dot"></div><h3>نتائج الطلاب التفصيلية</h3></div>
+    <div class="student-wrap">
+      <div class="student-hdr">
+        <span>جدول نتائج الطلاب الكامل</span>
+        <input class="search-box" type="text" id="searchBox" placeholder="🔍 ابحث عن طالب..." oninput="filterStudents()">
+      </div>
+      <div class="table-scroll">
+        <table class="student-table">
+          <thead id="studentHead"></thead>
+          <tbody id="studentBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /results -->
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>✦ تصميم د / فواز ✦</strong><br>
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">انقر هنا للمزيد 🔗</a>
+</div>
+
+<script>
+// ── GLOBALS ──────────────────────────────────────────────────
+let G = { students:[], headers:[], totalMarks:40, qCount:0 };
+
+// ── FILE INPUT ────────────────────────────────────────────────
+document.getElementById('fileInput').addEventListener('change', e => {
+  if(e.target.files[0]) handleFile(e.target.files[0]);
+});
+const dz = document.getElementById('dropZone');
+dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.classList.add('dragover'); });
+dz.addEventListener('dragleave', ()=> dz.classList.remove('dragover'));
+dz.addEventListener('drop', e=>{
+  e.preventDefault(); dz.classList.remove('dragover');
+  if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+});
+
+function handleFile(file) {
+  const loader = document.getElementById('loader');
+  loader.classList.remove('hidden');
+  document.getElementById('results').classList.add('hidden');
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, {type:'binary'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {header:1, defval:0});
+      if(rows.length < 2){ alert('الملف لا يحتوي على بيانات كافية!'); loader.classList.add('hidden'); return; }
+      parseData(rows);
+      loader.classList.add('hidden');
+      document.getElementById('results').classList.remove('hidden');
+      document.getElementById('results').scrollIntoView({behavior:'smooth'});
+    } catch(err){
+      alert('خطأ في قراءة الملف: ' + err.message);
+      loader.classList.add('hidden');
+    }
+  };
+  reader.readAsBinaryString(file);
+}
+
+function parseData(rows) {
+  const hdrs = rows[0].map(h => String(h||'').trim());
+  G.headers = hdrs;
+  // First col = name, rest = question scores
+  G.qCount = hdrs.length - 1;
+  G.students = rows.slice(1).filter(r => r[0]).map(r => ({
+    name: String(r[0]||'').trim(),
+    scores: Array.from({length:G.qCount}, (_,i) => parseFloat(r[i+1])||0)
+  }));
+  recompute();
+}
+
+function recompute() {
+  G.totalMarks = parseFloat(document.getElementById('totalMarks').value)||40;
+  if(!G.students.length) return;
+  renderAll();
+}
+
+// ── MATH HELPERS ─────────────────────────────────────────────
+function sum(arr)   { return arr.reduce((a,b)=>a+b,0); }
+function mean(arr)  { return arr.length ? sum(arr)/arr.length : 0; }
+function median(arr){ const s=[...arr].sort((a,b)=>a-b); const m=Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; }
+function mode(arr)  {
+  const freq={}; arr.forEach(v=>{freq[v]=(freq[v]||0)+1;});
+  let mx=0,mo=null; Object.entries(freq).forEach(([v,c])=>{ if(c>mx){mx=c;mo=parseFloat(v);} });
+  return mo;
+}
+function stdev(arr) {
+  if(arr.length<2)return 0;
+  const m=mean(arr); return Math.sqrt(arr.reduce((s,v)=>s+(v-m)**2,0)/(arr.length-1));
+}
+function getLevel(pct) {
+  if(pct>=90) return 'ممتاز';
+  if(pct>=80) return 'جيد جداً';
+  if(pct>=70) return 'جيد';
+  if(pct>=60) return 'مقبول';
+  return 'ضعيف';
+}
+function levelColor(l) {
+  return l==='ممتاز'?'#1E8449':l==='جيد جداً'?'#2E86C1':l==='جيد'?'#D4AC0D':l==='مقبول'?'#E67E22':'#C0392B';
+}
+
+// ── RENDER ALL ────────────────────────────────────────────────
+function renderAll() {
+  const students = G.students;
+  const TM = G.totalMarks;
+  // Compute totals
+  const totals = students.map(s=>sum(s.scores));
+  const pcts   = totals.map(t=>t/TM*100);
+  const levels = pcts.map(getLevel);
+
+  // ── KPI CARDS ──
+  const avg     = mean(totals);
+  const avgPct  = avg/TM*100;
+  const hi      = Math.max(...totals);
+  const lo      = Math.min(...totals);
+  const sd      = stdev(totals);
+  const med     = median(totals);
+  const md      = mode(totals);
+  const range_  = hi-lo;
+  const cv      = avg>0?sd/avg*100:0;
+  const pass    = pcts.filter(p=>p>=60).length;
+  const fail    = students.length-pass;
+  const passPct = students.length>0?pass/students.length*100:0;
+
+  const kpis = [
+    {label:'متوسط الفصل /'+TM, value:avg.toFixed(1),  sub:'المتوسط الحسابي', color:'#1E8449',  bg:'#eafaf1'},
+    {label:'متوسط النسبة %',   value:avgPct.toFixed(1)+'%',sub:'من '+TM+' درجة', color:'#1A7A6E', bg:'#e8f8f5'},
+    {label:'أعلى درجة',        value:hi,               sub:'/'+TM, color:'#2E86C1', bg:'#eaf4fc'},
+    {label:'أدنى درجة',        value:lo,               sub:'/'+TM, color:'#C0392B', bg:'#fdf2f2'},
+    {label:'الانحراف المعياري', value:sd.toFixed(2),   sub:'مقياس التشتت',  color:'#E67E22', bg:'#fef5e7'},
+    {label:'المدى',             value:range_,          sub:'أعلى−أدنى',     color:'#6C3483', bg:'#f5eef8'},
+    {label:'عدد الطلاب',        value:students.length, sub:'إجمالي',         color:'#1A5276', bg:'#eaf2fb'},
+    {label:'نسبة النجاح %',     value:passPct.toFixed(1)+'%', sub:pass+' ناجح من '+students.length, color:'#1E8449', bg:'#eafaf1'},
+  ];
+  const kg = document.getElementById('kpiGrid');
+  kg.innerHTML = kpis.map(k=>`
+    <div class="kpi-card" style="border-top-color:${k.color}; background:${k.bg};">
+      <div class="kpi-label">${k.label}</div>
+      <div class="kpi-value" style="color:${k.color}">${k.value}</div>
+      <div class="kpi-sub">${k.sub}</div>
+    </div>`).join('');
+
+  // ── LEVEL DISTRIBUTION ──
+  const lvlDefs = [
+    {label:'ممتاز',    range:'36–40', emoji:'🏆', color:'#1E8449', bg:'#eafaf1'},
+    {label:'جيد جداً', range:'32–35', emoji:'⭐', color:'#2E86C1', bg:'#eaf4fc'},
+    {label:'جيد',      range:'28–31', emoji:'✅', color:'#D4AC0D', bg:'#fef9e7'},
+    {label:'مقبول',    range:'24–27', emoji:'📘', color:'#E67E22', bg:'#fef5e7'},
+    {label:'ضعيف',     range:'< 24',  emoji:'⚠️', color:'#C0392B', bg:'#fdf2f2'},
+  ];
+  const lvlCounts = {};
+  lvlDefs.forEach(l=>{ lvlCounts[l.label]=levels.filter(lv=>lv===l.label).length; });
+
+  const dg = document.getElementById('distGrid');
+  dg.innerHTML = lvlDefs.map(l=>{
+    const cnt = lvlCounts[l.label]||0;
+    const pct = students.length>0?(cnt/students.length*100):0;
+    return `
+      <div class="dist-card">
+        <div class="dist-icon" style="background:${l.bg}; color:${l.color}">${l.emoji}</div>
+        <div class="dist-info">
+          <div class="count" style="color:${l.color}">${cnt}</div>
+          <div class="label">${l.label}</div>
+          <div class="pct">${pct.toFixed(1)}% — ${l.range}/40</div>
+          <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${l.color}"></div></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // ── CENTRAL TENDENCY ──
+  const ct = document.getElementById('centralTable');
+  const ctRows = [
+    ['المتوسط الحسابي',  avg.toFixed(2),     'مجموع الدرجات ÷ عدد الطلاب'],
+    ['الوسيط',           median(totals).toFixed(2), 'القيمة الوسطى بعد الترتيب'],
+    ['المنوال',          (mode(totals)||'-').toString(), 'الدرجة الأكثر تكراراً'],
+    ['أعلى درجة',        hi.toFixed(1),       'أفضل أداء في الفصل'],
+    ['أدنى درجة',        lo.toFixed(1),       'أضعف أداء في الفصل'],
+    ['متوسط النسبة %',   avgPct.toFixed(1)+'%', 'من إجمالي '+TM],
+  ];
+  ct.innerHTML = ctRows.map(([a,b,c])=>`<tr><td>${a}<br><small style="color:#999">${c}</small></td><td>${b}</td></tr>`).join('');
+
+  // ── DISPERSION ──
+  const dt_ = document.getElementById('dispersionTable');
+  const dtRows = [
+    ['المدى',              range_.toFixed(1),   'أعلى درجة − أدنى درجة'],
+    ['الانحراف المعياري',  sd.toFixed(2),       'يقيس التشتت حول المتوسط'],
+    ['التباين',            (sd*sd).toFixed(2),  'مربع الانحراف المعياري'],
+    ['معامل الاختلاف %',   cv.toFixed(1)+'%',   'صغره = تجانس أفضل'],
+    ['عدد الناجحين',       pass+' طالب',        'نسبة ≥ 60%: '+passPct.toFixed(1)+'%'],
+    ['عدد الراسبين',       fail+' طالب',        'نسبة < 60%: '+(100-passPct).toFixed(1)+'%'],
+  ];
+  dt_.innerHTML = dtRows.map(([a,b,c])=>`<tr><td>${a}<br><small style="color:#999">${c}</small></td><td>${b}</td></tr>`).join('');
+
+  // ── QUESTION ANALYSIS ──
+  const n27 = Math.max(1, Math.round(students.length*0.27));
+  const qMaxArr = Array.from({length:G.qCount}, (_,qi)=>{
+    const qScores = students.map(s=>s.scores[qi]);
+    return Math.max(...qScores);
+  });
+  const qBodyEl = document.getElementById('qTableBody');
+  let qRows = '';
+  for(let qi=0;qi<G.qCount;qi++){
+    const qScores = students.map(s=>s.scores[qi]);
+    const qMax    = qMaxArr[qi];
+    const qSum    = sum(qScores);
+    const diff    = students.length>0 && qMax>0 ? qSum/(students.length*qMax)*100 : 0;
+    const diffLbl = diff<30?'صعب جداً':diff<=70?'مناسب':'سهل جداً';
+    const diffCls = diff<30?'صعب':diff<=70?'مناسب':'سهل';
+    const sorted  = [...qScores].sort((a,b)=>b-a);
+    const hiSum   = sum(sorted.slice(0,n27));
+    const loSum   = sum(sorted.slice(-n27));
+    const disc    = (n27>0&&qMax>0)?(hiSum-loSum)/(n27*qMax):0;
+    const discLbl = disc>=0.4?'ممتاز':disc>=0.3?'جيد':disc>=0.2?'مقبول':'يراجع';
+    qRows += `<tr>
+      <td>${qi+1}</td>
+      <td>السؤال ${qi+1}</td>
+      <td>${qMax}</td>
+      <td>${qSum.toFixed(1)}</td>
+      <td>${diff.toFixed(1)}%</td>
+      <td><span class="badge diff-${diffCls}">${diffLbl}</span></td>
+      <td style="color:#1E8449;font-weight:700">${hiSum.toFixed(1)}</td>
+      <td style="color:#C0392B;font-weight:700">${loSum.toFixed(1)}</td>
+      <td style="font-weight:800">${disc.toFixed(2)}</td>
+      <td><span class="badge disc-${discLbl}">${discLbl}</span></td>
+    </tr>`;
+  }
+  qBodyEl.innerHTML = qRows;
+
+  // ── STUDENT TABLE ──
+  G._rows = students.map((s,i)=>({
+    i:i+1, name:s.name, scores:s.scores,
+    total:totals[i], pct:pcts[i], level:levels[i]
+  }));
+  renderStudentTable(G._rows);
+}
+
+function renderStudentTable(rows) {
+  const TM = G.totalMarks;
+  const thead = document.getElementById('studentHead');
+  const qs = Array.from({length:G.qCount},(_,i)=>`<th>س${i+1}</th>`).join('');
+  thead.innerHTML = `<tr><th>#</th><th>اسم الطالب</th>${qs}<th>المجموع/${TM}</th><th>النسبة %</th><th>مستوى الأداء</th></tr>`;
+
+  const tbody = document.getElementById('studentBody');
+  tbody.innerHTML = rows.map(r=>{
+    const bg = r.i%2===0?'#f8fbfd':'#fff';
+    const lvlColor = levelColor(r.level);
+    const scCells = r.scores.map(s=>`<td>${s}</td>`).join('');
+    return `<tr style="background:${bg}">
+      <td>${r.i}</td>
+      <td>${r.name}</td>
+      ${scCells}
+      <td style="font-weight:800;color:#1B4F72">${r.total.toFixed(1)}</td>
+      <td>${r.pct.toFixed(1)}%</td>
+      <td><span class="badge" style="background:${lvlColor}">${r.level}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function filterStudents() {
+  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  const filtered = G._rows ? G._rows.filter(r=>r.name.toLowerCase().includes(q)) : [];
+  renderStudentTable(filtered);
+}
+</script>
+</body>
+</html>

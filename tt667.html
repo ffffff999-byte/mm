@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة تحليل نتائج الطلاب الرقمية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --primary:#0d4f3c;
+  --primary-dark:#083628;
+  --primary-light:#1a7a5e;
+  --gold:#c9a64e;
+  --gold-light:#e6c976;
+  --gold-dark:#8e7234;
+  --cream:#faf6ec;
+  --ink:#1a1a1a;
+  --muted:#5a5a5a;
+  --line:#d4c896;
+  --excellent:#0d7a3e;
+  --vgood:#1a8fc4;
+  --good:#d4a017;
+  --pass:#d97706;
+  --fail:#c0392b;
+  --bg:#f5f1e4;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{font-family:'Tajawal','Cairo',sans-serif;background:var(--bg);color:var(--ink);direction:rtl;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+body{padding:20px 0;min-height:100vh;}
+
+/* ===== Toolbar (لا تطبع) ===== */
+.toolbar{
+  max-width:210mm;margin:0 auto 20px;background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);
+  padding:18px 24px;border-radius:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+  box-shadow:0 8px 24px rgba(13,79,60,.25);position:sticky;top:10px;z-index:100;
+}
+.toolbar-title{color:var(--gold-light);font-weight:800;font-size:18px;margin-left:auto;display:flex;align-items:center;gap:10px;}
+.toolbar-title svg{width:28px;height:28px;}
+.btn{
+  background:var(--gold);color:var(--primary-dark);border:none;padding:10px 18px;border-radius:10px;
+  font-family:inherit;font-weight:700;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  transition:all .2s;box-shadow:0 4px 10px rgba(201,166,78,.3);
+}
+.btn:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 6px 14px rgba(201,166,78,.45);}
+.btn-print{background:#ffffff;color:var(--primary-dark);}
+.btn-clear{background:#fff;color:#c0392b;}
+.btn-save{background:#fff;color:var(--primary-dark);}
+.btn svg{width:18px;height:18px;}
+
+/* ===== Page A4 ===== */
+.page{
+  width:210mm;min-height:297mm;background:#fff;margin:0 auto 20px;padding:14mm 12mm;
+  box-shadow:0 4px 24px rgba(0,0,0,.12);position:relative;
+  border:2px solid var(--line);
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(201,166,78,.04), transparent 30%),
+    radial-gradient(circle at 100% 100%, rgba(13,79,60,.04), transparent 30%);
+}
+
+/* ===== Header ===== */
+.app-header{
+  border:3px double var(--gold);background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+  color:#fff;padding:14px 20px;border-radius:12px;margin-bottom:16px;
+  display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;position:relative;overflow:hidden;
+}
+.app-header::before{
+  content:"";position:absolute;inset:0;
+  background-image:repeating-linear-gradient(45deg,rgba(201,166,78,.06) 0,rgba(201,166,78,.06) 2px,transparent 2px,transparent 14px);
+  pointer-events:none;
+}
+.logo-circle{
+  width:74px;height:74px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--gold-light),var(--gold-dark));
+  display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 4px 12px rgba(0,0,0,.3);
+  position:relative;z-index:1;
+}
+.logo-circle svg{width:42px;height:42px;color:var(--primary-dark);}
+.header-text{text-align:center;position:relative;z-index:1;}
+.header-text h1{font-family:'Cairo',sans-serif;font-size:24px;font-weight:900;letter-spacing:-.5px;margin-bottom:3px;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.3);}
+.header-text .sub{font-size:13px;color:var(--gold-light);font-weight:600;letter-spacing:.5px;}
+.header-text .school{font-size:14px;color:#fff;font-weight:700;margin-top:4px;}
+.header-badge{position:relative;z-index:1;text-align:center;color:#fff;}
+.header-badge .yr{display:block;font-size:11px;color:var(--gold-light);font-weight:600;}
+.header-badge .yr-val{font-size:16px;font-weight:800;}
+
+/* ===== Section Title ===== */
+.sec-title{
+  background:linear-gradient(90deg,var(--primary) 0%,var(--primary-light) 100%);color:#fff;
+  padding:8px 16px;border-radius:8px;font-weight:800;font-size:15px;margin:14px 0 10px;
+  display:flex;align-items:center;gap:10px;border-right:5px solid var(--gold);
+  box-shadow:0 2px 6px rgba(13,79,60,.2);
+}
+.sec-title svg{width:20px;height:20px;}
+
+/* ===== Basic Info Grid ===== */
+.info-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;
+}
+.info-cell{
+  background:linear-gradient(180deg,var(--cream) 0%,#fff 100%);
+  border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;position:relative;
+}
+.info-cell label{
+  display:block;font-size:10.5px;font-weight:700;color:var(--primary);margin-bottom:3px;
+}
+.info-cell input,.info-cell select{
+  width:100%;border:none;background:transparent;font-family:inherit;font-size:12.5px;
+  font-weight:700;color:var(--ink);outline:none;padding:1px 0;
+}
+.info-cell input::placeholder{color:#aaa;font-weight:500;}
+
+/* ===== Students Table ===== */
+.students-wrap{margin:10px 0;}
+.students-table{width:100%;border-collapse:collapse;font-size:11px;}
+.students-table thead{background:linear-gradient(180deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;}
+.students-table thead th{
+  padding:6px 4px;font-weight:800;font-size:11px;border:1px solid var(--primary-dark);
+  position:sticky;top:0;
+}
+.students-table thead th.col-m{background:var(--gold-dark);width:38px;}
+.students-table thead th.fasl{background:var(--primary-light);}
+.students-table tbody td{
+  border:1px solid #d8d8d8;padding:0;height:22px;background:#fff;
+}
+.students-table tbody td.idx{
+  background:var(--cream);text-align:center;font-weight:700;color:var(--primary-dark);font-size:10.5px;
+}
+.students-table tbody td input{
+  width:100%;height:100%;border:none;background:transparent;text-align:center;
+  font-family:inherit;font-size:11.5px;font-weight:600;color:var(--ink);outline:none;padding:2px;
+}
+.students-table tbody td input:focus{background:#fffbe6;box-shadow:inset 0 0 0 2px var(--gold);}
+.students-table tbody tr:nth-child(even) td{background:#fafafa;}
+.students-table tbody tr:nth-child(even) td.idx{background:#f3edd6;}
+.students-table tbody tr:hover td{background:#fffce8;}
+.students-table tbody tr:hover td.idx{background:#f0e4a8;}
+.col-m{width:36px;}
+.col-grade{width:auto;}
+
+/* ===== Stats per fasl ===== */
+.stats-section{margin-top:12px;}
+.stats-table{width:100%;border-collapse:collapse;font-size:11px;background:#fff;}
+.stats-table th,.stats-table td{border:1.5px solid var(--line);padding:6px 4px;text-align:center;}
+.stats-table thead th{
+  background:linear-gradient(180deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;font-weight:800;font-size:11.5px;
+}
+.stats-table thead th.label-col{background:var(--gold-dark);}
+.stats-table tbody td{font-weight:700;color:var(--primary-dark);font-size:11.5px;}
+.stats-table tbody td.label{
+  background:linear-gradient(90deg,var(--cream),#fff);text-align:right;font-weight:800;color:var(--primary);
+  padding-right:10px;font-size:11px;border-right:4px solid var(--gold);
+}
+.stats-table tbody td.total-col{background:#fff8e1;color:var(--gold-dark);font-weight:900;}
+
+/* ===== Grades Distribution ===== */
+.grades-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;}
+.grades-table{width:100%;border-collapse:collapse;font-size:11px;}
+.grades-table th,.grades-table td{border:1.5px solid var(--line);padding:6px;text-align:center;}
+.grades-table thead th{background:var(--primary);color:#fff;font-weight:800;font-size:11px;}
+.grades-table tbody td{font-weight:700;font-size:11.5px;}
+.grades-table tbody td.label{text-align:right;font-weight:800;padding-right:10px;border-right:5px solid;}
+.label-excellent{color:var(--excellent);border-color:var(--excellent)!important;background:#e8f5ec;}
+.label-vgood{color:var(--vgood);border-color:var(--vgood)!important;background:#e3f2fa;}
+.label-good{color:var(--good);border-color:var(--good)!important;background:#fdf6e0;}
+.label-pass{color:var(--pass);border-color:var(--pass)!important;background:#fef0e0;}
+.label-fail{color:var(--fail);border-color:var(--fail)!important;background:#fbe7e4;}
+.grades-table tfoot td{background:var(--primary-dark);color:#fff;font-weight:900;font-size:12px;}
+
+.charts-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;}
+.chart-box{
+  background:linear-gradient(180deg,#fff,var(--cream));border:2px solid var(--line);border-radius:10px;padding:10px;
+}
+.chart-box h4{
+  text-align:center;font-size:12px;font-weight:800;color:var(--primary-dark);margin-bottom:6px;
+  padding-bottom:5px;border-bottom:2px dashed var(--gold);
+}
+.chart-box canvas{max-height:200px;}
+
+/* ===== Final Result Box ===== */
+.final-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:10px;margin-top:12px;}
+.final-card{
+  background:linear-gradient(135deg,var(--primary) 0%,var(--primary-dark) 100%);color:#fff;
+  border-radius:12px;padding:12px;border:2px solid var(--gold);
+}
+.final-card h4{
+  text-align:center;font-size:13px;color:var(--gold-light);margin-bottom:8px;padding-bottom:6px;border-bottom:1px dashed var(--gold-light);
+}
+.final-card .row{display:flex;justify-content:space-between;padding:4px 6px;border-bottom:1px dashed rgba(255,255,255,.15);font-size:12px;}
+.final-card .row:last-child{border-bottom:none;}
+.final-card .row .key{color:var(--gold-light);font-weight:700;}
+.final-card .row .val{color:#fff;font-weight:900;background:rgba(255,255,255,.1);padding:1px 8px;border-radius:5px;font-size:12px;}
+
+.final-grades{
+  background:#fff;border-radius:12px;padding:8px;border:2px solid var(--line);
+}
+.final-grades table{width:100%;border-collapse:collapse;font-size:10.5px;}
+.final-grades th{background:var(--primary);color:#fff;padding:5px;border:1px solid var(--primary-dark);}
+.final-grades td{border:1px solid var(--line);padding:4px;text-align:center;font-weight:700;}
+
+/* ===== Footer ===== */
+.app-footer{
+  margin-top:14px;background:linear-gradient(135deg,var(--primary-dark) 0%,var(--primary) 100%);
+  color:#fff;padding:10px 16px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;
+  border:2px solid var(--gold);font-size:11.5px;
+}
+.app-footer .designer{font-weight:800;color:var(--gold-light);}
+.app-footer .designer a{color:#fff;text-decoration:none;background:var(--gold);padding:4px 10px;border-radius:6px;font-weight:800;margin-right:8px;}
+.app-footer .designer a:hover{background:var(--gold-light);}
+
+/* small ornament corner */
+.corner{position:absolute;width:36px;height:36px;color:var(--gold);opacity:.4;}
+.corner.tl{top:6px;right:6px;}
+.corner.tr{top:6px;left:6px;transform:scaleX(-1);}
+.corner.bl{bottom:6px;right:6px;transform:scaleY(-1);}
+.corner.br{bottom:6px;left:6px;transform:scale(-1,-1);}
+
+/* ===== Print ===== */
+@media print{
+  @page{size:A4 portrait;margin:6mm;}
+  body{background:#fff;padding:0;}
+  .toolbar,.no-print{display:none!important;}
+  .page{
+    width:100%;min-height:auto;margin:0;padding:8mm 7mm;box-shadow:none;border:1.5px solid var(--line);
+    page-break-after:always;
+  }
+  .page:last-child{page-break-after:auto;}
+  .students-table tbody td input{font-size:10.5px;}
+  input,select{border:none!important;background:transparent!important;}
+}
+
+/* Notification */
+.toast{
+  position:fixed;bottom:20px;right:50%;transform:translateX(50%);background:var(--primary);color:#fff;
+  padding:12px 24px;border-radius:10px;font-weight:700;box-shadow:0 6px 20px rgba(0,0,0,.25);
+  z-index:1000;opacity:0;transition:all .3s;border:2px solid var(--gold);
+}
+.toast.show{opacity:1;bottom:30px;}
+.toast.error{background:#c0392b;}
+
+/* hide print-only page when on screen toggle? we keep results page visible always */
+.divider-strip{
+  height:6px;background:repeating-linear-gradient(90deg,var(--gold) 0 14px,transparent 14px 22px);
+  margin:8px 0;border-radius:3px;
+}
+
+/* Page 2 layout adjustments */
+.page-2 .results-header{
+  background:linear-gradient(135deg,var(--gold-dark) 0%,var(--gold) 100%);color:var(--primary-dark);
+  padding:10px;border-radius:10px;text-align:center;margin-bottom:14px;border:2px solid var(--primary);
+}
+.page-2 .results-header h2{font-size:20px;font-family:'Cairo',sans-serif;font-weight:900;}
+.page-2 .results-header p{font-size:12px;font-weight:700;margin-top:3px;}
+
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0;}
+.kpi{
+  background:linear-gradient(180deg,#fff,var(--cream));border:2px solid var(--line);border-radius:10px;
+  padding:8px;text-align:center;position:relative;overflow:hidden;
+}
+.kpi::before{content:"";position:absolute;top:0;right:0;left:0;height:4px;background:var(--gold);}
+.kpi .num{font-size:22px;font-weight:900;color:var(--primary-dark);font-family:'Cairo',sans-serif;}
+.kpi .lbl{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px;}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0;}
+input[type=number]{-moz-appearance:textfield;}
+</style>
+</head>
+<body>
+
+<!-- =================== TOOLBAR =================== -->
+<div class="toolbar no-print">
+  <button class="btn" onclick="document.getElementById('xlsx-input').click()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    استيراد من Excel
+  </button>
+  <input type="file" id="xlsx-input" accept=".xlsx,.xls" style="display:none" onchange="importExcel(event)">
+
+  <button class="btn btn-save" onclick="saveData()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+    حفظ
+  </button>
+
+  <button class="btn btn-save" onclick="loadData()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>
+    استرجاع
+  </button>
+
+  <button class="btn btn-print" onclick="window.print()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    طباعة
+  </button>
+
+  <button class="btn" onclick="exportToExcel()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+    تصدير Excel
+  </button>
+
+  <button class="btn btn-clear" onclick="clearAllData()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+    مسح وتفريغ
+  </button>
+
+  <div class="toolbar-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+    منصة تحليل النتائج الرقمية
+  </div>
+</div>
+
+<!-- =================== PAGE 1: DATA ENTRY =================== -->
+<div class="page" id="page1">
+  <svg class="corner tl" viewBox="0 0 36 36" fill="currentColor"><path d="M0 0 L36 0 L36 4 L4 4 L4 36 L0 36 Z M8 8 L28 8 L28 10 L10 10 L10 28 L8 28 Z"/></svg>
+  <svg class="corner tr" viewBox="0 0 36 36" fill="currentColor"><path d="M0 0 L36 0 L36 4 L4 4 L4 36 L0 36 Z M8 8 L28 8 L28 10 L10 10 L10 28 L8 28 Z"/></svg>
+  <svg class="corner bl" viewBox="0 0 36 36" fill="currentColor"><path d="M0 0 L36 0 L36 4 L4 4 L4 36 L0 36 Z M8 8 L28 8 L28 10 L10 10 L10 28 L8 28 Z"/></svg>
+  <svg class="corner br" viewBox="0 0 36 36" fill="currentColor"><path d="M0 0 L36 0 L36 4 L4 4 L4 36 L0 36 Z M8 8 L28 8 L28 10 L10 10 L10 28 L8 28 Z"/></svg>
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="logo-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+    </div>
+    <div class="header-text">
+      <h1>منصة تحليل نتائج الطلاب</h1>
+      <div class="sub">دراسة وتحليل اختبار</div>
+      <div class="school" id="hdr-school">— اسم المدرسة —</div>
+    </div>
+    <div class="header-badge">
+      <span class="yr">العام الدراسي</span>
+      <span class="yr-val" id="hdr-year">14٤٦/١٤٤٧</span>
+    </div>
+  </div>
+
+  <!-- BASIC INFO -->
+  <div class="sec-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 11l3 3 8-8"/><path d="M20 12v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h9"/></svg>
+    البيانات الأساسية
+  </div>
+  <div class="info-grid">
+    <div class="info-cell"><label>المدرسة</label><input id="f-school" placeholder="اسم المدرسة" oninput="syncHeader()"></div>
+    <div class="info-cell"><label>المرحلة</label>
+      <select id="f-stage">
+        <option value="">-اختر-</option><option>ابتدائي</option><option>متوسط</option><option>ثانوي</option>
+      </select>
+    </div>
+    <div class="info-cell"><label>العام الدراسي</label><input id="f-year" placeholder="١٤٤٦/١٤٤٧" oninput="syncHeader()"></div>
+    <div class="info-cell"><label>الفصل الدراسي</label>
+      <select id="f-term"><option value="">-اختر-</option><option>الأول</option><option>الثاني</option><option>الثالث</option></select>
+    </div>
+    <div class="info-cell"><label>نوع القياس</label>
+      <select id="f-type"><option value="">-اختر-</option><option>منتصف الفصل</option><option>نهاية الفصل</option><option>قياس تجريبي</option><option>تحليل درجات الطالبات</option></select>
+    </div>
+    <div class="info-cell"><label>المادة</label><input id="f-subject" placeholder="اسم المادة"></div>
+    <div class="info-cell"><label>المعلم/ة</label><input id="f-teacher" placeholder="اسم المعلم/ة"></div>
+    <div class="info-cell"><label>الصف</label>
+      <select id="f-grade">
+        <option value="">-اختر-</option>
+        <option>الأول</option><option>الثاني</option><option>الثالث</option><option>الرابع</option><option>الخامس</option><option>السادس</option>
+      </select>
+    </div>
+    <div class="info-cell"><label>درجة التصحيح</label><input id="f-max" type="number" value="100" min="1" oninput="recalculate()"></div>
+    <div class="info-cell" style="grid-column:span 3;"><label>ملاحظات</label><input id="f-notes" placeholder="ملاحظات إضافية"></div>
+  </div>
+
+  <!-- STUDENTS TABLE -->
+  <div class="sec-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+    درجات الطلاب حسب الفصول
+  </div>
+  <div class="students-wrap">
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th class="col-m" rowspan="1">م</th>
+          <th class="fasl">الفصل ١</th>
+          <th class="fasl">الفصل ٢</th>
+          <th class="fasl">الفصل ٣</th>
+          <th class="fasl">الفصل ٤</th>
+          <th class="fasl">الفصل ٥</th>
+          <th class="fasl">الفصل ٦</th>
+        </tr>
+      </thead>
+      <tbody id="students-body"><!-- generated --></tbody>
+    </table>
+  </div>
+
+  <div class="app-footer no-print" style="margin-top:14px;">
+    <span>عدد الصفوف: <strong id="row-count">40</strong></span>
+    <div>
+      <button class="btn" onclick="changeRows(10)" style="padding:6px 12px;font-size:12px;">＋ 10 صفوف</button>
+      <button class="btn btn-clear" onclick="changeRows(-10)" style="padding:6px 12px;font-size:12px;">－ 10 صفوف</button>
+    </div>
+  </div>
+</div>
+
+<!-- =================== PAGE 2: RESULTS / ANALYSIS =================== -->
+<div class="page page-2" id="page2">
+  <svg class="corner tl" viewBox="0 0 36 36" fill="currentColor"><path d="M0 0 L36 0 L36 4 L4 4 L4 36 L0 36 Z M8 8 L28 8 L28 10 L10 10 L10 28 L8 28 Z"/></svg>
+  <svg class="corner tr" viewBox="0 0 36 36" fill="currentColor"><path d="M0 0 L36 0 L36 4 L4 4 L4 36 L0 36 Z M8 8 L28 8 L28 10 L10 10 L10 28 L8 28 Z"/></svg>
+  <svg class="corner bl" viewBox="0 0 36 36" fill="currentColor"><path d="M0 0 L36 0 L36 4 L4 4 L4 36 L0 36 Z M8 8 L28 8 L28 10 L10 10 L10 28 L8 28 Z"/></svg>
+  <svg class="corner br" viewBox="0 0 36 36" fill="currentColor"><path d="M0 0 L36 0 L36 4 L4 4 L4 36 L0 36 Z M8 8 L28 8 L28 10 L10 10 L10 28 L8 28 Z"/></svg>
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="logo-circle">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+    </div>
+    <div class="header-text">
+      <h1>نتيجة دراسة وتحليل الاختبار</h1>
+      <div class="sub" id="res-sub">— تقرير تحليلي شامل —</div>
+      <div class="school" id="res-school">— اسم المدرسة —</div>
+    </div>
+    <div class="header-badge">
+      <span class="yr">العام الدراسي</span>
+      <span class="yr-val" id="res-year">١٤٤٦/١٤٤٧</span>
+    </div>
+  </div>
+
+  <!-- Basic data echo -->
+  <div class="sec-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+    البيانات الأساسية للاختبار
+  </div>
+  <table class="stats-table" style="margin-bottom:10px;">
+    <tbody>
+      <tr><td class="label">المدرسة</td><td id="r-school">—</td><td class="label">المرحلة</td><td id="r-stage">—</td></tr>
+      <tr><td class="label">العام الدراسي</td><td id="r-year">—</td><td class="label">نوع القياس</td><td id="r-type">—</td></tr>
+      <tr><td class="label">الفصل الدراسي</td><td id="r-term">—</td><td class="label">الصف</td><td id="r-grade">—</td></tr>
+      <tr><td class="label">المعلم/ة</td><td id="r-teacher">—</td><td class="label">المادة</td><td id="r-subject">—</td></tr>
+      <tr><td class="label">درجة التصحيح</td><td id="r-max">100</td><td class="label">تاريخ التقرير</td><td id="r-date">—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Per-fasl statistics -->
+  <div class="sec-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    نتائج الفصول التفصيلية
+  </div>
+  <table class="stats-table">
+    <thead>
+      <tr>
+        <th class="label-col">البيان</th>
+        <th>الفصل ١</th><th>الفصل ٢</th><th>الفصل ٣</th><th>الفصل ٤</th><th>الفصل ٥</th><th>الفصل ٦</th>
+        <th class="total-col" style="background:var(--gold);color:var(--primary-dark);">الإجمالي</th>
+      </tr>
+    </thead>
+    <tbody id="fasl-stats">
+      <tr><td class="label">مجموع الدرجات</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="total-col">0</td></tr>
+      <tr><td class="label">عدد الطلاب</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="total-col">0</td></tr>
+      <tr><td class="label">متوسط الدرجات</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="total-col">—</td></tr>
+      <tr><td class="label">نسبة التحصيل</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="total-col">—</td></tr>
+      <tr><td class="label">أعلى درجة</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="total-col">—</td></tr>
+      <tr><td class="label">أدنى درجة</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="total-col">—</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Grades distribution -->
+  <div class="sec-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10H12z"/></svg>
+    توزيع التقديرات حسب الفصول
+  </div>
+  <table class="stats-table">
+    <thead>
+      <tr>
+        <th class="label-col">التقدير</th>
+        <th>الفصل ١</th><th>الفصل ٢</th><th>الفصل ٣</th><th>الفصل ٤</th><th>الفصل ٥</th><th>الفصل ٦</th>
+        <th class="total-col" style="background:var(--gold);color:var(--primary-dark);">الإجمالي</th>
+      </tr>
+    </thead>
+    <tbody id="grade-dist">
+      <tr><td class="label label-excellent">ممتاز (٩٠+)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="total-col">0</td></tr>
+      <tr><td class="label label-vgood">جيد جداً (٨٠-٨٩)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="total-col">0</td></tr>
+      <tr><td class="label label-good">جيد (٧٠-٧٩)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="total-col">0</td></tr>
+      <tr><td class="label label-pass">مقبول (٦٠-٦٩)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="total-col">0</td></tr>
+      <tr><td class="label label-fail">ضعيف (أقل من ٦٠)</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="total-col">0</td></tr>
+      <tr><td class="label" style="background:var(--primary-dark);color:#fff;border-color:var(--gold);">المجموع</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td class="total-col">0</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Charts -->
+  <div class="charts-wrap">
+    <div class="chart-box">
+      <h4>متوسط الدرجات لكل فصل</h4>
+      <canvas id="chart-fasl"></canvas>
+    </div>
+    <div class="chart-box">
+      <h4>نسب التقديرات العامة</h4>
+      <canvas id="chart-grades"></canvas>
+    </div>
+  </div>
+
+  <!-- Final result -->
+  <div class="sec-title">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+    النتيجة العامة للمدرسة
+  </div>
+  <div class="final-grid">
+    <div class="final-card">
+      <h4>الإحصائيات الكلية</h4>
+      <div class="row"><span class="key">المجموع الكلي للدرجات</span><span class="val" id="g-sum">0</span></div>
+      <div class="row"><span class="key">إجمالي عدد الطلاب</span><span class="val" id="g-count">0</span></div>
+      <div class="row"><span class="key">متوسط الدرجات العام</span><span class="val" id="g-avg">—</span></div>
+      <div class="row"><span class="key">نسبة التحصيل العامة</span><span class="val" id="g-rate">—</span></div>
+      <div class="row"><span class="key">أعلى درجة في المدرسة</span><span class="val" id="g-max">—</span></div>
+      <div class="row"><span class="key">أدنى درجة في المدرسة</span><span class="val" id="g-min">—</span></div>
+    </div>
+    <div class="final-grades">
+      <table>
+        <thead><tr><th>التقدير</th><th>العدد</th><th>النسبة</th></tr></thead>
+        <tbody id="final-grades-body">
+          <tr><td style="color:var(--excellent);font-weight:900;">ممتاز</td><td id="fg-e">0</td><td id="fg-ep">0%</td></tr>
+          <tr><td style="color:var(--vgood);font-weight:900;">جيد جداً</td><td id="fg-vg">0</td><td id="fg-vgp">0%</td></tr>
+          <tr><td style="color:var(--good);font-weight:900;">جيد</td><td id="fg-g">0</td><td id="fg-gp">0%</td></tr>
+          <tr><td style="color:var(--pass);font-weight:900;">مقبول</td><td id="fg-p">0</td><td id="fg-pp">0%</td></tr>
+          <tr><td style="color:var(--fail);font-weight:900;">ضعيف</td><td id="fg-f">0</td><td id="fg-fp">0%</td></tr>
+          <tr style="background:var(--primary);color:#fff;font-weight:900;"><td>المجموع</td><td id="fg-t">0</td><td id="fg-tp">0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="app-footer">
+    <span>تصميم د/فواز <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد هنا</a></span>
+    <span class="designer" id="footer-date">١٤٤٦هـ</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ========================================================
+   منصة تحليل نتائج الطلاب — JS
+======================================================== */
+const NUM_FASL = 6;
+let ROW_COUNT = 40;
+let chartFasl=null, chartGrades=null;
+
+const ar = (n) => {
+  if(n===null||n===undefined||isNaN(n)) return '—';
+  if(typeof n==='string') return n;
+  const fixed = (Math.round(n*100)/100);
+  return fixed.toString();
+};
+
+// Build students table
+function buildStudentsTable(){
+  const tbody = document.getElementById('students-body');
+  tbody.innerHTML = '';
+  for(let i=1;i<=ROW_COUNT;i++){
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td class="idx">${i}</td>` +
+      Array.from({length:NUM_FASL},(_,j)=>
+        `<td><input type="number" min="0" data-row="${i}" data-fasl="${j+1}" oninput="recalculate()" onfocus="this.select()"></td>`
+      ).join('');
+    tbody.appendChild(tr);
+  }
+  document.getElementById('row-count').textContent = ROW_COUNT;
+}
+
+function changeRows(delta){
+  // save current values
+  const cur = collectGrades();
+  ROW_COUNT = Math.max(10, Math.min(150, ROW_COUNT + delta));
+  buildStudentsTable();
+  // restore
+  for(let f=1;f<=NUM_FASL;f++){
+    for(let r=1;r<=ROW_COUNT;r++){
+      if(cur[f-1] && cur[f-1][r-1]!==undefined && cur[f-1][r-1]!==null){
+        const inp = document.querySelector(`input[data-row="${r}"][data-fasl="${f}"]`);
+        if(inp) inp.value = cur[f-1][r-1];
+      }
+    }
+  }
+  recalculate();
+}
+
+function collectGrades(){
+  const max = parseFloat(document.getElementById('f-max').value)||100;
+  const fasls = [];
+  for(let f=1;f<=NUM_FASL;f++){
+    const arr=[];
+    for(let r=1;r<=ROW_COUNT;r++){
+      const inp = document.querySelector(`input[data-row="${r}"][data-fasl="${f}"]`);
+      const v = inp ? inp.value.trim() : '';
+      if(v==='') arr.push(null);
+      else {
+        const n = parseFloat(v);
+        arr.push(isNaN(n)?null:n);
+      }
+    }
+    fasls.push(arr);
+  }
+  return fasls;
+}
+
+function classify(grade, max){
+  // نسبة من 100
+  const pct = (grade/max)*100;
+  if(pct>=90) return 'e';
+  if(pct>=80) return 'vg';
+  if(pct>=70) return 'g';
+  if(pct>=60) return 'p';
+  return 'f';
+}
+
+function recalculate(){
+  const max = parseFloat(document.getElementById('f-max').value)||100;
+  const fasls = collectGrades();
+
+  // Compute per-fasl stats
+  const stats = fasls.map(arr=>{
+    const valid = arr.filter(v=>v!==null && !isNaN(v));
+    const sum = valid.reduce((a,b)=>a+b,0);
+    const count = valid.length;
+    const avg = count?sum/count:null;
+    const rate = count?((sum/(count*max))*100):null;
+    const mx = count?Math.max(...valid):null;
+    const mn = count?Math.min(...valid):null;
+    const dist = {e:0,vg:0,g:0,p:0,f:0};
+    valid.forEach(v=>{ dist[classify(v,max)]++; });
+    return {sum,count,avg,rate,max:mx,min:mn,dist};
+  });
+
+  // populate per-fasl stats table
+  const ft = document.getElementById('fasl-stats').rows;
+  const totalSum = stats.reduce((a,s)=>a+s.sum,0);
+  const totalCount = stats.reduce((a,s)=>a+s.count,0);
+  const totalAvg = totalCount? totalSum/totalCount : null;
+  const totalRate = totalCount? (totalSum/(totalCount*max))*100 : null;
+  const allValid = fasls.flat().filter(v=>v!==null);
+  const totalMax = allValid.length? Math.max(...allValid) : null;
+  const totalMin = allValid.length? Math.min(...allValid) : null;
+
+  for(let i=0;i<NUM_FASL;i++){
+    ft[0].cells[i+1].textContent = stats[i].count? stats[i].sum.toFixed(0) : '0';
+    ft[1].cells[i+1].textContent = stats[i].count;
+    ft[2].cells[i+1].textContent = stats[i].avg!==null? stats[i].avg.toFixed(2) : '—';
+    ft[3].cells[i+1].textContent = stats[i].rate!==null? stats[i].rate.toFixed(1)+'%' : '—';
+    ft[4].cells[i+1].textContent = stats[i].max!==null? stats[i].max : '—';
+    ft[5].cells[i+1].textContent = stats[i].min!==null? stats[i].min : '—';
+  }
+  ft[0].cells[NUM_FASL+1].textContent = totalSum.toFixed(0);
+  ft[1].cells[NUM_FASL+1].textContent = totalCount;
+  ft[2].cells[NUM_FASL+1].textContent = totalAvg!==null? totalAvg.toFixed(2) : '—';
+  ft[3].cells[NUM_FASL+1].textContent = totalRate!==null? totalRate.toFixed(1)+'%' : '—';
+  ft[4].cells[NUM_FASL+1].textContent = totalMax!==null? totalMax : '—';
+  ft[5].cells[NUM_FASL+1].textContent = totalMin!==null? totalMin : '—';
+
+  // grade distribution
+  const gd = document.getElementById('grade-dist').rows;
+  const keys = ['e','vg','g','p','f'];
+  const distTotals = {e:0,vg:0,g:0,p:0,f:0};
+  for(let i=0;i<NUM_FASL;i++){
+    keys.forEach((k,kIdx)=>{
+      gd[kIdx].cells[i+1].textContent = stats[i].dist[k];
+      distTotals[k] += stats[i].dist[k];
+    });
+    // sum row
+    gd[5].cells[i+1].textContent = stats[i].count;
+  }
+  keys.forEach((k,kIdx)=>{
+    gd[kIdx].cells[NUM_FASL+1].textContent = distTotals[k];
+  });
+  gd[5].cells[NUM_FASL+1].textContent = totalCount;
+
+  // final card
+  document.getElementById('g-sum').textContent = totalSum.toFixed(0);
+  document.getElementById('g-count').textContent = totalCount;
+  document.getElementById('g-avg').textContent = totalAvg!==null? totalAvg.toFixed(2) : '—';
+  document.getElementById('g-rate').textContent = totalRate!==null? totalRate.toFixed(1)+'%' : '—';
+  document.getElementById('g-max').textContent = totalMax!==null? totalMax : '—';
+  document.getElementById('g-min').textContent = totalMin!==null? totalMin : '—';
+
+  // final grades
+  const pct = v => totalCount? ((v/totalCount)*100).toFixed(1)+'%' : '0%';
+  document.getElementById('fg-e').textContent = distTotals.e;
+  document.getElementById('fg-ep').textContent = pct(distTotals.e);
+  document.getElementById('fg-vg').textContent = distTotals.vg;
+  document.getElementById('fg-vgp').textContent = pct(distTotals.vg);
+  document.getElementById('fg-g').textContent = distTotals.g;
+  document.getElementById('fg-gp').textContent = pct(distTotals.g);
+  document.getElementById('fg-p').textContent = distTotals.p;
+  document.getElementById('fg-pp').textContent = pct(distTotals.p);
+  document.getElementById('fg-f').textContent = distTotals.f;
+  document.getElementById('fg-fp').textContent = pct(distTotals.f);
+  document.getElementById('fg-t').textContent = totalCount;
+  document.getElementById('fg-tp').textContent = totalCount?'100%':'0%';
+
+  // echo basic info
+  document.getElementById('r-school').textContent = document.getElementById('f-school').value||'—';
+  document.getElementById('r-stage').textContent = document.getElementById('f-stage').value||'—';
+  document.getElementById('r-year').textContent = document.getElementById('f-year').value||'—';
+  document.getElementById('r-type').textContent = document.getElementById('f-type').value||'—';
+  document.getElementById('r-term').textContent = document.getElementById('f-term').value||'—';
+  document.getElementById('r-grade').textContent = document.getElementById('f-grade').value||'—';
+  document.getElementById('r-teacher').textContent = document.getElementById('f-teacher').value||'—';
+  document.getElementById('r-subject').textContent = document.getElementById('f-subject').value||'—';
+  document.getElementById('r-max').textContent = max;
+  const today = new Date();
+  document.getElementById('r-date').textContent = today.toLocaleDateString('ar-SA-u-nu-arab',{year:'numeric',month:'long',day:'numeric'});
+
+  document.getElementById('res-school').textContent = document.getElementById('f-school').value||'— اسم المدرسة —';
+  document.getElementById('res-year').textContent = document.getElementById('f-year').value||'١٤٤٦/١٤٤٧';
+  document.getElementById('res-sub').textContent = (document.getElementById('f-subject').value||'—') + ' — ' + (document.getElementById('f-type').value||'تحليل النتائج');
+
+  // charts
+  drawCharts(stats, distTotals, totalCount);
+}
+
+function syncHeader(){
+  document.getElementById('hdr-school').textContent = document.getElementById('f-school').value||'— اسم المدرسة —';
+  document.getElementById('hdr-year').textContent = document.getElementById('f-year').value||'١٤٤٦/١٤٤٧';
+  recalculate();
+}
+
+// Add listeners to all info fields
+['f-school','f-stage','f-year','f-term','f-type','f-subject','f-teacher','f-grade','f-max','f-notes'].forEach(id=>{
+  document.addEventListener('DOMContentLoaded',()=>{
+    const el = document.getElementById(id);
+    if(el){ el.addEventListener('input',recalculate); el.addEventListener('change',recalculate); }
+  });
+});
+
+function drawCharts(stats, distTotals, totalCount){
+  // Fasl chart
+  const labels = ['الفصل ١','الفصل ٢','الفصل ٣','الفصل ٤','الفصل ٥','الفصل ٦'];
+  const avgData = stats.map(s=>s.avg||0);
+  const ctx1 = document.getElementById('chart-fasl').getContext('2d');
+  if(chartFasl) chartFasl.destroy();
+  chartFasl = new Chart(ctx1,{
+    type:'bar',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:'متوسط الدرجات',
+        data:avgData,
+        backgroundColor:['#0d4f3c','#1a7a5e','#c9a64e','#8e7234','#1a8fc4','#0d7a3e'],
+        borderColor:'#083628',
+        borderWidth:2,
+        borderRadius:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},
+        tooltip:{rtl:true,bodyFont:{family:'Tajawal'},titleFont:{family:'Tajawal'}}},
+      scales:{
+        y:{beginAtZero:true,ticks:{font:{family:'Tajawal',size:10}}},
+        x:{ticks:{font:{family:'Tajawal',size:10,weight:'bold'}}}
+      },
+      animation:{duration:300}
+    }
+  });
+
+  // Grades pie chart
+  const gradesLabels = ['ممتاز','جيد جداً','جيد','مقبول','ضعيف'];
+  const gradesData = [distTotals.e, distTotals.vg, distTotals.g, distTotals.p, distTotals.f];
+  const gradesColors = ['#0d7a3e','#1a8fc4','#d4a017','#d97706','#c0392b'];
+  const ctx2 = document.getElementById('chart-grades').getContext('2d');
+  if(chartGrades) chartGrades.destroy();
+  chartGrades = new Chart(ctx2,{
+    type:'doughnut',
+    data:{
+      labels:gradesLabels,
+      datasets:[{
+        data:gradesData,
+        backgroundColor:gradesColors,
+        borderColor:'#fff',
+        borderWidth:3
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{position:'right',labels:{font:{family:'Tajawal',size:11,weight:'bold'},padding:8,boxWidth:12}},
+        tooltip:{rtl:true,bodyFont:{family:'Tajawal'},titleFont:{family:'Tajawal'},
+          callbacks:{
+            label:function(ctx){
+              const total = ctx.dataset.data.reduce((a,b)=>a+b,0);
+              const v = ctx.parsed;
+              const p = total? ((v/total)*100).toFixed(1) : 0;
+              return ctx.label + ': ' + v + ' (' + p + '%)';
+            }
+          }
+        }
+      },
+      animation:{duration:400}
+    }
+  });
+}
+
+/* ============ Save / Load (localStorage) ============ */
+const STORAGE_KEY = 'fawaz_results_platform_v1';
+
+function saveData(){
+  const data = {
+    info:{
+      school:document.getElementById('f-school').value,
+      stage:document.getElementById('f-stage').value,
+      year:document.getElementById('f-year').value,
+      term:document.getElementById('f-term').value,
+      type:document.getElementById('f-type').value,
+      subject:document.getElementById('f-subject').value,
+      teacher:document.getElementById('f-teacher').value,
+      grade:document.getElementById('f-grade').value,
+      max:document.getElementById('f-max').value,
+      notes:document.getElementById('f-notes').value,
+    },
+    rows: ROW_COUNT,
+    grades: collectGrades(),
+    savedAt: new Date().toISOString()
+  };
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    toast('تم حفظ البيانات بنجاح ✓');
+  }catch(e){ toast('فشل الحفظ: '+e.message,true); }
+}
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw){ toast('لا توجد بيانات محفوظة',true); return; }
+    const data = JSON.parse(raw);
+    // restore info
+    Object.entries(data.info||{}).forEach(([k,v])=>{
+      const el = document.getElementById('f-'+k);
+      if(el) el.value = v||'';
+    });
+    // rows
+    if(data.rows && data.rows!==ROW_COUNT){
+      ROW_COUNT = data.rows;
+      buildStudentsTable();
+    }
+    // grades
+    if(data.grades){
+      data.grades.forEach((arr,fIdx)=>{
+        arr.forEach((v,rIdx)=>{
+          const inp = document.querySelector(`input[data-row="${rIdx+1}"][data-fasl="${fIdx+1}"]`);
+          if(inp) inp.value = (v===null||v===undefined)?'':v;
+        });
+      });
+    }
+    syncHeader();
+    recalculate();
+    toast('تم استرجاع البيانات بنجاح ✓');
+  }catch(e){ toast('فشل الاسترجاع: '+e.message,true); }
+}
+
+function clearAllData(){
+  if(!confirm('هل أنت متأكد من مسح وتفريغ جميع البيانات؟ لا يمكن التراجع.')) return;
+  // clear info
+  ['f-school','f-year','f-subject','f-teacher','f-notes'].forEach(id=>document.getElementById(id).value='');
+  ['f-stage','f-term','f-type','f-grade'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-max').value=100;
+  // clear grades
+  document.querySelectorAll('.students-table input').forEach(inp=>inp.value='');
+  syncHeader();
+  recalculate();
+  toast('تم مسح جميع البيانات ✓');
+}
+
+/* ============ Excel import / export ============ */
+function importExcel(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      const data = new Uint8Array(ev.target.result);
+      const wb = XLSX.read(data,{type:'array'});
+      // Try first sheet
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      // Heuristic: find columns that look like 6 numeric grade columns
+      // We'll search for first row where most subsequent rows have numbers in 6 consecutive cells
+      let bestStart = -1, bestCol = -1, bestScore = 0;
+      for(let r=0;r<Math.min(rows.length,30);r++){
+        for(let c=0;c<20;c++){
+          let score=0;
+          for(let rr=r+1; rr<Math.min(r+30,rows.length); rr++){
+            for(let cc=c; cc<c+6 && cc<(rows[rr]||[]).length; cc++){
+              const v = rows[rr][cc];
+              if(typeof v==='number' || (typeof v==='string' && v.trim()!=='' && !isNaN(parseFloat(v)))) score++;
+            }
+          }
+          if(score>bestScore){ bestScore=score; bestStart=r+1; bestCol=c; }
+        }
+      }
+      if(bestStart<0 || bestScore<3){
+        toast('تعذر اكتشاف بنية الدرجات تلقائياً',true);
+        return;
+      }
+      // import
+      const startRow = bestStart;
+      const startCol = bestCol;
+      // clear current
+      document.querySelectorAll('.students-table input').forEach(inp=>inp.value='');
+      let imported = 0;
+      for(let i=0;i<ROW_COUNT;i++){
+        const row = rows[startRow+i];
+        if(!row) break;
+        for(let f=0;f<NUM_FASL;f++){
+          const v = row[startCol+f];
+          if(v!=='' && v!==null && v!==undefined && !isNaN(parseFloat(v))){
+            const inp = document.querySelector(`input[data-row="${i+1}"][data-fasl="${f+1}"]`);
+            if(inp){ inp.value = parseFloat(v); imported++; }
+          }
+        }
+      }
+      // try to extract basic info: scan first ~30 rows for label-value pairs
+      const text = rows.slice(0,30).map(r=>r.join('|')).join('\n');
+      const tryPick = (labels) => {
+        for(let r=0;r<Math.min(rows.length,30);r++){
+          const row = rows[r];
+          for(let c=0;c<(row||[]).length;c++){
+            const cell = String(row[c]||'').trim();
+            if(labels.some(l=>cell.includes(l))){
+              // find next non-empty cell either same row or next row
+              for(let cc=c+1; cc<row.length+5; cc++){
+                let v = row[cc];
+                if(v===undefined && rows[r+1]) v = rows[r+1][c];
+                if(v!==undefined && v!==null && String(v).trim()!=='' && !labels.some(l=>String(v).includes(l))){
+                  return String(v).trim();
+                }
+              }
+            }
+          }
+        }
+        return null;
+      };
+      const fSchool = tryPick(['المدرسة','المدرسه']);
+      const fYear = tryPick(['العام الدراسي','العام']);
+      const fTerm = tryPick(['الفصل الدراسي']);
+      const fType = tryPick(['نوع القياس']);
+      const fSubject = tryPick(['المادة','الماده']);
+      const fTeacher = tryPick(['المعلم','المعلمة']);
+      const fStage = tryPick(['المرحلة','المرحله']);
+      const fGrade = tryPick(['الصف']);
+      const fMax = tryPick(['درجة التصحيح']);
+      if(fSchool) document.getElementById('f-school').value = fSchool;
+      if(fYear) document.getElementById('f-year').value = fYear;
+      if(fTerm) document.getElementById('f-term').value = fTerm;
+      if(fType) document.getElementById('f-type').value = fType;
+      if(fSubject) document.getElementById('f-subject').value = fSubject;
+      if(fTeacher) document.getElementById('f-teacher').value = fTeacher;
+      if(fStage) document.getElementById('f-stage').value = fStage;
+      if(fGrade) document.getElementById('f-grade').value = fGrade;
+      if(fMax && !isNaN(parseFloat(fMax))) document.getElementById('f-max').value = parseFloat(fMax);
+
+      syncHeader();
+      recalculate();
+      toast('تم استيراد ' + imported + ' درجة بنجاح ✓');
+    }catch(err){
+      console.error(err);
+      toast('فشل الاستيراد: '+err.message,true);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  // reset input
+  e.target.value = '';
+}
+
+function exportToExcel(){
+  const wb = XLSX.utils.book_new();
+  // Sheet 1: البيانات
+  const info = [
+    ['المدرسة', document.getElementById('f-school').value],
+    ['المرحلة', document.getElementById('f-stage').value],
+    ['العام الدراسي', document.getElementById('f-year').value],
+    ['الفصل الدراسي', document.getElementById('f-term').value],
+    ['نوع القياس', document.getElementById('f-type').value],
+    ['المادة', document.getElementById('f-subject').value],
+    ['المعلم/ة', document.getElementById('f-teacher').value],
+    ['الصف', document.getElementById('f-grade').value],
+    ['درجة التصحيح', document.getElementById('f-max').value],
+    [],
+    ['م','الفصل 1','الفصل 2','الفصل 3','الفصل 4','الفصل 5','الفصل 6']
+  ];
+  const fasls = collectGrades();
+  for(let r=1;r<=ROW_COUNT;r++){
+    info.push([r, ...fasls.map(arr=>arr[r-1]===null?'':arr[r-1])]);
+  }
+  const ws1 = XLSX.utils.aoa_to_sheet(info);
+  XLSX.utils.book_append_sheet(wb, ws1, 'البيانات');
+
+  // Sheet 2: النتائج
+  const ft = document.getElementById('fasl-stats').rows;
+  const gd = document.getElementById('grade-dist').rows;
+  const res = [
+    ['نتيجة دراسة وتحليل اختبار'],
+    [],
+    ['المدرسة', document.getElementById('f-school').value, '', 'المرحلة', document.getElementById('f-stage').value],
+    ['العام الدراسي', document.getElementById('f-year').value, '', 'نوع القياس', document.getElementById('f-type').value],
+    ['الفصل الدراسي', document.getElementById('f-term').value, '', 'الصف', document.getElementById('f-grade').value],
+    ['المعلم/ة', document.getElementById('f-teacher').value, '', 'المادة', document.getElementById('f-subject').value],
+    ['درجة التصحيح', document.getElementById('f-max').value],
+    [],
+    ['نتائج الفصول التفصيلية'],
+    ['البيان','الفصل 1','الفصل 2','الفصل 3','الفصل 4','الفصل 5','الفصل 6','الإجمالي']
+  ];
+  for(let i=0;i<ft.length;i++){
+    const row = [];
+    for(let j=0;j<ft[i].cells.length;j++) row.push(ft[i].cells[j].textContent);
+    res.push(row);
+  }
+  res.push([], ['توزيع التقديرات']);
+  res.push(['التقدير','الفصل 1','الفصل 2','الفصل 3','الفصل 4','الفصل 5','الفصل 6','الإجمالي']);
+  for(let i=0;i<gd.length;i++){
+    const row = [];
+    for(let j=0;j<gd[i].cells.length;j++) row.push(gd[i].cells[j].textContent);
+    res.push(row);
+  }
+  res.push([], ['النتيجة العامة']);
+  res.push(['المجموع الكلي', document.getElementById('g-sum').textContent]);
+  res.push(['إجمالي عدد الطلاب', document.getElementById('g-count').textContent]);
+  res.push(['متوسط الدرجات', document.getElementById('g-avg').textContent]);
+  res.push(['نسبة التحصيل', document.getElementById('g-rate').textContent]);
+  res.push(['أعلى درجة', document.getElementById('g-max').textContent]);
+  res.push(['أدنى درجة', document.getElementById('g-min').textContent]);
+
+  const ws2 = XLSX.utils.aoa_to_sheet(res);
+  XLSX.utils.book_append_sheet(wb, ws2, 'النتائج');
+
+  const fname = 'تحليل_النتائج_' + (document.getElementById('f-subject').value||'مادة') + '_' + new Date().toISOString().slice(0,10) + '.xlsx';
+  XLSX.writeFile(wb, fname);
+  toast('تم تصدير الملف بنجاح ✓');
+}
+
+/* ============ Toast ============ */
+function toast(msg, isError){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError?' error':'');
+  setTimeout(()=>{ t.className = 'toast'+(isError?' error':''); }, 2500);
+}
+
+/* ============ Init ============ */
+buildStudentsTable();
+recalculate();
+// attach listeners for info fields after build
+['f-school','f-stage','f-year','f-term','f-type','f-subject','f-teacher','f-grade','f-max','f-notes'].forEach(id=>{
+  const el = document.getElementById(id);
+  if(el){ el.addEventListener('input',recalculate); el.addEventListener('change',recalculate); }
+});
+// auto-save listeners
+let saveTimer;
+document.addEventListener('input',()=>{
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(()=>{
+    try{ localStorage.setItem(STORAGE_KEY+'_auto', JSON.stringify({
+      info:Object.fromEntries(['school','stage','year','term','type','subject','teacher','grade','max','notes'].map(k=>[k,document.getElementById('f-'+k).value])),
+      rows:ROW_COUNT, grades:collectGrades(), savedAt:new Date().toISOString()
+    })); }catch(e){}
+  }, 1500);
+});
+// auto-load if available
+window.addEventListener('load',()=>{
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY+'_auto');
+    if(raw){
+      const data = JSON.parse(raw);
+      Object.entries(data.info||{}).forEach(([k,v])=>{
+        const el = document.getElementById('f-'+k);
+        if(el && !el.value) el.value = v||'';
+      });
+      if(data.rows && data.rows!==ROW_COUNT){
+        ROW_COUNT = data.rows; buildStudentsTable();
+      }
+      if(data.grades){
+        data.grades.forEach((arr,fIdx)=>{
+          arr.forEach((v,rIdx)=>{
+            const inp = document.querySelector(`input[data-row="${rIdx+1}"][data-fasl="${fIdx+1}"]`);
+            if(inp && (v!==null && v!==undefined && v!=='')) inp.value = v;
+          });
+        });
+      }
+      syncHeader();
+      recalculate();
+    }
+  }catch(e){}
+});
+</script>
+</body>
+</html>

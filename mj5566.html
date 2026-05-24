@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استمارة المدرسة (2): تنفيذ خطة التحسين</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --secondary: #0d9488;
+            --accent: #d97706;
+            --bg-light: #f0fdfa;
+            --text-dark: #1e293b;
+            --border: #cbd5e1;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background-color: var(--white);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            border-top: 8px solid var(--primary);
+        }
+
+        .header {
+            background-color: var(--white);
+            color: var(--primary);
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .header h1 { margin: 0; font-size: 1.8rem; font-weight: 800; }
+        .header p { margin: 8px 0 0; font-size: 1.1rem; color: var(--secondary); font-weight: bold; }
+
+        .section {
+            padding: 25px;
+            border-bottom: 2px dashed var(--border);
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.4rem;
+            border-right: 5px solid var(--accent);
+            padding-right: 15px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            background-color: var(--bg-light);
+            padding: 10px 15px 10px 10px;
+            border-radius: 4px;
+        }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-weight: 700; color: var(--secondary); font-size: 0.95rem; }
+
+        input[type="text"], input[type="number"], select {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            background-color: #f8fafc;
+            transition: all 0.3s;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        /* الجدول والحاويات المرنة للطباعة السليمة */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            table-layout: fixed; 
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid var(--border);
+            text-align: center;
+            vertical-align: top;
+            padding: 0; 
+        }
+
+        .data-table th {
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: bold;
+            padding: 12px 6px;
+        }
+
+        .editable-text {
+            width: 100%;
+            min-height: 60px;
+            padding: 12px 10px;
+            box-sizing: border-box;
+            border: 2px solid transparent;
+            text-align: right;
+            outline: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+            transition: background 0.3s, border 0.3s;
+        }
+
+        .editable-text.center-text {
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .editable-text:focus {
+            border: 2px solid var(--accent);
+            background: var(--white);
+        }
+
+        /* أزرار الذكاء الاصطناعي والإجراءات */
+        .ai-btn-container { display: flex; justify-content: flex-end; margin-bottom: 10px; }
+        .btn-ai {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white; border: none; padding: 8px 16px; border-radius: 20px;
+            font-family: inherit; font-weight: bold; font-size: 0.9rem; cursor: pointer;
+            display: flex; align-items: center; gap: 5px; transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-ai:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3); }
+
+        .actions { text-align: center; padding: 30px; background-color: var(--bg-light); }
+        .btn-print {
+            background-color: var(--primary); color: white; border: none; padding: 12px 35px;
+            font-size: 1.1rem; font-weight: bold; font-family: inherit; border-radius: 8px;
+            cursor: pointer; transition: background-color 0.3s; box-shadow: 0 4px 6px rgba(15, 118, 110, 0.3);
+        }
+        .btn-print:hover { background-color: #0f5132; }
+
+        /* التذييل */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #1e293b;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+            display: block;
+            margin-top: 8px;
+            direction: ltr;
+        }
+
+        /* ======================================================= */
+        /* إعدادات الطباعة الأنيقة لـ PDF (مخصصة لحل مشكلة الخط)   */
+        /* ======================================================= */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 10mm; 
+            }
+
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+
+            body { 
+                background: white !important; 
+                padding: 0; 
+                font-size: 11pt !important; 
+                color: #000 !important;
+            }
+
+            .container { 
+                box-shadow: none !important; border: none !important; 
+                max-width: 100% !important; width: 100% !important;
+                border-top: none !important;
+            }
+
+            .btn-ai, .actions, .footer { display: none !important; }
+            
+            .header { padding: 5px 0 15px 0; border-bottom: 2px solid #0f766e; margin-bottom: 15px;}
+            .header h1 { font-size: 16pt !important; color: #0f766e !important; }
+            .header p { font-size: 12pt !important; color: #333 !important; }
+            
+            .section { padding: 10px 0; border-bottom: none; page-break-inside: auto; }
+            .section-title { 
+                font-size: 14pt !important; padding: 6px 10px; margin-bottom: 10px; 
+                color: #0f766e !important; background-color: #f1f5f9 !important;
+                border-right: 4px solid #f59e0b !important;
+            }
+            
+            .grid-3 { gap: 10px; margin-bottom: 10px; }
+            .form-group label { font-size: 10pt !important; color: #000 !important;}
+            input, select { 
+                padding: 4px; font-size: 11pt !important; border: none !important; 
+                border-bottom: 1px dashed #94a3b8 !important; background: transparent !important; 
+                color: #000 !important; height: 25px;
+            }
+
+            .data-table { 
+                font-size: 10.5pt !important; margin-bottom: 15px; 
+                page-break-inside: auto; border-collapse: collapse; width: 100%; table-layout: fixed; 
+            }
+            
+            /* مقاسات الأعمدة المتناسقة للطباعة (بعد التعديل الجديد لـ 4 أعمدة) */
+            .data-table th:nth-child(1) { width: 15%; } 
+            .data-table th:nth-child(2) { width: 25%; } 
+            .data-table th:nth-child(3) { width: 45%; } 
+            .data-table th:nth-child(4) { width: 15%; } 
+
+            .data-table tr { page-break-inside: avoid !important; page-break-after: auto; }
+            .data-table th { 
+                background-color: #0f766e !important; color: #ffffff !important; 
+                padding: 8px 4px !important; border: 1px solid #333 !important; font-size: 10.5pt !important;
+            }
+            .data-table td { border: 1px solid #666 !important; padding: 0 !important; }
+
+            .editable-text {
+                font-size: 10.5pt !important; line-height: 1.5 !important; 
+                padding: 8px !important; min-height: auto !important;
+                border: none !important; color: #000 !important; overflow: hidden !important;
+            }
+            .editable-text.center-text { color: #0f766e !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>استمارة المدرسة (2): تنفيذ خطة التحسين في مجالات الممارسات الإشرافية</h1>
+        <p>وزارة التعليم - المملكة العربية السعودية</p>
+    </div>
+
+    <!-- أولاً: البيانات الأساسية -->
+    <div class="section">
+        <h2 class="section-title">أولاً- البيانات الأساسية</h2>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>اسم المدرسة</label>
+                <input type="text" placeholder="أدخل اسم المدرسة">
+            </div>
+            <div class="form-group">
+                <label>المرحلة</label>
+                <select><option>الابتدائية</option><option selected>متوسط</option><option>الثانوية</option></select>
+            </div>
+            <div class="form-group">
+                <label>جنس المدرسة</label>
+                <select><option>بنين</option><option selected>بنات</option></select>
+            </div>
+        </div>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>الرقم الوزاري</label>
+                <input type="number" placeholder="مثال: 40909">
+            </div>
+            <div class="form-group">
+                <label>نوع المبنى</label>
+                <select><option selected>حكومي</option><option>مستأجر</option></select>
+            </div>
+            <div class="form-group">
+                <label>استقلاليه المبنى</label>
+                <select><option>مستقل</option><option selected>مشترك</option></select>
+            </div>
+        </div>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>الفترة</label>
+                <select><option selected>صباحي</option><option>مسائي</option></select>
+            </div>
+            <div class="form-group">
+                <label>استقلالية الإدارة</label>
+                <select><option selected>مستقلة</option><option>مشتركة</option></select>
+            </div>
+            <div class="form-group">
+                <label>اسم المدرسة المشتركة في الإدارة</label>
+                <input type="text" placeholder="في حال كانت مشتركة...">
+            </div>
+        </div>
+    </div>
+
+    <!-- ثانياً: إجراءات تنفيذ خطة التحسين -->
+    <div class="section">
+        <h2 class="section-title">ثانيا: إجراءات تنفيذ خطة التحسين في مجالات الممارسات الإشرافية</h2>
+        
+        <div class="ai-btn-container">
+            <button class="btn-ai" onclick="generateAllPlans()">✨ توليد جميع الإجراءات بالذكاء الاصطناعي</button>
+        </div>
+        
+        <table class="data-table" id="mainTable">
+            <thead>
+                <tr>
+                    <th>المجال</th>
+                    <th>العنصر / المكون / العملية المراد تحسينها</th>
+                    <th>لجان المدرسة</th>
+                    <th>مشرف الدعم</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- مجال التدريس -->
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">مجال التدريس</div></td>
+                    <td><div class="editable-text ai-col-2" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-3" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-4 center-text" contenteditable="true"></div></td>
+                </tr>
+                <!-- مجال نواتج التعلم -->
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">مجال نواتج التعلم</div></td>
+                    <td><div class="editable-text ai-col-2" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-3" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-4 center-text" contenteditable="true"></div></td>
+                </tr>
+                <!-- مجال الأنشطة المدرسية -->
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">مجال الأنشطة المدرسية</div></td>
+                    <td><div class="editable-text ai-col-2" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-3" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-4 center-text" contenteditable="true"></div></td>
+                </tr>
+                <!-- مجال التوجيه الطلابي -->
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">مجال التوجيه الطلابي</div></td>
+                    <td><div class="editable-text ai-col-2" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-3" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-4 center-text" contenteditable="true"></div></td>
+                </tr>
+                <!-- مجال التطوير المهني -->
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">مجال التطوير المهني</div></td>
+                    <td><div class="editable-text ai-col-2" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-3" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-col-4 center-text" contenteditable="true"></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ثالثاً: التوصيات والمقترحات والاعتماد -->
+    <div class="section" style="page-break-inside: avoid;">
+        <h2 class="section-title">ثالثا التوصيات والمقترحات</h2>
+        <div class="form-group">
+            <div class="editable-text" contenteditable="true" style="border: 1px solid var(--border); background: var(--bg-light); border-radius: 6px;"></div>
+        </div>
+        
+        <div class="grid-3" style="margin-top: 40px; text-align: center; border-top: 1px dashed var(--border); padding-top: 20px;">
+            <div>
+                <p><strong>مدير المدرسة</strong></p>
+                <input type="text" style="text-align: center; width: 80%;" placeholder="الاسم هنا">
+            </div>
+            <div>
+                <p><strong>التوقيع</strong></p>
+                <input type="text" style="text-align: center; width: 80%; background: transparent; border-style: dashed;">
+            </div>
+            <div>
+                <p><strong>ختم المدرسة</strong></p>
+                <div style="width: 120px; height: 70px; border: 1px dashed var(--border); margin: 0 auto; border-radius: 8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الأزرار -->
+    <div class="actions">
+        <button class="btn-print" onclick="window.print()">🖨️ حفظ كملف PDF / طباعة الاستمارة</button>
+    </div>
+
+    <!-- التذييل -->
+    <div class="footer">
+        <div>تصميم د/فواز</div>
+        <div style="font-size: 0.95rem; margin-top:8px;">تفضل للمزيد</div>
+        <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+</div>
+
+<script>
+    // البيانات المستخلصة بدقة
+    const planData = [
+        {
+            col2: "التخطيط التنفيذ التقويم",
+            col3: "تخطيط الدروس وأساليب وطرق التدريس وأساليب وطرق التقويم للطلاب\nتعمل لجان المدرسة ومنسوبيها على التحسين المستمر في مجال التدريس في تخطيط الدروس وأساليب وطرق التدريس وأساليب وطرق التقويم للطلاب ونشر النشرات التربوية وعمل المجتمعات المهنية والزيارات التبادلية",
+            col4: "الدعم والمساندة في هذه الاجراءات"
+        },
+        {
+            col2: "تحسين التحصيل التعليمي للطلاب",
+            col3: "دراسة نتائج الطلاب وتحليلها ومعرفة جوانب القوة والضعف\nتعمل لجان المدرسة ومنسوبيها على اجادة تحسين مهارات التفكير العليا والتعلم العميق وتحليل نتائج الطلاب ومعرفة نقاط القوة والضعف والتواصل الاسري فيما يخدم رفع النواتج",
+            col4: "الدعم والمساندة في هذه الاجراءات"
+        },
+        {
+            col2: "البرامج والأنشطة الصفية وغير الصفية",
+            col3: "ارتباط الأنشطة بالأهداف التعليمية وفاعليتها وقدرتها في تحسين مهارات الطلاب ورفع نواتج التعلم\nتعمل لجان المدرسة ومنسوبيها على اجادة تحسين الأنشطة الصفية وغير الصفية فيما يخدم تنمية مهارات الطلاب ومشاركة الأسرة والمجتمع في ذلك",
+            col4: "الدعم والمساندة في هذه الاجراءات"
+        },
+        {
+            col2: "البرامج الإرشادية والفعاليات",
+            col3: "التوجيه السلوكي والمهني للطلاب ومشاركة الأسرة\nتعمل لجان المدرسة ومنسوبيا على اجادة التواصل الفعال مع الأسرة والتوجيه السلوكي والمهني للطلاب ودعم قواعد الانضباط والسلوك وتنمية الهوية الوطنية والقيم",
+            col4: "الدعم والمساندة في هذه الاجراءات"
+        },
+        {
+            col2: "التطوير المستمر والتفاعل التربوي مع المجتمع",
+            col3: "التطوير المستمر والتفاعل التربوي مع المجتمع على المستوى الفردي والفريق والمؤسسة\nتعمل لجان المدرسة ومنسوبيها على اجادة مجتمعات التعلم المهنية والتطوير المؤسسي على مستويات المعلمين فرديا ومؤسسياً",
+            col4: "الدعم والمساندة في هذه الاجراءات"
+        }
+    ];
+
+    function generateAllPlans() {
+        const rows = document.querySelectorAll('#mainTable tbody tr');
+        
+        rows.forEach((row, index) => {
+            if(planData[index]) {
+                const cols2 = row.querySelector('.ai-col-2');
+                const cols3 = row.querySelector('.ai-col-3');
+                const cols4 = row.querySelector('.ai-col-4');
+
+                typeWriterEffect(cols2, planData[index].col2);
+                typeWriterEffect(cols3, planData[index].col3);
+                typeWriterEffect(cols4, planData[index].col4);
+            }
+        });
+    }
+
+    function typeWriterEffect(element, text) {
+        element.innerText = '';
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                element.innerText += text.charAt(i);
+                i++;
+                setTimeout(type, 10); 
+            }
+        }
+        type();
+    }
+</script>
+
+</body>
+</html>

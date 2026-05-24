@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خطة التحسين في مجالات الممارسات الإشرافية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e; /* لون أخضر مزرق أنيق يناسب التعليم */
+            --secondary: #0d9488;
+            --accent: #f59e0b; /* لون برتقالي للتباين */
+            --bg-light: #f0fdfa;
+            --text-dark: #1e293b;
+            --border: #cbd5e1;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #e2e8f0;
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--white);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            border-top: 8px solid var(--primary);
+        }
+
+        .header {
+            background-color: var(--white);
+            color: var(--primary);
+            padding: 25px 20px;
+            text-align: center;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            font-size: 1.1rem;
+            color: var(--secondary);
+            font-weight: bold;
+        }
+
+        .section {
+            padding: 25px;
+            border-bottom: 2px dashed var(--border);
+        }
+
+        .section-title {
+            color: var(--primary);
+            font-size: 1.4rem;
+            border-right: 5px solid var(--accent);
+            padding-right: 15px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            background-color: var(--bg-light);
+            padding: 10px 15px 10px 10px;
+            border-radius: 4px;
+        }
+
+        /* شبكات البيانات الأساسية */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 15px; }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-weight: 700;
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        input[type="text"], input[type="number"], select {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            background-color: #f8fafc;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: var(--white);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        /* الجداول والحاويات المرنة */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            table-layout: fixed; /* لتثبيت عرض الأعمدة */
+        }
+
+        .data-table th, .data-table td {
+            border: 1px solid var(--border);
+            text-align: center;
+            vertical-align: top;
+            padding: 0; 
+        }
+
+        .data-table th {
+            background-color: var(--primary);
+            color: var(--white);
+            font-weight: bold;
+            padding: 12px 6px;
+            font-size: 0.95rem;
+        }
+
+        /* الحاوية النصية القابلة للتعديل - تتمدد تلقائياً */
+        .editable-text {
+            width: 100%;
+            min-height: 45px;
+            padding: 10px 8px;
+            box-sizing: border-box;
+            border: 2px solid transparent;
+            text-align: right;
+            outline: none;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.5;
+            transition: background 0.3s, border 0.3s;
+        }
+
+        .editable-text.center-text {
+            text-align: center;
+            font-weight: bold;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .editable-text:focus {
+            border: 2px solid var(--accent);
+            background: var(--white);
+        }
+
+        .ai-btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .btn-ai {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-ai:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+        }
+
+        .actions {
+            text-align: center;
+            padding: 30px;
+            background-color: var(--bg-light);
+        }
+
+        .btn-print {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-family: inherit;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 6px rgba(15, 118, 110, 0.3);
+        }
+
+        .btn-print:hover { background-color: #0f5132; }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #1e293b;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+            display: block;
+            margin-top: 8px;
+            direction: ltr;
+        }
+
+        /* ======================================================= */
+        /* إعدادات الطباعة (حل مشكلة كبر الخط واختفاء النصوص)      */
+        /* ======================================================= */
+        @media print {
+            /* جعل الطباعة بالعرض (Landscape) لضمان مساحة واسعة للجدول */
+            @page {
+                size: A4 landscape;
+                margin: 10mm; /* تقليل الهوامش للاستفادة من المساحة */
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            body { 
+                background: white !important; 
+                padding: 0; 
+                font-size: 11pt !important; /* تصغير الخط بشكل دقيق للطباعة */
+                color: #000 !important;
+            }
+
+            .container { 
+                box-shadow: none !important; 
+                border: none !important; 
+                max-width: 100% !important; 
+                width: 100% !important;
+                border-top: none !important;
+            }
+
+            /* إخفاء الأزرار الملونة */
+            .btn-ai, .actions { display: none !important; }
+            
+            .header { padding: 5px 0 15px 0; border-bottom: 2px solid #0f766e; margin-bottom: 15px;}
+            .header h1 { font-size: 16pt !important; color: #0f766e !important; }
+            .header p { font-size: 12pt !important; color: #333 !important; }
+            
+            .section { padding: 10px 0; border-bottom: none; page-break-inside: auto; }
+            .section-title { 
+                font-size: 14pt !important; 
+                padding: 6px 10px; 
+                margin-bottom: 10px; 
+                color: #0f766e !important; 
+                background-color: #f1f5f9 !important;
+                border-right: 4px solid #f59e0b !important;
+            }
+            
+            /* تصغير الفراغات في الحقول العلوية */
+            .grid-3, .grid-2 { gap: 10px; margin-bottom: 10px; }
+            .form-group label { font-size: 10pt !important; color: #000 !important;}
+            input, select { 
+                padding: 4px; 
+                font-size: 11pt !important; 
+                border: none !important; 
+                border-bottom: 1px solid #94a3b8 !important; 
+                background: transparent !important; 
+                color: #000 !important;
+                height: 25px;
+            }
+
+            /* ضبط الجداول بدقة لمنع الخروج عن الإطار */
+            .data-table { 
+                font-size: 10.5pt !important; 
+                margin-bottom: 15px; 
+                page-break-inside: auto; 
+                border-collapse: collapse;
+                width: 100%;
+                table-layout: fixed; /* ضروري لضبط العرض */
+            }
+            
+            /* توزيع مقاسات الأعمدة بدقة للورقة */
+            .data-table th:nth-child(1) { width: 10%; } /* المجال */
+            .data-table th:nth-child(2) { width: 15%; } /* العنصر */
+            .data-table th:nth-child(3) { width: 15%; } /* الاحتياج */
+            .data-table th:nth-child(4) { width: 30%; } /* الإجراءات - الأكبر مساحة */
+            .data-table th:nth-child(5) { width: 12%; } /* أساليب */
+            .data-table th:nth-child(6) { width: 8%; }  /* المدة */
+            .data-table th:nth-child(7) { width: 10%; } /* التنفيذ */
+
+            .data-table tr { 
+                page-break-inside: avoid !important; /* يمنع انقسام الصف */
+                page-break-after: auto; 
+            }
+            .data-table th { 
+                background-color: #0f766e !important; 
+                color: #ffffff !important; 
+                padding: 8px 4px !important;
+                border: 1px solid #333 !important;
+                font-size: 10.5pt !important;
+            }
+            .data-table td { 
+                border: 1px solid #666 !important; 
+                padding: 0 !important;
+            }
+
+            /* حاويات النصوص المرنة في الطباعة */
+            .editable-text {
+                font-size: 10.5pt !important;
+                line-height: 1.4 !important; 
+                padding: 6px !important; /* تقليل الحشوة الداخلية لترك مساحة للنص */
+                min-height: auto !important;
+                border: none !important;
+                color: #000 !important;
+                overflow: hidden !important;
+            }
+
+            .editable-text.center-text {
+                color: #0f766e !important;
+            }
+            
+            .footer {
+                display: none !important; /* إخفاء التذييل في الطباعة لمنع التشتت */
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>استمارة المدرسة (1): بناء خطة التحسين في مجالات الممارسات الإشرافية</h1>
+        <p>وزارة التعليم - الإدارة العامة للتعليم - الشؤون التعليمية</p>
+    </div>
+
+    <!-- أولاً: البيانات الأساسية -->
+    <div class="section">
+        <h2 class="section-title">أولاً: البيانات الأساسية للمدرسة</h2>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>اسم المدرسة</label>
+                <input type="text" placeholder="أدخل اسم المدرسة">
+            </div>
+            <div class="form-group">
+                <label>المرحلة الدراسية</label>
+                <input type="text" placeholder="مثال: الابتدائية">
+            </div>
+            <div class="form-group">
+                <label>جنس المدرسة</label>
+                <select><option>بنين</option><option>بنات</option></select>
+            </div>
+        </div>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>الرقم الوزاري</label>
+                <input type="number">
+            </div>
+            <div class="form-group">
+                <label>نوع المبنى</label>
+                <select><option>حكومي</option><option>مستأجر</option></select>
+            </div>
+            <div class="form-group">
+                <label>استقلالية المبنى</label>
+                <select><option>مستقل</option><option>مشترك</option></select>
+            </div>
+        </div>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>الفترة</label>
+                <select><option>صباحي</option><option>مسائي</option></select>
+            </div>
+            <div class="form-group">
+                <label>استقلالية الإدارة</label>
+                <select><option>مستقل</option><option>مشترك</option></select>
+            </div>
+            <div class="form-group">
+                <label>اسم المدرسة المشتركة في الإدارة</label>
+                <input type="text">
+            </div>
+        </div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label>مستوى الأداء العام للمدرسة في التقويم المدرسي (آخر تقرير)</label>
+                <input type="text" placeholder="مثال: تقدم">
+            </div>
+            <div class="form-group">
+                <label>مستوى المدرسة في نواتج التعلم في التقويم المدرسي (آخر تقرير)</label>
+                <input type="text" placeholder="مثال: انطلاق">
+            </div>
+        </div>
+    </div>
+
+    <!-- ثانياً: إجراءات خطة التحسين -->
+    <div class="section">
+        <h2 class="section-title">ثانياً: إجراءات خطة التحسين في مجالات الممارسات الإشرافية</h2>
+        
+        <!-- 1. مجال التدريس -->
+        <div class="ai-btn-container">
+            <button class="btn-ai" onclick="fillTable('teaching')">✨ توليد بنود: التدريس</button>
+        </div>
+        <table class="data-table" id="table-teaching">
+            <thead>
+                <tr>
+                    <th>المجال</th>
+                    <th>العنصر/المكون/العملية المراد تحسينها</th>
+                    <th>وصف الاحتياج</th>
+                    <th>إجراءات التحسين</th>
+                    <th>أساليب وطرق التحسين</th>
+                    <th>مدة الإنجاز</th>
+                    <th>التنفيذ والمسؤولية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">التدريس</div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 2. مجال نواتج التعلم -->
+        <div class="ai-btn-container" style="margin-top: 25px;">
+            <button class="btn-ai" onclick="fillTable('learning_outcomes')">✨ توليد بنود: نواتج التعلم</button>
+        </div>
+        <table class="data-table" id="table-learning_outcomes">
+             <thead>
+                <tr>
+                    <th>المجال</th>
+                    <th>العنصر/المكون/العملية المراد تحسينها</th>
+                    <th>وصف الاحتياج</th>
+                    <th>إجراءات التحسين</th>
+                    <th>أساليب وطرق التحسين</th>
+                    <th>مدة الإنجاز</th>
+                    <th>التنفيذ والمسؤولية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">نواتج التعلم</div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                </tr>
+            </tbody>
+        </table>
+
+         <!-- 3. مجال الأنشطة المدرسية -->
+         <div class="ai-btn-container" style="margin-top: 25px;">
+            <button class="btn-ai" onclick="fillTable('activities')">✨ توليد بنود: الأنشطة المدرسية</button>
+        </div>
+        <table class="data-table" id="table-activities">
+             <thead>
+                <tr>
+                    <th>المجال</th>
+                    <th>العنصر/المكون/العملية المراد تحسينها</th>
+                    <th>وصف الاحتياج</th>
+                    <th>إجراءات التحسين</th>
+                    <th>أساليب وطرق التحسين</th>
+                    <th>مدة الإنجاز</th>
+                    <th>التنفيذ والمسؤولية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">الأنشطة المدرسية</div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                </tr>
+            </tbody>
+        </table>
+
+         <!-- 4. مجال التوجيه الطلابي -->
+         <div class="ai-btn-container" style="margin-top: 25px;">
+            <button class="btn-ai" onclick="fillTable('student_guidance')">✨ توليد بنود: التوجيه الطلابي</button>
+        </div>
+        <table class="data-table" id="table-student_guidance">
+             <thead>
+                <tr>
+                    <th>المجال</th>
+                    <th>العنصر/المكون/العملية المراد تحسينها</th>
+                    <th>وصف الاحتياج</th>
+                    <th>إجراءات التحسين</th>
+                    <th>أساليب وطرق التحسين</th>
+                    <th>مدة الإنجاز</th>
+                    <th>التنفيذ والمسؤولية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">التوجيه الطلابي</div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                </tr>
+            </tbody>
+        </table>
+
+         <!-- 5. مجال التطوير المهني المستمر -->
+         <div class="ai-btn-container" style="margin-top: 25px;">
+            <button class="btn-ai" onclick="fillTable('continuous_dev')">✨ توليد بنود: التطوير المهني</button>
+        </div>
+        <table class="data-table" id="table-continuous_dev">
+             <thead>
+                <tr>
+                    <th>المجال</th>
+                    <th>العنصر/المكون/العملية المراد تحسينها</th>
+                    <th>وصف الاحتياج</th>
+                    <th>إجراءات التحسين</th>
+                    <th>أساليب وطرق التحسين</th>
+                    <th>مدة الإنجاز</th>
+                    <th>التنفيذ والمسؤولية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><div class="editable-text center-text" contenteditable="true">التطوير المهني المستمر</div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                    <td><div class="editable-text ai-fillable center-text" contenteditable="true"></div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ثالثاً: التوصيات والمقترحات -->
+    <div class="section" style="page-break-inside: avoid;">
+        <h2 class="section-title">ثالثاً: التوصيات والمقترحات</h2>
+        <div class="form-group">
+            <div class="editable-text" contenteditable="true" style="border: 1px solid var(--border); background: var(--bg-light); border-radius: 6px;">- المتابعة المستمرة للاحتياجات المدرسية وعمل الخطط الإجرائية لمتابعة عملية التنفيذ في جميع مجالات الممارسات الإشرافية.</div>
+        </div>
+        
+        <div class="grid-2" style="margin-top: 40px; text-align: center; border-top: 1px dashed var(--border); padding-top: 20px;">
+            <div>
+                <p><strong>مدير/ة المدرسة:</strong></p>
+                <input type="text" style="text-align: center; width: 60%;" placeholder="الاسم والتوقيع">
+            </div>
+            <div>
+                <p><strong>ختم المدرسة:</strong></p>
+                <div style="width: 150px; height: 80px; border: 1px dashed var(--border); margin: 0 auto; border-radius: 8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الأزرار -->
+    <div class="actions">
+        <button class="btn-print" onclick="window.print()">🖨️ حفظ كملف PDF / طباعة السجل</button>
+    </div>
+
+    <!-- التذييل -->
+    <div class="footer">
+        <div>تصميم د/فواز</div>
+        <div style="font-size: 0.9rem; margin-top:8px;">تفضل للمزيد</div>
+        <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+</div>
+
+<script>
+    // قاعدة بيانات التوليد الذكي مستخلصة من الأدلة المرفقة
+    const aiData = {
+        'teaching': [
+            {
+                element: "تخطيط التدريس\nتنفيذ التدريس\nتقويم التعلم",
+                need: "تخطيط الوحدات والفصول والدروس\nطرائق التدريس وأساليبه\nالتقنيات والوسائل التعليمية\nالتخطيط للتقويم وإعداد أدواته",
+                actions: "- إعداد خطط الدروس وفق خطة الدرس.\n- التنوع في الاستراتيجيات وطرائق التدريس.\n- دمج وسائل التقنية.\n- تطبيق أساليب التقويم وتعزيز التدريس الفعال.\n- تهيئة مناخ آمن وجاذب للتعلم.",
+                methods: "ورش عمل\nدورات تدريبية\nنشرات تربوية\nزيارات صفية تبادلية\nمجتمعات تعلم مهنية",
+                duration: "فصل دراسي",
+                responsibility: "لجان المدرسة\nالمعلمين\nمشرف خدمات دعم التميز"
+            }
+        ],
+        'learning_outcomes': [
+            {
+                element: "تحسين التحصيل العلمي والدراسي للطالب",
+                need: "معايير المحتوى والأهداف.\nدراسة نتائج تعلم الطلاب وتحليلها.\nتحديد جوانب القوة والضعف وأسباب تدني المستوى.\nمشاركة أولياء الأمور في تعليم أبنائهم.",
+                actions: "- تصميم برامج مناسبة لرفع مستوى التعلم (دروس تقوية، منصات).\n- تحسين بيئات التعلم والإدارة الصفية.\n- تعزيز سلوك التعلم العميق وتفريد التعليم الذاتي.\n- تحسين ممارسات التقويم التكويني.\n- تنمية مهارات التفكير الناقد والإبداعي.",
+                methods: "ورش عمل\nدورات تدريبية\nنشرات تربوية\nزيارات صفية تبادلية",
+                duration: "فصل دراسي",
+                responsibility: "لجان المدرسة\nالمعلمين\nمشرف خدمات دعم التميز"
+            }
+        ],
+        'activities': [
+            {
+                element: "البرامج والأنشطة الصفية وغير الصفية",
+                need: "ارتباط الأنشطة بالأهداف التعليمية.\nفاعلية الأنشطة في تحسين المهارات والقدرات والنواتج.\nالشراكة مع الأسرة والمجتمع.",
+                actions: "- عمل برامج وأنشطة تدعم التعلم.\n- عمل أنشطة غير صفية تعزز التعليم الصفي.\n- عمل أنشطة صفية تدعم احتياج الطالب وترتبط بالأهداف.",
+                methods: "دورات تدريبية\nنشرات تربوية\nزيارات صفية\nمجتمعات تعلم مهنية",
+                duration: "فصل دراسي",
+                responsibility: "لجان المدرسة\nرائد النشاط\nمشرف خدمات التميز"
+            }
+        ],
+        'student_guidance': [
+            {
+                element: "البرامج والإجراءات والفعاليات",
+                need: "توجيه سلوك الطالب.\nتوجيه تعليمي ومهني للطلاب.\nالشراكة الأسرية والمجتمعية.",
+                actions: "- تعزيز القيم وأخلاقيات المهنة والانتماء الوطني والتنوع الثقافي.\n- برامج رفع الدافعية وتحفيز التعلم.\n- تعزيز التطور الصحي والنفسي والاجتماعي للطلاب.\n- تفعيل الشراكة الأسرية والمجتمعية لدعم التعلم.",
+                methods: "ورش عمل\nدورات تدريبية\nنشرات تربوية\nزيارات صفية",
+                duration: "فصل دراسي",
+                responsibility: "لجان المدرسة\nالموجه الطلابي\nمشرف خدمات التميز"
+            }
+        ],
+        'continuous_dev': [
+            {
+                element: "التطوير المهني المستمر والتفاعل مع التربويين والمجتمع",
+                need: "التطوير الفردي والنمو المهني.\nالتطوير الفريقي كمجتمعات تعلم.\nالتطوير المستمر للمدرسة.",
+                actions: "- التأمل الذاتي (تقويم - مراجعة - تصحيح).\n- تفعيل تعلم الأقران والملاحظات الصفية.\n- دروس تطبيقية وتبادل زيارات.\n- لقاءات ومجتمعات تعلم مهنية.",
+                methods: "دورات تدريبية\nحلقات وورش عمل\nزيارات صفية\nمجتمعات تعلم مهنية",
+                duration: "فصل دراسي",
+                responsibility: "لجان المدرسة\nالقيادة المدرسية\nمشرف خدمات التميز"
+            }
+        ]
+    };
+
+    function fillTable(domainKey) {
+        const tableId = 'table-' + domainKey;
+        const tbody = document.querySelector(`#${tableId} tbody`);
+        const rows = tbody.querySelectorAll('tr');
+        const data = aiData[domainKey];
+
+        data.forEach((item, index) => {
+            if (rows[index]) {
+                const fillables = rows[index].querySelectorAll('.ai-fillable');
+                
+                typeWriterEffect(fillables[0], item.element);
+                typeWriterEffect(fillables[1], item.need);
+                typeWriterEffect(fillables[2], item.actions);
+                typeWriterEffect(fillables[3], item.methods);
+                typeWriterEffect(fillables[4], item.duration);
+                typeWriterEffect(fillables[5], item.responsibility);
+            }
+        });
+    }
+
+    function typeWriterEffect(element, text) {
+        element.innerText = '';
+        let i = 0;
+        function type() {
+            if (i < text.length) {
+                element.innerText += text.charAt(i);
+                i++;
+                setTimeout(type, 8); // سرعة الكتابة
+            }
+        }
+        type();
+    }
+</script>
+
+</body>
+</html>

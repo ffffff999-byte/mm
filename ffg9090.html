@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نقاط المفاضلة للمعلمين - تصميم د/فواز</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap');
+
+  :root {
+    --green-dark:  #1a6b3c;
+    --green-med:   #2e8b57;
+    --green-light: #c8e6c9;
+    --gold:        #f9a825;
+    --gold-dark:   #b8860b;
+    --blue-dark:   #003366;
+    --blue-med:    #1565c0;
+    --blue-light:  #bbdefb;
+    --red:         #b71c1c;
+    --red-light:   #ffcdd2;
+    --purple:      #6a0dad;
+    --teal:        #00796b;
+    --orange:      #e65100;
+    --white:       #ffffff;
+    --bg:          #f0f4f8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Cairo', 'Arial', sans-serif;
+    background: linear-gradient(135deg, #e8f5e9 0%, #e3f2fd 50%, #f3e5f5 100%);
+    min-height: 100vh;
+    padding: 20px;
+    direction: rtl;
+  }
+
+  /* ======= HERO HEADER ======= */
+  .hero {
+    background: linear-gradient(135deg, var(--green-dark) 0%, #0d4f2c 40%, var(--blue-dark) 100%);
+    border-radius: 24px;
+    padding: 40px 30px 30px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: #000;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 18px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+    letter-spacing: 1px;
+  }
+  .hero h1 {
+    color: var(--white);
+    font-size: clamp(22px, 4vw, 36px);
+    font-weight: 900;
+    line-height: 1.4;
+    margin-bottom: 10px;
+  }
+  .hero p {
+    color: #a5d6a7;
+    font-size: 15px;
+    margin-bottom: 20px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .hero-stat {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 10px 22px;
+    color: var(--white);
+    text-align: center;
+  }
+  .hero-stat .num { font-size: 28px; font-weight: 900; color: var(--gold); }
+  .hero-stat .lbl { font-size: 12px; color: #c8e6c9; }
+
+  /* ======= SECTION TITLE ======= */
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(90deg, var(--green-dark), var(--green-med));
+    color: var(--white);
+    padding: 14px 24px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 16px rgba(26,107,60,0.3);
+  }
+  .section-title .icon {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  /* ======= ELEMENTS GRID ======= */
+  .elements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+  .element-card {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e0e0e0;
+  }
+  .element-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.14);
+  }
+  .card-header {
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .card-num {
+    width: 38px; height: 38px; min-width: 38px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 900; color: var(--white);
+    border: 2px solid rgba(255,255,255,0.4);
+  }
+  .card-title {
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.4;
+    flex: 1;
+  }
+  .card-max {
+    background: var(--gold);
+    color: #000;
+    font-size: 13px;
+    font-weight: 900;
+    padding: 4px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .card-body {
+    padding: 14px 18px;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 10px;
+    border-right: 3px solid #e0e0e0;
+    padding-right: 10px;
+  }
+  .card-formula {
+    background: #e8f0fe;
+    border: 1px solid #bbdefb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--blue-dark);
+    font-weight: 700;
+    direction: ltr;
+    text-align: left;
+  }
+  .card-formula::before {
+    content: 'fx  ';
+    color: var(--green-dark);
+    font-weight: 900;
+  }
+
+  /* card color themes */
+  .c1 .card-header { background: linear-gradient(135deg, #1a6b3c, #2e8b57); }
+  .c2 .card-header { background: linear-gradient(135deg, #1565c0, #1976d2); }
+  .c3 .card-header { background: linear-gradient(135deg, #6a0dad, #8e24aa); }
+  .c4 .card-header { background: linear-gradient(135deg, #b71c1c, #c62828); }
+  .c5 .card-header { background: linear-gradient(135deg, #e65100, #f4511e); }
+  .c6 .card-header { background: linear-gradient(135deg, #00796b, #00897b); }
+  .c7 .card-header { background: linear-gradient(135deg, #4527a0, #5e35b1); }
+  .c8 .card-header { background: linear-gradient(135deg, #558b2f, #689f38); }
+  .c9 .card-header { background: linear-gradient(135deg, #880e4f, #ad1457); }
+  .c10 .card-header { background: linear-gradient(135deg, #b8860b, #f9a825); }
+
+  /* ======= TOTAL BAR ======= */
+  .total-bar {
+    background: linear-gradient(135deg, var(--green-dark), var(--blue-dark));
+    border-radius: 16px;
+    padding: 22px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 30px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+  }
+  .total-label {
+    color: #a5d6a7;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .total-value {
+    background: var(--gold);
+    color: #000;
+    font-size: 36px;
+    font-weight: 900;
+    padding: 8px 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(249,168,37,0.4);
+  }
+  .total-note {
+    color: #c8e6c9;
+    font-size: 13px;
+    max-width: 300px;
+    line-height: 1.6;
+  }
+
+  /* ======= CALCULATOR TABLE ======= */
+  .calc-section {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+  .calc-header-bar {
+    background: linear-gradient(90deg, var(--blue-dark), var(--blue-med));
+    padding: 16px 24px;
+    color: var(--white);
+    font-size: 17px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .calc-hint {
+    background: #fff9c4;
+    border-right: 4px solid var(--gold);
+    padding: 12px 18px;
+    font-size: 13px;
+    color: #555;
+    font-weight: 600;
+  }
+
+  .table-wrap { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 900px;
+  }
+  thead th {
+    padding: 12px 10px;
+    text-align: center;
+    font-weight: 700;
+    font-size: 12px;
+    white-space: nowrap;
+    border: 1px solid #ddd;
+  }
+  .th-name  { background: var(--green-dark); color: #fff; }
+  .th-input { background: #f57f17; color: #fff; }
+  .th-total { background: var(--red); color: #fff; }
+  .th-rank  { background: var(--blue-dark); color: #fff; }
+
+  tbody tr:nth-child(even) { background: #f5f5f5; }
+  tbody tr:hover { background: #e8f5e9; }
+  tbody td {
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    vertical-align: middle;
+  }
+  .td-num  { font-weight: 900; color: var(--green-dark); font-size: 14px; }
+  .td-name { text-align: right; font-weight: 700; color: var(--blue-dark); padding-right: 14px; white-space: nowrap; }
+  .td-region { font-size: 12px; color: #666; }
+  .td-input {
+    background: #fffde7 !important;
+    font-weight: 700;
+    color: #333;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .td-input:focus-within { background: #fff9c4 !important; }
+  .td-input input {
+    width: 52px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 4px 6px;
+    text-align: center;
+    font-family: 'Cairo', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    background: transparent;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .td-input input:focus {
+    border-color: var(--green-dark);
+    box-shadow: 0 0 0 2px rgba(26,107,60,0.2);
+  }
+  .td-select select {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 4px 6px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    background: #fffde7;
+    cursor: pointer;
+    outline: none;
+  }
+  .td-bool select {
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 12px;
+    background: #fffde7;
+    cursor: pointer;
+  }
+  .td-total {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--white) !important;
+    border-radius: 8px;
+  }
+  .td-rank {
+    font-weight: 900;
+    font-size: 15px;
+  }
+
+  /* ======= STATS ROW ======= */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 2px solid #e0e0e0;
+  }
+  .stat-cell {
+    padding: 16px;
+    text-align: center;
+    border-left: 1px solid #e0e0e0;
+  }
+  .stat-cell:last-child { border-left: none; }
+  .stat-cell .s-val { font-size: 26px; font-weight: 900; }
+  .stat-cell .s-lbl { font-size: 12px; color: #888; margin-top: 4px; }
+  .stat-max { color: var(--green-dark); }
+  .stat-min { color: var(--red); }
+  .stat-avg { color: var(--blue-dark); }
+
+  /* ======= TIEBREAK SECTION ======= */
+  .tiebreak-section {
+    background: var(--white);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+  .tiebreak-header {
+    background: linear-gradient(90deg, var(--green-dark), var(--teal));
+    padding: 16px 24px;
+    color: var(--white);
+    font-size: 17px;
+    font-weight: 800;
+  }
+  .tiebreak-note {
+    background: #e8f5e9;
+    border-right: 4px solid var(--green-dark);
+    padding: 12px 18px;
+    font-size: 13px;
+    color: var(--green-dark);
+    font-weight: 700;
+  }
+  .tiebreak-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    padding: 20px;
+  }
+  .tb-card {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .tb-card-head {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--white);
+  }
+  .tb-priority {
+    width: 36px; height: 36px; min-width: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900;
+  }
+  .tb-card-title { font-size: 13px; font-weight: 700; flex: 1; line-height: 1.4; }
+  .tb-card-body { padding: 12px 16px; background: #fafafa; }
+  .tb-detail { font-size: 12px; color: #555; margin-bottom: 8px; line-height: 1.6; }
+  .tb-formula {
+    background: #e8f0fe;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--blue-dark);
+    font-weight: 700;
+    direction: ltr;
+    text-align: left;
+  }
+  .tb1 .tb-card-head { background: linear-gradient(135deg, #f57f17, #fb8c00); }
+  .tb2 .tb-card-head { background: linear-gradient(135deg, #1565c0, #1976d2); }
+  .tb3 .tb-card-head { background: linear-gradient(135deg, #6a0dad, #8e24aa); }
+  .tb4 .tb-card-head { background: linear-gradient(135deg, #b71c1c, #c62828); }
+  .tb5 .tb-card-head { background: linear-gradient(135deg, #00796b, #00897b); }
+
+  /* ======= PROGRESS BARS ======= */
+  .progress-section {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+  }
+  .progress-title {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--green-dark);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--green-light);
+  }
+  .progress-item {
+    margin-bottom: 16px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #444;
+  }
+  .progress-bar-bg {
+    background: #e0e0e0;
+    border-radius: 8px;
+    height: 14px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 8px;
+    transition: width 1s ease;
+    position: relative;
+  }
+  .progress-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 30%;
+    background: rgba(255,255,255,0.3);
+    border-radius: 0 8px 8px 0;
+  }
+
+  /* ======= SIGNATURE ======= */
+  .signature {
+    background: linear-gradient(135deg, var(--green-dark) 0%, #0d4f2c 50%, var(--blue-dark) 100%);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .signature::before {
+    content: '✦ ✦ ✦';
+    position: absolute;
+    top: 12px; left: 50%; transform: translateX(-50%);
+    color: rgba(249,168,37,0.3);
+    font-size: 24px;
+    letter-spacing: 20px;
+  }
+  .sig-name {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 2px 12px rgba(249,168,37,0.4);
+    margin-bottom: 8px;
+    letter-spacing: 2px;
+  }
+  .sig-divider {
+    width: 80px; height: 3px;
+    background: var(--gold);
+    margin: 12px auto;
+    border-radius: 2px;
+  }
+  .sig-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--gold);
+    color: #000;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 800;
+    padding: 12px 28px;
+    border-radius: 30px;
+    margin-top: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(249,168,37,0.4);
+  }
+  .sig-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(249,168,37,0.5);
+  }
+  .sig-link .arrow { font-size: 18px; }
+
+  /* ======= PRINT BUTTON ======= */
+  .print-btn {
+    display: block;
+    width: fit-content;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--green-dark), var(--green-med));
+    color: var(--white);
+    border: none;
+    padding: 12px 32px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Cairo', sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(26,107,60,0.3);
+    transition: transform 0.2s;
+  }
+  .print-btn:hover { transform: translateY(-2px); }
+
+  @media print {
+    body { background: white; padding: 0; }
+    .print-btn { display: none; }
+    .element-card:hover { transform: none; }
+  }
+
+  @media (max-width: 600px) {
+    .elements-grid { grid-template-columns: 1fr; }
+    .tiebreak-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: 1fr; }
+    .total-bar { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-badge">وزارة التعليم — نظام المفاضلة</div>
+  <h1>نقاط المفاضلة للمعلمين والمعلمات في المدارس</h1>
+  <p>احتساب نقاط المفاضلة على الفرص المعلنة وفق نوعها وتخصصها</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">10</div><div class="lbl">عناصر التقييم</div></div>
+    <div class="hero-stat"><div class="num">165</div><div class="lbl">الحد الأعلى للنقاط</div></div>
+    <div class="hero-stat"><div class="num">5</div><div class="lbl">معايير التساوي</div></div>
+    <div class="hero-stat"><div class="num">15</div><div class="lbl">نموذج بيانات</div></div>
+  </div>
+</div>
+
+<button class="print-btn" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+
+<!-- ===== SECTION 1: ELEMENTS ===== -->
+<div class="section-title">
+  <div class="icon">📋</div>
+  أولاً: عناصر نقاط المفاضلة والحدود القصوى
+</div>
+
+<div class="elements-grid">
+
+  <div class="element-card c1">
+    <div class="card-header">
+      <div class="card-num">1</div>
+      <div class="card-title">اختبار التخصص للرخصة المهنية التعليمية</div>
+      <div class="card-max">حد أعلى: 35</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">درجة اختبار التخصص المعتمد في رخصة مهنية سارية</div>
+      <div class="card-formula">MIN(درجة_التخصص, 35)</div>
+    </div>
+  </div>
+
+  <div class="element-card c2">
+    <div class="card-header">
+      <div class="card-num">2</div>
+      <div class="card-title">الاختبار التربوي العام للرخصة المهنية التعليمية</div>
+      <div class="card-max">حد أعلى: 25</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">درجة الاختبار التربوي المعتمد في رخصة مهنية سارية</div>
+      <div class="card-formula">MIN(درجة_التربوي, 25)</div>
+    </div>
+  </div>
+
+  <div class="element-card c3">
+    <div class="card-header">
+      <div class="card-num">3</div>
+      <div class="card-title">نقاط التطوير المهني</div>
+      <div class="card-max">حد أعلى: 25</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">وفق دليل احتساب نقاط التطوير المهني المكتسبة خلال العام الذي يسبق تاريخ التقديم</div>
+      <div class="card-formula">MIN(نقاط_التطوير, 25)</div>
+    </div>
+  </div>
+
+  <div class="element-card c4">
+    <div class="card-header">
+      <div class="card-num">4</div>
+      <div class="card-title">متوسط تقييم الأداء الوظيفي للعامين الدراسيين السابقين</div>
+      <div class="card-max">حد أعلى: 30</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">يُحسب متوسط درجة الأداء الوظيفي لآخر عامين دراسيين</div>
+      <div class="card-formula">MIN(AVERAGE(أداء1, أداء2), 30)</div>
+    </div>
+  </div>
+
+  <div class="element-card c5">
+    <div class="card-header">
+      <div class="card-num">5</div>
+      <div class="card-title">أيام الغياب بدون عذر</div>
+      <div class="card-max">خصم: 14</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">خصم نقطة عن كل يوم غياب بدون عذر خلال العام الذي يسبق تاريخ التقديم</div>
+      <div class="card-formula">-MIN(أيام_الغياب, 14)</div>
+    </div>
+  </div>
+
+  <div class="element-card c6">
+    <div class="card-header">
+      <div class="card-num">6</div>
+      <div class="card-title">رتبة الوظيفة التعليمية</div>
+      <div class="card-max">حد أعلى: 8</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">معلم/مساعد معلم = 2 | ممارس = 4 | متقدم = 6 | خبير = 8</div>
+      <div class="card-formula">IFS(رتبة=2→2, =4→4, =6→6, =8→8)</div>
+    </div>
+  </div>
+
+  <div class="element-card c7">
+    <div class="card-header">
+      <div class="card-num">7</div>
+      <div class="card-title">ساعات التطوع</div>
+      <div class="card-max">حد أعلى: 20</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">نقطة لكل ساعة تطوع مسجلة خلال العام الذي يسبق تاريخ التقديم</div>
+      <div class="card-formula">MIN(ساعات_التطوع, 20)</div>
+    </div>
+  </div>
+
+  <div class="element-card c8">
+    <div class="card-header">
+      <div class="card-num">8</div>
+      <div class="card-title">نقاط سنة التقديم (لمن تقدم قبل 1443هـ)</div>
+      <div class="card-max">حد أعلى: 13</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">نقطة عن كل سنة — لمن تقدم للنقل قبل عام 1443هـ فقط</div>
+      <div class="card-formula">MIN(سنوات_التقديم, 13)</div>
+    </div>
+  </div>
+
+  <div class="element-card c9">
+    <div class="card-header">
+      <div class="card-num">9</div>
+      <div class="card-title">الخدمة الوظيفية</div>
+      <div class="card-max">حد أعلى: 25</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">نقطة عن كل سنة خدمة وظيفية فعلية</div>
+      <div class="card-formula">MIN(سنوات_الخدمة, 25)</div>
+    </div>
+  </div>
+
+  <div class="element-card c10">
+    <div class="card-header">
+      <div class="card-num">10</div>
+      <div class="card-title">من يعمل ضمن التشكيلات الإشرافية أو مديراً للمدرسة</div>
+      <div class="card-max">حد أعلى: 5</div>
+    </div>
+    <div class="card-body">
+      <div class="card-desc">لمن لهم قرارات تكليف فعالة في نظام فارس وقت التقديم</div>
+      <div class="card-formula">IF(مدير_أو_مشرف = "نعم", 5, 0)</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== TOTAL BAR ===== -->
+<div class="total-bar">
+  <div>
+    <div class="total-label">إجمالي الحد الأعلى لجميع النقاط</div>
+    <div style="color:#a5d6a7;font-size:13px;margin-top:4px;">مجموع الحدود القصوى لجميع العناصر العشرة</div>
+  </div>
+  <div class="total-value">165 نقطة</div>
+  <div class="total-note">يُحسب الإجمالي الفعلي لكل معلم بناءً على بياناته الحقيقية مع مراعاة الحدود القصوى لكل عنصر</div>
+</div>
+
+<!-- ===== PROGRESS BARS ===== -->
+<div class="progress-section">
+  <div class="progress-title">📊 توزيع الأوزان النسبية لعناصر التقييم</div>
+
+  <div class="progress-item">
+    <div class="progress-label"><span>اختبار التخصص</span><span>35 / 165 = 21.2%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:21.2%;background:linear-gradient(90deg,#1a6b3c,#2e8b57)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>متوسط الأداء الوظيفي</span><span>30 / 165 = 18.2%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:18.2%;background:linear-gradient(90deg,#b71c1c,#c62828)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>الاختبار التربوي العام</span><span>25 / 165 = 15.2%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:15.2%;background:linear-gradient(90deg,#1565c0,#1976d2)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>نقاط التطوير المهني</span><span>25 / 165 = 15.2%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:15.2%;background:linear-gradient(90deg,#6a0dad,#8e24aa)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>الخدمة الوظيفية</span><span>25 / 165 = 15.2%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:15.2%;background:linear-gradient(90deg,#880e4f,#ad1457)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>ساعات التطوع</span><span>20 / 165 = 12.1%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:12.1%;background:linear-gradient(90deg,#4527a0,#5e35b1)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>نقاط سنة التقديم (قبل 1443هـ)</span><span>13 / 165 = 7.9%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:7.9%;background:linear-gradient(90deg,#558b2f,#689f38)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>رتبة الوظيفة التعليمية</span><span>8 / 165 = 4.8%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:4.8%;background:linear-gradient(90deg,#00796b,#00897b)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>التشكيلات الإشرافية / مدير مدرسة</span><span>5 / 165 = 3.0%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:3.0%;background:linear-gradient(90deg,#b8860b,#f9a825)"></div></div>
+  </div>
+  <div class="progress-item">
+    <div class="progress-label"><span>أيام الغياب بدون عذر (خصم)</span><span>14 / 165 = 8.5%</span></div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:8.5%;background:linear-gradient(90deg,#e65100,#f4511e)"></div></div>
+  </div>
+</div>
+
+<!-- ===== CALCULATOR ===== -->
+<div class="calc-section">
+  <div class="calc-header-bar">
+    🧮 حاسبة النقاط التفاعلية — بيانات عينة واقعية (قابلة للتعديل)
+  </div>
+  <div class="calc-hint">
+    💡 الخلايا ذات الخلفية الصفراء قابلة للتعديل — ستُحسب نقاط كل معلم تلقائياً فور التغيير
+  </div>
+  <div class="table-wrap">
+    <table id="calcTable">
+      <thead>
+        <tr>
+          <th class="th-name" rowspan="2">م</th>
+          <th class="th-name" rowspan="2">اسم المعلم</th>
+          <th class="th-name" rowspan="2">المنطقة</th>
+          <th class="th-input" colspan="9">بيانات الإدخال (قابلة للتعديل)</th>
+          <th class="th-total" rowspan="2">إجمالي<br>النقاط</th>
+          <th class="th-rank" rowspan="2">الترتيب</th>
+        </tr>
+        <tr>
+          <th class="th-input">التخصص<br>(max 35)</th>
+          <th class="th-input">التربوي<br>(max 25)</th>
+          <th class="th-input">التطوير<br>(max 25)</th>
+          <th class="th-input">أداء<br>عام 1</th>
+          <th class="th-input">أداء<br>عام 2</th>
+          <th class="th-input">غياب<br>بدون عذر</th>
+          <th class="th-input">الرتبة<br>(2/4/6/8)</th>
+          <th class="th-input">تطوع<br>(max 20)</th>
+          <th class="th-input">خدمة<br>(max 25)</th>
+          <th class="th-input">مدير/<br>مشرف</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3" style="background:var(--green-dark);color:#fff;font-weight:800;font-size:13px;padding:12px;text-align:center;">الإحصائيات</td>
+          <td colspan="9" style="background:#f5f5f5;"></td>
+          <td style="background:var(--green-dark);padding:0;">
+            <div class="stats-row" style="display:block;">
+              <div style="padding:6px;text-align:center;background:var(--green-dark);">
+                <div id="statMax" style="font-size:18px;font-weight:900;color:var(--gold);">—</div>
+                <div style="font-size:10px;color:#a5d6a7;">أعلى</div>
+              </div>
+              <div style="padding:6px;text-align:center;background:#1a5c34;">
+                <div id="statMin" style="font-size:18px;font-weight:900;color:#ffcdd2;">—</div>
+                <div style="font-size:10px;color:#a5d6a7;">أدنى</div>
+              </div>
+              <div style="padding:6px;text-align:center;background:#145228;">
+                <div id="statAvg" style="font-size:18px;font-weight:900;color:#bbdefb;">—</div>
+                <div style="font-size:10px;color:#a5d6a7;">متوسط</div>
+              </div>
+            </div>
+          </td>
+          <td style="background:#e8f5e9;"></td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ===== TIEBREAK ===== -->
+<div class="tiebreak-section">
+  <div class="tiebreak-header">⚖️ ثالثاً: معايير الترتيب عند التساوي في نقاط المفاضلة</div>
+  <div class="tiebreak-note">
+    عند التساوي بين المتقدمين في نقاط المفاضلة الواردة في الفقرتين أولاً وثانياً بحسب نوع الفرصة — يتم التفضيل بالأعلى وفق الترتيب التالي:
+  </div>
+  <div class="tiebreak-grid">
+    <div class="tb-card tb1">
+      <div class="tb-card-head">
+        <div class="tb-priority">1</div>
+        <div class="tb-card-title">اختبار التخصص للرخصة المهنية التعليمية</div>
+      </div>
+      <div class="tb-card-body">
+        <div class="tb-detail">الأعلى درجة في اختبار التخصص يُقدَّم أولاً — ترتيب تنازلي</div>
+        <div class="tb-formula">RANK(درجة_التخصص, نطاق, 0)</div>
+      </div>
+    </div>
+    <div class="tb-card tb2">
+      <div class="tb-card-head">
+        <div class="tb-priority">2</div>
+        <div class="tb-card-title">الاختبار التربوي العام للرخصة المهنية التعليمية</div>
+      </div>
+      <div class="tb-card-body">
+        <div class="tb-detail">الأعلى درجة في الاختبار التربوي يُقدَّم أولاً — ترتيب تنازلي</div>
+        <div class="tb-formula">RANK(درجة_التربوي, نطاق, 0)</div>
+      </div>
+    </div>
+    <div class="tb-card tb3">
+      <div class="tb-card-head">
+        <div class="tb-priority">3</div>
+        <div class="tb-card-title">متوسط الأداء الوظيفي</div>
+      </div>
+      <div class="tb-card-body">
+        <div class="tb-detail">الأعلى متوسطاً في الأداء الوظيفي يُقدَّم أولاً — متوسط آخر عامين</div>
+        <div class="tb-formula">RANK(AVERAGE(أداء1,أداء2), نطاق, 0)</div>
+      </div>
+    </div>
+    <div class="tb-card tb4">
+      <div class="tb-card-head">
+        <div class="tb-priority">4</div>
+        <div class="tb-card-title">الغياب بدون عذر (الأقل)</div>
+      </div>
+      <div class="tb-card-body">
+        <div class="tb-detail">الأقل غياباً بدون عذر يُقدَّم أولاً — ترتيب تصاعدي (الأقل أفضل)</div>
+        <div class="tb-formula">RANK(أيام_الغياب, نطاق, 1)</div>
+      </div>
+    </div>
+    <div class="tb-card tb5">
+      <div class="tb-card-head">
+        <div class="tb-priority">5</div>
+        <div class="tb-card-title">تاريخ المباشرة</div>
+      </div>
+      <div class="tb-card-body">
+        <div class="tb-detail">الأقدم في تاريخ المباشرة يُقدَّم أولاً — الأقدم تاريخاً يُقدَّم</div>
+        <div class="tb-formula">RANK(تاريخ_المباشرة, نطاق, 1)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SIGNATURE ===== -->
+<div class="signature">
+  <div class="sig-name">✦&nbsp;&nbsp;تصميم&nbsp;&nbsp;د / فواز&nbsp;&nbsp;✦</div>
+  <div class="sig-divider"></div>
+  <a class="sig-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">
+    <span class="arrow">✈</span>
+    انقر هنا للمزيد
+    <span class="arrow">←</span>
+  </a>
+</div>
+
+<script>
+// ===== بيانات العينة =====
+const sampleData = [
+  { name: "أحمد محمد العتيبي",    region: "الرياض",        spec:88, edu:78, dev:22, p1:95, p2:92, absent:0, rank:8, vol:18, service:12, mgr:true  },
+  { name: "سارة عبدالله القحطاني", region: "جدة",           spec:75, edu:70, dev:18, p1:88, p2:85, absent:1, rank:6, vol:10, service:8,  mgr:false },
+  { name: "محمد علي الزهراني",    region: "مكة المكرمة",   spec:92, edu:82, dev:24, p1:98, p2:96, absent:0, rank:8, vol:20, service:15, mgr:true  },
+  { name: "نورة سعد الدوسري",     region: "الدمام",         spec:68, edu:65, dev:15, p1:80, p2:78, absent:2, rank:4, vol:8,  service:6,  mgr:false },
+  { name: "خالد إبراهيم الشمري",  region: "المدينة المنورة",spec:85, edu:75, dev:20, p1:90, p2:88, absent:0, rank:6, vol:15, service:10, mgr:false },
+  { name: "فاطمة يوسف الغامدي",   region: "الطائف",         spec:72, edu:68, dev:17, p1:85, p2:82, absent:1, rank:4, vol:12, service:7,  mgr:false },
+  { name: "عبدالرحمن ناصر المالكي",region: "أبها",           spec:90, edu:80, dev:23, p1:95, p2:93, absent:0, rank:8, vol:19, service:14, mgr:true  },
+  { name: "هند محمد السبيعي",     region: "تبوك",           spec:65, edu:60, dev:14, p1:75, p2:72, absent:3, rank:4, vol:6,  service:5,  mgr:false },
+  { name: "سلطان فهد الحربي",     region: "الجوف",          spec:78, edu:72, dev:19, p1:88, p2:86, absent:0, rank:6, vol:14, service:9,  mgr:false },
+  { name: "ريم عبدالعزيز النجدي",  region: "حائل",           spec:82, edu:76, dev:21, p1:92, p2:90, absent:1, rank:6, vol:16, service:11, mgr:false },
+  { name: "تركي سعود الرشيدي",    region: "القصيم",         spec:95, edu:85, dev:25, p1:99, p2:97, absent:0, rank:8, vol:20, service:16, mgr:true  },
+  { name: "منيرة حمد العنزي",     region: "نجران",          spec:70, edu:66, dev:16, p1:82, p2:80, absent:2, rank:4, vol:9,  service:6,  mgr:false },
+  { name: "بدر عوض الثبيتي",      region: "جازان",          spec:80, edu:74, dev:20, p1:90, p2:87, absent:0, rank:6, vol:15, service:10, mgr:true  },
+  { name: "أميرة سالم الجهني",    region: "عسير",           spec:74, edu:69, dev:18, p1:86, p2:83, absent:1, rank:4, vol:11, service:8,  mgr:false },
+  { name: "وليد حسن المطيري",     region: "الباحة",         spec:87, edu:77, dev:22, p1:94, p2:91, absent:0, rank:8, vol:17, service:13, mgr:false },
+];
+
+// ===== حساب النقاط =====
+function calcTotal(d) {
+  const spec    = Math.min(+d.spec    || 0, 35);
+  const edu     = Math.min(+d.edu     || 0, 25);
+  const dev     = Math.min(+d.dev     || 0, 25);
+  const perf    = Math.min(((+d.p1 || 0) + (+d.p2 || 0)) / 2, 30);
+  const absent  = Math.min(+d.absent  || 0, 14);
+  const rankMap = {2:2, 4:4, 6:6, 8:8};
+  const rankPts = rankMap[+d.rank] || 0;
+  const vol     = Math.min(+d.vol     || 0, 20);
+  const service = Math.min(+d.service || 0, 25);
+  const mgr     = (d.mgr === true || d.mgr === 'نعم') ? 5 : 0;
+  return spec + edu + dev + perf - absent + rankPts + vol + service + mgr;
+}
+
+// ===== لون الإجمالي =====
+function totalColor(val) {
+  if (val >= 130) return 'linear-gradient(135deg,#1a6b3c,#2e8b57)';
+  if (val >= 100) return 'linear-gradient(135deg,#1565c0,#1976d2)';
+  if (val >= 70)  return 'linear-gradient(135deg,#e65100,#f4511e)';
+  return 'linear-gradient(135deg,#b71c1c,#c62828)';
+}
+
+// ===== بناء الجدول =====
+function buildTable() {
+  const tbody = document.getElementById('tableBody');
+  tbody.innerHTML = '';
+
+  sampleData.forEach((d, i) => {
+    const tr = document.createElement('tr');
+    tr.style.background = i % 2 === 0 ? '#f9f9f9' : '#fff';
+
+    const total = calcTotal(d);
+
+    tr.innerHTML = `
+      <td class="td-num">${i+1}</td>
+      <td class="td-name">${d.name}</td>
+      <td class="td-region">${d.region}</td>
+      <td class="td-input"><input type="number" value="${d.spec}"    min="0" max="100" data-row="${i}" data-field="spec"    onchange="updateRow(this)"></td>
+      <td class="td-input"><input type="number" value="${d.edu}"     min="0" max="100" data-row="${i}" data-field="edu"     onchange="updateRow(this)"></td>
+      <td class="td-input"><input type="number" value="${d.dev}"     min="0" max="100" data-row="${i}" data-field="dev"     onchange="updateRow(this)"></td>
+      <td class="td-input"><input type="number" value="${d.p1}"      min="0" max="100" data-row="${i}" data-field="p1"      onchange="updateRow(this)"></td>
+      <td class="td-input"><input type="number" value="${d.p2}"      min="0" max="100" data-row="${i}" data-field="p2"      onchange="updateRow(this)"></td>
+      <td class="td-input"><input type="number" value="${d.absent}"  min="0" max="365" data-row="${i}" data-field="absent"  onchange="updateRow(this)"></td>
+      <td class="td-select">
+        <select data-row="${i}" data-field="rank" onchange="updateRow(this)">
+          <option value="2" ${d.rank==2?'selected':''}>2 - معلم</option>
+          <option value="4" ${d.rank==4?'selected':''}>4 - ممارس</option>
+          <option value="6" ${d.rank==6?'selected':''}>6 - متقدم</option>
+          <option value="8" ${d.rank==8?'selected':''}>8 - خبير</option>
+        </select>
+      </td>
+      <td class="td-input"><input type="number" value="${d.vol}"     min="0" max="500" data-row="${i}" data-field="vol"     onchange="updateRow(this)"></td>
+      <td class="td-input"><input type="number" value="${d.service}" min="0" max="40"  data-row="${i}" data-field="service" onchange="updateRow(this)"></td>
+      <td class="td-bool">
+        <select data-row="${i}" data-field="mgr" onchange="updateRow(this)">
+          <option value="نعم" ${d.mgr?'selected':''}>✅ نعم</option>
+          <option value="لا"  ${!d.mgr?'selected':''}>❌ لا</option>
+        </select>
+      </td>
+      <td class="td-total" id="total-${i}" style="background:${totalColor(total)}">${total.toFixed(1)}</td>
+      <td class="td-rank" id="rank-${i}">—</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  updateRanks();
+  updateStats();
+}
+
+// ===== تحديث صف عند التغيير =====
+function updateRow(el) {
+  const i = +el.dataset.row;
+  const field = el.dataset.field;
+  sampleData[i][field] = field === 'mgr' ? el.value : +el.value;
+  const total = calcTotal(sampleData[i]);
+  const td = document.getElementById(`total-${i}`);
+  td.textContent = total.toFixed(1);
+  td.style.background = totalColor(total);
+  updateRanks();
+  updateStats();
+}
+
+// ===== تحديث الترتيب =====
+function updateRanks() {
+  const totals = sampleData.map((d, i) => ({ i, val: calcTotal(d) }));
+  const sorted = [...totals].sort((a, b) => b.val - a.val);
+  const rankColors = ['#f9a825','#9e9e9e','#cd7f32'];
+  const medals = ['🥇','🥈','🥉'];
+  sorted.forEach((item, pos) => {
+    const td = document.getElementById(`rank-${item.i}`);
+    if (td) {
+      td.textContent = medals[pos] || `#${pos+1}`;
+      td.style.color = rankColors[pos] || '#333';
+      td.style.fontSize = pos < 3 ? '18px' : '14px';
+    }
+  });
+}
+
+// ===== تحديث الإحصائيات =====
+function updateStats() {
+  const totals = sampleData.map(d => calcTotal(d));
+  document.getElementById('statMax').textContent = Math.max(...totals).toFixed(1);
+  document.getElementById('statMin').textContent = Math.min(...totals).toFixed(1);
+  document.getElementById('statAvg').textContent = (totals.reduce((a,b)=>a+b,0)/totals.length).toFixed(1);
+}
+
+// ===== تشغيل =====
+buildTable();
+</script>
+</body>
+</html>

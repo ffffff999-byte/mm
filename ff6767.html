@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة الخطة الفصلية التفاعلية</title>
+<style>
+:root{
+  --navy:#071b33;--navy2:#0d2b4f;--gold:#c9a24a;--paper:#fffdfa;--ink:#111827;--muted:#667085;--line:#d7dee8;--green:#e9f8ee;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Tahoma","Arial",sans-serif;background:linear-gradient(135deg,#eef3f8,#fff);color:var(--ink)}
+.hero{min-height:360px;background:linear-gradient(90deg,rgba(7,27,51,.97),rgba(7,27,51,.72)),url('') center/cover;position:relative;color:white;padding:28px 42px;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 10% 80%,rgba(201,162,74,.25),transparent 32%),radial-gradient(circle at 90% 20%,rgba(255,255,255,.13),transparent 25%)}
+.hero>*{position:relative;z-index:1}
+.top{display:flex;justify-content:space-between;gap:20px;align-items:flex-start}
+.logoBox{width:130px;height:100px;border:1px dashed rgba(255,255,255,.45);border-radius:18px;display:grid;place-items:center;text-align:center;font-size:13px;background:rgba(255,255,255,.08);overflow:hidden}
+.logoBox img{width:100%;height:100%;object-fit:contain}
+.school-info{text-align:center;line-height:2;font-weight:bold}
+[contenteditable]{outline:0;border-radius:7px;padding:2px 7px}
+[contenteditable]:focus{background:#fff7d6;color:#111}
+.title{margin:70px auto 30px;text-align:center;font-size:46px;font-weight:900;letter-spacing:1px}
+.subtitle{text-align:center;font-size:30px;font-weight:800}
+.manager{margin-top:40px;text-align:left;font-size:20px;line-height:2}
+.toolbar{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);padding:12px 18px;border-bottom:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+button,.btn{border:0;background:var(--navy);color:white;padding:11px 16px;border-radius:12px;cursor:pointer;font-weight:800;box-shadow:0 7px 18px rgba(7,27,51,.16)}
+button:hover{background:var(--navy2)}
+.gold{background:var(--gold);color:#111}
+input[type=file]{display:none}
+main{max-width:1280px;margin:22px auto;padding:0 15px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:20px;margin:20px 0;box-shadow:0 14px 35px rgba(7,27,51,.08)}
+h2{margin:0 0 15px;color:var(--navy);font-size:26px;display:flex;align-items:center;gap:10px}
+h2:before{content:"";width:10px;height:34px;background:var(--gold);border-radius:9px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.field{display:flex;flex-direction:column;gap:6px}
+label{font-weight:800;color:var(--navy)}
+input,select,textarea{width:100%;border:1px solid #cfd8e3;border-radius:12px;padding:11px;font-family:inherit;font-size:15px;background:white}
+textarea{min-height:90px;resize:vertical}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.tab{background:#eaf0f7;color:var(--navy);box-shadow:none}
+.tab.active{background:var(--navy);color:white}
+.tableWrap{overflow:auto;border:1px solid var(--line);border-radius:16px}
+table{width:100%;border-collapse:collapse;min-width:1050px;background:white}
+th,td{border:1px solid var(--line);padding:10px;vertical-align:top}
+th{background:var(--navy);color:white;font-size:14px}
+td{min-height:70px}
+.weekHead{background:#f5f0df;font-weight:900;text-align:center}
+.cellEdit{min-height:70px;white-space:pre-wrap}
+.aiBox{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.output{background:#f8fafc;border:1px dashed #aab6c5;border-radius:14px;padding:15px;min-height:180px;white-space:pre-wrap;line-height:1.9}
+.sources a{display:block;color:var(--navy);font-weight:800;margin:8px 0;word-break:break-all}
+.footer{text-align:center;margin:30px 0;padding:25px;color:var(--navy);font-size:18px}
+.footer a{color:var(--navy);font-weight:900}
+.badge{display:inline-block;background:#fff3cd;border:1px solid #f0d37a;border-radius:999px;padding:5px 12px;font-weight:900;color:#5b4300}
+@media(max-width:800px){.grid,.aiBox{grid-template-columns:1fr}.title{font-size:34px}.subtitle{font-size:24px}.top{flex-direction:column;align-items:center}.manager{text-align:center}}
+@media print{
+ body{background:white}.toolbar,.noPrint{display:none!important}main{max-width:none;margin:0;padding:0}.card{box-shadow:none;border:0;page-break-inside:avoid}.hero{min-height:100vh;page-break-after:always}.pageBreak{page-break-before:always}button{display:none}
+ table{font-size:11px;min-width:0}th,td{padding:5px}.tableWrap{overflow:visible;border:0}
+}
+</style>
+</head>
+<body>
+<section class="hero printable">
+  <div class="top">
+    <label class="logoBox"><input type="file" accept="image/*" onchange="loadLogo(event,'logo1')"><img id="logo1" alt=""><span>شعار المدرسة<br>اضغط للرفع</span></label>
+    <div class="school-info">
+      <div contenteditable="true">الإدارة العامة للتعليم بمنطقة ........</div>
+      <div contenteditable="true">الشؤون التعليمية / أداء التعليم</div>
+      <div contenteditable="true">مدرسة ........</div>
+    </div>
+    <label class="logoBox"><input type="file" accept="image/*" onchange="loadLogo(event,'logo2')"><img id="logo2" alt=""><span>شعار التعليم<br>اضغط للرفع</span></label>
+  </div>
+  <div class="title" contenteditable="true">الخـــــــطـــــة الفــصـــليــة</div>
+  <div class="subtitle" contenteditable="true">(الفترة الدراسية الثانية)</div>
+  <div class="manager">
+    <div>مدير/ة المدرسة</div>
+    <div contenteditable="true">............................</div>
+    <div contenteditable="true">1447هـ</div>
+  </div>
+</section>
+
+<nav class="toolbar">
+  <button onclick="showSection('plan')">بناء الخطة</button>
+  <button onclick="showSection('generator')">المولّد الاصطناعي</button>
+  <button onclick="showSection('sources')">الأدلة والمصادر</button>
+  <button class="gold" onclick="window.print()">طباعة / حفظ PDF</button>
+  <button onclick="saveData()">حفظ البيانات</button>
+  <button onclick="loadData()">استرجاع</button>
+</nav>
+
+<main>
+<section id="plan" class="section">
+  <div class="card">
+    <h2>بيانات قابلة للتعديل</h2>
+    <div class="grid">
+      <div class="field"><label>اسم المدرسة</label><input id="schoolName" value="مدرسة ........"></div>
+      <div class="field"><label>مدير/ة المدرسة</label><input id="managerName" value=""></div>
+      <div class="field"><label>الفصل/الفترة</label><input value="الفترة الدراسية الثانية"></div>
+      <div class="field"><label>العام الدراسي</label><input value="1447هـ"></div>
+      <div class="field"><label>الشهر الهجري</label><input value="رجب - شعبان - رمضان - شوال - ذو القعدة - ذو الحجة - محرم"></div>
+      <div class="field"><label>عدد الأسابيع</label><input value="19 أسبوعًا"></div>
+      <div class="field"><label>بداية الخطة</label><input value="1447-7-29هـ"></div>
+      <div class="field"><label>نهاية الخطة</label><input value="1448-2-28هـ"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>جدول الخطة الفصلية — الأسابيع 1 إلى 7</h2>
+    <div class="tableWrap"><table contenteditable="true">
+      <tr><th>المحور</th><th>إجازة عيد الفطر</th><th>الأسبوع 1</th><th>الأسبوع 2</th><th>الأسبوع 3</th><th>الأسبوع 4</th><th>الأسبوع 5</th><th>الأسبوع 6</th><th>الأسبوع 7</th></tr>
+      <tr><td class="weekHead">التاريخ</td><td>1447-7-29هـ<br>1447-08-3هـ</td><td>1447-08-6هـ<br>1447-08-10هـ</td><td>1447-08-13هـ<br>1447-08-17هـ</td><td>1447-08-20هـ<br>1447-08-24هـ</td><td>1447-08-27هـ<br>1447-09-2هـ</td><td>1447-09-6هـ<br>1447-09-9هـ</td><td>1447-09-12هـ<br>1447-09-16هـ</td><td>1447-09-17هـ<br>1447-10-9هـ</td></tr>
+      <tr><td class="weekHead">برامج التوجيه الطلابي</td><td>برنامج التهيئة الإرشادية<br>مجالس أولياء الأمور<br>التوعية بقواعد السلوك والمواظبة</td><td>تعزيز السلوك الإيجابي<br>الاستخدام الآمن للإنترنت والألعاب الإلكترونية</td><td>المجلس الطلابي<br>رعاية ودعم الفئات الخاصة</td><td>الاستخدام الآمن للإنترنت والألعاب الإلكترونية<br>تعزيز السلوك الإيجابي</td><td>برنامج رفق لمناهضة العنف<br>تفعيل إطار توثيق العلاقة بين الأسرة والمدرسة</td><td>التوجيه المهني<br>تعزيز المهارات النفسية والاجتماعية</td><td>برنامج رفق لمناهضة العنف<br>التهيئة الإرشادية للاختبارات</td><td>اختبارات أعمال السنة الفترة الأولى الشهرية<br>فرص استثمارية متعددة للطلاب ولشاغلي الوظائف التعليمية</td></tr>
+      <tr><td class="weekHead">القيم</td><td>الانضباط</td><td>التعاون</td><td>الأمانة</td><td>العزيمة</td><td>الانتماء الوطني (الأمن الوطني)</td><td>الانتماء الوطني (تناغم فريد ولوحة فنية متكاملة)</td><td>الانتماء الوطني (إنجاز محلي وريادة عالمية)</td><td></td></tr>
+      <tr><td class="weekHead">مجال النشاط الطلابي</td><td>الثقافة والفنون</td><td>الثقافة والفنون</td><td>الثقافة والفنون</td><td>الثقافة والفنون</td><td>المواطنة والحياة</td><td>المواطنة والحياة</td><td>المواطنة والحياة</td><td></td></tr>
+      <tr><td class="weekHead">برنامج النشاط الطلابي</td><td>الأزياء السعودية</td><td>الثقافة الإعلامية</td><td>اليوم العالمي للتعليم<br>الفنون المسرحية</td><td>تصاميم تراثية معاصرة</td><td>التطوع الطلابي<br>يوم التأسيس</td><td>قيمنا حياة<br>يوم العلم الوطني</td><td>مهارات طموحة</td><td></td></tr>
+    </table></div>
+  </div>
+
+  <div class="card pageBreak">
+    <h2>جدول الخطة الفصلية — الأسابيع 8 إلى 14</h2>
+    <div class="tableWrap"><table contenteditable="true">
+      <tr><th>المحور</th><th>الأسبوع 8</th><th>الأسبوع 9</th><th>الأسبوع 10</th><th>الأسبوع 11</th><th>الأسبوع 12</th><th>الأسبوع 13</th><th>الأسبوع 14</th></tr>
+      <tr><td class="weekHead">التاريخ</td><td>1447-10-10هـ<br>1447-10-14هـ</td><td>1447-10-17هـ<br>1447-10-21هـ</td><td>1447-10-24هـ<br>1447-10-28هـ</td><td>1447-11-2هـ<br>1447-11-6هـ</td><td>1447-11-9هـ<br>1447-11-13هـ</td><td>1447-11-16هـ<br>1447-11-20هـ</td><td>1447-11-23هـ<br>1447-11-27هـ</td></tr>
+      <tr><td class="weekHead">برامج التوجيه الطلابي</td><td>تعزيز السلوك الإيجابي<br>الاستخدام الآمن للإنترنت والألعاب الإلكترونية</td><td>المجلس الطلابي<br>الاستخدام الآمن للإنترنت والألعاب الإلكترونية</td><td>تعزيز السلوك الإيجابي<br>برنامج رفق لمناهضة العنف</td><td>رعاية ودعم الفئات الخاصة<br>التوجيه المهني</td><td>تفعيل إطار توثيق العلاقة بين الأسرة والمدرسة<br>تعزيز المهارات النفسية والاجتماعية</td><td>تعزيز السلوك الإيجابي<br>تعزيز المهارات النفسية والاجتماعية</td><td>برنامج رفق لمناهضة العنف<br>التهيئة الإرشادية للاختبارات</td></tr>
+      <tr><td class="weekHead">القيم</td><td>التسامح</td><td>الوسطية</td><td>المثابرة</td><td>الإتقان</td><td>المرونة</td><td>الإيجابية</td><td>الانضباط</td></tr>
+      <tr><td class="weekHead">مجال النشاط الطلابي</td><td>العلوم والتقنية</td><td>العلوم والتقنية</td><td>العلوم والتقنية</td><td>العلوم والتقنية</td><td>العلوم والتقنية</td><td>العلوم والتقنية</td><td>الصحة والرياضة</td></tr>
+      <tr><td class="weekHead">برنامج النشاط الطلابي</td><td>يوم السعودية الخضراء<br>التصاميم العلمية</td><td>يوم الصحة العالمي<br>الذكاء الاصطناعي</td><td>تحدي إنترنت الأشياء</td><td>تطبيقات ستيم STEAM</td><td>رواد فضاء المستقبل</td><td>مدن المستقبل</td><td>مهارات الأولمبياد الرياضي والدفاع عن النفس</td></tr>
+    </table></div>
+  </div>
+
+  <div class="card pageBreak">
+    <h2>جدول الخطة الفصلية — الأسابيع 15 إلى 19</h2>
+    <div class="tableWrap"><table contenteditable="true">
+      <tr><th>المحور</th><th>الأسبوع 15</th><th>إجازة عيد الأضحى</th><th>الأسبوع 16</th><th>الأسبوع 17</th><th>الأسبوع 18</th><th>الأسبوع 19</th><th>الإجازة الصيفية</th></tr>
+      <tr><td class="weekHead">التاريخ</td><td>1447-11-30هـ<br>1447-12-4هـ</td><td>1447-12-5هـ<br>1447-12-15هـ</td><td>1447-12-16هـ<br>1447-12-18هـ</td><td>1447-12-21هـ<br>1447-12-25هـ</td><td>1447-12-28هـ<br>1448-1-3هـ</td><td>1448-1-6هـ<br>1448-1-10هـ</td><td>1448-1-11هـ<br>1448-2-28هـ</td></tr>
+      <tr><td class="weekHead">برامج التوجيه الطلابي</td><td>اختبارات أعمال السنة الفترة الثانية الشهرية<br>فرص استثمارية متعددة</td><td></td><td>تفعيل إطار توثيق العلاقة بين الأسرة والمدرسة<br>تعزيز المهارات النفسية والاجتماعية</td><td>التهيئة الإرشادية للاختبارات النهائية<br>رعاية ودعم الفئات الخاصة</td><td>التهيئة الإرشادية للاختبارات النهائية<br>تكريم الطلبة الخريجين</td><td>تكريم الطلبة المتميزين<br>اختبارات نهاية الفصل الدراسي الثاني</td><td>مخيمات كشفية<br>أندية صيفية<br>أعمال تطوعية<br>تطوير مهني</td></tr>
+      <tr><td class="weekHead">القيم</td><td>العزيمة</td><td></td><td>الانضباط</td><td>الإتقان</td><td>المثابرة</td><td>العزيمة</td><td></td></tr>
+      <tr><td class="weekHead">مجال النشاط الطلابي</td><td>الصحة والرياضة</td><td></td><td>الصحة والرياضة</td><td>النشاط الكشفي</td><td>النشاط الكشفي</td><td>النشاط الكشفي</td><td></td></tr>
+      <tr><td class="weekHead">برنامج النشاط الطلابي</td><td>مهارات الرياضات الإلكترونية والذهنية</td><td></td><td>مهارات الرياضات الجماعية والفردية</td><td>مجتمعي وبيئتي مسؤوليتي</td><td>مخيمي التقني</td><td>خطواتي الكشفية الصحية</td><td></td></tr>
+    </table></div>
+  </div>
+</section>
+
+<section id="generator" class="section" style="display:none">
+  <div class="card">
+    <h2>المولّد الاصطناعي لفقرات الخطة</h2>
+    <p><span class="badge">يعمل بدون إنترنت</span> يولّد صياغات جاهزة اعتمادًا على المدخلات؛ عدّل الناتج كما تريد.</p>
+    <div class="aiBox">
+      <div>
+        <div class="grid" style="grid-template-columns:1fr 1fr">
+          <div class="field"><label>نوع الفقرة</label><select id="genType"><option>برنامج توجيه طلابي</option><option>نشاط طلابي</option><option>قيمة أسبوعية</option><option>مؤشر متابعة</option><option>توصية تنفيذية</option></select></div>
+          <div class="field"><label>الأسبوع/الشهر</label><input id="genWeek" placeholder="مثال: الأسبوع 8 / شهر شوال"></div>
+        </div>
+        <div class="field"><label>الموضوع</label><input id="genTopic" placeholder="مثال: تعزيز السلوك الإيجابي"></div>
+        <div class="field"><label>الفئة المستهدفة</label><input id="genTarget" placeholder="الطلاب / أولياء الأمور / المعلمين"></div>
+        <div class="field"><label>ملاحظات إضافية</label><textarea id="genNotes" placeholder="أدخل أي تفاصيل تريد تضمينها"></textarea></div>
+        <button class="gold" onclick="generateText()">توليد الفقرة</button>
+      </div>
+      <div>
+        <label>الناتج القابل للتعديل</label>
+        <div id="aiOutput" class="output" contenteditable="true">سيظهر التوليد هنا...</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="sources" class="section" style="display:none">
+  <div class="card sources">
+    <h2>الأدلة والمصادر</h2>
+    <a href="https://moe.gov.sa/ar/aboutus/aboutministry/Pages/rpr.aspx" target="_blank">أدلة التوجيه الطلابي — وزارة التعليم</a>
+    <a href="https://www.ien.edu.sa/#/generalactivities/" target="_blank">مجاﻻت الأنشطة الطلابية — بوابة عين</a>
+    <a href="https://www.ien.edu.sa/#/generalactivities/6" target="_blank">الأيام والمناسبات — بوابة عين</a>
+    <a href="https://www.ien.edu.sa/#/generalactivities/7" target="_blank">الفترات الﻻصفية — بوابة عين</a>
+  </div>
+</section>
+
+<div class="footer">
+  <div>تفضل للمزيد</div>
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+  <div style="margin-top:12px;font-weight:900">تصميم د/فواز</div>
+</div>
+</main>
+
+<script>
+function showSection(id){document.querySelectorAll('.section').forEach(s=>s.style.display='none');document.getElementById(id).style.display='block';}
+function loadLogo(e,id){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=()=>{const img=document.getElementById(id);img.src=r.result;img.nextElementSibling.style.display='none'};r.readAsDataURL(file);}
+function generateText(){
+ const type=genType.value, week=genWeek.value||"الأسبوع المحدد", topic=genTopic.value||"الموضوع المختار", target=genTarget.value||"الفئة المستهدفة", notes=genNotes.value||"";
+ const templates={
+  "برنامج توجيه طلابي":`ينفذ برنامج "${topic}" خلال ${week} مستهدفًا ${target}، من خلال لقاءات إرشادية وأنشطة تطبيقية ورسائل توعوية، مع توثيق التنفيذ وقياس الأثر عبر الملاحظة والاستبانة المختصرة وسجل المتابعة. ${notes}`,
+  "نشاط طلابي":`يُفعل نشاط "${topic}" خلال ${week} بما يعزز مشاركة ${target}، ويتضمن خطوات تنفيذ واضحة، ومهامًا موزعة، وشواهد موثقة، ومؤشر إنجاز يقيس نسبة المشاركة وجودة المخرجات. ${notes}`,
+  "قيمة أسبوعية":`تركز خطة ${week} على قيمة "${topic}" عبر مواقف صفية ولاصفية، ونماذج تطبيقية، ورسائل مدرسية، وتكريم للممارسات الإيجابية؛ بما يحول القيمة من شعار جميل إلى سلوك ظاهر، لا لوحة معلقة فقط. ${notes}`,
+  "مؤشر متابعة":`مؤشر المتابعة المقترح لـ "${topic}": نسبة تنفيذ البرامج المخططة، عدد الشواهد المرفوعة، مستوى مشاركة ${target}، ونتائج التغذية الراجعة، مع مراجعة أسبوعية واتخاذ إجراء تصحيحي عند انخفاض المؤشر. ${notes}`,
+  "توصية تنفيذية":`يوصى بتفعيل "${topic}" خلال ${week} وفق جدول زمني محدد، وتكليف مسؤول/ة تنفيذ، وتحديد شواهد رقمية، ومراجعة أثر التنفيذ في نهاية الأسبوع، وربط النتائج بخطة التحسين المدرسية. ${notes}`
+ };
+ aiOutput.textContent=templates[type];
+}
+function saveData(){localStorage.setItem('fawazPlanHTML',document.body.innerHTML);alert('تم حفظ البيانات على هذا المتصفح.');}
+function loadData(){const d=localStorage.getItem('fawazPlanHTML');if(d&&confirm('سيتم استبدال الصفحة بالنسخة المحفوظة. متابعة؟')){document.body.innerHTML=d;}}
+function clearPersonalNames(){
+ const names=['فهد بن محمد سعد الزهراني','فهد الزهراني','هشام بن حكيم'];
+ document.querySelectorAll('body *').forEach(el=>{if(el.children.length===0){let t=el.textContent;names.forEach(n=>t=t.replaceAll(n,'........'));el.textContent=t;}});
+ alert('تمت إزالة الأسماء الشخصية المعروفة من الملف.');
+}
+</script>
+</body>
+</html>

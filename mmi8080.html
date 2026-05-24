@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نموذج مساءلة - تأخر / خروج / انصراف</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#0d4f3c;
+    --primary-light:#1a6b54;
+    --accent:#c9a961;
+    --accent-light:#e0c789;
+    --bg:#f4f1ea;
+    --paper:#ffffff;
+    --ink:#1a1a1a;
+    --muted:#666;
+    --line:#d4cfc0;
+    --danger:#a83232;
+    --success:#2d7a4f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh}
+  body{
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(13,79,60,.04) 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(201,169,97,.06) 0%, transparent 40%),
+      linear-gradient(180deg,#f4f1ea 0%,#ebe6d8 100%);
+    padding:24px 12px;
+  }
+
+  /* Toolbar */
+  .toolbar{
+    max-width:900px;margin:0 auto 18px;
+    background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+    border-radius:16px;padding:14px 18px;
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;
+    box-shadow:0 10px 30px -10px rgba(13,79,60,.4);
+    position:sticky;top:10px;z-index:50;
+  }
+  .toolbar button{
+    background:rgba(255,255,255,.12);
+    color:#fff;border:1px solid rgba(255,255,255,.2);
+    padding:9px 16px;border-radius:10px;font-family:inherit;
+    font-weight:500;font-size:14px;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;
+    transition:all .2s ease;backdrop-filter:blur(10px);
+  }
+  .toolbar button:hover{background:var(--accent);border-color:var(--accent);transform:translateY(-2px);box-shadow:0 6px 20px -5px rgba(201,169,97,.6)}
+  .toolbar button.primary{background:var(--accent);border-color:var(--accent)}
+  .toolbar button.primary:hover{background:var(--accent-light);color:var(--primary)}
+  .toolbar svg{width:16px;height:16px}
+
+  /* Paper */
+  .paper{
+    max-width:900px;margin:0 auto;background:var(--paper);
+    border-radius:14px;padding:42px 48px;
+    box-shadow:
+      0 1px 2px rgba(0,0,0,.04),
+      0 20px 60px -20px rgba(0,0,0,.15),
+      0 0 0 1px rgba(0,0,0,.02);
+    position:relative;overflow:hidden;
+  }
+  .paper::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:6px;
+    background:linear-gradient(90deg,var(--primary) 0%,var(--accent) 50%,var(--primary) 100%);
+  }
+  .paper::after{
+    content:'';position:absolute;top:60px;left:-40px;
+    width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,rgba(201,169,97,.08) 0%,transparent 70%);
+    pointer-events:none;
+  }
+
+  /* Header */
+  .header{
+    display:grid;grid-template-columns:1fr auto 1fr;gap:20px;
+    align-items:start;padding-bottom:18px;border-bottom:2px solid var(--line);
+    margin-bottom:24px;
+  }
+  .header .right,.header .left{font-size:13px;color:var(--muted)}
+  .header .right label,.header .left label{font-weight:700;color:var(--ink);display:block;margin-bottom:4px}
+  .header .right input,.header .left input{
+    width:100%;border:none;border-bottom:1px dashed var(--line);
+    padding:4px 0;background:transparent;font-family:inherit;font-size:13px;
+  }
+  .header .left{text-align:left}
+  .ministry{
+    text-align:center;display:flex;flex-direction:column;align-items:center;gap:6px;
+  }
+  .ministry .crest{
+    width:72px;height:72px;border-radius:50%;
+    background:linear-gradient(135deg,var(--primary),var(--primary-light));
+    display:flex;align-items:center;justify-content:center;color:var(--accent);
+    font-size:30px;box-shadow:0 6px 16px -4px rgba(13,79,60,.4);
+    position:relative;overflow:hidden;cursor:pointer;
+    transition:all .25s ease;
+    border:2px solid transparent;
+  }
+  .ministry .crest:hover{
+    border-color:var(--accent);
+    transform:scale(1.05);
+    box-shadow:0 8px 22px -4px rgba(201,169,97,.6);
+  }
+  .ministry .crest img{
+    width:100%;height:100%;object-fit:contain;
+    background:#fff;
+  }
+  .ministry .crest .overlay{
+    position:absolute;inset:0;background:rgba(13,79,60,.85);
+    color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    opacity:0;transition:opacity .25s;font-size:10px;gap:2px;
+    border-radius:50%;
+  }
+  .ministry .crest:hover .overlay{opacity:1}
+  .ministry .crest .overlay svg{width:18px;height:18px}
+  .ministry .remove-logo{
+    position:absolute;top:-4px;left:-4px;
+    width:22px;height:22px;border-radius:50%;
+    background:var(--danger);color:#fff;border:2px solid #fff;
+    display:none;align-items:center;justify-content:center;
+    cursor:pointer;font-size:14px;font-weight:700;line-height:1;
+    box-shadow:0 2px 6px rgba(0,0,0,.2);z-index:5;
+  }
+  .ministry .crest.has-image .remove-logo{display:flex}
+  .ministry .crest.has-image{padding:0}
+  .ministry .crest.has-image .default-icon{display:none}
+  .ministry .name-ar{font-family:'Amiri',serif;font-weight:700;font-size:15px;color:var(--primary)}
+  .ministry .name-en{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+  .ministry .name-ar,.ministry .name-en{
+    border:none;background:transparent;text-align:center;font-family:inherit;
+    outline:none;width:140px;
+  }
+  .ministry .name-ar{font-family:'Amiri',serif;font-weight:700;font-size:15px;color:var(--primary)}
+  .ministry .name-ar:focus,.ministry .name-en:focus{
+    border-bottom:1px dashed var(--accent);
+  }
+
+  /* Title */
+  .title-block{
+    text-align:center;margin:14px 0 28px;position:relative;
+  }
+  .title-block h1{
+    font-family:'Amiri',serif;font-size:32px;font-weight:700;
+    color:var(--primary);display:inline-block;padding:10px 40px;
+    position:relative;letter-spacing:1px;
+  }
+  .title-block h1::before,.title-block h1::after{
+    content:'';position:absolute;top:50%;width:30px;height:2px;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  }
+  .title-block h1::before{right:-10px}
+  .title-block h1::after{left:-10px}
+  .title-block .sub{
+    display:inline-block;margin-top:4px;font-size:13px;color:var(--muted);
+    padding:3px 12px;background:var(--bg);border-radius:20px;
+  }
+
+  /* Info grid */
+  .info-grid{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:0;
+    border:1.5px solid var(--primary);border-radius:8px;overflow:hidden;
+    margin-bottom:28px;
+  }
+  .info-cell{
+    padding:10px 14px;border-bottom:1px solid var(--line);
+    display:flex;flex-direction:column;gap:4px;
+    background:linear-gradient(180deg,rgba(13,79,60,.02),transparent);
+  }
+  .info-cell:nth-child(odd){border-left:1px solid var(--line)}
+  .info-cell:nth-last-child(-n+2){border-bottom:none}
+  .info-cell label{
+    font-size:11px;font-weight:700;color:var(--primary);
+    text-transform:uppercase;letter-spacing:.5px;
+  }
+  .info-cell input{
+    border:none;background:transparent;font-family:inherit;
+    font-size:14px;font-weight:500;color:var(--ink);outline:none;
+    padding:2px 0;width:100%;
+  }
+  .info-cell input:focus{border-bottom:1px solid var(--accent)}
+
+  /* Section */
+  .section{margin-bottom:24px}
+  .greeting{
+    background:linear-gradient(90deg,rgba(13,79,60,.04),transparent);
+    padding:12px 16px;border-right:3px solid var(--accent);
+    border-radius:0 8px 8px 0;margin-bottom:14px;
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;
+  }
+  .greeting .salam{font-weight:500;color:var(--primary)}
+  .greeting .blessing{font-size:13px;color:var(--muted);font-family:'Amiri',serif}
+  .greeting .to{font-weight:700;color:var(--ink)}
+
+  .date-line{
+    display:flex;flex-wrap:wrap;align-items:center;gap:10px;
+    margin-bottom:14px;font-size:14px;
+  }
+  .date-line .label{color:var(--muted)}
+  .date-line input{
+    border:none;border-bottom:1px dashed var(--line);padding:3px 6px;
+    font-family:inherit;text-align:center;background:transparent;font-size:14px;
+  }
+  .date-line .d{width:42px}
+  .date-line .m{width:42px}
+  .date-line .y{width:60px}
+
+  /* Checkbox items */
+  .check-list{display:flex;flex-direction:column;gap:10px;margin:18px 0}
+  .check-item{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:10px 14px;border-radius:8px;
+    background:rgba(244,241,234,.6);border:1px solid transparent;
+    transition:all .2s;
+  }
+  .check-item:hover{border-color:var(--line);background:rgba(244,241,234,.9)}
+  .check-item input[type="checkbox"]{
+    width:18px;height:18px;cursor:pointer;accent-color:var(--primary);
+    margin-top:2px;flex-shrink:0;
+  }
+  .check-item .body{flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:14px}
+  .check-item .body input[type="text"]{
+    border:none;border-bottom:1px dashed var(--muted);padding:2px 4px;
+    background:transparent;font-family:inherit;width:60px;text-align:center;font-size:13px;
+  }
+  .check-item .body .label{color:var(--ink)}
+
+  /* Statement */
+  .statement{
+    background:linear-gradient(135deg,rgba(201,169,97,.08),rgba(13,79,60,.04));
+    padding:14px 16px;border-radius:8px;margin:18px 0;
+    font-size:14px;line-height:1.8;
+  }
+  .statement textarea{
+    width:100%;border:none;background:rgba(255,255,255,.6);
+    padding:10px;border-radius:6px;font-family:inherit;font-size:14px;
+    resize:vertical;min-height:60px;margin-top:8px;
+    border:1px dashed var(--line);
+  }
+  .statement textarea:focus{outline:none;border-color:var(--accent);background:#fff}
+
+  /* Signature row */
+  .sig-row{
+    display:grid;grid-template-columns:1fr auto auto;gap:18px;
+    align-items:center;padding:12px 0;border-top:1px dashed var(--line);
+    margin-top:14px;
+  }
+  .sig-row .field{display:flex;align-items:center;gap:8px;font-size:13px}
+  .sig-row .field label{font-weight:700;color:var(--primary);white-space:nowrap}
+  .sig-row .field input{
+    border:none;border-bottom:1px solid var(--line);padding:4px 6px;
+    font-family:inherit;background:transparent;font-size:13px;min-width:120px;
+  }
+  .sig-row .field .d,.sig-row .field .m{width:36px;text-align:center}
+  .sig-row .field .y{width:50px;text-align:center}
+
+  /* Divider */
+  .divider{
+    text-align:center;margin:28px 0 18px;position:relative;
+  }
+  .divider::before{
+    content:'';position:absolute;top:50%;left:0;right:0;height:1px;
+    background:linear-gradient(90deg,transparent,var(--line),transparent);
+  }
+  .divider span{
+    background:var(--paper);padding:0 16px;color:var(--accent);
+    position:relative;font-size:18px;
+  }
+
+  /* Section header */
+  .sec-head{
+    background:var(--primary);color:#fff;padding:8px 16px;
+    border-radius:8px 8px 0 0;font-weight:700;font-size:14px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .sec-head .num{
+    background:var(--accent);color:var(--primary);
+    width:24px;height:24px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-weight:900;font-size:13px;
+  }
+  .sec-body{
+    border:1.5px solid var(--primary);border-top:none;
+    border-radius:0 0 8px 8px;padding:16px;
+  }
+
+  /* Decision radios */
+  .decisions{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .decision-item{
+    display:flex;align-items:center;gap:10px;
+    padding:8px 12px;border-radius:6px;cursor:pointer;
+    transition:all .2s;font-size:14px;
+    border:1px solid transparent;
+  }
+  .decision-item:hover{background:rgba(244,241,234,.8);border-color:var(--line)}
+  .decision-item input[type="radio"]{
+    width:16px;height:16px;cursor:pointer;accent-color:var(--primary);
+  }
+
+  /* Footer */
+  .footer{
+    margin-top:24px;padding-top:16px;border-top:2px dashed var(--line);
+    display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;
+    font-size:12px;color:var(--muted);
+  }
+  .footer .note{
+    background:rgba(168,50,50,.06);color:var(--danger);
+    padding:6px 12px;border-radius:6px;border-right:3px solid var(--danger);
+    font-weight:500;
+  }
+  .footer .tag{
+    background:var(--primary);color:#fff;padding:4px 12px;
+    border-radius:20px;font-weight:700;
+  }
+
+  /* Modal */
+  .modal{
+    position:fixed;inset:0;background:rgba(0,0,0,.6);
+    display:none;align-items:center;justify-content:center;z-index:100;
+    backdrop-filter:blur(4px);
+  }
+  .modal.active{display:flex}
+  .modal-content{
+    background:#fff;border-radius:16px;padding:24px;
+    max-width:420px;width:90%;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);
+  }
+  .modal h3{color:var(--primary);margin-bottom:14px;font-size:18px}
+  .modal label{display:block;font-size:13px;color:var(--muted);margin:10px 0 4px;font-weight:500}
+  .modal input,.modal textarea{
+    width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;
+    font-family:inherit;font-size:14px;
+  }
+  .modal input:focus,.modal textarea:focus{outline:none;border-color:var(--primary)}
+  .modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+  .modal-actions button{
+    padding:9px 18px;border-radius:8px;font-family:inherit;font-weight:500;
+    cursor:pointer;border:none;font-size:14px;
+  }
+  .btn-cancel{background:var(--bg);color:var(--ink)}
+  .btn-send{background:var(--primary);color:#fff}
+  .btn-send:hover{background:var(--primary-light)}
+
+  /* Toast */
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+    background:var(--success);color:#fff;padding:12px 24px;border-radius:30px;
+    box-shadow:0 10px 30px rgba(45,122,79,.4);
+    transition:transform .3s;z-index:200;font-weight:500;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* A4 Preview Mode (on-screen) */
+  body.a4-preview{
+    background:#525659!important;
+    padding:30px 12px!important;
+  }
+  body.a4-preview .paper{
+    width:210mm!important;
+    min-height:297mm!important;
+    max-width:210mm!important;
+    padding:8mm 10mm!important;
+    margin:0 auto!important;
+    box-shadow:0 4px 24px rgba(0,0,0,.4)!important;
+    border-radius:0!important;
+    font-size:10pt;
+    overflow:hidden;
+  }
+  body.a4-preview .paper *{
+    font-size:inherit;
+  }
+  body.a4-preview .title-block h1{font-size:20pt!important;padding:2mm 14mm!important}
+  body.a4-preview .info-cell label{font-size:7.5pt!important}
+  body.a4-preview .info-cell input{font-size:9.5pt!important}
+  body.a4-preview .sec-head{padding:2mm 3mm!important;font-size:10pt!important}
+  body.a4-preview .sec-body{padding:3mm!important}
+  body.a4-preview .check-item{padding:1.5mm 3mm!important}
+  body.a4-preview .statement{padding:2.5mm 3mm!important;font-size:9.5pt!important}
+  body.a4-preview .footer{font-size:8pt!important}
+
+  /* ============================================
+     PRINT / PDF — Single A4 Portrait Page
+     ============================================ */
+  @page{
+    size:A4 portrait;
+    margin:8mm;
+  }
+
+  @media print{
+    *{
+      -webkit-print-color-adjust:exact!important;
+      print-color-adjust:exact!important;
+      color-adjust:exact!important;
+    }
+    html,body{
+      width:210mm;
+      height:297mm;
+      margin:0!important;
+      padding:0!important;
+      background:#fff!important;
+      overflow:hidden!important;
+    }
+    body{
+      background-image:none!important;
+      font-size:9pt;
+    }
+    .toolbar,.modal,.toast{display:none!important}
+
+    .paper{
+      width:194mm!important;          /* 210 - 2*8 margins */
+      max-width:194mm!important;
+      min-height:auto!important;
+      height:auto!important;
+      max-height:281mm!important;     /* 297 - 2*8 */
+      margin:0!important;
+      padding:6mm 7mm!important;
+      box-shadow:none!important;
+      border-radius:0!important;
+      overflow:hidden!important;
+      page-break-inside:avoid!important;
+      break-inside:avoid!important;
+      page-break-after:avoid!important;
+      break-after:avoid!important;
+      page-break-before:avoid!important;
+      break-before:avoid!important;
+      display:flex;
+      flex-direction:column;
+    }
+    .paper::before{height:2mm!important}
+    .paper::after{display:none!important}
+
+    /* No element should split */
+    .paper > *,
+    .sec-body,.sec-head,.info-grid,.check-list,.check-item,
+    .sig-row,.statement,.greeting,.date-line,.footer,
+    .title-block,.header,.decisions,.decision-item{
+      page-break-inside:avoid!important;
+      break-inside:avoid!important;
+    }
+
+    /* Header tighter */
+    .header{
+      padding-bottom:3mm!important;
+      margin-bottom:3mm!important;
+      gap:6mm!important;
+    }
+    .header .right label,.header .left label{font-size:8pt!important;margin-bottom:1mm!important}
+    .header .right input,.header .left input{font-size:8pt!important;padding:1mm 0!important}
+    .ministry .crest{
+      width:14mm!important;height:14mm!important;
+      font-size:14pt!important;
+      cursor:default!important;border:none!important;
+    }
+    .ministry .crest .overlay,.ministry .remove-logo{display:none!important}
+    .ministry .name-ar{font-size:9pt!important}
+    .ministry .name-en{font-size:6.5pt!important}
+
+    /* Title tighter */
+    .title-block{margin:2mm 0 3mm!important}
+    .title-block h1{
+      font-size:18pt!important;
+      padding:1mm 14mm!important;
+      letter-spacing:0!important;
+    }
+    .title-block .sub{
+      font-size:7.5pt!important;
+      padding:1mm 3mm!important;
+      margin-top:1mm!important;
+    }
+
+    /* Info grid compact */
+    .info-grid{margin-bottom:3mm!important}
+    .info-cell{padding:1.8mm 2.5mm!important;gap:0.5mm!important}
+    .info-cell label{font-size:7pt!important;letter-spacing:0!important}
+    .info-cell input{font-size:9pt!important;padding:0!important}
+
+    /* Sections */
+    .sec-head{
+      padding:1.5mm 3mm!important;
+      font-size:9pt!important;
+    }
+    .sec-head .num{
+      width:4mm!important;height:4mm!important;
+      font-size:7.5pt!important;
+    }
+    .sec-body{padding:2.5mm 3mm!important}
+
+    /* Greeting */
+    .greeting{
+      padding:1.5mm 3mm!important;
+      margin-bottom:1.5mm!important;
+      gap:2mm!important;
+    }
+    .greeting .salam,.greeting .to{font-size:8.5pt!important}
+    .greeting .blessing{font-size:8pt!important}
+    .greeting input{padding:0.5mm!important;font-size:8.5pt!important}
+
+    /* Date line */
+    .date-line{
+      gap:1.5mm!important;
+      margin-bottom:1.5mm!important;
+      font-size:8.5pt!important;
+    }
+    .date-line input{padding:0 1mm!important;font-size:8.5pt!important}
+
+    /* Checklist */
+    .check-list{gap:1.2mm!important;margin:2mm 0!important}
+    .check-item{padding:1.2mm 2.5mm!important}
+    .check-item input[type="checkbox"]{width:3.2mm!important;height:3.2mm!important}
+    .check-item .body{font-size:8.5pt!important;gap:1mm!important}
+    .check-item .body input[type="text"]{font-size:8pt!important;padding:0 0.5mm!important;width:14mm!important}
+
+    /* Statement */
+    .statement{
+      padding:2mm 3mm!important;
+      margin:2mm 0!important;
+      font-size:8.5pt!important;
+      line-height:1.4!important;
+    }
+    .statement textarea{
+      padding:1.5mm!important;
+      font-size:8.5pt!important;
+      min-height:10mm!important;
+      margin-top:1mm!important;
+    }
+
+    /* Signature row */
+    .sig-row{
+      padding:1.5mm 0!important;
+      gap:3mm!important;
+      margin-top:1.5mm!important;
+    }
+    .sig-row .field{gap:1.5mm!important;font-size:8pt!important}
+    .sig-row .field input{font-size:8pt!important;padding:0.5mm 1mm!important;min-width:18mm!important}
+
+    /* Divider */
+    .divider{margin:3mm 0 2mm!important}
+    .divider span{font-size:11pt!important;padding:0 3mm!important}
+
+    /* Decisions */
+    .decisions{gap:1mm!important;margin-top:1.5mm!important}
+    .decision-item{
+      padding:1.2mm 2.5mm!important;
+      font-size:8.5pt!important;
+      gap:2mm!important;
+    }
+    .decision-item input[type="radio"]{width:3mm!important;height:3mm!important}
+
+    /* Footer */
+    .footer{
+      margin-top:3mm!important;
+      padding-top:2mm!important;
+      font-size:7.5pt!important;
+      gap:2mm!important;
+    }
+    .footer .note{padding:1mm 2.5mm!important}
+    .footer .tag{padding:0.5mm 2.5mm!important;font-size:7.5pt!important}
+
+    /* Remove hover effects */
+    .check-item:hover,.decision-item:hover{background:rgba(244,241,234,.6)!important;border-color:transparent!important}
+  }
+
+  /* Mobile */
+  @media (max-width:640px){
+    .paper{padding:24px 20px}
+    .header{grid-template-columns:1fr;text-align:center}
+    .header .left{text-align:center}
+    .info-grid{grid-template-columns:1fr}
+    .info-cell{border-left:none!important;border-bottom:1px solid var(--line)!important}
+    .title-block h1{font-size:24px;padding:8px 24px}
+    .sig-row{grid-template-columns:1fr}
+    .toolbar button{padding:8px 12px;font-size:12px}
+  }
+
+
+  /* =====================================================
+     ENHANCED PRINT FIT — A4 Portrait / One Page PDF
+     تمت إضافة هذه الطبقة لضبط الطباعة فقط دون تغيير واجهة العرض
+     ===================================================== */
+  :root{ --print-scale: 1; }
+  .print-measure-lock{position:fixed!important;top:0!important;right:0!important;width:190mm!important;visibility:hidden!important;pointer-events:none!important;z-index:-9999!important;}
+  @media print{
+    @page{ size:A4 portrait; margin:10mm; }
+    html,body{width:210mm!important;height:297mm!important;min-width:210mm!important;min-height:297mm!important;max-width:210mm!important;max-height:297mm!important;margin:0!important;padding:0!important;overflow:hidden!important;background:#fff!important;}
+    body{display:block!important;font-family:'Tajawal',Arial,sans-serif!important;line-height:1.18!important;background-image:none!important;}
+    .toolbar,.modal,.toast,#emailModal,#logoInput,.overlay,.remove-logo{display:none!important;visibility:hidden!important;}
+    .paper{position:absolute!important;top:0!important;right:0!important;left:auto!important;width:190mm!important;height:277mm!important;max-width:190mm!important;max-height:277mm!important;min-height:0!important;margin:0!important;padding:4.5mm 5mm!important;border-radius:0!important;box-shadow:none!important;background:#fff!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;transform:scale(var(--print-scale))!important;transform-origin:top right!important;page-break-before:avoid!important;page-break-after:avoid!important;page-break-inside:avoid!important;break-before:avoid!important;break-after:avoid!important;break-inside:avoid!important;}
+    .paper::before{height:1.4mm!important}.paper::after{display:none!important}
+    .paper,.paper *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-sizing:border-box!important;max-width:100%!important;}
+    .paper>*,.header,.title-block,.info-grid,.sec-head,.sec-body,.greeting,.date-line,.check-list,.check-item,.statement,.sig-row,.divider,.decisions,.decision-item,.footer{page-break-inside:avoid!important;break-inside:avoid!important;overflow:hidden!important;}
+    .header{display:grid!important;grid-template-columns:1fr 26mm 1fr!important;gap:3.5mm!important;align-items:start!important;padding-bottom:1.8mm!important;margin-bottom:1.9mm!important;border-bottom:1px solid var(--line)!important;}
+    .header .right,.header .left{font-size:7.1pt!important;line-height:1.1!important}.header .right label,.header .left label{font-size:7.2pt!important;margin-bottom:.4mm!important}.header input{font-size:7.2pt!important;padding:0!important;min-height:3.5mm!important}
+    .ministry{gap:.5mm!important}.ministry .crest{width:11.5mm!important;height:11.5mm!important;font-size:11pt!important;box-shadow:none!important}.ministry .name-ar{font-size:7.8pt!important;width:28mm!important;line-height:1.05!important}.ministry .name-en{font-size:5.2pt!important;width:28mm!important;line-height:1!important}
+    .title-block{margin:1.3mm 0 2mm!important;line-height:1!important}.title-block h1{font-size:15.2pt!important;padding:.3mm 10mm!important;letter-spacing:0!important;line-height:1.05!important}.title-block h1::before,.title-block h1::after{width:16px!important;height:1px!important}.title-block .sub{font-size:6.7pt!important;padding:.5mm 2mm!important;margin-top:.4mm!important;line-height:1!important;}
+    .info-grid{grid-template-columns:repeat(2,1fr)!important;margin-bottom:2mm!important;border-width:1px!important;border-radius:1.6mm!important}.info-cell{padding:1.1mm 1.8mm!important;gap:.2mm!important;min-height:8mm!important}.info-cell label{font-size:6.2pt!important;line-height:1!important;letter-spacing:0!important}.info-cell input{font-size:7.7pt!important;line-height:1.05!important;padding:0!important;min-height:3.5mm!important}
+    .sec-head{padding:1mm 2.2mm!important;border-radius:1.8mm 1.8mm 0 0!important;font-size:7.9pt!important;line-height:1!important;gap:1.5mm!important}.sec-head .num{width:3.7mm!important;height:3.7mm!important;font-size:6.5pt!important;line-height:1!important}.sec-body{padding:1.6mm 2mm!important;border-width:1px!important;border-radius:0 0 1.8mm 1.8mm!important;margin-bottom:0!important;}
+    .greeting{padding:1mm 1.8mm!important;margin-bottom:.9mm!important;gap:1.2mm!important;border-right-width:1.2mm!important;border-radius:0 1.6mm 1.6mm 0!important;min-height:6mm!important}.greeting .salam,.greeting .to,.greeting input{font-size:7.7pt!important;line-height:1.05!important}.greeting .blessing{font-size:7.1pt!important;line-height:1.05!important}.greeting input{padding:0!important;min-width:24mm!important}.sec-body>div[style*="padding:10px"]{padding:.8mm 0!important;line-height:1!important}.sec-body>div[style*="padding:10px"] .salam{font-size:8.2pt!important;line-height:1.05!important}
+    .date-line{gap:.9mm!important;margin-bottom:1mm!important;font-size:7.4pt!important;line-height:1.05!important}.date-line input{font-size:7.4pt!important;padding:0!important;min-height:3.5mm!important}.date-line .d,.date-line .m{width:8mm!important}.date-line .y{width:12mm!important}
+    .check-list{gap:.65mm!important;margin:1.1mm 0!important}.check-item{padding:.75mm 1.6mm!important;gap:1.2mm!important;border-radius:1.5mm!important;min-height:5.8mm!important;line-height:1.05!important}.check-item input[type="checkbox"]{width:2.8mm!important;height:2.8mm!important;margin-top:.2mm!important}.check-item .body{font-size:7.5pt!important;gap:.6mm!important;line-height:1.05!important}.check-item .body input[type="text"]{font-size:7.2pt!important;width:11mm!important;padding:0!important;min-height:3mm!important}
+    .statement{padding:1.2mm 1.8mm!important;margin:1mm 0!important;font-size:7.55pt!important;line-height:1.25!important;border-radius:1.5mm!important}.statement textarea{height:16mm!important;min-height:16mm!important;max-height:16mm!important;resize:none!important;padding:1mm!important;margin-top:.8mm!important;font-size:7.4pt!important;line-height:1.18!important;border-radius:1.2mm!important;overflow:hidden!important;}
+    .sig-row{display:grid!important;grid-template-columns:1fr .8fr 1.15fr!important;gap:2mm!important;padding:1mm 0!important;margin-top:.8mm!important;border-top:1px dashed var(--line)!important;align-items:center!important}.sig-row .field{font-size:7.25pt!important;gap:.8mm!important;line-height:1!important;white-space:nowrap!important}.sig-row .field label{font-size:7.25pt!important;white-space:nowrap!important}.sig-row .field input{font-size:7.25pt!important;min-width:15mm!important;padding:0 .5mm!important;min-height:3.2mm!important}.sig-row .field .d,.sig-row .field .m{width:6.5mm!important;min-width:6.5mm!important}.sig-row .field .y{width:10mm!important;min-width:10mm!important}
+    .divider{margin:1.5mm 0 1.2mm!important;height:3.5mm!important;line-height:3.5mm!important}.divider span{font-size:8.5pt!important;padding:0 2mm!important}
+    .decisions{gap:.7mm!important;margin-top:.8mm!important}.decision-item{padding:.85mm 1.6mm!important;gap:1.2mm!important;font-size:7.6pt!important;line-height:1.05!important;border-radius:1.3mm!important}.decision-item input[type="radio"]{width:2.7mm!important;height:2.7mm!important}
+    .footer{margin-top:auto!important;padding-top:1.2mm!important;border-top:1px dashed var(--line)!important;gap:1.2mm!important;font-size:6.6pt!important;line-height:1.1!important}.footer .note{padding:.7mm 1.4mm!important;border-right-width:1mm!important;max-width:150mm!important}.footer .tag{padding:.45mm 1.6mm!important;font-size:6.6pt!important;white-space:nowrap!important}
+    input,textarea{outline:none!important;box-shadow:none!important;}
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <button class="primary" onclick="window.print()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6z"/></svg>
+    طباعة
+  </button>
+  <button onclick="togglePreview()" id="previewBtn">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    معاينة A4
+  </button>
+  <button onclick="saveAsPDF()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    حفظ PDF
+  </button>
+  <button onclick="saveData()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2zM17 21v-8H7v8M7 3v5h8"/></svg>
+    حفظ البيانات
+  </button>
+  <button onclick="loadData()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg>
+    تحميل البيانات
+  </button>
+  <button onclick="openEmail()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2zM22 6l-10 7L2 6"/></svg>
+    إرسال بالإيميل
+  </button>
+  <button onclick="resetForm()">
+    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8M3 3v5h5"/></svg>
+    تفريغ
+  </button>
+</div>
+
+<!-- Paper -->
+<div class="paper" id="paper">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="right">
+      <label>مدرسة /</label>
+      <input type="text" id="schoolName" placeholder="اسم المدرسة">
+    </div>
+    <div class="ministry">
+      <div class="crest" id="logoCrest" onclick="triggerLogoUpload(event)" title="اضغط لرفع الشعار">
+        <span class="default-icon">✦</span>
+        <div class="overlay">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+          <span>رفع شعار</span>
+        </div>
+        <div class="remove-logo" onclick="removeLogo(event)" title="إزالة الشعار">×</div>
+      </div>
+      <input type="file" id="logoInput" accept="image/*" style="display:none" onchange="handleLogoUpload(event)">
+      <input type="text" class="name-ar" id="orgNameAr" value="وزارة التعليم" placeholder="اسم الجهة">
+      <input type="text" class="name-en" id="orgNameEn" value="Ministry of Education" placeholder="Organization">
+    </div>
+    <div class="left">
+      <label>المشفوعات :</label>
+      <input type="text" id="attachments" placeholder="المرفقات">
+    </div>
+  </div>
+
+  <!-- Title -->
+  <div class="title-block">
+    <h1>مساءلة من تأخر / خروج / انصراف</h1>
+    <div class="sub">نموذج رسمي للمساءلة الإدارية</div>
+  </div>
+
+  <!-- Info grid -->
+  <div class="info-grid">
+    <div class="info-cell">
+      <label>اسم المدرسة</label>
+      <input type="text" id="schoolFullName">
+    </div>
+    <div class="info-cell">
+      <label>التخصص المهني</label>
+      <input type="text" id="specialty">
+    </div>
+    <div class="info-cell">
+      <label>الاسم رباعياً</label>
+      <input type="text" id="fullName">
+    </div>
+    <div class="info-cell">
+      <label>رقم الجوال</label>
+      <input type="tel" id="phone">
+    </div>
+    <div class="info-cell">
+      <label>الهوية الوطنية</label>
+      <input type="text" id="nationalId">
+    </div>
+    <div class="info-cell">
+      <label>المستوى / المرتبة</label>
+      <input type="text" id="level">
+    </div>
+  </div>
+
+  <!-- Section 1: من الإدارة -->
+  <div class="sec-head"><span class="num">١</span> رسالة الإدارة</div>
+  <div class="sec-body">
+    <div class="greeting">
+      <span class="to">المكرم :</span>
+      <input type="text" id="addressee1" placeholder="الاسم" style="border:none;border-bottom:1px dashed var(--line);background:transparent;padding:4px;font-family:inherit;flex:1;min-width:120px">
+      <span class="blessing">وفقه الله</span>
+    </div>
+    <div style="padding:10px 4px"><span class="salam" style="font-family:'Amiri',serif;color:var(--primary);font-size:15px">السلام عليكم ورحمة الله وبركاته</span></div>
+    
+    <div class="date-line">
+      <span class="label">إنه في يوم</span>
+      <input type="text" placeholder="اليوم" style="width:80px">
+      <span class="label">الموافق</span>
+      <input type="text" class="d" placeholder="يوم">
+      <span>/</span>
+      <input type="text" class="m" placeholder="شهر">
+      <span>/</span>
+      <input type="text" class="y" placeholder="سنة">
+      <span class="label">١٤هـ</span>
+      <span class="label">اتضح ما يلي :</span>
+    </div>
+
+    <div class="check-list">
+      <label class="check-item">
+        <input type="checkbox">
+        <div class="body">
+          <span class="label">تأخركم من بداية الدوام وحضوركم الساعة</span>
+          <span>(</span>
+          <input type="text" placeholder="الوقت">
+          <span>)</span>
+        </div>
+      </label>
+      <label class="check-item">
+        <input type="checkbox">
+        <div class="body">
+          <span class="label">عدم تواجدكم أثناء الدوام من الساعة</span>
+          <span>(</span><input type="text"><span>:</span><input type="text"><span>)</span>
+          <span class="label">إلى الساعة</span>
+          <span>(</span><input type="text"><span>:</span><input type="text"><span>)</span>
+        </div>
+      </label>
+      <label class="check-item">
+        <input type="checkbox">
+        <div class="body">
+          <span class="label">انصرافكم مبكراً قبل نهاية الدوام من الساعة</span>
+          <span>(</span><input type="text"><span>:</span><input type="text"><span>)</span>
+        </div>
+      </label>
+      <label class="check-item">
+        <input type="checkbox">
+        <div class="body">
+          <span class="label">إثبات الحضور أو الانصراف من موقع آخر</span>
+        </div>
+      </label>
+    </div>
+
+    <div class="statement">
+      عليه نأمل توضيح أسباب ذلك مع إرفاق ما يؤيد عذركم، ولكم تحياتي.
+    </div>
+
+    <div class="sig-row">
+      <div class="field">
+        <label>مدير :</label>
+        <input type="text" id="managerName1" placeholder="اسم المدير">
+      </div>
+      <div class="field">
+        <label>التوقيع :</label>
+        <input type="text" placeholder="...........">
+      </div>
+      <div class="field">
+        <label>التاريخ :</label>
+        <input type="text" class="d"><span>/</span>
+        <input type="text" class="m"><span>/</span>
+        <input type="text" class="y"><span>١٤هـ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Section 2: رد الموظف -->
+  <div class="sec-head"><span class="num">٢</span> رد الموظف</div>
+  <div class="sec-body">
+    <div class="greeting">
+      <span class="to">المكرم / مدير</span>
+      <input type="text" id="addressee2" placeholder="اسم المدير" style="border:none;border-bottom:1px dashed var(--line);background:transparent;padding:4px;font-family:inherit;flex:1;min-width:120px">
+      <span class="blessing">وفقه الله</span>
+    </div>
+    <div style="padding:10px 4px"><span class="salam" style="font-family:'Amiri',serif;color:var(--primary);font-size:15px">السلام عليكم ورحمة الله وبركاته</span></div>
+    
+    <div class="statement">
+      <strong>أفيدكم أن أسباب ذلك ما يلي :</strong>
+      <textarea id="reasons" placeholder="اكتب أسباب التأخر أو الغياب هنا..."></textarea>
+    </div>
+
+    <div class="sig-row">
+      <div class="field">
+        <label>الاسم :</label>
+        <input type="text" id="employeeName">
+      </div>
+      <div class="field">
+        <label>التوقيع :</label>
+        <input type="text" placeholder="...........">
+      </div>
+      <div class="field">
+        <label>التاريخ :</label>
+        <input type="text" class="d"><span>/</span>
+        <input type="text" class="m"><span>/</span>
+        <input type="text" class="y"><span>١٤هـ</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><span>✦</span></div>
+
+  <!-- Section 3: رأي المدير -->
+  <div class="sec-head"><span class="num">٣</span> رأي المدير</div>
+  <div class="sec-body">
+    <div class="decisions">
+      <label class="decision-item">
+        <input type="radio" name="decision">
+        <span>عذره مقبول.</span>
+      </label>
+      <label class="decision-item">
+        <input type="radio" name="decision">
+        <span>عذره غير مقبول ويحسم عليه.</span>
+      </label>
+    </div>
+
+    <div class="sig-row">
+      <div class="field">
+        <label>مدير :</label>
+        <input type="text" id="managerName2">
+      </div>
+      <div class="field">
+        <label>التوقيع :</label>
+        <input type="text" placeholder="...........">
+      </div>
+      <div class="field">
+        <label>التاريخ :</label>
+        <input type="text" class="d"><span>/</span>
+        <input type="text" class="m"><span>/</span>
+        <input type="text" class="y"><span>١٤هـ</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="note">ملاحظة : ترفق بطاقة المساءلة مع أصل قرار الحسم في حالة عدم قبول العذر.</div>
+    <div class="tag">مرفق رقم (٣)</div>
+  </div>
+</div>
+
+<!-- Email Modal -->
+<div class="modal" id="emailModal">
+  <div class="modal-content">
+    <h3>✉️ إرسال النموذج بالإيميل</h3>
+    <label>البريد الإلكتروني للمستلم</label>
+    <input type="email" id="emailTo" placeholder="example@email.com">
+    <label>الموضوع</label>
+    <input type="text" id="emailSubject" value="نموذج مساءلة - تأخر / خروج / انصراف">
+    <label>رسالة إضافية (اختياري)</label>
+    <textarea id="emailBody" rows="3" placeholder="اكتب رسالة..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeEmail()">إلغاء</button>
+      <button class="btn-send" onclick="sendEmail()">إرسال</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">تم بنجاح ✓</div>
+
+<script>
+  // Toggle A4 preview mode
+  function togglePreview(){
+    document.body.classList.toggle('a4-preview');
+    const btn=document.getElementById('previewBtn');
+    if(document.body.classList.contains('a4-preview')){
+      btn.style.background='var(--accent)';
+      btn.style.borderColor='var(--accent)';
+      showToast('وضع معاينة A4 ✓');
+      window.scrollTo({top:0,behavior:'smooth'});
+    }else{
+      btn.style.background='';
+      btn.style.borderColor='';
+      showToast('عودة للوضع العادي');
+    }
+  }
+
+  // ===== Logo Management =====
+  function triggerLogoUpload(e){
+    if(e.target.classList.contains('remove-logo'))return;
+    document.getElementById('logoInput').click();
+  }
+
+  function handleLogoUpload(e){
+    const file=e.target.files[0];if(!file)return;
+    if(!file.type.startsWith('image/')){
+      showToast('الملف يجب أن يكون صورة ✗');return;
+    }
+    if(file.size>2*1024*1024){
+      showToast('حجم الصورة كبير (الحد 2MB) ✗');return;
+    }
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      setLogo(ev.target.result);
+      showToast('تم رفع الشعار ✓');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function setLogo(dataUrl){
+    const crest=document.getElementById('logoCrest');
+    // Remove existing img if any
+    const oldImg=crest.querySelector('img');
+    if(oldImg)oldImg.remove();
+    // Insert new image
+    const img=document.createElement('img');
+    img.src=dataUrl;
+    crest.insertBefore(img,crest.firstChild);
+    crest.classList.add('has-image');
+    try{localStorage.setItem('musaalaLogo',dataUrl)}catch(e){}
+  }
+
+  function removeLogo(e){
+    e.stopPropagation();
+    const crest=document.getElementById('logoCrest');
+    const img=crest.querySelector('img');
+    if(img)img.remove();
+    crest.classList.remove('has-image');
+    document.getElementById('logoInput').value='';
+    try{localStorage.removeItem('musaalaLogo')}catch(e){}
+    showToast('تم إزالة الشعار ✓');
+  }
+
+  // Toast helper
+  function showToast(msg){
+    const t=document.getElementById('toast');
+    t.textContent=msg;t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),2400);
+  }
+
+  // Collect all form values
+  function collectData(){
+    const data={};
+    document.querySelectorAll('#paper input, #paper textarea').forEach((el,i)=>{
+      const key=el.id||`field_${i}`;
+      data[key]=el.type==='checkbox'||el.type==='radio'?el.checked:el.value;
+    });
+    return data;
+  }
+
+  // Save to localStorage + download JSON
+  function saveData(){
+    const data=collectData();
+    // Include logo in export
+    try{
+      const logo=localStorage.getItem('musaalaLogo');
+      if(logo)data._logo=logo;
+    }catch(e){}
+    try{
+      localStorage.setItem('musaalaForm',JSON.stringify(data));
+    }catch(e){}
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');
+    a.href=url;a.download='مساءلة_'+new Date().toISOString().slice(0,10)+'.json';
+    a.click();URL.revokeObjectURL(url);
+    showToast('تم حفظ البيانات ✓');
+  }
+
+  // Load from JSON file or localStorage
+  function loadData(){
+    const input=document.createElement('input');
+    input.type='file';input.accept='.json';
+    input.onchange=e=>{
+      const file=e.target.files[0];if(!file)return;
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        try{
+          const data=JSON.parse(ev.target.result);
+          applyData(data);
+          showToast('تم تحميل البيانات ✓');
+        }catch(err){showToast('خطأ في الملف ✗')}
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }
+
+  function applyData(data){
+    // Restore logo if present in data
+    if(data._logo){setLogo(data._logo)}
+    document.querySelectorAll('#paper input, #paper textarea').forEach((el,i)=>{
+      const key=el.id||`field_${i}`;
+      if(data[key]===undefined)return;
+      if(el.type==='checkbox'||el.type==='radio')el.checked=data[key];
+      else el.value=data[key];
+    });
+  }
+
+  // Auto-restore on load
+  window.addEventListener('DOMContentLoaded',()=>{
+    try{
+      const saved=localStorage.getItem('musaalaForm');
+      if(saved)applyData(JSON.parse(saved));
+      const savedLogo=localStorage.getItem('musaalaLogo');
+      if(savedLogo)setLogo(savedLogo);
+    }catch(e){}
+  });
+
+  // Auto-save every change
+  document.addEventListener('input',()=>{
+    try{localStorage.setItem('musaalaForm',JSON.stringify(collectData()))}catch(e){}
+  });
+
+  // Save as PDF (uses print dialog → save as PDF)
+  function saveAsPDF(){
+    showToast('اختر "حفظ كـ PDF" في نافذة الطباعة');
+    setTimeout(()=>{fitA4Print();window.print();},500);
+  }
+
+  // Email
+  function openEmail(){document.getElementById('emailModal').classList.add('active')}
+  function closeEmail(){document.getElementById('emailModal').classList.remove('active')}
+  function sendEmail(){
+    const to=document.getElementById('emailTo').value;
+    const subject=encodeURIComponent(document.getElementById('emailSubject').value);
+    const extra=document.getElementById('emailBody').value;
+    const data=collectData();
+    
+    let body=extra+'\n\n=== بيانات النموذج ===\n\n';
+    body+=`المدرسة: ${data.schoolName||data.schoolFullName||'—'}\n`;
+    body+=`الاسم: ${data.fullName||'—'}\n`;
+    body+=`الهوية الوطنية: ${data.nationalId||'—'}\n`;
+    body+=`التخصص: ${data.specialty||'—'}\n`;
+    body+=`المستوى/المرتبة: ${data.level||'—'}\n`;
+    body+=`رقم الجوال: ${data.phone||'—'}\n\n`;
+    body+=`الأسباب:\n${data.reasons||'—'}\n`;
+    
+    const mailto=`mailto:${to}?subject=${subject}&body=${encodeURIComponent(body)}`;
+    window.location.href=mailto;
+    closeEmail();
+    showToast('تم فتح برنامج البريد ✓');
+  }
+
+  // Reset
+  function resetForm(){
+    if(!confirm('هل تريد تفريغ جميع الحقول؟'))return;
+    document.querySelectorAll('#paper input, #paper textarea').forEach(el=>{
+      if(el.type==='checkbox'||el.type==='radio')el.checked=false;
+      else el.value='';
+    });
+    try{localStorage.removeItem('musaalaForm')}catch(e){}
+    showToast('تم تفريغ النموذج ✓');
+  }
+
+  // Close modal on outside click
+  document.getElementById('emailModal').addEventListener('click',e=>{
+    if(e.target.id==='emailModal')closeEmail();
+  });
+
+
+  // ===== One-page A4 print fitting =====
+  function mmToPx(mm){
+    const probe=document.createElement('div');
+    probe.style.width=mm+'mm';
+    probe.style.position='absolute';
+    probe.style.visibility='hidden';
+    document.body.appendChild(probe);
+    const px=probe.getBoundingClientRect().width;
+    probe.remove();
+    return px;
+  }
+  function fitA4Print(){
+    const paper=document.getElementById('paper');
+    if(!paper)return;
+    document.documentElement.style.setProperty('--print-scale','1');
+    paper.classList.add('print-measure-lock');
+    const availableW=mmToPx(190);
+    const availableH=mmToPx(277);
+    const rect=paper.getBoundingClientRect();
+    const neededW=Math.max(rect.width,paper.scrollWidth,1);
+    const neededH=Math.max(rect.height,paper.scrollHeight,1);
+    const scale=Math.min(1, availableW/neededW, availableH/neededH);
+    document.documentElement.style.setProperty('--print-scale', String(Math.max(0.82, scale - 0.01)));
+    paper.classList.remove('print-measure-lock');
+  }
+  window.addEventListener('beforeprint', fitA4Print);
+  window.addEventListener('afterprint', ()=>{document.documentElement.style.setProperty('--print-scale','1');});
+
+</script>
+</body>
+</html>

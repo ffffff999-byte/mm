@@ -1,0 +1,4060 @@
+<!DOCTYPE html>
+<!--
+================================================================================
+  منصة نافس الرقمية التفاعلية - النسخة الكاملة
+================================================================================
+  📌 الوصف:
+  منصة احترافية متكاملة لإدارة ومتابعة "خطة تحسين نواتج تعلم الاختبارات الوطنية نافس"
+  مبنية بصفحة HTML واحدة ذاتية الاحتواء تعمل بدون خادم وبدون قاعدة بيانات.
+
+  🚀 طريقة الاستخدام:
+  1. احفظ الملف باسم "نافس.html"
+  2. افتحه بنقرة مزدوجة في أي متصفح حديث (Chrome / Edge / Safari / Firefox)
+  3. ستظهر شاشة الترحيب ثم لوحة التحكم الرئيسية
+  4. اذهب إلى "الإعدادات" لتعديل اسم المدرسة والشعار والمسؤولين
+  5. جميع البيانات تُحفظ تلقائياً في المتصفح (localStorage)
+
+  ⚙️ المكتبات الخارجية المستخدمة (CDN فقط):
+  - TailwindCSS (تصميم سريع)
+  - Chart.js (رسوم بيانية)
+  - SheetJS / xlsx (تصدير Excel)
+  - html2pdf.js (تصدير PDF)
+  - canvas-confetti (احتفال 100%)
+  - خط Tajawal من Google Fonts
+
+  🎨 الألوان الرئيسية:
+  - الأخضر السعودي: #006C35
+  - الذهبي الملكي: #C9A961
+  - أبيض ناعم: #FAFAF7
+  - رمادي عميق للوضع الليلي: #0F1419
+
+  📅 الإصدار: 1.0.0
+  📆 التاريخ: 1447هـ / 2026م
+================================================================================
+-->
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة نافس الرقمية | تحسين نواتج التعلم</title>
+
+<!-- المكتبات الخارجية -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+<!-- الخطوط العربية -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   CSS Utility Classes - بديل كامل لـ Tailwind CDN
+   مكتوب يدوياً لإزالة التحذير وتسريع الأداء
+============================================================ */
+
+/* Reset أساسي */
+*, *::before, *::after { box-sizing: border-box; }
+ul, ol { list-style: none; padding: 0; margin: 0; }
+
+/* Display & Flex */
+.flex { display: flex; }
+.inline-flex { display: inline-flex; }
+.grid { display: grid; }
+.hidden { display: none; }
+.block { display: block; }
+.relative { position: relative; }
+.absolute { position: absolute; }
+.inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+
+/* Flex Direction & Wrap */
+.flex-1 { flex: 1 1 0%; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-shrink-0 { flex-shrink: 0; }
+
+/* Align & Justify */
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
+
+/* Grid */
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.col-span-2 { grid-column: span 2 / span 2; }
+
+/* Gap */
+.gap-1 { gap: 0.25rem; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.gap-6 { gap: 1.5rem; }
+
+/* Spacing - Margin */
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+
+/* Padding */
+.p-3 { padding: 0.75rem; }
+.p-4 { padding: 1rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.p-12 { padding: 3rem; }
+.pt-4 { padding-top: 1rem; }
+.pr-2 { padding-right: 0.5rem; }
+.pr-10 { padding-right: 2.5rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+
+/* Space between (RTL aware) */
+.space-y-1\.5 > * + * { margin-top: 0.375rem; }
+.space-y-2 > * + * { margin-top: 0.5rem; }
+.space-y-3 > * + * { margin-top: 0.75rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.space-y-5 > * + * { margin-top: 1.25rem; }
+
+/* Width & Height */
+.w-1 { width: 0.25rem; }
+.w-10 { width: 2.5rem; }
+.w-72 { width: 18rem; }
+.w-full { width: 100%; }
+.h-5 { height: 1.25rem; }
+.h-10 { height: 2.5rem; }
+.h-20 { height: 5rem; }
+.min-w-0 { min-width: 0; }
+.max-h-48 { max-height: 12rem; }
+.max-w-full { max-width: 100%; }
+.min-w-\[200px\] { min-width: 200px; }
+
+/* Border Radius */
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-xl { border-radius: 0.75rem; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-full { border-radius: 9999px; }
+
+/* Borders */
+.border { border-width: 1px; border-style: solid; }
+.border-t { border-top-width: 1px; border-top-style: solid; }
+
+/* Typography */
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-base { font-size: 1rem; line-height: 1.5rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.leading-tight { line-height: 1.25; }
+.leading-relaxed { line-height: 1.625; }
+
+/* Opacity */
+.opacity-60 { opacity: 0.6; }
+.opacity-70 { opacity: 0.7; }
+.opacity-80 { opacity: 0.8; }
+.opacity-90 { opacity: 0.9; }
+
+/* Overflow */
+.overflow-hidden { overflow: hidden; }
+.overflow-x-auto { overflow-x: auto; }
+.overflow-x-hidden { overflow-x: hidden; }
+.overflow-y-auto { overflow-y: auto; }
+
+/* Cursor */
+.cursor-pointer { cursor: pointer; }
+
+/* Text utilities */
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.line-through { text-decoration: line-through; }
+
+/* Transitions */
+.transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+
+/* Responsive: Small breakpoint (640px+) */
+@media (min-width: 640px) {
+  .sm\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Responsive: Medium breakpoint (768px+) */
+@media (min-width: 768px) {
+  .md\:flex { display: flex; }
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .md\:text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+}
+
+/* Responsive: Large breakpoint (1024px+) */
+@media (min-width: 1024px) {
+  .lg\:block { display: block; }
+  .lg\:flex { display: flex; }
+  .lg\:hidden { display: none; }
+  .lg\:p-8 { padding: 2rem; }
+  .lg\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .lg\:col-span-2 { grid-column: span 2 / span 2; }
+}
+
+/* ============================================================
+   متغيرات الألوان والثيمات
+============================================================ */
+:root {
+  --saudi-green: #006C35;
+  --saudi-green-light: #00A050;
+  --saudi-green-dark: #004D26;
+  --royal-gold: #C9A961;
+  --royal-gold-light: #E5C988;
+  --royal-gold-dark: #9C7F3F;
+  --bg-primary: #FAFAF7;
+  --bg-secondary: #F0F2EE;
+  --bg-card: rgba(255, 255, 255, 0.75);
+  --text-primary: #1A1F1C;
+  --text-secondary: #4A554F;
+  --border-color: rgba(0, 108, 53, 0.15);
+  --shadow-soft: 0 4px 20px rgba(0, 108, 53, 0.08);
+  --shadow-strong: 0 12px 40px rgba(0, 108, 53, 0.15);
+  --gradient-primary: linear-gradient(135deg, #006C35 0%, #00A050 100%);
+  --gradient-gold: linear-gradient(135deg, #C9A961 0%, #E5C988 100%);
+}
+
+[data-theme="dark"] {
+  --bg-primary: #0F1419;
+  --bg-secondary: #1A2128;
+  --bg-card: rgba(26, 33, 40, 0.85);
+  --text-primary: #F0F2EE;
+  --text-secondary: #B8C5BC;
+  --border-color: rgba(201, 169, 97, 0.2);
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-strong: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* ============================================================
+   الإعدادات العامة
+============================================================ */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Tajawal', -apple-system, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  transition: background 0.3s ease, color 0.3s ease;
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(0, 108, 53, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(201, 169, 97, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(0, 108, 53, 0.03) 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
+[data-theme="dark"] body {
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(0, 108, 53, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(201, 169, 97, 0.1) 0%, transparent 40%);
+}
+
+.font-display {
+  font-family: 'Amiri', 'Tajawal', serif;
+}
+
+/* ============================================================
+   شاشة الترحيب (Splash Screen)
+============================================================ */
+#splash {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #004D26 0%, #006C35 50%, #00A050 100%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#splash.hide {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.splash-logo {
+  width: 140px;
+  height: 140px;
+  background: var(--gradient-gold);
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 60px rgba(201, 169, 97, 0.4);
+  animation: splashPulse 1.5s ease infinite, splashRotate 8s linear infinite;
+  position: relative;
+}
+
+.splash-logo::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 2px solid rgba(201, 169, 97, 0.4);
+  border-radius: 40px;
+  animation: splashRing 2s ease infinite;
+}
+
+.splash-logo::after {
+  content: '';
+  position: absolute;
+  inset: -20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 48px;
+  animation: splashRing 2s ease infinite 0.3s;
+}
+
+.splash-logo svg {
+  width: 70px;
+  height: 70px;
+  color: white;
+}
+
+@keyframes splashPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes splashRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.05); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes splashRing {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0.2; }
+}
+
+.splash-title {
+  font-family: 'Amiri', serif;
+  font-size: 3rem;
+  color: white;
+  margin-top: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  animation: fadeUp 1s ease 0.3s both;
+}
+
+.splash-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  animation: fadeUp 1s ease 0.6s both;
+}
+
+.splash-loader {
+  width: 200px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  margin-top: 3rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.splash-loader::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-gold);
+  border-radius: 100px;
+  animation: loadProgress 1.5s ease-in-out;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes loadProgress {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* ============================================================
+   الهيدر الثابت
+============================================================ */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.85rem 1.5rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.brand-logo {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-primary);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 108, 53, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.brand-logo::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: translateX(-100%);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  to { transform: translateX(100%); }
+}
+
+.icon-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.icon-btn:hover {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 108, 53, 0.3);
+}
+
+.icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ============================================================
+   الشريط الجانبي (Sidebar)
+============================================================ */
+.sidebar {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border-color);
+  height: calc(100vh - 78px);
+  position: sticky;
+  top: 78px;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 100px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.95rem 1.25rem;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  color: var(--text-secondary);
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.nav-item:hover {
+  background: rgba(0, 108, 53, 0.06);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.nav-item.active {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 8px 24px rgba(0, 108, 53, 0.25);
+  border-color: transparent;
+}
+
+.nav-item.active .nav-icon {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.nav-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(0, 108, 53, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.nav-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================================
+   البطاقات والمحتوى
+============================================================ */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: var(--shadow-soft);
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  box-shadow: var(--shadow-strong);
+  transform: translateY(-2px);
+}
+
+.stat-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 120px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  opacity: 0.06;
+  transform: translate(40%, -40%);
+  transition: all 0.4s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-strong);
+}
+
+.stat-card:hover::before {
+  transform: translate(20%, -20%) scale(1.3);
+  opacity: 0.1;
+}
+
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.stat-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+.stat-value {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  font-family: 'Tajawal', sans-serif;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+
+/* ============================================================
+   شريط التقدم
+============================================================ */
+.progress-bar {
+  height: 10px;
+  background: var(--bg-secondary);
+  border-radius: 100px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: 100px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+.progress-mini {
+  height: 6px;
+}
+
+/* ============================================================
+   الأكورديون (طي/فتح)
+============================================================ */
+.accordion {
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background: var(--bg-card);
+  transition: all 0.3s ease;
+}
+
+.accordion.open {
+  box-shadow: var(--shadow-strong);
+  border-color: var(--saudi-green);
+}
+
+.accordion-header {
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: background 0.25s ease;
+  background: linear-gradient(90deg, transparent, rgba(0, 108, 53, 0.02));
+}
+
+.accordion-header:hover {
+  background: rgba(0, 108, 53, 0.04);
+}
+
+.accordion.open .accordion-header {
+  background: linear-gradient(90deg, rgba(0, 108, 53, 0.06), rgba(201, 169, 97, 0.06));
+  border-bottom: 1px solid var(--border-color);
+}
+
+.accordion-number {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 108, 53, 0.25);
+}
+
+.accordion-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+
+.accordion.open .accordion-body {
+  max-height: 3000px;
+}
+
+.accordion-content {
+  padding: 1.5rem;
+}
+
+.chevron {
+  transition: transform 0.3s ease;
+  color: var(--text-secondary);
+}
+
+.accordion.open .chevron {
+  transform: rotate(180deg);
+  color: var(--saudi-green);
+}
+
+/* ============================================================
+   الجداول
+============================================================ */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.data-table th {
+  background: linear-gradient(135deg, var(--saudi-green), var(--saudi-green-dark));
+  color: white;
+  padding: 1rem 0.85rem;
+  text-align: right;
+  font-weight: 700;
+  font-size: 0.92rem;
+  position: sticky;
+  top: 0;
+}
+
+.data-table th:first-child {
+  border-top-right-radius: 14px;
+}
+.data-table th:last-child {
+  border-top-left-radius: 14px;
+}
+
+.data-table td {
+  padding: 1rem 0.85rem;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 0.92rem;
+  vertical-align: top;
+  background: var(--bg-card);
+}
+
+.data-table tr:hover td {
+  background: rgba(0, 108, 53, 0.04);
+}
+
+/* ============================================================
+   مؤشرات الحالة
+============================================================ */
+.status-pill {
+  padding: 0.4rem 0.85rem;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.status-not-started {
+  background: rgba(156, 163, 175, 0.15);
+  color: #6b7280;
+  border-color: rgba(156, 163, 175, 0.3);
+}
+
+.status-in-progress {
+  background: rgba(201, 169, 97, 0.15);
+  color: var(--royal-gold-dark);
+  border-color: rgba(201, 169, 97, 0.4);
+}
+
+.status-completed {
+  background: rgba(0, 108, 53, 0.15);
+  color: var(--saudi-green);
+  border-color: rgba(0, 108, 53, 0.4);
+}
+
+[data-theme="dark"] .status-in-progress { color: var(--royal-gold-light); }
+[data-theme="dark"] .status-completed { color: var(--saudi-green-light); }
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: statusPulse 2s infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ============================================================
+   الأزرار
+============================================================ */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 0.7rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(0, 108, 53, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 108, 53, 0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-gold {
+  background: var(--gradient-gold);
+  color: #5C4A1F;
+  padding: 0.7rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(201, 169, 97, 0.3);
+}
+
+.btn-gold:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(201, 169, 97, 0.4);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  padding: 0.7rem 1.4rem;
+  border-radius: 12px;
+  font-weight: 600;
+  border: 1.5px solid var(--border-color);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.25s ease;
+}
+
+.btn-outline:hover {
+  border-color: var(--saudi-green);
+  color: var(--saudi-green);
+  background: rgba(0, 108, 53, 0.04);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, #DC2626, #B91C1C);
+  color: white;
+  padding: 0.55rem 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+/* ============================================================
+   حقول الإدخال
+============================================================ */
+.input-field {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  transition: all 0.25s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--saudi-green);
+  box-shadow: 0 0 0 4px rgba(0, 108, 53, 0.12);
+}
+
+textarea.input-field {
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* ============================================================
+   Toast Notifications
+============================================================ */
+#toast-container {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+
+.toast {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-width: 300px;
+  box-shadow: var(--shadow-strong);
+  animation: toastSlide 0.3s ease;
+  pointer-events: auto;
+  border-right: 4px solid var(--saudi-green);
+}
+
+.toast.error { border-right-color: #DC2626; }
+.toast.warning { border-right-color: var(--royal-gold); }
+.toast.success { border-right-color: var(--saudi-green); }
+
+.toast-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(0, 108, 53, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--saudi-green);
+  flex-shrink: 0;
+}
+
+.toast.error .toast-icon { background: rgba(220, 38, 38, 0.1); color: #DC2626; }
+.toast.warning .toast-icon { background: rgba(201, 169, 97, 0.15); color: var(--royal-gold-dark); }
+
+@keyframes toastSlide {
+  from { opacity: 0; transform: translateX(-100%); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.toast.hide {
+  animation: toastOut 0.3s ease forwards;
+}
+
+@keyframes toastOut {
+  to { opacity: 0; transform: translateX(-100%); }
+}
+
+/* ============================================================
+   Modal
+============================================================ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  z-index: 5000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-overlay.show { display: flex; }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-content {
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-strong);
+  animation: modalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ============================================================
+   Timeline (المخطط الزمني)
+============================================================ */
+.timeline {
+  position: relative;
+  padding-right: 2rem;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  right: 0.95rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom,
+    var(--saudi-green) 0%,
+    var(--royal-gold) 50%,
+    var(--saudi-green) 100%);
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.5rem;
+}
+
+.timeline-marker {
+  position: absolute;
+  right: -2.4rem;
+  top: 0.25rem;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  border: 3px solid var(--saudi-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.timeline-marker.completed {
+  background: var(--gradient-primary);
+  border-color: var(--saudi-green);
+}
+
+.timeline-marker.completed::after {
+  content: '✓';
+  color: white;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* ============================================================
+   Recommendations Cards
+============================================================ */
+.rec-card {
+  padding: 1.25rem;
+  border-radius: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-right: 4px solid var(--saudi-green);
+  margin-bottom: 1rem;
+  transition: all 0.25s ease;
+}
+
+.rec-card.warning { border-right-color: var(--royal-gold); }
+.rec-card.critical { border-right-color: #DC2626; }
+.rec-card.success { border-right-color: var(--saudi-green-light); }
+
+.rec-card:hover {
+  transform: translateX(-4px);
+  box-shadow: var(--shadow-soft);
+}
+
+/* ============================================================
+   تأثيرات التحميل (Fade In)
+============================================================ */
+.fade-in {
+  animation: fadeUp 0.5s ease backwards;
+}
+
+.fade-in:nth-child(1) { animation-delay: 0.05s; }
+.fade-in:nth-child(2) { animation-delay: 0.1s; }
+.fade-in:nth-child(3) { animation-delay: 0.15s; }
+.fade-in:nth-child(4) { animation-delay: 0.2s; }
+.fade-in:nth-child(5) { animation-delay: 0.25s; }
+.fade-in:nth-child(6) { animation-delay: 0.3s; }
+
+/* ============================================================
+   الاستجابة للأجهزة
+============================================================ */
+.mobile-menu-btn { display: none; }
+
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    top: 78px;
+    right: 0;
+    width: 280px;
+    transform: translateX(100%);
+    z-index: 90;
+    box-shadow: -10px 0 40px rgba(0,0,0,0.15);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .mobile-menu-btn { display: flex; }
+  .main-content { padding: 1rem !important; }
+}
+
+@media (max-width: 640px) {
+  .splash-title { font-size: 2rem; }
+  .stat-value { font-size: 1.8rem; }
+  .data-table { font-size: 0.85rem; }
+  .data-table th, .data-table td { padding: 0.7rem 0.5rem; }
+  .accordion-content { padding: 1rem; }
+  .modal-content { border-radius: 18px; }
+  #toast-container { left: 1rem; right: 1rem; bottom: 1rem; }
+  .toast { min-width: auto; }
+}
+
+/* ============================================================
+   تخصيصات للوضع الليلي
+============================================================ */
+[data-theme="dark"] .input-field {
+  background: rgba(15, 20, 25, 0.6);
+}
+
+[data-theme="dark"] .data-table td {
+  background: rgba(26, 33, 40, 0.5);
+}
+
+[data-theme="dark"] .data-table tr:hover td {
+  background: rgba(0, 108, 53, 0.15);
+}
+
+[data-theme="dark"] .progress-bar {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ============================================================
+   توقيع المصمم - Designer Credit
+============================================================ */
+.designer-credit {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(135deg, rgba(0,108,53,0.06), rgba(201,169,97,0.08));
+  border: 1px solid rgba(201, 169, 97, 0.3);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.designer-credit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at top right, rgba(201,169,97,0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.designer-credit::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at bottom left, rgba(0,108,53,0.1), transparent 70%);
+  pointer-events: none;
+}
+
+.designer-credit-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.designer-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #C9A961, #E5C988);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 12px rgba(201, 169, 97, 0.35);
+  flex-shrink: 0;
+}
+
+.designer-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.designer-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.designer-title {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.designer-name {
+  font-family: 'Amiri', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--saudi-green);
+  letter-spacing: 0.3px;
+  line-height: 1.1;
+}
+
+[data-theme="dark"] .designer-name {
+  color: var(--saudi-green-light);
+}
+
+.designer-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1rem;
+  background: linear-gradient(135deg, #0088cc, #00a4e8);
+  color: white !important;
+  text-decoration: none;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.designer-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 136, 204, 0.4);
+  background: linear-gradient(135deg, #00a4e8, #0088cc);
+}
+
+.designer-link:active {
+  transform: translateY(0);
+}
+
+.designer-link svg {
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   التعديل المباشر للنص (Inline Edit)
+============================================================ */
+.brand-text-wrap {
+  cursor: pointer;
+  position: relative;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.brand-text-wrap:hover {
+  background: rgba(0, 108, 53, 0.06);
+}
+
+.brand-text-wrap::after {
+  content: '✎';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  font-size: 11px;
+  color: var(--saudi-green);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.brand-text-wrap:hover::after {
+  opacity: 0.7;
+}
+
+.editable-title {
+  outline: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.editable-title.editing {
+  background: rgba(0, 108, 53, 0.08);
+  padding: 2px 8px;
+  box-shadow: 0 0 0 2px var(--saudi-green);
+}
+
+[data-theme="dark"] .brand-text-wrap:hover {
+  background: rgba(201, 169, 97, 0.1);
+}
+
+/* ============================================================
+   طباعة احترافية - A4 Portrait 300DPI
+============================================================ */
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@page :first {
+  size: A4 portrait;
+  margin: 0;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  html, body {
+    background: white !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 10pt !important;
+    line-height: 1.4 !important;
+    overflow: hidden !important;
+  }
+  
+  .app-header, .sidebar, .no-print, #toast-container, #splash,
+  .modal-overlay, .icon-btn, .mobile-menu-btn,
+  button, .btn-primary, .btn-gold, .btn-outline, .btn-danger {
+    display: none !important;
+  }
+  
+  .main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 210mm !important;
+    overflow: hidden !important;
+  }
+  
+  .glass-card, .stat-card, .accordion {
+    box-shadow: none !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    border: 1px solid #d1d5db !important;
+    background: white !important;
+    backdrop-filter: none !important;
+    margin-bottom: 6px !important;
+    border-radius: 8px !important;
+  }
+  
+  .accordion-body {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+  
+  .accordion {
+    page-break-inside: avoid !important;
+  }
+  
+  table {
+    page-break-inside: auto;
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+  
+  tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  
+  thead {
+    display: table-header-group;
+  }
+  
+  /* ضمان وضوح النصوص للطباعة */
+  h1, h2, h3, h4 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  
+  .section-title {
+    font-size: 14pt !important;
+  }
+  
+  .stat-value {
+    font-size: 18pt !important;
+  }
+  
+  /* تنعيم الخطوط للطباعة */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: geometricPrecision;
+  }
+}
+
+/* فئة خاصة للتقرير المطبوع - A4 محسّن لصفحة واحدة */
+.print-report-a4 {
+  width: 210mm !important;
+  height: 297mm !important;
+  max-width: 210mm !important;
+  max-height: 297mm !important;
+  min-height: 297mm !important;
+  padding: 7mm 8mm !important;
+  margin: 0 auto !important;
+  background: white !important;
+  color: #1A1F1C !important;
+  font-family: 'Tajawal', sans-serif !important;
+  font-size: 10pt !important;
+  line-height: 1.4 !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  page-break-after: avoid !important;
+  break-after: avoid !important;
+  page-break-before: avoid !important;
+  break-before: avoid !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+  text-rendering: geometricPrecision !important;
+  image-rendering: -webkit-optimize-contrast !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+.print-report-a4 * {
+  box-sizing: border-box !important;
+  page-break-inside: avoid !important;
+  break-inside: avoid !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+
+.print-report-a4 h1 { font-size: 16pt; margin: 0; line-height: 1.15; font-weight: 800; }
+.print-report-a4 h2 { font-size: 11pt; margin: 1pt 0; line-height: 1.2; font-weight: 800; }
+.print-report-a4 h3 { font-size: 10pt; margin: 1pt 0; line-height: 1.2; font-weight: 700; }
+.print-report-a4 p { margin: 1.5pt 0; line-height: 1.4; }
+.print-report-a4 table {
+  font-size: 8.5pt;
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+.print-report-a4 th, .print-report-a4 td {
+  padding: 1.6mm 2mm;
+  border: 0.3mm solid #d1d5db;
+  vertical-align: middle;
+}
+.print-report-a4 th {
+  font-weight: 700;
+  background-color: #006C35;
+  color: white;
+}
+.print-report-a4 img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ============================================================
+   تأثيرات إضافية
+============================================================ */
+.scroll-fade::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.scroll-fade::-webkit-scrollbar-track { background: transparent; }
+.scroll-fade::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 100px;
+}
+.scroll-fade::-webkit-scrollbar-thumb:hover {
+  background: var(--saudi-green);
+}
+
+.section-title {
+  font-family: 'Amiri', serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.section-title::before {
+  content: '';
+  width: 6px;
+  height: 32px;
+  background: var(--gradient-gold);
+  border-radius: 100px;
+}
+
+.section-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+/* تنقل بين الأقسام */
+.page { display: none; animation: fadeUp 0.4s ease; }
+.page.active { display: block; }
+
+/* checkbox تخصيص */
+.custom-checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  background: var(--bg-card);
+}
+
+.custom-checkbox.checked {
+  background: var(--gradient-primary);
+  border-color: var(--saudi-green);
+}
+
+.custom-checkbox.checked::after {
+  content: '✓';
+  color: white;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+/* بادج رقم */
+.badge {
+  display: inline-flex;
+  padding: 0.2rem 0.6rem;
+  background: rgba(0, 108, 53, 0.1);
+  color: var(--saudi-green);
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .badge {
+  color: var(--saudi-green-light);
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     شاشة الترحيب (Splash)
+============================================================ -->
+<div id="splash">
+  <div class="splash-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+    </svg>
+  </div>
+  <h1 class="splash-title">منصة نافس الرقمية</h1>
+  <p class="splash-subtitle">تحسين نواتج تعلم الاختبارات الوطنية</p>
+  <div class="splash-loader"></div>
+</div>
+
+<!-- ============================================================
+     الهيدر العلوي
+============================================================ -->
+<header class="app-header">
+  <div class="flex items-center justify-between gap-4">
+    <div class="flex items-center gap-3">
+      <button class="icon-btn mobile-menu-btn lg:hidden" onclick="toggleSidebar()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+      <div class="brand-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
+      </div>
+      <div class="brand-text-wrap" title="انقر مرتين للتعديل" ondblclick="enableInlineEdit('brand-school-name', 'schoolName')">
+        <h1 class="font-bold text-lg leading-tight editable-title" id="brand-school-name">منصة نافس الرقمية</h1>
+        <p class="text-xs opacity-70" id="brand-school-tagline">إدارة خطة تحسين نواتج التعلم</p>
+      </div>
+    </div>
+
+    <div class="hidden md:flex items-center gap-3 px-4 py-2 rounded-2xl glass-card">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--saudi-green)">
+        <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+      <div class="text-sm">
+        <div class="font-semibold" id="hijri-date">--</div>
+        <div class="text-xs opacity-60" id="greg-date">--</div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button class="icon-btn" onclick="openSettings()" title="الإعدادات">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+      </button>
+      <button class="icon-btn" onclick="toggleTheme()" title="تبديل الوضع" id="theme-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="theme-icon">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+      </button>
+      <button class="icon-btn hidden md:flex" onclick="window.print()" title="طباعة">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="6 9 6 2 18 2 18 9"></polyline>
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+          <rect x="6" y="14" width="12" height="8"></rect>
+        </svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     التخطيط الرئيسي
+============================================================ -->
+<div class="flex">
+  <!-- الشريط الجانبي -->
+  <aside class="sidebar w-72 p-4 hidden lg:block" id="sidebar">
+    <nav class="space-y-1.5">
+      <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+        <div class="nav-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+        </div>
+        <span>لوحة المعلومات</span>
+      </div>
+      <div class="nav-item" data-page="intensive" onclick="navigate('intensive')">
+        <div class="nav-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+        </div>
+        <span>الخطة المكثفة</span>
+      </div>
+      <div class="nav-item" data-page="teachers" onclick="navigate('teachers')">
+        <div class="nav-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+        </div>
+        <span>خطة المعلمين</span>
+      </div>
+      <div class="nav-item" data-page="management" onclick="navigate('management')">
+        <div class="nav-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+        <span>التشكيلات المدرسية</span>
+      </div>
+      <div class="nav-item" data-page="committees" onclick="navigate('committees')">
+        <div class="nav-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </div>
+        <span>اللجان المدرسية</span>
+      </div>
+      <div class="nav-item" data-page="tracking" onclick="navigate('tracking')">
+        <div class="nav-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        </div>
+        <span>سجل المتابعة</span>
+      </div>
+      <div class="nav-item" data-page="reports" onclick="navigate('reports')">
+        <div class="nav-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"></path><path d="M7 12l3-3 3 3 5-5"></path></svg>
+        </div>
+        <span>التقارير والتحليلات</span>
+      </div>
+    </nav>
+
+    <div class="mt-8 p-4 rounded-2xl" style="background: var(--gradient-primary); color: white;">
+      <div class="flex items-center gap-2 mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span class="font-bold text-sm">حالة الخطة</span>
+      </div>
+      <div class="text-2xl font-bold mb-1" id="sidebar-progress">0%</div>
+      <div class="text-xs opacity-90">إجمالي نسبة التنفيذ</div>
+      <div class="progress-bar progress-mini mt-3" style="background: rgba(255,255,255,0.2);">
+        <div class="progress-fill" id="sidebar-progress-bar" style="width: 0%; background: white;"></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- المحتوى الرئيسي -->
+  <main class="flex-1 main-content p-6 lg:p-8 max-w-full overflow-x-hidden">
+    <!-- صفحات المحتوى -->
+    <div id="page-content"></div>
+  </main>
+</div>
+
+<!-- ============================================================
+     Toast Container
+============================================================ -->
+<div id="toast-container"></div>
+
+<!-- ============================================================
+     Modal: الإعدادات
+============================================================ -->
+<div class="modal-overlay" id="settings-modal" onclick="closeModal(event, 'settings-modal')">
+  <div class="modal-content p-6" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="section-title text-2xl">الإعدادات</h2>
+      <button class="icon-btn" onclick="closeSettings()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-semibold mb-2">اسم المدرسة</label>
+        <input type="text" class="input-field" id="settings-school" placeholder="أدخل اسم المدرسة">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-2">اسم مدير المدرسة</label>
+        <input type="text" class="input-field" id="settings-principal" placeholder="مدير المدرسة">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-2">اسم المشرف التربوي</label>
+        <input type="text" class="input-field" id="settings-supervisor" placeholder="المشرف التربوي">
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-2">إدارة التعليم</label>
+        <input type="text" class="input-field" id="settings-education" placeholder="إدارة التعليم بمنطقة...">
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold mb-2">السنة الدراسية</label>
+          <input type="text" class="input-field" id="settings-year" placeholder="1447هـ">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-2">عدد الطلاب المستهدفين</label>
+          <input type="number" class="input-field" id="settings-students" placeholder="0">
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-2">شعار المدرسة (اختياري)</label>
+        <input type="file" class="input-field" id="settings-logo" accept="image/*">
+        <div id="logo-preview" class="mt-2"></div>
+      </div>
+
+      <div class="border-t pt-4 mt-4" style="border-color: var(--border-color);">
+        <h3 class="font-bold mb-3 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #DC2626"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"></path></svg>
+          منطقة الخطر
+        </h3>
+        <button class="btn-danger w-full" onclick="resetData()">
+          مسح جميع البيانات والعودة للوضع الافتراضي
+        </button>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-6 pt-4 border-t" style="border-color: var(--border-color);">
+      <button class="btn-primary flex-1" onclick="saveSettings()">حفظ الإعدادات</button>
+      <button class="btn-outline" onclick="closeSettings()">إلغاء</button>
+    </div>
+
+    <!-- توقيع المصمم -->
+    <div class="designer-credit">
+      <div class="designer-credit-content">
+        <div class="designer-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <div class="designer-text">
+          <div class="designer-title">تصميم وإعداد</div>
+          <div class="designer-name">د. فــــواز</div>
+        </div>
+      </div>
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener" class="designer-link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z"/>
+        </svg>
+        <span>تفضل للمزيد هنا</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Modal: إضافة/تعديل سجل متابعة
+============================================================ -->
+<div class="modal-overlay" id="tracking-modal" onclick="closeModal(event, 'tracking-modal')">
+  <div class="modal-content p-6" onclick="event.stopPropagation()">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="section-title text-2xl" id="tracking-modal-title">إضافة سجل متابعة</h2>
+      <button class="icon-btn" onclick="closeTrackingModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+
+    <div class="space-y-4">
+      <input type="hidden" id="tracking-id">
+      <div>
+        <label class="block text-sm font-semibold mb-2">إجراء التنفيذ</label>
+        <textarea class="input-field" id="tracking-action" rows="2" placeholder="صف الإجراء المنفذ"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold mb-2">تاريخ التنفيذ المدوّن</label>
+          <input type="date" class="input-field" id="tracking-date-planned">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-2">حالة التنفيذ</label>
+          <select class="input-field" id="tracking-status">
+            <option value="نُفذ">نُفذ</option>
+            <option value="لم يُنفذ">لم يُنفذ</option>
+            <option value="جارٍ التنفيذ">جارٍ التنفيذ</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-semibold mb-2">أسباب عدم التنفيذ (إن وجدت)</label>
+        <textarea class="input-field" id="tracking-reasons" rows="2"></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-semibold mb-2">تاريخ التنفيذ المقترح</label>
+          <input type="date" class="input-field" id="tracking-date-proposed">
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-2">مؤشر التحقق</label>
+          <input type="text" class="input-field" id="tracking-indicator" placeholder="مثل: تقرير، صور، شهادة">
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-6 pt-4 border-t" style="border-color: var(--border-color);">
+      <button class="btn-primary flex-1" onclick="saveTrackingRecord()">حفظ السجل</button>
+      <button class="btn-outline" onclick="closeTrackingModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ============================================================
+     قلب المنصة: البيانات + المنطق
+============================================================ -->
+<script>
+// =============================================================
+// 1) البيانات الأساسية للخطة (PLAN_DATA)
+//    مستخرجة من الخطتين الرسميتين بدقة كاملة
+// =============================================================
+const DEFAULT_PLAN_DATA = {
+  settings: {
+    schoolName: 'مدرسة المرحلة المتوسطة',
+    schoolTagline: 'منصة نافس - تحسين نواتج التعلم',
+    principalName: '',
+    supervisorName: '',
+    educationDept: 'الإدارة العامة للتعليم',
+    academicYear: '1447هـ / 2026م',
+    studentsCount: 0,
+    logo: null
+  },
+
+  // الوحدة 2: الخطة الإجرائية المكثفة (3 أهداف)
+  intensive: [
+    {
+      id: 'int1',
+      title: 'تهيئة الطلاب النفسية لأداء الاختبارات الوطنية',
+      executionTime: 'من 5/7/1447هـ إلى 12/9/1447هـ',
+      actions: [
+        { id: 'int1-a1', text: 'توضيح الهدف من الاختبارات الوطنية', done: false },
+        { id: 'int1-a2', text: 'التأكيد على الطلاب بأهمية الاستعداد للاختبارات', done: false },
+        { id: 'int1-a3', text: 'رفع دافعية الطلاب لأداء الاختبارات الوطنية', done: false },
+        { id: 'int1-a4', text: 'متابعة الاختبارات المحاكية من إدارة التعليم حسب الجدولة', done: false }
+      ],
+      means: 'الإذاعة المدرسية، المنشورات الإلكترونية، شاشات الإعلانات، الرسائل النصية',
+      executor: 'مدير المدرسة، الموجه الطلابي',
+      supporter: 'أعضاء لجنة نافس',
+      indicator: 'تقرير + شواهد بصرية',
+      notes: '',
+      attachment: null
+    },
+    {
+      id: 'int2',
+      title: 'رفع مستوى الطلاب في نتائج اختبارات نافس',
+      executionTime: 'فترة الترم الثاني',
+      actions: [
+        { id: 'int2-a1', text: 'تكليف المعلمين بمنهجية معينة لرفع مستوى الطلاب', done: false },
+        { id: 'int2-a2', text: 'التركيز أثناء شرح الدروس على المهارات المستهدفة', done: false },
+        { id: 'int2-a3', text: 'توضيح المهارات للطلاب خلال كل درس', done: false },
+        { id: 'int2-a4', text: 'عمل مجتمعات مهنية للمعلمين مساندة لذلك', done: false },
+        { id: 'int2-a5', text: 'متابعة الاختبارات المحاكية من إدارة التعليم', done: false }
+      ],
+      means: 'المهارات المستهدفة للمواد والمراحل، المتابعة المستمرة، تزويد المعلمين بدليل نواتج التعلم 2025',
+      executor: 'مدير المدرسة، معلمو المواد المستهدفة',
+      supporter: 'أعضاء لجنة نافس',
+      indicator: 'تقرير + تحسن نسبة الأداء',
+      notes: '',
+      attachment: null
+    },
+    {
+      id: 'int3',
+      title: 'تدريب الطلاب على أداء الاختبارات الوطنية',
+      executionTime: 'فترات الترم الثاني',
+      actions: [
+        { id: 'int3-a1', text: 'تدريب الطلاب على آلية الاختبار وطريقة التظليل الصحيحة', done: false },
+        { id: 'int3-a2', text: 'إجراء اختبار قبلي لقياس المستوى', done: false },
+        { id: 'int3-a3', text: 'إجراء اختبار بعدي لقياس أثر الخطة الإجرائية', done: false },
+        { id: 'int3-a4', text: 'تكريم الطلاب المتميزين في فترة التدريب', done: false },
+        { id: 'int3-a5', text: 'توضيح أدوات الاختبار ومواعيده وآلياته', done: false }
+      ],
+      means: 'استخدام نماذج محاكية، نماذج التظليل، اختبارات قبلية وبعدية',
+      executor: 'مدير المدرسة، الموجه الطلابي',
+      supporter: 'أعضاء لجنة نافس',
+      indicator: 'تقرير + نتائج مقارنة',
+      notes: '',
+      attachment: null
+    }
+  ],
+
+  // الوحدة 3: خطة معلمي المواد المستهدفة (8 إجراءات)
+  teachers: [
+    { id: 'tch1', text: 'تحقيق الأهداف التعليمية ومؤشرات الأداء الرئيسة للاختبارات الوطنية (نواتج التعلم - مستويات الأداء) الصادرة من هيئة تقويم التعليم', responsibility: 'معلمو المواد المستهدفة (رياضيات - علوم - القراءة)', follow: 'وكيل المدرسة للشؤون التعليمية', duration: 'مستمر', indicator: 'تحسن نسبة الأداء في الاختبارات الوطنية (نافس) بمعدل 5% عن خط الأساس لدورة عام (2024م)', status: 'not-started', notes: '', updated: '' },
+    { id: 'tch2', text: 'تصميم وتدريس المادة الدراسية باستخدام استراتيجيات تعليم وتعلم حديثة ومتنوعة، تعمل على تنمية القدرة على التفكير والإبداع لدى الطلاب', responsibility: 'معلمو المواد المستهدفة', follow: 'وكيل المدرسة للشؤون التعليمية', duration: 'مستمر', indicator: 'تنوع الاستراتيجيات', status: 'not-started', notes: '', updated: '' },
+    { id: 'tch3', text: 'تقييم مستوى الطلاب بشكل مرحلي وتفعيل جميع أدوات التقويم المتنوعة، وقياس نواتج التعلم (قبل وبعد) عملية التعلم، ووضع خطط علاجية لردم فجوات الأداء وإعداد مواد إثرائية', responsibility: 'معلمو المواد المستهدفة', follow: 'وكيل المدرسة للشؤون التعليمية', duration: 'فصلياً', indicator: 'خطط علاجية ومواد إثرائية', status: 'not-started', notes: '', updated: '' },
+    { id: 'tch4', text: 'تهيئة الطلاب للمشاركة في الاختبارات الوطنية والدولية', responsibility: 'معلمو المواد المستهدفة', follow: 'وكيل المدرسة للشؤون التعليمية', duration: 'قبل الاختبارات', indicator: 'جاهزية الطلاب', status: 'not-started', notes: '', updated: '' },
+    { id: 'tch5', text: 'إعداد التكليفات والأنشطة والمهام الأدائية والاختبارات وفق الضوابط المعتمدة، وتصحيحها والعمل على تحديد الاحتياجات الفردية للطلاب', responsibility: 'معلمو المواد المستهدفة', follow: 'وكيل المدرسة للشؤون التعليمية', duration: 'مستمر', indicator: 'سجلات الأداء الفردية', status: 'not-started', notes: '', updated: '' },
+    { id: 'tch6', text: 'تقديم تغذية راجعة بناءة وبشكل منتظم تتوافق مع مستويات الطلاب؛ لتحسين نواتج التعلم', responsibility: 'معلمو المواد المستهدفة', follow: 'وكيل المدرسة للشؤون التعليمية', duration: 'مستمر', indicator: 'سجلات التغذية الراجعة', status: 'not-started', notes: '', updated: '' },
+    { id: 'tch7', text: 'تخصيص حصتين أسبوعياً من حصص اللغة العربية في المرحلة الابتدائية، وحصة في المرحلة المتوسطة، لتعزيز الفهم القرائي، وتخصيص (5) دقائق للصفوف الأولية و(5-10) دقائق للصفوف العليا من الحصة الدراسية بواقع أربع حصص يومياً للقراءات الإثرائية وتعزيز الفهم القرائي', responsibility: 'معلمو اللغة العربية', follow: 'وكيل المدرسة للشؤون التعليمية', duration: 'أسبوعياً', indicator: 'جدول حصص الفهم القرائي', status: 'not-started', notes: '', updated: '' },
+    { id: 'tch8', text: 'تخصيص حصة أسبوعياً من حصص مادتي الرياضيات والعلوم في المرحلتين الابتدائية والمتوسطة لتحقيق (نواتج التعلم - مستويات الأداء) الصادرة من هيئة تقويم التعليم', responsibility: 'معلمو الرياضيات والعلوم', follow: 'وكيل المدرسة للشؤون التعليمية', duration: 'أسبوعياً', indicator: 'جدول حصص نواتج التعلم', status: 'not-started', notes: '', updated: '' }
+  ],
+
+  // الوحدة 4: التشكيلات المدرسية (10 إجراءات)
+  management: [
+    { id: 'mgt1', text: 'قيادة عملية تحليل ومراجعة تقدم الطالب داخل المدرسة من أجل تقييم عملية توصيل المحتوى الدراسي وفعالية أساليب التدريس وتقديم التوصيات المناسبة', responsibility: 'مدير المدرسة', follow: 'فريق الدعم / المشرف المقيم', duration: 'مستمر', indicator: 'تحسن نسبة الأداء في الاختبارات الوطنية (نافس) بمعدل 5% عن خط الأساس لدورة عام (2024م)', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt2', text: 'متابعة التحصيل الدراسي وتقدم الطلاب داخل المدرسة، والتأكد من مدى فعالية أساليب التدريس واتخاذ الإجراءات المناسبة حيالها', responsibility: 'مدير المدرسة', follow: 'فريق الدعم / المشرف المقيم', duration: 'مستمر', indicator: 'تقارير دورية', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt3', text: 'الإشراف على عمليات التدريس واستخدام استراتيجيات التعلم، بما يضمن تحقيق أهداف المواد المستهدفة', responsibility: 'مدير المدرسة', follow: 'فريق الدعم / المشرف المقيم', duration: 'مستمر', indicator: 'تقارير الزيارات الصفية', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt4', text: 'تحليل مستوى التحصيل لدى الطلاب ومتابعة أدائهم ومدى تطور مستوى تحصيلهم الدراسي ومتابعة نتائجهم بشكل دوري، وعرض الحالات التي تتطلب إضافة حصص علاجية أو إثرائية على لجنة التوجيه والإرشاد', responsibility: 'وكيل المدرسة للشؤون التعليمية', follow: 'مدير المدرسة', duration: 'بعد التقويم', indicator: 'تحليلات + توصيات', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt5', text: 'متابعة تقييم أداء الطلاب وتطور مستوى تحصيلهم الدراسي، والإشراف الكامل على الإجراءات المتعلقة بذلك منذ بدايتها وحتى انتهائها', responsibility: 'وكيل المدرسة للشؤون التعليمية', follow: 'مدير المدرسة', duration: 'مستمر', indicator: 'سجلات الأداء', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt6', text: 'متابعة مستوى تقدم الطلاب وأدائهم مع معلمي الصف فيما يتعلق بالأهداف المحددة لكل مادة مستهدفة، والتأكد من الالتزام بإجراءات المتابعة', responsibility: 'وكيل المدرسة للشؤون التعليمية', follow: 'مدير المدرسة', duration: 'مستمر', indicator: 'محاضر اجتماعات', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt7', text: 'متابعة التزام المعلمين بتخصيص الحصص العلاجية لتحسين نواتج التعلم للمواد المستهدفة', responsibility: 'وكيل المدرسة للشؤون التعليمية', follow: 'مدير المدرسة', duration: 'مستمر', indicator: 'جداول الحصص العلاجية', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt8', text: 'متابعة مستويات الطلاب التحصيلية (المعيدين والمتأخرين دراسياً ومتكرري الرسوب) والمساهمة في تحسين أداء الطلاب وزيادة نواتج تعلمهم من خلال البرامج المحفزة والعلاجية المناسبة بعد دراسة وتحليل وتفسير نتائج كل فترة مع وجود مقارنة بيانية قبل وبعد البرنامج العلاجي', responsibility: 'الموجه الطلابي', follow: 'وكيل المدرسة لشؤون الطلاب', duration: 'مستمر', indicator: 'برامج علاجية + مقارنات', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt9', text: 'متابعة التحسن في نواتج تعلم الطلاب (المعيدين والمتأخرين دراسياً ومتكرري الرسوب) لمعرفة جدوى الإجراءات المتخذة، وتقديم التقارير إلى لجنة التحصيل الدراسي', responsibility: 'الموجه الطلابي', follow: 'وكيل المدرسة لشؤون الطلاب', duration: 'مستمر', indicator: 'تقارير التحسن', status: 'not-started', notes: '', updated: '' },
+    { id: 'mgt10', text: 'دراسة حالات الطلاب (المعيدين والمتأخرين دراسياً ومتكرري الرسوب)، واقتراح الإجراءات المناسبة بالتنسيق مع معلمي المواد المستهدفة، وتقديم تقرير إلى لجنة التحصيل الدراسي لإقرار التوصيات المناسبة، ومتابعة تنفيذ التوصيات بعد اعتمادها من مدير المدرسة', responsibility: 'الموجه الطلابي', follow: 'وكيل المدرسة لشؤون الطلاب', duration: 'مستمر', indicator: 'دراسات الحالة', status: 'not-started', notes: '', updated: '' }
+  ],
+
+  // الوحدة 5: اللجان المدرسية (7 إجراءات)
+  committees: [
+    { id: 'com1', text: 'متابعة المستوى التحصيلي للطلاب بشكل دوري وتحليله، ودراسة نتائج الطلاب لدورة الاختبارات الوطنية (نافس) السابقة من جميع الجوانب، وإعداد التقارير اللازمة ورفعها لمدير المدرسة لمناقشتها مع اللجنة الإدارية', responsibility: 'لجنة التحصيل الدراسي', follow: 'مدير المدرسة', duration: 'مستمر', indicator: 'تحسن نسبة الأداء في الاختبارات الوطنية (نافس) بمعدل 5% عن خط الأساس لدورة عام (2024م)', status: 'not-started', notes: '', updated: '' },
+    { id: 'com2', text: 'تزويد معلمي المواد المستهدفة بالتقارير المعتمدة لتحليل نتائج الاختبارات الوطنية، وتوصيات اللجنة بشأنها', responsibility: 'لجنة التحصيل الدراسي', follow: 'مدير المدرسة', duration: 'مستمر', indicator: 'تقارير التحليل', status: 'not-started', notes: '', updated: '' },
+    { id: 'com3', text: 'مراجعة نتائج الاختبارات الوطنية الخاصة بالمدرسة وتقديم المقترحات لتعزيز نقاط القوة، ومعالجة نقاط الضعف', responsibility: 'لجنة التحصيل الدراسي', follow: 'مدير المدرسة', duration: 'مستمر', indicator: 'خطة تعزيز ومعالجة', status: 'not-started', notes: '', updated: '' },
+    { id: 'com4', text: 'تقديم الدعم للهيئة التعليمية حول المفاهيم والأسس والآليات التي تبنى عليها الاختبارات الوطنية والدولية، وتوفير جميع المتطلبات اللازمة للطلاب قبل تنفيذ الاختبارات', responsibility: 'لجنة التحصيل الدراسي', follow: 'مدير المدرسة', duration: 'بعد التقويم', indicator: 'دورات تدريبية', status: 'not-started', notes: '', updated: '' },
+    { id: 'com5', text: 'دراسة إضافة حصص علاجية أو إثرائية للمواد المستهدفة، بالتنسيق مع لجنة التحصيل الدراسي، على ألا يترتب على ذلك مبالغ مالية على الطلاب أو تعويض مادي للمعلمين، وتكون في فراغات جداول المعلمين بما يكمل أنصبتهم الرسمية ولا يخل بخطة المدرسة', responsibility: 'لجنة التوجيه الطلابي', follow: 'وكيل المدرسة لشؤون الطلاب', duration: 'مستمر', indicator: 'جداول حصص علاجية', status: 'not-started', notes: '', updated: '' },
+    { id: 'com6', text: 'تشجيع المعلمين على تبادل أفضل الممارسات التدريسية لرفع المستوى التحصيلي للطلاب، واقتراح التوصيات اللازمة في تطوير طرق التدريس وأساليب التقويم', responsibility: 'لجنة التميّز', follow: 'مدير المدرسة', duration: 'مستمر', indicator: 'محاضر تبادل الممارسات', status: 'not-started', notes: '', updated: '' },
+    { id: 'com7', text: 'مناقشة تقارير الاختبارات الوطنية والدولية وإقرار التوصيات المناسبة لها', responsibility: 'اللجنة الإدارية', follow: 'مدير المدرسة', duration: 'بعد صدور بطاقات أداء المدرسة', indicator: 'محاضر اللجنة الإدارية', status: 'not-started', notes: '', updated: '' }
+  ],
+
+  // الوحدة 6: سجل المتابعة
+  trackingRecords: []
+};
+
+// =============================================================
+// 2) إدارة الحالة (State Management)
+// =============================================================
+const STORAGE_KEY = 'nafes_platform_data_v1';
+let state = loadState();
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      // دمج البيانات المحفوظة مع الافتراضية للحفاظ على البنية
+      return mergeDeep(JSON.parse(JSON.stringify(DEFAULT_PLAN_DATA)), parsed);
+    }
+  } catch (e) { console.error('Load error:', e); }
+  return JSON.parse(JSON.stringify(DEFAULT_PLAN_DATA));
+}
+
+function mergeDeep(target, source) {
+  for (const key in source) {
+    if (source[key] && typeof source[key] === 'object' && !Array.isArray(source[key])) {
+      target[key] = mergeDeep(target[key] || {}, source[key]);
+    } else {
+      target[key] = source[key];
+    }
+  }
+  return target;
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch (e) {
+    showToast('فشل حفظ البيانات: ربما الذاكرة ممتلئة', 'error');
+  }
+}
+
+// =============================================================
+// 3) دوال مساعدة
+// =============================================================
+function $(id) { return document.getElementById(id); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+function formatDate(date) {
+  if (!date) return '--';
+  const d = new Date(date);
+  return d.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+function getHijriDate() {
+  try {
+    return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    }).format(new Date());
+  } catch(e) {
+    return '1447هـ';
+  }
+}
+
+function getGregDate() {
+  return new Intl.DateTimeFormat('ar', {
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+  }).format(new Date());
+}
+
+function updateDates() {
+  $('hijri-date').textContent = getHijriDate();
+  $('greg-date').textContent = getGregDate();
+}
+
+// =============================================================
+// 4) Toast Notifications
+// =============================================================
+function showToast(message, type = 'success') {
+  const container = $('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  const icons = {
+    success: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>',
+    error: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+    warning: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>'
+  };
+  toast.innerHTML = `
+    <div class="toast-icon">${icons[type] || icons.success}</div>
+    <div class="flex-1 font-medium">${message}</div>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('hide');
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
+}
+
+// =============================================================
+// 5) التنقل بين الصفحات (Routing)
+// =============================================================
+function navigate(page) {
+  // تحديث الشريط الجانبي
+  $$('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.page === page);
+  });
+  // إغلاق الشريط الجانبي على الجوال
+  $('sidebar').classList.remove('open');
+  // عرض الصفحة المطلوبة
+  renderPage(page);
+  // التمرير لأعلى
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleSidebar() {
+  $('sidebar').classList.toggle('open');
+}
+
+// =============================================================
+// 6) محرك الإحصائيات
+// =============================================================
+function calculateStats() {
+  const stats = {
+    total: 0,
+    completed: 0,
+    inProgress: 0,
+    notStarted: 0,
+    teachers: { total: 0, done: 0 },
+    management: { total: 0, done: 0 },
+    committees: { total: 0, done: 0 },
+    intensive: { total: 0, done: 0 }
+  };
+
+  // الخطة المكثفة
+  state.intensive.forEach(g => {
+    g.actions.forEach(a => {
+      stats.total++;
+      stats.intensive.total++;
+      if (a.done) { stats.completed++; stats.intensive.done++; }
+      else { stats.notStarted++; }
+    });
+  });
+
+  // معلمون
+  state.teachers.forEach(t => {
+    stats.total++;
+    stats.teachers.total++;
+    if (t.status === 'completed') { stats.completed++; stats.teachers.done++; }
+    else if (t.status === 'in-progress') { stats.inProgress++; }
+    else { stats.notStarted++; }
+  });
+
+  // إدارة
+  state.management.forEach(t => {
+    stats.total++;
+    stats.management.total++;
+    if (t.status === 'completed') { stats.completed++; stats.management.done++; }
+    else if (t.status === 'in-progress') { stats.inProgress++; }
+    else { stats.notStarted++; }
+  });
+
+  // لجان
+  state.committees.forEach(t => {
+    stats.total++;
+    stats.committees.total++;
+    if (t.status === 'completed') { stats.completed++; stats.committees.done++; }
+    else if (t.status === 'in-progress') { stats.inProgress++; }
+    else { stats.notStarted++; }
+  });
+
+  stats.percentage = stats.total === 0 ? 0 : Math.round((stats.completed / stats.total) * 100);
+  return stats;
+}
+
+function updateSidebarProgress() {
+  const stats = calculateStats();
+  $('sidebar-progress').textContent = stats.percentage + '%';
+  $('sidebar-progress-bar').style.width = stats.percentage + '%';
+}
+
+// CountUp animation
+function countUp(element, target, duration = 1500) {
+  const start = 0;
+  const increment = target / (duration / 16);
+  let current = start;
+  const isPercent = element.dataset.percent === 'true';
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+      // Confetti at 100%
+      if (target === 100 && isPercent) {
+        celebrateCompletion();
+      }
+    }
+    element.textContent = Math.round(current) + (isPercent ? '%' : '');
+  }, 16);
+}
+
+function celebrateCompletion() {
+  if (typeof confetti !== 'undefined') {
+    const duration = 3000;
+    const animationEnd = Date.now() + duration;
+    const interval = setInterval(() => {
+      const timeLeft = animationEnd - Date.now();
+      if (timeLeft <= 0) return clearInterval(interval);
+      confetti({
+        particleCount: 3,
+        startVelocity: 30,
+        spread: 360,
+        origin: { x: Math.random(), y: Math.random() * 0.5 },
+        colors: ['#006C35', '#C9A961', '#E5C988', '#00A050', '#FFFFFF']
+      });
+    }, 250);
+  }
+}
+
+
+// =============================================================
+// 7) صفحة لوحة المعلومات (Dashboard)
+// =============================================================
+function renderDashboard() {
+  const stats = calculateStats();
+  const settings = state.settings;
+
+  return `
+    <div class="mb-8 fade-in">
+      <h2 class="section-title">لوحة المعلومات</h2>
+      <p class="section-subtitle">نظرة شاملة على تنفيذ خطة تحسين نواتج التعلم للاختبارات الوطنية</p>
+    </div>
+
+    <!-- شريط الترحيب -->
+    <div class="glass-card p-6 mb-6 fade-in" style="background: linear-gradient(135deg, rgba(0,108,53,0.08), rgba(201,169,97,0.08));">
+      <div class="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h3 class="text-2xl font-bold mb-1">${settings.schoolName}</h3>
+          <p class="opacity-70">${settings.educationDept} • ${settings.academicYear}</p>
+        </div>
+        <div class="text-left">
+          <div class="text-sm opacity-70">إجمالي تقدم الخطة</div>
+          <div class="text-4xl font-bold" style="color: var(--saudi-green);">${stats.percentage}%</div>
+        </div>
+      </div>
+      <div class="progress-bar mt-4">
+        <div class="progress-fill" style="width: ${stats.percentage}%"></div>
+      </div>
+    </div>
+
+    <!-- البطاقات الإحصائية -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="stat-card fade-in">
+        <div class="stat-icon" style="background: rgba(0,108,53,0.12); color: var(--saudi-green);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+        </div>
+        <div class="stat-value" data-percent="true" data-target="${stats.percentage}">0%</div>
+        <div class="stat-label">نسبة تنفيذ الخطة</div>
+        <div class="progress-bar progress-mini mt-3">
+          <div class="progress-fill" style="width: ${stats.percentage}%"></div>
+        </div>
+      </div>
+
+      <div class="stat-card fade-in">
+        <div class="stat-icon" style="background: rgba(201,169,97,0.15); color: var(--royal-gold-dark);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+        </div>
+        <div class="stat-value" data-target="${stats.completed}">0</div>
+        <div class="stat-label">المنفذ من أصل ${stats.total} إجراء</div>
+      </div>
+
+      <div class="stat-card fade-in">
+        <div class="stat-icon" style="background: rgba(0,108,53,0.12); color: var(--saudi-green);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+        </div>
+        <div class="stat-value" data-target="${settings.studentsCount || 0}">0</div>
+        <div class="stat-label">الطلاب المستهدفون</div>
+      </div>
+
+      <div class="stat-card fade-in">
+        <div class="stat-icon" style="background: rgba(0,108,53,0.12); color: var(--saudi-green);">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+        </div>
+        <div class="stat-value" data-percent="true" data-target="5">0%</div>
+        <div class="stat-label">التحسن المستهدف عن خط الأساس 2024</div>
+      </div>
+    </div>
+
+    <!-- الرسوم البيانية -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div class="glass-card p-6 fade-in">
+        <h3 class="font-bold mb-4 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--saudi-green)"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
+          توزيع التنفيذ
+        </h3>
+        <div style="height: 280px; position: relative;">
+          <canvas id="chart-doughnut"></canvas>
+        </div>
+      </div>
+
+      <div class="glass-card p-6 fade-in lg:col-span-2">
+        <h3 class="font-bold mb-4 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--saudi-green)"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+          تقدم التنفيذ حسب المحور
+        </h3>
+        <div style="height: 280px; position: relative;">
+          <canvas id="chart-bar"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ملخص سريع -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 fade-in">
+      ${[
+        { title: 'الخطة المكثفة', total: stats.intensive.total, done: stats.intensive.done, page: 'intensive', color: 'rgba(0,108,53,0.15)', textColor: 'var(--saudi-green)' },
+        { title: 'إجراءات المعلمين', total: stats.teachers.total, done: stats.teachers.done, page: 'teachers', color: 'rgba(201,169,97,0.18)', textColor: 'var(--royal-gold-dark)' },
+        { title: 'التشكيلات + اللجان', total: stats.management.total + stats.committees.total, done: stats.management.done + stats.committees.done, page: 'management', color: 'rgba(0,108,53,0.12)', textColor: 'var(--saudi-green)' }
+      ].map(s => `
+        <div class="glass-card p-5 cursor-pointer" onclick="navigate('${s.page}')">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold">${s.title}</span>
+            <span class="badge">${s.done} / ${s.total}</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: ${s.total ? Math.round(s.done/s.total*100) : 0}%"></div>
+          </div>
+          <div class="text-sm opacity-70 mt-2">${s.total ? Math.round(s.done/s.total*100) : 0}% من الإجراءات منفذة</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function initDashboardCharts() {
+  const stats = calculateStats();
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  const textColor = isDark ? '#F0F2EE' : '#1A1F1C';
+  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+
+  // الرسم الدائري
+  const ctxDoughnut = document.getElementById('chart-doughnut');
+  if (ctxDoughnut) {
+    new Chart(ctxDoughnut, {
+      type: 'doughnut',
+      data: {
+        labels: ['منفذ', 'قيد التنفيذ', 'لم يبدأ'],
+        datasets: [{
+          data: [stats.completed, stats.inProgress, stats.notStarted],
+          backgroundColor: ['#006C35', '#C9A961', '#9CA3AF'],
+          borderWidth: 0,
+          hoverOffset: 8
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        cutout: '68%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            rtl: true,
+            labels: { color: textColor, font: { family: 'Tajawal', size: 13 }, padding: 15 }
+          }
+        }
+      }
+    });
+  }
+
+  // الرسم الشريطي
+  const ctxBar = document.getElementById('chart-bar');
+  if (ctxBar) {
+    new Chart(ctxBar, {
+      type: 'bar',
+      data: {
+        labels: ['الخطة المكثفة', 'المعلمون', 'التشكيلات', 'اللجان'],
+        datasets: [
+          {
+            label: 'المنفذ',
+            data: [stats.intensive.done, stats.teachers.done, stats.management.done, stats.committees.done],
+            backgroundColor: '#006C35',
+            borderRadius: 8
+          },
+          {
+            label: 'المتبقي',
+            data: [
+              stats.intensive.total - stats.intensive.done,
+              stats.teachers.total - stats.teachers.done,
+              stats.management.total - stats.management.done,
+              stats.committees.total - stats.committees.done
+            ],
+            backgroundColor: 'rgba(201,169,97,0.6)',
+            borderRadius: 8
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', rtl: true, labels: { color: textColor, font: { family: 'Tajawal' } } }
+        },
+        scales: {
+          x: { ticks: { color: textColor, font: { family: 'Tajawal' } }, grid: { display: false } },
+          y: { ticks: { color: textColor, font: { family: 'Tajawal' } }, grid: { color: gridColor }, beginAtZero: true, stacked: false }
+        }
+      }
+    });
+  }
+
+  // تشغيل CountUp
+  $$('.stat-value[data-target]').forEach(el => {
+    countUp(el, parseInt(el.dataset.target));
+  });
+}
+
+// =============================================================
+// 8) صفحة الخطة الإجرائية المكثفة
+// =============================================================
+function renderIntensive() {
+  let html = `
+    <div class="mb-6 fade-in">
+      <h2 class="section-title">الخطة الإجرائية المكثفة</h2>
+      <p class="section-subtitle">3 أهداف رئيسية لتحسين أداء المدرسة في اختبارات نافس 2026</p>
+    </div>
+  `;
+
+  state.intensive.forEach((goal, idx) => {
+    const done = goal.actions.filter(a => a.done).length;
+    const total = goal.actions.length;
+    const percent = total ? Math.round(done/total*100) : 0;
+
+    html += `
+      <div class="accordion fade-in" id="acc-${goal.id}">
+        <div class="accordion-header" onclick="toggleAccordion('${goal.id}')">
+          <div class="accordion-number">${idx + 1}</div>
+          <div class="flex-1 min-w-0">
+            <h3 class="font-bold text-base md:text-lg mb-1 truncate">${goal.title}</h3>
+            <div class="flex items-center gap-3 flex-wrap text-sm">
+              <span class="opacity-70">📅 ${goal.executionTime}</span>
+              <span class="badge">${done} / ${total}</span>
+            </div>
+            <div class="progress-bar progress-mini mt-2" style="max-width: 240px;">
+              <div class="progress-fill" style="width: ${percent}%"></div>
+            </div>
+          </div>
+          <svg class="chevron" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </div>
+        <div class="accordion-body">
+          <div class="accordion-content space-y-5">
+            <div>
+              <h4 class="font-bold mb-3 flex items-center gap-2"><span class="w-1 h-5 rounded-full" style="background: var(--saudi-green)"></span>إجراءات التنفيذ</h4>
+              <div class="space-y-2">
+                ${goal.actions.map(a => `
+                  <div class="flex items-start gap-3 p-3 rounded-xl cursor-pointer hover:bg-opacity-50" style="background: rgba(0,108,53,0.04)" onclick="toggleAction('${goal.id}', '${a.id}')">
+                    <div class="custom-checkbox ${a.done ? 'checked' : ''}"></div>
+                    <span class="flex-1 ${a.done ? 'line-through opacity-60' : ''}">${a.text}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl" style="background: rgba(201,169,97,0.08)">
+                <div class="text-xs font-bold mb-2 opacity-70">🛠 وسيلة التنفيذ</div>
+                <div class="text-sm">${goal.means}</div>
+              </div>
+              <div class="p-4 rounded-xl" style="background: rgba(0,108,53,0.06)">
+                <div class="text-xs font-bold mb-2 opacity-70">📊 مؤشر التنفيذ</div>
+                <div class="text-sm">${goal.indicator}</div>
+              </div>
+              <div class="p-4 rounded-xl" style="background: rgba(0,108,53,0.06)">
+                <div class="text-xs font-bold mb-2 opacity-70">👤 الجهة المنفذة</div>
+                <div class="text-sm">${goal.executor}</div>
+              </div>
+              <div class="p-4 rounded-xl" style="background: rgba(201,169,97,0.08)">
+                <div class="text-xs font-bold mb-2 opacity-70">🤝 الجهة المساندة</div>
+                <div class="text-sm">${goal.supporter}</div>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-sm font-bold mb-2">📅 وقت التنفيذ (قابل للتعديل)</label>
+              <input type="text" class="input-field" value="${goal.executionTime || ''}" placeholder="مثال: من 5/7/1447هـ إلى 12/9/1447هـ" onchange="updateIntensiveDate('${goal.id}', this.value)">
+              <p class="text-xs opacity-60 mt-1">يمكنك إدخال التاريخ بصيغة هجرية أو ميلادية حسب رغبتك</p>
+            </div>
+
+            <div>
+              <label class="block text-sm font-bold mb-2">📝 ملاحظات وشواهد</label>
+              <textarea class="input-field" rows="3" placeholder="أضف ملاحظاتك وأي شواهد على التنفيذ..." onchange="updateIntensiveNotes('${goal.id}', this.value)">${goal.notes || ''}</textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-bold mb-2">📎 صورة شاهد التنفيذ</label>
+              <input type="file" accept="image/*" class="input-field" onchange="uploadIntensiveImage('${goal.id}', event)">
+              ${goal.attachment ? `<div class="mt-3"><img src="${goal.attachment}" class="rounded-xl max-h-48 border" style="border-color: var(--border-color)"></div>` : ''}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  return html;
+}
+
+function toggleAccordion(id) {
+  $('acc-' + id).classList.toggle('open');
+}
+
+function toggleAction(goalId, actionId) {
+  const goal = state.intensive.find(g => g.id === goalId);
+  if (!goal) return;
+  const action = goal.actions.find(a => a.id === actionId);
+  if (!action) return;
+  action.done = !action.done;
+  saveState();
+  updateSidebarProgress();
+  // إعادة عرض الصفحة الحالية
+  const wasOpen = $('acc-' + goalId).classList.contains('open');
+  renderPage('intensive');
+  if (wasOpen) setTimeout(() => $('acc-' + goalId).classList.add('open'), 50);
+  showToast(action.done ? '✓ تم تأشير الإجراء كمنفذ' : 'تم إلغاء تأشير الإجراء', 'success');
+}
+
+function updateIntensiveNotes(goalId, value) {
+  const goal = state.intensive.find(g => g.id === goalId);
+  if (goal) {
+    goal.notes = value;
+    saveState();
+  }
+}
+
+function updateIntensiveDate(goalId, value) {
+  const goal = state.intensive.find(g => g.id === goalId);
+  if (goal) {
+    goal.executionTime = value;
+    saveState();
+    // تحديث رأس الأكورديون بدون إعادة رسم كاملة
+    const wasOpen = $('acc-' + goalId).classList.contains('open');
+    renderPage('intensive');
+    if (wasOpen) setTimeout(() => $('acc-' + goalId).classList.add('open'), 50);
+    showToast('تم تحديث تاريخ التنفيذ', 'success');
+  }
+}
+
+function uploadIntensiveImage(goalId, event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+    showToast('حجم الصورة كبير جداً، يجب أن يكون أقل من 2 ميجابايت', 'error');
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const goal = state.intensive.find(g => g.id === goalId);
+    if (goal) {
+      goal.attachment = e.target.result;
+      saveState();
+      renderPage('intensive');
+      setTimeout(() => $('acc-' + goalId).classList.add('open'), 50);
+      showToast('تم رفع الصورة بنجاح', 'success');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+
+// =============================================================
+// 9) صفحات الجداول (المعلمون، التشكيلات، اللجان)
+// =============================================================
+function renderTablePage(category, title, subtitle, icon) {
+  const items = state[category];
+
+  return `
+    <div class="mb-6 fade-in flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <h2 class="section-title">${title}</h2>
+        <p class="section-subtitle">${subtitle}</p>
+      </div>
+      <button class="btn-gold" onclick="exportTableExcel('${category}')">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        تصدير Excel
+      </button>
+    </div>
+
+    <div class="glass-card overflow-hidden fade-in">
+      <div class="overflow-x-auto scroll-fade">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">م</th>
+              <th style="min-width: 350px;">إجراءات التنفيذ</th>
+              <th style="min-width: 160px;">مسؤولية التنفيذ</th>
+              <th style="min-width: 140px;">المتابعة</th>
+              <th style="min-width: 100px;">مدة التنفيذ</th>
+              <th style="min-width: 130px;">الحالة</th>
+              <th style="min-width: 180px;">الملاحظات</th>
+              <th style="width: 120px;">آخر تحديث</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${items.map((item, idx) => `
+              <tr>
+                <td class="font-bold text-center">${idx + 1}</td>
+                <td class="text-sm leading-relaxed">${item.text}</td>
+                <td class="text-sm">${item.responsibility}</td>
+                <td class="text-sm">${item.follow}</td>
+                <td class="text-sm">
+                  <input type="text" class="input-field text-xs" style="padding: 0.4rem 0.6rem; min-width: 100px;" value="${item.duration || ''}" placeholder="المدة..." onchange="updateItemDuration('${category}', '${item.id}', this.value)">
+                </td>
+                <td>
+                  <select class="status-pill status-${item.status}" onchange="updateItemStatus('${category}', '${item.id}', this.value)">
+                    <option value="not-started" ${item.status === 'not-started' ? 'selected' : ''}>لم يبدأ</option>
+                    <option value="in-progress" ${item.status === 'in-progress' ? 'selected' : ''}>جارٍ التنفيذ</option>
+                    <option value="completed" ${item.status === 'completed' ? 'selected' : ''}>منجز</option>
+                  </select>
+                </td>
+                <td>
+                  <textarea class="input-field text-xs" rows="2" placeholder="ملاحظات..." onchange="updateItemNotes('${category}', '${item.id}', this.value)">${item.notes || ''}</textarea>
+                </td>
+                <td class="text-xs opacity-70">${item.updated || '—'}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4 fade-in">
+      <div class="glass-card p-5">
+        <div class="text-sm opacity-70 mb-1">إجمالي الإجراءات</div>
+        <div class="text-3xl font-bold">${items.length}</div>
+      </div>
+      <div class="glass-card p-5" style="border-right: 4px solid var(--saudi-green)">
+        <div class="text-sm opacity-70 mb-1">المنجزة</div>
+        <div class="text-3xl font-bold" style="color: var(--saudi-green)">${items.filter(i => i.status === 'completed').length}</div>
+      </div>
+      <div class="glass-card p-5" style="border-right: 4px solid var(--royal-gold)">
+        <div class="text-sm opacity-70 mb-1">قيد التنفيذ</div>
+        <div class="text-3xl font-bold" style="color: var(--royal-gold-dark)">${items.filter(i => i.status === 'in-progress').length}</div>
+      </div>
+    </div>
+  `;
+}
+
+function updateItemStatus(category, id, status) {
+  const item = state[category].find(i => i.id === id);
+  if (item) {
+    item.status = status;
+    item.updated = new Date().toLocaleDateString('ar-SA');
+    saveState();
+    updateSidebarProgress();
+    renderPage(category);
+    showToast('تم تحديث حالة الإجراء', 'success');
+    // Check for 100% completion
+    const stats = calculateStats();
+    if (stats.percentage === 100) {
+      setTimeout(() => celebrateCompletion(), 500);
+    }
+  }
+}
+
+function updateItemNotes(category, id, value) {
+  const item = state[category].find(i => i.id === id);
+  if (item) {
+    item.notes = value;
+    item.updated = new Date().toLocaleDateString('ar-SA');
+    saveState();
+  }
+}
+
+function updateItemDuration(category, id, value) {
+  const item = state[category].find(i => i.id === id);
+  if (item) {
+    item.duration = value;
+    item.updated = new Date().toLocaleDateString('ar-SA');
+    saveState();
+  }
+}
+
+// =============================================================
+// 10) صفحة سجل المتابعة
+// =============================================================
+let trackingFilter = 'all';
+let trackingSearch = '';
+
+function renderTracking() {
+  let records = state.trackingRecords;
+
+  // تصفية
+  if (trackingFilter !== 'all') {
+    records = records.filter(r => r.status === trackingFilter);
+  }
+
+  // بحث
+  if (trackingSearch) {
+    const q = trackingSearch.toLowerCase();
+    records = records.filter(r =>
+      (r.action || '').toLowerCase().includes(q) ||
+      (r.indicator || '').toLowerCase().includes(q) ||
+      (r.reasons || '').toLowerCase().includes(q)
+    );
+  }
+
+  return `
+    <div class="mb-6 fade-in flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <h2 class="section-title">نظام المتابعة</h2>
+        <p class="section-subtitle">سجل تفصيلي لتنفيذ الإجراءات وأسباب التأخير</p>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        <button class="btn-primary" onclick="openTrackingModal()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          إضافة سجل
+        </button>
+        <button class="btn-outline" onclick="exportTrackingExcel()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline></svg>
+          Excel
+        </button>
+        <button class="btn-outline" onclick="exportTrackingPDF()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          PDF
+        </button>
+      </div>
+    </div>
+
+    <div class="glass-card p-4 mb-6 fade-in">
+      <div class="flex gap-3 flex-wrap items-center">
+        <div class="flex-1 min-w-[200px]">
+          <div class="relative">
+            <input type="text" class="input-field pr-10" placeholder="🔍 بحث في السجلات..." value="${trackingSearch}" oninput="trackingSearch = this.value; renderPage('tracking')">
+          </div>
+        </div>
+        <div class="flex gap-2 flex-wrap">
+          ${[
+            { value: 'all', label: 'الكل' },
+            { value: 'نُفذ', label: 'منفذ' },
+            { value: 'جارٍ التنفيذ', label: 'جارٍ' },
+            { value: 'لم يُنفذ', label: 'لم يُنفذ' }
+          ].map(f => `
+            <button class="px-4 py-2 rounded-xl text-sm font-semibold transition-all ${trackingFilter === f.value ? 'btn-primary' : 'btn-outline'}" onclick="trackingFilter = '${f.value}'; renderPage('tracking')">${f.label}</button>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    ${records.length === 0 ? `
+      <div class="glass-card p-12 text-center fade-in">
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color: var(--text-secondary); margin: 0 auto 1rem; opacity: 0.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>
+        <h3 class="text-lg font-bold mb-2">لا توجد سجلات متابعة بعد</h3>
+        <p class="opacity-70 mb-4">ابدأ بإضافة أول سجل لمتابعة تنفيذ الإجراءات</p>
+        <button class="btn-primary" onclick="openTrackingModal()">إضافة سجل جديد</button>
+      </div>
+    ` : `
+      <div class="glass-card overflow-hidden fade-in">
+        <div class="overflow-x-auto scroll-fade">
+          <table class="data-table" id="tracking-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">م</th>
+                <th style="min-width: 240px;">إجراء التنفيذ</th>
+                <th>التاريخ المخطط</th>
+                <th>الحالة</th>
+                <th style="min-width: 180px;">أسباب عدم التنفيذ</th>
+                <th>التاريخ المقترح</th>
+                <th>مؤشر التحقق</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${records.map((r, idx) => `
+                <tr>
+                  <td class="text-center font-bold">${idx + 1}</td>
+                  <td class="text-sm">${r.action || '—'}</td>
+                  <td class="text-sm">${r.datePlanned ? formatDate(r.datePlanned) : '—'}</td>
+                  <td>
+                    <span class="status-pill ${r.status === 'نُفذ' ? 'status-completed' : r.status === 'جارٍ التنفيذ' ? 'status-in-progress' : 'status-not-started'}">
+                      <span class="status-dot"></span>${r.status}
+                    </span>
+                  </td>
+                  <td class="text-sm">${r.reasons || '—'}</td>
+                  <td class="text-sm">${r.dateProposed ? formatDate(r.dateProposed) : '—'}</td>
+                  <td class="text-sm">${r.indicator || '—'}</td>
+                  <td>
+                    <div class="flex gap-1">
+                      <button class="icon-btn" style="width: 32px; height: 32px;" onclick="editTrackingRecord('${r.id}')" title="تعديل">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                      </button>
+                      <button class="btn-danger" style="padding: 0.4rem 0.6rem;" onclick="deleteTrackingRecord('${r.id}')">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"></path></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    `}
+  `;
+}
+
+function openTrackingModal(id = null) {
+  $('tracking-modal-title').textContent = id ? 'تعديل سجل المتابعة' : 'إضافة سجل متابعة';
+  if (id) {
+    const r = state.trackingRecords.find(x => x.id === id);
+    if (r) {
+      $('tracking-id').value = r.id;
+      $('tracking-action').value = r.action || '';
+      $('tracking-date-planned').value = r.datePlanned || '';
+      $('tracking-status').value = r.status || 'نُفذ';
+      $('tracking-reasons').value = r.reasons || '';
+      $('tracking-date-proposed').value = r.dateProposed || '';
+      $('tracking-indicator').value = r.indicator || '';
+    }
+  } else {
+    $('tracking-id').value = '';
+    $('tracking-action').value = '';
+    $('tracking-date-planned').value = '';
+    $('tracking-status').value = 'نُفذ';
+    $('tracking-reasons').value = '';
+    $('tracking-date-proposed').value = '';
+    $('tracking-indicator').value = '';
+  }
+  $('tracking-modal').classList.add('show');
+}
+
+function closeTrackingModal() {
+  $('tracking-modal').classList.remove('show');
+}
+
+function saveTrackingRecord() {
+  const id = $('tracking-id').value;
+  const data = {
+    action: $('tracking-action').value.trim(),
+    datePlanned: $('tracking-date-planned').value,
+    status: $('tracking-status').value,
+    reasons: $('tracking-reasons').value.trim(),
+    dateProposed: $('tracking-date-proposed').value,
+    indicator: $('tracking-indicator').value.trim()
+  };
+
+  if (!data.action) {
+    showToast('يجب إدخال إجراء التنفيذ', 'error');
+    return;
+  }
+
+  if (id) {
+    const r = state.trackingRecords.find(x => x.id === id);
+    if (r) Object.assign(r, data);
+    showToast('تم تعديل السجل بنجاح', 'success');
+  } else {
+    state.trackingRecords.push({ id: 'trk_' + Date.now(), ...data });
+    showToast('تم إضافة السجل بنجاح', 'success');
+  }
+
+  saveState();
+  closeTrackingModal();
+  renderPage('tracking');
+}
+
+function editTrackingRecord(id) {
+  openTrackingModal(id);
+}
+
+function deleteTrackingRecord(id) {
+  if (!confirm('هل أنت متأكد من حذف هذا السجل؟')) return;
+  state.trackingRecords = state.trackingRecords.filter(r => r.id !== id);
+  saveState();
+  renderPage('tracking');
+  showToast('تم حذف السجل', 'success');
+}
+
+
+// =============================================================
+// 11) صفحة التقارير والتحليلات
+// =============================================================
+function renderReports() {
+  const stats = calculateStats();
+  const recommendations = generateRecommendations(stats);
+
+  return `
+    <div class="mb-6 fade-in flex items-center justify-between flex-wrap gap-3">
+      <div>
+        <h2 class="section-title">التقارير والتحليلات الذكية</h2>
+        <p class="section-subtitle">رؤى تحليلية وتوصيات مبنية على بيانات تنفيذ الخطة</p>
+      </div>
+      <div class="flex gap-2 flex-wrap">
+        <button class="btn-primary" onclick="generateFullReport()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          توليد تقرير PDF كامل
+        </button>
+        <button class="btn-gold" onclick="window.print()">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          طباعة
+        </button>
+      </div>
+    </div>
+
+    <!-- التحليل الذكي والتوصيات -->
+    <div class="glass-card p-6 mb-6 fade-in">
+      <h3 class="font-bold text-xl mb-4 flex items-center gap-2">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--gradient-gold); color: white;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 2a1 1 0 0 1 1 1v2h4V3a1 1 0 0 1 2 0v2h2a2 2 0 0 1 2 2v2h2a1 1 0 0 1 0 2h-2v4h2a1 1 0 0 1 0 2h-2v2a2 2 0 0 1-2 2h-2v2a1 1 0 0 1-2 0v-2h-4v2a1 1 0 0 1-2 0v-2H7a2 2 0 0 1-2-2v-2H3a1 1 0 0 1 0-2h2v-4H3a1 1 0 0 1 0-2h2V7a2 2 0 0 1 2-2h2V3a1 1 0 0 1 1-1z"></path></svg>
+        </div>
+        التحليل الذكي والتوصيات
+      </h3>
+      <p class="text-sm opacity-70 mb-4">توصيات مبنية على تحليل واقع تنفيذ الخطة في الوقت الحالي</p>
+
+      <div class="space-y-3">
+        ${recommendations.map(r => `
+          <div class="rec-card ${r.type}">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style="background: ${r.type === 'critical' ? 'rgba(220,38,38,0.12)' : r.type === 'warning' ? 'rgba(201,169,97,0.15)' : 'rgba(0,108,53,0.12)'}; color: ${r.type === 'critical' ? '#DC2626' : r.type === 'warning' ? 'var(--royal-gold-dark)' : 'var(--saudi-green)'};">
+                ${r.icon}
+              </div>
+              <div class="flex-1">
+                <h4 class="font-bold mb-1">${r.title}</h4>
+                <p class="text-sm opacity-80">${r.message}</p>
+              </div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <!-- الجدول الزمني -->
+    <div class="glass-card p-6 mb-6 fade-in">
+      <h3 class="font-bold text-xl mb-6 flex items-center gap-2">
+        <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: var(--gradient-primary); color: white;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </div>
+        المخطط الزمني للخطة المكثفة
+      </h3>
+      <div class="timeline">
+        ${state.intensive.map((g, idx) => {
+          const done = g.actions.filter(a => a.done).length;
+          const total = g.actions.length;
+          const completed = done === total;
+          return `
+            <div class="timeline-item">
+              <div class="timeline-marker ${completed ? 'completed' : ''}">${completed ? '' : `<span style="font-size: 0.75rem; font-weight: bold; color: var(--saudi-green);">${idx + 1}</span>`}</div>
+              <div class="pr-2">
+                <h4 class="font-bold text-base mb-1">${g.title}</h4>
+                <div class="text-sm opacity-70 mb-2">📅 ${g.executionTime}</div>
+                <div class="flex items-center gap-3">
+                  <div class="flex-1 progress-bar progress-mini" style="max-width: 200px;">
+                    <div class="progress-fill" style="width: ${total ? (done/total*100) : 0}%"></div>
+                  </div>
+                  <span class="badge">${done}/${total}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- مخطط مقارن -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 fade-in">
+      <div class="glass-card p-6">
+        <h3 class="font-bold mb-4">مقارنة الإنجاز بين المحاور</h3>
+        <div style="height: 280px;"><canvas id="report-chart-1"></canvas></div>
+      </div>
+      <div class="glass-card p-6">
+        <h3 class="font-bold mb-4">نسبة تنفيذ كل محور</h3>
+        <div style="height: 280px;"><canvas id="report-chart-2"></canvas></div>
+      </div>
+    </div>
+  `;
+}
+
+function generateRecommendations(stats) {
+  const recs = [];
+  const checkIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+  const warnIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>';
+  const critIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>';
+  const trophyIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>';
+
+  // نسبة التنفيذ الكلية
+  if (stats.percentage < 25) {
+    recs.push({ type: 'critical', icon: critIcon, title: 'تنبيه: نسبة التنفيذ منخفضة جداً', message: `نسبة التنفيذ الحالية ${stats.percentage}%. يُنصح بعقد اجتماع طارئ مع فريق نافس لمراجعة الخطة ووضع جدول زمني عاجل للتنفيذ.` });
+  } else if (stats.percentage < 50) {
+    recs.push({ type: 'warning', icon: warnIcon, title: 'حالة التنفيذ تحتاج تسريع', message: `نسبة التنفيذ ${stats.percentage}%. ينبغي تكثيف الجهود وتفعيل الإجراءات المتبقية، خاصة في محاور المعلمين والتشكيلات.` });
+  } else if (stats.percentage < 80) {
+    recs.push({ type: 'info', icon: checkIcon, title: 'التنفيذ يسير بشكل جيد', message: `نسبة التنفيذ ${stats.percentage}%. استمرار في النهج الحالي مع التركيز على إكمال الإجراءات المتأخرة.` });
+  } else if (stats.percentage < 100) {
+    recs.push({ type: 'success', icon: trophyIcon, title: 'أداء متميز - اللمسات الأخيرة', message: `نسبة التنفيذ ${stats.percentage}%. تبقى القليل لإكمال الخطة، ينصح بمراجعة الإجراءات المتبقية وتكريم الفريق.` });
+  } else {
+    recs.push({ type: 'success', icon: trophyIcon, title: 'إنجاز كامل! 🎉', message: 'تم تنفيذ جميع إجراءات الخطة بنسبة 100%. يُوصى بتوثيق التجربة وإعداد تقرير ختامي شامل.' });
+  }
+
+  // محور المعلمين
+  if (stats.teachers.total > 0) {
+    const teachersPercent = (stats.teachers.done / stats.teachers.total) * 100;
+    if (teachersPercent < 50) {
+      recs.push({ type: 'warning', icon: warnIcon, title: 'محور المعلمين يحتاج اهتماماً', message: `إنجاز المعلمين ${Math.round(teachersPercent)}%. يُوصى بعقد اجتماع مهني مع معلمي المواد المستهدفة (رياضيات/علوم/قراءة) لاستعراض المهارات المستهدفة وتنشيط المجتمعات المهنية.` });
+    }
+  }
+
+  // الفهم القرائي
+  const readingAction = state.teachers.find(t => t.id === 'tch7');
+  if (readingAction && readingAction.status !== 'completed') {
+    recs.push({ type: 'info', icon: warnIcon, title: 'تذكير: حصص الفهم القرائي', message: 'لم يتم تنفيذ تخصيص حصص الفهم القرائي بعد. هذه الحصص أساسية لتحسين أداء الطلاب في اختبارات نافس للقراءة.' });
+  }
+
+  // التشكيلات
+  if (stats.management.total > 0) {
+    const mgtPercent = (stats.management.done / stats.management.total) * 100;
+    if (mgtPercent > 80) {
+      recs.push({ type: 'success', icon: trophyIcon, title: 'إدارة فعّالة', message: `محور التشكيلات المدرسية حقق ${Math.round(mgtPercent)}%. الإدارة تقوم بدور قيادي ممتاز في تنفيذ الخطة.` });
+    }
+  }
+
+  // الخطة المكثفة
+  if (stats.intensive.total > 0) {
+    const intPercent = (stats.intensive.done / stats.intensive.total) * 100;
+    if (intPercent === 100) {
+      recs.push({ type: 'success', icon: trophyIcon, title: 'اكتمال الخطة المكثفة', message: 'تم إنجاز جميع إجراءات الخطة الإجرائية المكثفة. يُوصى بتكريم الطلاب والمعلمين المتميزين.' });
+    }
+  }
+
+  // إذا لم تكن هناك توصيات سلبية، أضف توصية عامة
+  if (recs.length === 1 && recs[0].type === 'info') {
+    recs.push({ type: 'info', icon: checkIcon, title: 'توصية عامة', message: 'استمرار في توثيق الإجراءات بإضافة صور وشواهد لتدعيم التقارير الختامية وتسهيل عرضها على الإدارة التعليمية.' });
+  }
+
+  return recs;
+}
+
+function initReportCharts() {
+  const stats = calculateStats();
+  const isDark = document.documentElement.dataset.theme === 'dark';
+  const textColor = isDark ? '#F0F2EE' : '#1A1F1C';
+  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)';
+
+  const c1 = document.getElementById('report-chart-1');
+  if (c1) {
+    new Chart(c1, {
+      type: 'radar',
+      data: {
+        labels: ['الخطة المكثفة', 'المعلمون', 'التشكيلات', 'اللجان'],
+        datasets: [{
+          label: 'نسبة الإنجاز %',
+          data: [
+            stats.intensive.total ? Math.round(stats.intensive.done/stats.intensive.total*100) : 0,
+            stats.teachers.total ? Math.round(stats.teachers.done/stats.teachers.total*100) : 0,
+            stats.management.total ? Math.round(stats.management.done/stats.management.total*100) : 0,
+            stats.committees.total ? Math.round(stats.committees.done/stats.committees.total*100) : 0
+          ],
+          backgroundColor: 'rgba(0, 108, 53, 0.2)',
+          borderColor: '#006C35',
+          borderWidth: 2,
+          pointBackgroundColor: '#C9A961',
+          pointBorderColor: '#fff',
+          pointRadius: 5
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { rtl: true, labels: { color: textColor, font: { family: 'Tajawal' } } }
+        },
+        scales: {
+          r: {
+            beginAtZero: true, max: 100,
+            ticks: { color: textColor, backdropColor: 'transparent' },
+            grid: { color: gridColor },
+            pointLabels: { color: textColor, font: { family: 'Tajawal', size: 13 } },
+            angleLines: { color: gridColor }
+          }
+        }
+      }
+    });
+  }
+
+  const c2 = document.getElementById('report-chart-2');
+  if (c2) {
+    new Chart(c2, {
+      type: 'polarArea',
+      data: {
+        labels: ['الخطة المكثفة', 'المعلمون', 'التشكيلات', 'اللجان'],
+        datasets: [{
+          data: [
+            stats.intensive.total ? Math.round(stats.intensive.done/stats.intensive.total*100) : 0,
+            stats.teachers.total ? Math.round(stats.teachers.done/stats.teachers.total*100) : 0,
+            stats.management.total ? Math.round(stats.management.done/stats.management.total*100) : 0,
+            stats.committees.total ? Math.round(stats.committees.done/stats.committees.total*100) : 0
+          ],
+          backgroundColor: ['rgba(0,108,53,0.7)', 'rgba(201,169,97,0.7)', 'rgba(0,160,80,0.6)', 'rgba(156,127,63,0.6)'],
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'right', rtl: true, labels: { color: textColor, font: { family: 'Tajawal', size: 12 } } }
+        },
+        scales: {
+          r: {
+            beginAtZero: true, max: 100,
+            ticks: { color: textColor, backdropColor: 'transparent' },
+            grid: { color: gridColor }
+          }
+        }
+      }
+    });
+  }
+}
+
+// =============================================================
+// 12) محرك العرض الرئيسي (Router)
+// =============================================================
+function renderPage(page) {
+  const container = $('page-content');
+  switch(page) {
+    case 'dashboard':
+      container.innerHTML = renderDashboard();
+      setTimeout(initDashboardCharts, 50);
+      break;
+    case 'intensive':
+      container.innerHTML = renderIntensive();
+      break;
+    case 'teachers':
+      container.innerHTML = renderTablePage('teachers', 'خطة معلمي المواد المستهدفة', '8 إجراءات لمعلمي الرياضيات والعلوم واللغة العربية', 'teacher');
+      break;
+    case 'management':
+      container.innerHTML = renderTablePage('management', 'خطة التشكيلات المدرسية', '10 إجراءات لمدير المدرسة والوكيل والموجه الطلابي', 'management');
+      break;
+    case 'committees':
+      container.innerHTML = renderTablePage('committees', 'خطة اللجان المدرسية', '7 إجراءات للجان التحصيل والتوجيه والتميز والإدارية', 'committees');
+      break;
+    case 'tracking':
+      container.innerHTML = renderTracking();
+      break;
+    case 'reports':
+      container.innerHTML = renderReports();
+      setTimeout(initReportCharts, 50);
+      break;
+  }
+  updateSidebarProgress();
+}
+
+// =============================================================
+// 13) الوضع الليلي
+// =============================================================
+function toggleTheme() {
+  const current = document.documentElement.dataset.theme || 'light';
+  const next = current === 'light' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('nafes_theme', next);
+  updateThemeIcon(next);
+  // إعادة عرض الصفحة الحالية لتحديث الرسوم
+  const active = $$('.nav-item.active')[0];
+  if (active) renderPage(active.dataset.page);
+}
+
+function updateThemeIcon(theme) {
+  const icon = $('theme-icon');
+  if (theme === 'dark') {
+    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
+  } else {
+    icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+  }
+}
+
+
+// =============================================================
+// 14) الإعدادات
+// =============================================================
+function openSettings() {
+  $('settings-school').value = state.settings.schoolName || '';
+  $('settings-principal').value = state.settings.principalName || '';
+  $('settings-supervisor').value = state.settings.supervisorName || '';
+  $('settings-education').value = state.settings.educationDept || '';
+  $('settings-year').value = state.settings.academicYear || '';
+  $('settings-students').value = state.settings.studentsCount || 0;
+  
+  if (state.settings.logo) {
+    $('logo-preview').innerHTML = `<img src="${state.settings.logo}" class="h-20 rounded-lg border" style="border-color: var(--border-color)">`;
+  } else {
+    $('logo-preview').innerHTML = '';
+  }
+  
+  $('settings-modal').classList.add('show');
+}
+
+function closeSettings() {
+  $('settings-modal').classList.remove('show');
+}
+
+function closeModal(event, id) {
+  if (event.target.id === id) {
+    $(id).classList.remove('show');
+  }
+}
+
+function saveSettings() {
+  // قراءة القيم من الحقول مع الحفاظ على القيم القديمة إن كانت الحقول فارغة
+  const newSchool = $('settings-school').value.trim();
+  const newPrincipal = $('settings-principal').value.trim();
+  const newSupervisor = $('settings-supervisor').value.trim();
+  const newEducation = $('settings-education').value.trim();
+  const newYear = $('settings-year').value.trim();
+  const newStudents = $('settings-students').value;
+
+  // تحديث الحالة (state) — نسمح بالقيم الفارغة لكل الحقول الاختيارية
+  state.settings.schoolName = newSchool || state.settings.schoolName || 'مدرسة المرحلة المتوسطة';
+  state.settings.principalName = newPrincipal;
+  state.settings.supervisorName = newSupervisor;
+  state.settings.educationDept = newEducation || state.settings.educationDept || 'الإدارة العامة للتعليم';
+  state.settings.academicYear = newYear || state.settings.academicYear || '1447هـ';
+  state.settings.studentsCount = newStudents !== '' ? parseInt(newStudents) || 0 : (state.settings.studentsCount || 0);
+
+  // التعامل مع الشعار
+  const logoFile = $('settings-logo').files[0];
+
+  const finalizeSettings = () => {
+    saveState();
+    applyBrandSettings();
+    closeSettings();
+    showToast('✓ تم حفظ الإعدادات بنجاح', 'success');
+    // إعادة عرض الصفحة الحالية لإظهار التغييرات فوراً
+    const active = $$('.nav-item.active')[0];
+    if (active) renderPage(active.dataset.page);
+  };
+
+  if (logoFile) {
+    if (logoFile.size > 1024 * 1024) {
+      showToast('حجم الشعار يجب أن يكون أقل من 1 ميجابايت', 'error');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      state.settings.logo = e.target.result;
+      finalizeSettings();
+    };
+    reader.onerror = () => {
+      showToast('فشل قراءة ملف الشعار', 'error');
+    };
+    reader.readAsDataURL(logoFile);
+  } else {
+    finalizeSettings();
+  }
+}
+
+function applyBrandSettings() {
+  $('brand-school-name').textContent = state.settings.schoolName || 'منصة نافس الرقمية';
+  $('brand-school-tagline').textContent = state.settings.educationDept || 'إدارة خطة تحسين نواتج التعلم';
+}
+
+// =============================================================
+// التعديل المباشر للنصوص (Inline Edit)
+// =============================================================
+function enableInlineEdit(elementId, settingKey) {
+  const el = $(elementId);
+  if (!el || el.isContentEditable) return;
+
+  el.classList.add('editing');
+  el.setAttribute('contenteditable', 'true');
+  el.focus();
+
+  // تحديد النص بالكامل
+  const range = document.createRange();
+  range.selectNodeContents(el);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+
+  const finishEdit = () => {
+    el.classList.remove('editing');
+    el.removeAttribute('contenteditable');
+    const newValue = el.textContent.trim();
+    if (newValue && newValue !== state.settings[settingKey]) {
+      state.settings[settingKey] = newValue;
+      saveState();
+      showToast('✓ تم تحديث ' + (settingKey === 'schoolName' ? 'اسم المدرسة' : 'النص'), 'success');
+    } else if (!newValue) {
+      // إذا تم مسح النص، إعادة القيمة الافتراضية
+      el.textContent = state.settings[settingKey] || 'منصة نافس الرقمية';
+    }
+    el.removeEventListener('blur', finishEdit);
+    el.removeEventListener('keydown', handleKey);
+  };
+
+  const handleKey = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      el.blur();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      el.textContent = state.settings[settingKey] || 'منصة نافس الرقمية';
+      el.blur();
+    }
+  };
+
+  el.addEventListener('blur', finishEdit);
+  el.addEventListener('keydown', handleKey);
+}
+
+// =============================================================
+// 15) إعادة تعيين البيانات
+// =============================================================
+function resetData() {
+  if (!confirm('⚠️ سيتم مسح جميع البيانات والعودة للوضع الافتراضي. هل أنت متأكد؟')) return;
+  if (!confirm('تأكيد نهائي: لا يمكن التراجع بعد الحذف!')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = JSON.parse(JSON.stringify(DEFAULT_PLAN_DATA));
+  saveState();
+  applyBrandSettings();
+  closeSettings();
+  navigate('dashboard');
+  showToast('تم إعادة تعيين البيانات', 'success');
+}
+
+// =============================================================
+// 16) التصدير: Excel و PDF
+// =============================================================
+function exportTableExcel(category) {
+  const items = state[category];
+  const titles = {
+    teachers: 'خطة معلمي المواد المستهدفة',
+    management: 'التشكيلات المدرسية',
+    committees: 'اللجان المدرسية'
+  };
+  const data = [
+    ['م', 'إجراءات التنفيذ', 'مسؤولية التنفيذ', 'المتابعة', 'مدة التنفيذ', 'مؤشر الإنجاز', 'الحالة', 'الملاحظات', 'آخر تحديث']
+  ];
+  items.forEach((item, idx) => {
+    const statusText = item.status === 'completed' ? 'منجز' : item.status === 'in-progress' ? 'جارٍ التنفيذ' : 'لم يبدأ';
+    data.push([idx + 1, item.text, item.responsibility, item.follow, item.duration, item.indicator, statusText, item.notes || '', item.updated || '']);
+  });
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:5},{wch:60},{wch:30},{wch:25},{wch:15},{wch:35},{wch:15},{wch:30},{wch:15}];
+  ws['!rtl'] = true;
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, titles[category]);
+  XLSX.writeFile(wb, `${titles[category]}-${new Date().toISOString().slice(0,10)}.xlsx`);
+  showToast('تم تصدير الجدول إلى Excel', 'success');
+}
+
+function exportTrackingExcel() {
+  const data = [
+    ['م', 'إجراء التنفيذ', 'التاريخ المخطط', 'حالة المتابعة', 'أسباب عدم التنفيذ', 'التاريخ المقترح', 'مؤشر التحقق']
+  ];
+  state.trackingRecords.forEach((r, idx) => {
+    data.push([idx + 1, r.action || '', r.datePlanned || '', r.status || '', r.reasons || '', r.dateProposed || '', r.indicator || '']);
+  });
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [{wch:5},{wch:50},{wch:18},{wch:15},{wch:30},{wch:18},{wch:25}];
+  ws['!rtl'] = true;
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'سجل المتابعة');
+  XLSX.writeFile(wb, `سجل-المتابعة-${new Date().toISOString().slice(0,10)}.xlsx`);
+  showToast('تم تصدير سجل المتابعة', 'success');
+}
+
+function exportTrackingPDF() {
+  const records = state.trackingRecords;
+  const today = new Date();
+  const hijriToday = getHijriDate();
+
+  if (records.length === 0) {
+    showToast('لا توجد سجلات لتصديرها', 'warning');
+    return;
+  }
+
+  // عرض السجلات في صفحات A4 (أقصى ~15 سجل لكل صفحة)
+  const recordsPerPage = 15;
+  const pages = [];
+  for (let i = 0; i < records.length; i += recordsPerPage) {
+    pages.push(records.slice(i, i + recordsPerPage));
+  }
+
+  const html = `
+<div style="
+  direction: rtl;
+  font-family: 'Tajawal', 'Arial', sans-serif;
+  color: #1A1F1C;
+  background: white;
+  width: 210mm;
+  padding: 10mm;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+">
+  <!-- الترويسة -->
+  <div style="
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 4mm;
+    border-bottom: 1mm solid #006C35;
+    margin-bottom: 5mm;
+  ">
+    <div style="text-align: right;">
+      <div style="font-size: 9pt; color: #006C35; font-weight: 700;">${state.settings.educationDept || 'إدارة التعليم'}</div>
+      <div style="font-size: 11pt; color: #1A1F1C; font-weight: 800;">${state.settings.schoolName || 'المدرسة'}</div>
+    </div>
+    <div style="text-align: center;">
+      <h1 style="font-family: 'Amiri', serif; font-size: 15pt; color: #006C35; margin: 0; font-weight: 800;">سجل متابعة خطة نافس</h1>
+      <div style="font-size: 9pt; color: #C9A961; margin-top: 1mm; font-weight: 700;">${state.settings.academicYear || '1447هـ'}</div>
+    </div>
+    <div style="text-align: left;">
+      <div style="font-size: 8.5pt; color: #4A554F;">التاريخ: <span style="font-weight: 700;">${hijriToday}</span></div>
+      <div style="font-size: 8pt; color: #4A554F; margin-top: 0.5mm;">إجمالي السجلات: <span style="font-weight: 700; color: #006C35;">${records.length}</span></div>
+    </div>
+  </div>
+
+  <!-- الجدول -->
+  <table style="
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5pt;
+    page-break-inside: auto;
+  ">
+    <thead style="display: table-header-group;">
+      <tr style="background: linear-gradient(135deg, #006C35, #004D26); color: white;">
+        <th style="padding: 2.5mm; border: 0.3mm solid #006C35; width: 8mm; text-align: center; font-weight: 700;">م</th>
+        <th style="padding: 2.5mm; border: 0.3mm solid #006C35; text-align: right; font-weight: 700;">إجراء التنفيذ</th>
+        <th style="padding: 2.5mm; border: 0.3mm solid #006C35; width: 22mm; text-align: center; font-weight: 700;">التاريخ المخطط</th>
+        <th style="padding: 2.5mm; border: 0.3mm solid #006C35; width: 22mm; text-align: center; font-weight: 700;">الحالة</th>
+        <th style="padding: 2.5mm; border: 0.3mm solid #006C35; width: 30mm; text-align: right; font-weight: 700;">أسباب عدم التنفيذ</th>
+        <th style="padding: 2.5mm; border: 0.3mm solid #006C35; width: 22mm; text-align: center; font-weight: 700;">التاريخ المقترح</th>
+        <th style="padding: 2.5mm; border: 0.3mm solid #006C35; width: 28mm; text-align: right; font-weight: 700;">مؤشر التحقق</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${records.map((r, idx) => {
+        const statusColor = r.status === 'نُفذ' ? '#006C35' : r.status === 'جارٍ التنفيذ' ? '#C9A961' : '#DC2626';
+        const statusBg = r.status === 'نُفذ' ? '#F0FDF4' : r.status === 'جارٍ التنفيذ' ? '#FFFBEB' : '#FEF2F2';
+        return `
+          <tr style="background: ${idx % 2 === 0 ? '#FAFAF7' : '#ffffff'}; page-break-inside: avoid;">
+            <td style="padding: 2mm; border: 0.3mm solid #D1D5DB; text-align: center; font-weight: 700;">${idx + 1}</td>
+            <td style="padding: 2mm; border: 0.3mm solid #D1D5DB; line-height: 1.5;">${r.action || '—'}</td>
+            <td style="padding: 2mm; border: 0.3mm solid #D1D5DB; text-align: center; font-size: 7.5pt;">${r.datePlanned ? formatDate(r.datePlanned) : '—'}</td>
+            <td style="padding: 2mm; border: 0.3mm solid #D1D5DB; text-align: center;">
+              <span style="background: ${statusBg}; color: ${statusColor}; padding: 1mm 2mm; border-radius: 1.5mm; font-weight: 700; font-size: 7.5pt; border: 0.3mm solid ${statusColor};">${r.status || '—'}</span>
+            </td>
+            <td style="padding: 2mm; border: 0.3mm solid #D1D5DB; font-size: 7.5pt;">${r.reasons || '—'}</td>
+            <td style="padding: 2mm; border: 0.3mm solid #D1D5DB; text-align: center; font-size: 7.5pt;">${r.dateProposed ? formatDate(r.dateProposed) : '—'}</td>
+            <td style="padding: 2mm; border: 0.3mm solid #D1D5DB; font-size: 7.5pt;">${r.indicator || '—'}</td>
+          </tr>
+        `;
+      }).join('')}
+    </tbody>
+  </table>
+
+  <!-- ملخص -->
+  <div style="
+    margin-top: 5mm;
+    padding: 3mm;
+    background: linear-gradient(135deg, #F0F2EE, #FFF9E6);
+    border-right: 1mm solid #006C35;
+    border-radius: 2mm;
+    display: flex;
+    justify-content: space-around;
+    font-size: 9pt;
+  ">
+    <div style="text-align: center;">
+      <div style="color: #006C35; font-weight: 800; font-size: 14pt;">${records.filter(r => r.status === 'نُفذ').length}</div>
+      <div style="color: #4A554F; font-weight: 600; margin-top: 1mm;">منفذ</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="color: #C9A961; font-weight: 800; font-size: 14pt;">${records.filter(r => r.status === 'جارٍ التنفيذ').length}</div>
+      <div style="color: #4A554F; font-weight: 600; margin-top: 1mm;">جارٍ التنفيذ</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="color: #DC2626; font-weight: 800; font-size: 14pt;">${records.filter(r => r.status === 'لم يُنفذ').length}</div>
+      <div style="color: #4A554F; font-weight: 600; margin-top: 1mm;">لم يُنفذ</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="color: #1A1F1C; font-weight: 800; font-size: 14pt;">${records.length}</div>
+      <div style="color: #4A554F; font-weight: 600; margin-top: 1mm;">الإجمالي</div>
+    </div>
+  </div>
+
+  <!-- التوقيعات -->
+  <div style="
+    margin-top: 8mm;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6mm;
+    padding-top: 3mm;
+    border-top: 0.4mm dashed #C9A961;
+  ">
+    <div style="text-align: center;">
+      <div style="font-size: 9pt; color: #4A554F; font-weight: 700; margin-bottom: 8mm;">المشرف التربوي</div>
+      <div style="border-top: 0.4mm solid #1A1F1C; padding-top: 1mm; font-size: 8.5pt; font-weight: 700;">${state.settings.supervisorName || '...........................'}</div>
+    </div>
+    <div style="text-align: center;">
+      <div style="font-size: 9pt; color: #4A554F; font-weight: 700; margin-bottom: 8mm;">مدير المدرسة</div>
+      <div style="border-top: 0.4mm solid #1A1F1C; padding-top: 1mm; font-size: 8.5pt; font-weight: 700;">${state.settings.principalName || '...........................'}</div>
+    </div>
+  </div>
+
+  <!-- التذييل -->
+  <div style="
+    margin-top: 5mm;
+    text-align: center;
+    font-size: 7pt;
+    color: #9CA3AF;
+    padding-top: 2mm;
+    border-top: 0.2mm solid #E5E7EB;
+  ">
+    منصة نافس الرقمية © ${new Date().getFullYear()}م • تم التوليد في ${today.toLocaleString('ar-SA')}
+  </div>
+</div>
+`;
+
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'fixed';
+  wrapper.style.top = '-10000px';
+  wrapper.style.left = '0';
+  wrapper.style.width = '210mm';
+  wrapper.style.background = 'white';
+  wrapper.innerHTML = html;
+  document.body.appendChild(wrapper);
+
+  showToast('جارٍ تصدير سجل المتابعة بدقة 4K...', 'success');
+
+  html2pdf().set({
+    margin: 0,
+    filename: `سجل-المتابعة-${today.toISOString().slice(0,10)}.pdf`,
+    image: { type: 'jpeg', quality: 1.0 },
+    html2canvas: {
+      scale: 4,
+      useCORS: true,
+      letterRendering: true,
+      backgroundColor: '#ffffff',
+      dpi: 300,
+      logging: false
+    },
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait',
+      compress: true,
+      precision: 16
+    },
+    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+  }).from(wrapper.firstElementChild).save().then(() => {
+    document.body.removeChild(wrapper);
+    showToast('✓ تم تصدير ملف PDF بنجاح', 'success');
+  }).catch(err => {
+    console.error(err);
+    if (wrapper.parentNode) document.body.removeChild(wrapper);
+    showToast('فشل تصدير الملف', 'error');
+  });
+}
+
+function generateFullReport() {
+  const stats = calculateStats();
+  const settings = state.settings;
+  const recs = generateRecommendations(stats).slice(0, 4); // أهم 4 توصيات لتلائم الصفحة
+  const today = new Date();
+  const hijriToday = getHijriDate();
+  const gregToday = today.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  // حساب نسب المحاور
+  const intPct = stats.intensive.total ? Math.round(stats.intensive.done/stats.intensive.total*100) : 0;
+  const tchPct = stats.teachers.total ? Math.round(stats.teachers.done/stats.teachers.total*100) : 0;
+  const mgtPct = stats.management.total ? Math.round(stats.management.done/stats.management.total*100) : 0;
+  const comPct = stats.committees.total ? Math.round(stats.committees.done/stats.committees.total*100) : 0;
+
+  // التقرير: تصميم A4 عمودي محكم - 210mm x 297mm - صفحة واحدة فقط
+  const reportHTML = `
+<div class="print-report-a4" id="print-report-root" style="
+  direction: rtl;
+  font-family: 'Tajawal', 'Arial', sans-serif;
+  color: #1A1F1C;
+  background: #ffffff;
+  width: 210mm;
+  height: 297mm;
+  padding: 6mm 7mm;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+">
+
+  <!-- ============ الترويسة الرسمية ============ -->
+  <div style="
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 4mm;
+    border-bottom: 1.2mm solid #006C35;
+    margin-bottom: 4mm;
+  ">
+    <div style="text-align: right; flex: 1;">
+      <div style="font-size: 9pt; color: #006C35; font-weight: 700;">المملكة العربية السعودية</div>
+      <div style="font-size: 9pt; color: #4A554F; font-weight: 600;">وزارة التعليم</div>
+      <div style="font-size: 9pt; color: #4A554F; font-weight: 600;">${settings.educationDept || 'إدارة التعليم'}</div>
+      <div style="font-size: 10pt; color: #1A1F1C; font-weight: 800; margin-top: 1mm;">${settings.schoolName || 'المدرسة'}</div>
+    </div>
+    <div style="
+      width: 22mm;
+      height: 22mm;
+      background: linear-gradient(135deg, #006C35, #00A050);
+      border-radius: 4mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2pt 6pt rgba(0,108,53,0.25);
+    ">
+      ${settings.logo
+        ? `<img src="${settings.logo}" style="width: 90%; height: 90%; object-fit: contain; border-radius: 3mm; background: white;">`
+        : `<div style="color: white; font-family: 'Amiri', serif; font-weight: 800; font-size: 14pt; text-align: center; line-height: 1.1;">نافس</div>`
+      }
+    </div>
+    <div style="text-align: left; flex: 1;">
+      <div style="font-size: 8.5pt; color: #4A554F;">العام الدراسي: <span style="font-weight: 700; color: #006C35;">${settings.academicYear || '1447هـ'}</span></div>
+      <div style="font-size: 8.5pt; color: #4A554F; margin-top: 0.5mm;">التاريخ الهجري: <span style="font-weight: 600;">${hijriToday}</span></div>
+      <div style="font-size: 8.5pt; color: #4A554F; margin-top: 0.5mm;">التاريخ الميلادي: <span style="font-weight: 600;">${gregToday}</span></div>
+      <div style="font-size: 8pt; color: #C9A961; font-weight: 700; margin-top: 1mm;">رقم التقرير: ${Date.now().toString().slice(-6)}</div>
+    </div>
+  </div>
+
+  <!-- ============ العنوان الرئيسي ============ -->
+  <div style="text-align: center; margin-bottom: 4mm;">
+    <h1 style="
+      font-family: 'Amiri', serif;
+      font-size: 17pt;
+      color: #006C35;
+      margin: 0;
+      font-weight: 800;
+      letter-spacing: 0.3pt;
+    ">التقرير الشامل لخطة نافس</h1>
+    <div style="
+      font-size: 10pt;
+      color: #C9A961;
+      margin-top: 1mm;
+      font-weight: 700;
+    ">تحسين نواتج تعلم الاختبارات الوطنية ٢٠٢٦م</div>
+  </div>
+
+  <!-- ============ مؤشرات الأداء الرئيسية - 4 بطاقات ============ -->
+  <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5mm; margin-bottom: 4mm;">
+    <div style="
+      padding: 3mm;
+      background: linear-gradient(135deg, #006C35, #00A050);
+      border-radius: 2mm;
+      color: white;
+      text-align: center;
+      box-shadow: 0 1pt 3pt rgba(0,108,53,0.2);
+    ">
+      <div style="font-size: 18pt; font-weight: 800; line-height: 1;">${stats.percentage}<span style="font-size: 11pt;">%</span></div>
+      <div style="font-size: 8pt; margin-top: 1mm; opacity: 0.95; font-weight: 600;">نسبة تنفيذ الخطة</div>
+    </div>
+    <div style="
+      padding: 3mm;
+      background: linear-gradient(135deg, #C9A961, #E5C988);
+      border-radius: 2mm;
+      color: #5C4A1F;
+      text-align: center;
+      box-shadow: 0 1pt 3pt rgba(201,169,97,0.25);
+    ">
+      <div style="font-size: 18pt; font-weight: 800; line-height: 1;">${stats.completed}</div>
+      <div style="font-size: 8pt; margin-top: 1mm; font-weight: 600;">المنجز من ${stats.total}</div>
+    </div>
+    <div style="
+      padding: 3mm;
+      background: #F0F2EE;
+      border: 0.4mm solid #006C35;
+      border-radius: 2mm;
+      text-align: center;
+    ">
+      <div style="font-size: 18pt; font-weight: 800; line-height: 1; color: #006C35;">${settings.studentsCount || 0}</div>
+      <div style="font-size: 8pt; margin-top: 1mm; color: #4A554F; font-weight: 600;">الطلاب المستهدفون</div>
+    </div>
+    <div style="
+      padding: 3mm;
+      background: #F0F2EE;
+      border: 0.4mm solid #C9A961;
+      border-radius: 2mm;
+      text-align: center;
+    ">
+      <div style="font-size: 18pt; font-weight: 800; line-height: 1; color: #C9A961;">+5<span style="font-size: 11pt;">%</span></div>
+      <div style="font-size: 8pt; margin-top: 1mm; color: #4A554F; font-weight: 600;">التحسن المستهدف</div>
+    </div>
+  </div>
+
+  <!-- ============ شريط التقدم الرئيسي ============ -->
+  <div style="margin-bottom: 4mm;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 1.5mm;">
+      <span style="font-size: 9pt; font-weight: 700; color: #1A1F1C;">📊 التقدم الإجمالي للخطة</span>
+      <span style="font-size: 9pt; font-weight: 700; color: #006C35;">${stats.percentage}%</span>
+    </div>
+    <div style="
+      height: 4mm;
+      background: #E5E7EB;
+      border-radius: 2mm;
+      overflow: hidden;
+      position: relative;
+    ">
+      <div style="
+        width: ${stats.percentage}%;
+        height: 100%;
+        background: linear-gradient(90deg, #006C35, #00A050, #C9A961);
+        border-radius: 2mm;
+      "></div>
+    </div>
+  </div>
+
+  <!-- ============ الإحصائيات التفصيلية ============ -->
+  <div style="margin-bottom: 4mm;">
+    <h2 style="
+      font-size: 11pt;
+      color: #006C35;
+      margin: 0 0 2mm 0;
+      font-weight: 800;
+      border-right: 1.2mm solid #C9A961;
+      padding-right: 2mm;
+    ">📋 الإحصائيات التفصيلية حسب المحاور</h2>
+    <table style="
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8.5pt;
+    ">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #006C35, #004D26); color: white;">
+          <th style="padding: 2mm; border: 0.3mm solid #006C35; text-align: right; font-weight: 700;">المحور</th>
+          <th style="padding: 2mm; border: 0.3mm solid #006C35; text-align: center; font-weight: 700; width: 16mm;">الإجمالي</th>
+          <th style="padding: 2mm; border: 0.3mm solid #006C35; text-align: center; font-weight: 700; width: 16mm;">المنجز</th>
+          <th style="padding: 2mm; border: 0.3mm solid #006C35; text-align: center; font-weight: 700; width: 16mm;">المتبقي</th>
+          <th style="padding: 2mm; border: 0.3mm solid #006C35; text-align: center; font-weight: 700; width: 18mm;">النسبة</th>
+          <th style="padding: 2mm; border: 0.3mm solid #006C35; text-align: center; font-weight: 700;">مؤشر بصري</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${[
+          { name: 'الخطة الإجرائية المكثفة', total: stats.intensive.total, done: stats.intensive.done, pct: intPct },
+          { name: 'خطة معلمي المواد المستهدفة', total: stats.teachers.total, done: stats.teachers.done, pct: tchPct },
+          { name: 'خطة التشكيلات المدرسية', total: stats.management.total, done: stats.management.done, pct: mgtPct },
+          { name: 'خطة اللجان المدرسية', total: stats.committees.total, done: stats.committees.done, pct: comPct }
+        ].map((row, i) => `
+          <tr style="background: ${i % 2 === 0 ? '#FAFAF7' : '#ffffff'};">
+            <td style="padding: 1.8mm 2mm; border: 0.3mm solid #D1D5DB; font-weight: 600;">${row.name}</td>
+            <td style="padding: 1.8mm 2mm; border: 0.3mm solid #D1D5DB; text-align: center; font-weight: 700;">${row.total}</td>
+            <td style="padding: 1.8mm 2mm; border: 0.3mm solid #D1D5DB; text-align: center; color: #006C35; font-weight: 700;">${row.done}</td>
+            <td style="padding: 1.8mm 2mm; border: 0.3mm solid #D1D5DB; text-align: center; color: #C9A961; font-weight: 700;">${row.total - row.done}</td>
+            <td style="padding: 1.8mm 2mm; border: 0.3mm solid #D1D5DB; text-align: center; font-weight: 800; color: ${row.pct >= 75 ? '#006C35' : row.pct >= 50 ? '#C9A961' : '#DC2626'};">${row.pct}%</td>
+            <td style="padding: 1.8mm 2mm; border: 0.3mm solid #D1D5DB;">
+              <div style="height: 2.5mm; background: #E5E7EB; border-radius: 1.5mm; overflow: hidden;">
+                <div style="width: ${row.pct}%; height: 100%; background: linear-gradient(90deg, #006C35, #00A050); border-radius: 1.5mm;"></div>
+              </div>
+            </td>
+          </tr>
+        `).join('')}
+        <tr style="background: linear-gradient(135deg, #FFF9E6, #FEF3C7); font-weight: 800;">
+          <td style="padding: 2mm; border: 0.3mm solid #C9A961; color: #5C4A1F;">الإجمالي العام</td>
+          <td style="padding: 2mm; border: 0.3mm solid #C9A961; text-align: center; color: #5C4A1F;">${stats.total}</td>
+          <td style="padding: 2mm; border: 0.3mm solid #C9A961; text-align: center; color: #006C35;">${stats.completed}</td>
+          <td style="padding: 2mm; border: 0.3mm solid #C9A961; text-align: center; color: #C9A961;">${stats.total - stats.completed}</td>
+          <td style="padding: 2mm; border: 0.3mm solid #C9A961; text-align: center; color: #006C35; font-size: 10pt;">${stats.percentage}%</td>
+          <td style="padding: 2mm; border: 0.3mm solid #C9A961;">
+            <div style="height: 3mm; background: #E5E7EB; border-radius: 1.5mm; overflow: hidden;">
+              <div style="width: ${stats.percentage}%; height: 100%; background: linear-gradient(90deg, #006C35, #C9A961); border-radius: 1.5mm;"></div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ============ التوصيات الذكية ============ -->
+  <div style="margin-bottom: 3.5mm;">
+    <h2 style="
+      font-size: 11pt;
+      color: #006C35;
+      margin: 0 0 2mm 0;
+      font-weight: 800;
+      border-right: 1.2mm solid #C9A961;
+      padding-right: 2mm;
+    ">💡 التوصيات والملاحظات الإجرائية</h2>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2mm;">
+      ${recs.map((r, i) => {
+        const color = r.type === 'critical' ? '#DC2626' : r.type === 'warning' ? '#C9A961' : r.type === 'success' ? '#006C35' : '#00A050';
+        const bg = r.type === 'critical' ? '#FEF2F2' : r.type === 'warning' ? '#FFFBEB' : r.type === 'success' ? '#F0FDF4' : '#F0F9FF';
+        return `
+          <div style="
+            padding: 2.5mm;
+            background: ${bg};
+            border-right: 0.8mm solid ${color};
+            border-radius: 1.5mm;
+            border-top: 0.2mm solid ${color}30;
+            border-bottom: 0.2mm solid ${color}30;
+            border-left: 0.2mm solid ${color}30;
+          ">
+            <div style="font-size: 8.5pt; font-weight: 800; color: ${color}; margin-bottom: 1mm;">
+              ${i + 1}. ${r.title}
+            </div>
+            <div style="font-size: 8pt; color: #1A1F1C; line-height: 1.45;">${r.message}</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  </div>
+
+  <!-- ============ شريط الأهداف الاستراتيجية ============ -->
+  <div style="
+    background: linear-gradient(135deg, #006C35, #004D26);
+    color: white;
+    padding: 3mm;
+    border-radius: 2mm;
+    margin-bottom: 3mm;
+  ">
+    <div style="font-size: 9pt; font-weight: 800; margin-bottom: 1.5mm;">🎯 الأهداف الاستراتيجية للخطة:</div>
+    <div style="font-size: 8pt; line-height: 1.55;">
+      رفع نسبة أداء المدرسة في الاختبارات الوطنية (نافس) بمعدل ٥٪ عن خط الأساس لدورة عام ٢٠٢٤م، عبر تحقيق نواتج التعلم ومستويات الأداء الصادرة من هيئة تقويم التعليم في المواد الثلاث المستهدفة: الرياضيات والعلوم والقراءة، وتفعيل المجتمعات المهنية وحصص الفهم القرائي، وتنفيذ خطط علاجية وإثرائية للطلاب وفق احتياجاتهم الفردية.
+    </div>
+  </div>
+
+  <!-- ============ التوقيعات الرسمية ============ -->
+  <div style="
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4mm;
+    margin-top: auto;
+    padding-top: 3mm;
+    border-top: 0.5mm dashed #C9A961;
+  ">
+    <div style="text-align: center;">
+      <div style="font-size: 8.5pt; color: #4A554F; font-weight: 700; margin-bottom: 6mm;">معد التقرير</div>
+      <div style="border-top: 0.4mm solid #1A1F1C; padding-top: 1mm;">
+        <div style="font-size: 8pt; font-weight: 700; color: #1A1F1C;">${settings.supervisorName || '...........................'}</div>
+        <div style="font-size: 7pt; color: #6B7280; margin-top: 0.5mm;">المشرف التربوي</div>
+      </div>
+    </div>
+    <div style="text-align: center;">
+      <div style="font-size: 8.5pt; color: #4A554F; font-weight: 700; margin-bottom: 6mm;">المدقق</div>
+      <div style="border-top: 0.4mm solid #1A1F1C; padding-top: 1mm;">
+        <div style="font-size: 8pt; font-weight: 700; color: #1A1F1C;">...........................</div>
+        <div style="font-size: 7pt; color: #6B7280; margin-top: 0.5mm;">رئيس لجنة نافس</div>
+      </div>
+    </div>
+    <div style="text-align: center;">
+      <div style="font-size: 8.5pt; color: #4A554F; font-weight: 700; margin-bottom: 6mm;">المعتمد</div>
+      <div style="border-top: 0.4mm solid #1A1F1C; padding-top: 1mm;">
+        <div style="font-size: 8pt; font-weight: 700; color: #1A1F1C;">${settings.principalName || '...........................'}</div>
+        <div style="font-size: 7pt; color: #6B7280; margin-top: 0.5mm;">مدير المدرسة</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ التذييل ============ -->
+  <div style="
+    position: absolute;
+    bottom: 3mm;
+    left: 7mm;
+    right: 7mm;
+    text-align: center;
+    font-size: 6.5pt;
+    color: #9CA3AF;
+    padding-top: 1.5mm;
+    border-top: 0.2mm solid #E5E7EB;
+  ">
+    منصة نافس الرقمية © ${new Date().getFullYear()}م • صفحة 1 من 1 • تم التوليد في ${today.toLocaleString('ar-SA')}
+  </div>
+</div>
+`;
+
+  // إنشاء العنصر بأبعاد A4 محددة بدقة
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'fixed';
+  wrapper.style.top = '-10000px';
+  wrapper.style.left = '0';
+  wrapper.style.width = '210mm';
+  wrapper.style.height = '297mm';
+  wrapper.style.background = 'white';
+  wrapper.style.zIndex = '-1';
+  wrapper.innerHTML = reportHTML;
+  document.body.appendChild(wrapper);
+
+  showToast('جارٍ توليد التقرير بدقة 4K...', 'success');
+
+  // إعدادات html2pdf محسّنة لـ A4 صفحة واحدة + دقة 4K (300DPI)
+  const opt = {
+    margin: 0,
+    filename: `التقرير-الشامل-نافس-${today.toISOString().slice(0,10)}.pdf`,
+    image: {
+      type: 'jpeg',
+      quality: 1.0
+    },
+    html2canvas: {
+      scale: 4,                    // ⭐ دقة 4x = ~384DPI (أعلى من 300DPI للطباعة الاحترافية)
+      useCORS: true,
+      letterRendering: true,
+      allowTaint: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+      width: 794,                  // 210mm × 96 / 25.4 = 794px (A4 عرض دقيق)
+      height: 1123,                // 297mm × 96 / 25.4 = 1123px (A4 ارتفاع دقيق)
+      windowWidth: 794,
+      windowHeight: 1123,
+      x: 0,
+      y: 0,
+      scrollX: 0,
+      scrollY: 0,
+      foreignObjectRendering: false,
+      imageTimeout: 15000,
+      removeContainer: true
+    },
+    jsPDF: {
+      unit: 'mm',
+      format: 'a4',
+      orientation: 'portrait',
+      compress: true,
+      precision: 16,
+      hotfixes: ['px_scaling'],
+      putOnlyUsedFonts: true,
+      floatPrecision: 16
+    },
+    pagebreak: {
+      mode: ['avoid-all', 'css'],
+      avoid: ['.print-report-a4', 'table', 'tr', 'div', 'h1', 'h2', 'h3']
+    }
+  };
+
+  // التقاط العنصر بدقة عالية وضمان صفحة واحدة فقط
+  setTimeout(() => {
+    html2pdf()
+      .set(opt)
+      .from(wrapper.querySelector('.print-report-a4'))
+      .toPdf()
+      .get('pdf')
+      .then((pdf) => {
+        // إجبار صفحة واحدة فقط - حذف أي صفحات إضافية
+        const totalPages = pdf.internal.getNumberOfPages();
+        if (totalPages > 1) {
+          for (let i = totalPages; i > 1; i--) {
+            pdf.deletePage(i);
+          }
+        }
+        // إضافة بيانات وصفية للملف
+        pdf.setProperties({
+          title: 'التقرير الشامل لخطة نافس',
+          subject: 'تحسين نواتج تعلم الاختبارات الوطنية',
+          author: state.settings.schoolName || 'منصة نافس',
+          keywords: 'نافس, تعليم, خطة, تقرير',
+          creator: 'منصة نافس الرقمية'
+        });
+      })
+      .save()
+      .then(() => {
+        if (wrapper.parentNode) document.body.removeChild(wrapper);
+        showToast('✓ تم توليد التقرير بدقة 4K بنجاح', 'success');
+      })
+      .catch(err => {
+        console.error('PDF error:', err);
+        if (wrapper.parentNode) document.body.removeChild(wrapper);
+        showToast('فشل توليد التقرير، حاول مرة أخرى', 'error');
+      });
+  }, 300);
+}
+
+// =============================================================
+// 17) اختصارات لوحة المفاتيح
+// =============================================================
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    saveState();
+    showToast('تم حفظ البيانات', 'success');
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+    e.preventDefault();
+    window.print();
+  }
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
+    e.preventDefault();
+    toggleTheme();
+  }
+  if (e.key === 'Escape') {
+    $$('.modal-overlay.show').forEach(m => m.classList.remove('show'));
+  }
+});
+
+// =============================================================
+// 18) التهيئة الرئيسية (Initialization)
+// =============================================================
+function init() {
+  // استرجاع الوضع الليلي
+  const savedTheme = localStorage.getItem('nafes_theme') || 'light';
+  document.documentElement.dataset.theme = savedTheme;
+  updateThemeIcon(savedTheme);
+
+  // تطبيق الإعدادات
+  applyBrandSettings();
+  updateDates();
+  setInterval(updateDates, 60000);
+
+  // عرض لوحة المعلومات
+  renderPage('dashboard');
+
+  // إخفاء شاشة الترحيب
+  setTimeout(() => {
+    $('splash').classList.add('hide');
+    setTimeout(() => $('splash').remove(), 700);
+  }, 1500);
+
+  // ترحيب أول مرة
+  if (!localStorage.getItem('nafes_welcomed')) {
+    setTimeout(() => {
+      showToast('مرحباً بك في منصة نافس! يمكنك تخصيص الإعدادات من زر ⚙️', 'success');
+      localStorage.setItem('nafes_welcomed', '1');
+    }, 2000);
+  }
+}
+
+// إغلاق المودال عند الضغط خارجه
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('modal-overlay')) {
+    e.target.classList.remove('show');
+  }
+});
+
+// انطلاق المنصة
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+</script>
+</body>
+</html>

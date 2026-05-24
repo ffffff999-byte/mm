@@ -227,117 +227,255 @@
         }
 
         /* ======================================================= */
-        /* إعدادات الطباعة (حل مشكلة كبر الخط واختفاء النصوص)      */
+        /* إعدادات الطباعة A4 عمودي - صفحة واحدة قدر الإمكان       */
         /* ======================================================= */
         @media print {
-            /* جعل الطباعة بالعرض (Landscape) لضمان مساحة واسعة للجدول */
             @page {
-                size: A4 landscape;
-                margin: 10mm; /* تقليل الهوامش للاستفادة من المساحة */
+                size: A4 portrait;
+                margin: 10mm;
             }
 
             * {
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                box-sizing: border-box !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
             }
 
-            body { 
-                background: white !important; 
-                padding: 0; 
-                font-size: 11pt !important; /* تصغير الخط بشكل دقيق للطباعة */
-                color: #000 !important;
-            }
-
-            .container { 
-                box-shadow: none !important; 
-                border: none !important; 
-                max-width: 100% !important; 
-                width: 100% !important;
-                border-top: none !important;
-            }
-
-            /* إخفاء الأزرار الملونة */
-            .btn-ai, .actions { display: none !important; }
-            
-            .header { padding: 5px 0 15px 0; border-bottom: 2px solid #0f766e; margin-bottom: 15px;}
-            .header h1 { font-size: 16pt !important; color: #0f766e !important; }
-            .header p { font-size: 12pt !important; color: #333 !important; }
-            
-            .section { padding: 10px 0; border-bottom: none; page-break-inside: auto; }
-            .section-title { 
-                font-size: 14pt !important; 
-                padding: 6px 10px; 
-                margin-bottom: 10px; 
-                color: #0f766e !important; 
-                background-color: #f1f5f9 !important;
-                border-right: 4px solid #f59e0b !important;
-            }
-            
-            /* تصغير الفراغات في الحقول العلوية */
-            .grid-3, .grid-2 { gap: 10px; margin-bottom: 10px; }
-            .form-group label { font-size: 10pt !important; color: #000 !important;}
-            input, select { 
-                padding: 4px; 
-                font-size: 11pt !important; 
-                border: none !important; 
-                border-bottom: 1px solid #94a3b8 !important; 
-                background: transparent !important; 
-                color: #000 !important;
-                height: 25px;
-            }
-
-            /* ضبط الجداول بدقة لمنع الخروج عن الإطار */
-            .data-table { 
-                font-size: 10.5pt !important; 
-                margin-bottom: 15px; 
-                page-break-inside: auto; 
-                border-collapse: collapse;
-                width: 100%;
-                table-layout: fixed; /* ضروري لضبط العرض */
-            }
-            
-            /* توزيع مقاسات الأعمدة بدقة للورقة */
-            .data-table th:nth-child(1) { width: 10%; } /* المجال */
-            .data-table th:nth-child(2) { width: 15%; } /* العنصر */
-            .data-table th:nth-child(3) { width: 15%; } /* الاحتياج */
-            .data-table th:nth-child(4) { width: 30%; } /* الإجراءات - الأكبر مساحة */
-            .data-table th:nth-child(5) { width: 12%; } /* أساليب */
-            .data-table th:nth-child(6) { width: 8%; }  /* المدة */
-            .data-table th:nth-child(7) { width: 10%; } /* التنفيذ */
-
-            .data-table tr { 
-                page-break-inside: avoid !important; /* يمنع انقسام الصف */
-                page-break-after: auto; 
-            }
-            .data-table th { 
-                background-color: #0f766e !important; 
-                color: #ffffff !important; 
-                padding: 8px 4px !important;
-                border: 1px solid #333 !important;
-                font-size: 10.5pt !important;
-            }
-            .data-table td { 
-                border: 1px solid #666 !important; 
+            html,
+            body {
+                width: 210mm !important;
+                height: 297mm !important;
+                min-height: 297mm !important;
+                max-height: 297mm !important;
+                margin: 0 !important;
                 padding: 0 !important;
+                overflow: hidden !important;
+                background: #ffffff !important;
+                color: #111827 !important;
+                font-size: 6.8pt !important;
+                line-height: 1.16 !important;
             }
 
-            /* حاويات النصوص المرنة في الطباعة */
-            .editable-text {
-                font-size: 10.5pt !important;
-                line-height: 1.4 !important; 
-                padding: 6px !important; /* تقليل الحشوة الداخلية لترك مساحة للنص */
-                min-height: auto !important;
-                border: none !important;
-                color: #000 !important;
+            body {
+                display: block !important;
+            }
+
+            .container {
+                width: 190mm !important;
+                max-width: 190mm !important;
+                height: 277mm !important;
+                max-height: 277mm !important;
+                margin: 0 auto !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                border-radius: 0 !important;
+                border-top: 3px solid var(--primary) !important;
+                box-shadow: none !important;
+                background: #ffffff !important;
+            }
+
+            .actions,
+            .btn-ai,
+            .ai-btn-container,
+            .footer {
+                display: none !important;
+                visibility: hidden !important;
+                height: 0 !important;
+                min-height: 0 !important;
+                max-height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
                 overflow: hidden !important;
             }
 
-            .editable-text.center-text {
-                color: #0f766e !important;
+            .header {
+                padding: 3mm 2mm 2.2mm !important;
+                margin: 0 !important;
+                border-bottom: 1px solid #0f766e !important;
+                background: #ffffff !important;
             }
-            
-            .footer {
-                display: none !important; /* إخفاء التذييل في الطباعة لمنع التشتت */
+
+            .header h1 {
+                margin: 0 !important;
+                font-size: 11pt !important;
+                line-height: 1.15 !important;
+                color: #0f766e !important;
+                font-weight: 800 !important;
+            }
+
+            .header p {
+                margin: 1mm 0 0 !important;
+                font-size: 7.6pt !important;
+                line-height: 1.1 !important;
+                color: #334155 !important;
+            }
+
+            .section {
+                padding: 2mm 0 !important;
+                margin: 0 !important;
+                border-bottom: 0 !important;
+                overflow: hidden !important;
+            }
+
+            .section-title {
+                font-size: 8.4pt !important;
+                line-height: 1.1 !important;
+                padding: 1.4mm 2mm !important;
+                margin: 0 0 1.6mm !important;
+                color: #0f766e !important;
+                background-color: #ecfdf5 !important;
+                border-right: 3px solid #f59e0b !important;
+                border-radius: 2mm !important;
+            }
+
+            .grid-3,
+            .grid-2 {
+                display: grid !important;
+                gap: 1.2mm !important;
+                margin: 0 0 1.2mm !important;
+            }
+
+            .grid-3 { grid-template-columns: repeat(3, 1fr) !important; }
+            .grid-2 { grid-template-columns: repeat(2, 1fr) !important; }
+
+            .form-group {
+                gap: 0.6mm !important;
+                margin: 0 !important;
+            }
+
+            .form-group label {
+                font-size: 6.4pt !important;
+                line-height: 1.05 !important;
+                color: #0f766e !important;
+                font-weight: 700 !important;
+            }
+
+            input[type="text"],
+            input[type="number"],
+            select {
+                height: 5.8mm !important;
+                min-height: 5.8mm !important;
+                padding: 0.8mm 1mm !important;
+                border: 0.35pt solid #94a3b8 !important;
+                border-radius: 1.2mm !important;
+                background: #ffffff !important;
+                color: #111827 !important;
+                font-size: 6.6pt !important;
+                line-height: 1.05 !important;
+                box-shadow: none !important;
+            }
+
+            .data-table {
+                width: 100% !important;
+                table-layout: fixed !important;
+                border-collapse: collapse !important;
+                margin: 0 0 1.4mm !important;
+                font-size: 5.85pt !important;
+                line-height: 1.08 !important;
+            }
+
+            .data-table th:nth-child(1), .data-table td:nth-child(1) { width: 9% !important; }
+            .data-table th:nth-child(2), .data-table td:nth-child(2) { width: 16% !important; }
+            .data-table th:nth-child(3), .data-table td:nth-child(3) { width: 17% !important; }
+            .data-table th:nth-child(4), .data-table td:nth-child(4) { width: 29% !important; }
+            .data-table th:nth-child(5), .data-table td:nth-child(5) { width: 13% !important; }
+            .data-table th:nth-child(6), .data-table td:nth-child(6) { width: 7% !important; }
+            .data-table th:nth-child(7), .data-table td:nth-child(7) { width: 9% !important; }
+
+            .data-table th,
+            .data-table td {
+                border: 0.35pt solid #475569 !important;
+                padding: 0 !important;
+                vertical-align: top !important;
+                overflow: hidden !important;
+            }
+
+            .data-table th {
+                background: #0f766e !important;
+                color: #ffffff !important;
+                font-size: 5.8pt !important;
+                line-height: 1.08 !important;
+                font-weight: 800 !important;
+                padding: 1mm 0.7mm !important;
+                text-align: center !important;
+            }
+
+            .data-table tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+
+            .editable-text {
+                min-height: 8mm !important;
+                max-height: 18mm !important;
+                padding: 1mm 1.1mm !important;
+                border: 0 !important;
+                background: transparent !important;
+                color: #111827 !important;
+                font-size: 5.75pt !important;
+                line-height: 1.13 !important;
+                white-space: pre-wrap !important;
+                word-break: break-word !important;
+                overflow: hidden !important;
+                text-align: right !important;
+            }
+
+            .editable-text.center-text {
+                min-height: 8mm !important;
+                max-height: 18mm !important;
+                color: #0f766e !important;
+                text-align: center !important;
+                align-items: center !important;
+                justify-content: center !important;
+                font-weight: 800 !important;
+            }
+
+            .section:last-of-type,
+            .section[style] {
+                padding-top: 1.5mm !important;
+                overflow: hidden !important;
+            }
+
+            .section:last-of-type .editable-text,
+            .section[style] .editable-text {
+                min-height: 10mm !important;
+                max-height: 18mm !important;
+                padding: 1.2mm !important;
+                border: 0.35pt solid #cbd5e1 !important;
+                border-radius: 1.5mm !important;
+                background: #f8fafc !important;
+                font-size: 6.1pt !important;
+            }
+
+            .section:last-of-type .grid-2,
+            .section[style] .grid-2 {
+                margin-top: 2mm !important;
+                padding-top: 1.5mm !important;
+                border-top: 0.35pt dashed #94a3b8 !important;
+                font-size: 6.5pt !important;
+            }
+
+            .section:last-of-type p,
+            .section[style] p {
+                margin: 0 0 1mm !important;
+                line-height: 1.05 !important;
+            }
+
+            .section:last-of-type input,
+            .section[style] input {
+                width: 45mm !important;
+                height: 5.8mm !important;
+                text-align: center !important;
+            }
+
+            .section:last-of-type .grid-2 div div,
+            .section[style] .grid-2 div div {
+                width: 26mm !important;
+                height: 13mm !important;
+                max-height: 13mm !important;
+                border: 0.35pt dashed #94a3b8 !important;
             }
         }
     </style>

@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>منصة إسناد المواد الدراسية</title>
+    <style>
+        /* المتغيرات الأساسية للألوان (نسق احترافي يناسب التعليم) */
+        :root {
+            --primary-color: #0f766e; /* أخضر مزرق أنيق */
+            --secondary-color: #115e59;
+            --accent-color: #d97706; /* ذهبي للإبراز */
+            --bg-color: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.8;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid var(--primary-color);
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* تصميم التبويبات التفاعلية للشاشة */
+        @media screen {
+            .tabs-nav {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-bottom: 30px;
+                flex-wrap: wrap;
+            }
+
+            .tab-btn {
+                background: #f1f5f9;
+                border: 2px solid transparent;
+                padding: 12px 24px;
+                border-radius: 50px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: bold;
+                color: var(--text-muted);
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .tab-btn:hover {
+                background: #e2e8f0;
+                color: var(--primary-color);
+            }
+
+            .tab-btn.active {
+                background: var(--primary-color);
+                color: var(--white);
+                border-color: var(--secondary-color);
+                box-shadow: 0 4px 10px rgba(15, 118, 110, 0.3);
+            }
+
+            .tab-content {
+                display: none;
+                animation: fadeIn 0.5s ease-in-out;
+            }
+
+            .tab-content.active {
+                display: block;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* الجداول والتنسيق الداخلي */
+        h2 {
+            color: var(--secondary-color);
+            border-right: 5px solid var(--accent-color);
+            padding-right: 15px;
+            margin-top: 30px;
+            background: #f8fafc;
+            padding: 10px 15px 10px 0;
+            border-radius: 4px;
+        }
+
+        .rules-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rules-list li {
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            position: relative;
+            padding-right: 45px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .rules-list li::before {
+            content: "✓";
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            background: var(--primary-color);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            text-align: right;
+        }
+
+        th {
+            background: var(--primary-color);
+            color: var(--white);
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        td {
+            background: var(--white);
+            color: var(--text-main);
+        }
+
+        tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tr:hover td {
+            background-color: #f1f5f9;
+        }
+
+        /* تنسيقات المقارنة (الفروق) */
+        .diff-table th {
+            background: #1e293b;
+        }
+        
+        .old-val {
+            color: #b91c1c;
+            background: #fef2f2;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            border: 1px dashed #fca5a5;
+            font-size: 0.95rem;
+        }
+        
+        .new-val {
+            color: #15803d;
+            background: #f0fdf4;
+            padding: 6px 12px;
+            border-radius: 6px;
+            display: inline-block;
+            border: 1px solid #86efac;
+            font-weight: bold;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 4px rgba(21, 128, 61, 0.1);
+        }
+
+        /* التذييل */
+        .footer {
+            margin-top: 50px;
+            padding-top: 25px;
+            text-align: center;
+            border-top: 2px dashed var(--border-color);
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .footer a {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .footer a:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        /* إعدادات الطباعة للـ PDF (weasyprint) */
+        @media print {
+            @page {
+                size: A4;
+                margin: 12mm 15mm;
+                background-color: #ffffff;
+            }
+            body {
+                background: #ffffff;
+                padding: 0;
+                font-size: 11pt; /* حجم خط مناسب للطباعة ليس كبيراً */
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+                width: 100%;
+                border-radius: 0;
+            }
+            .tabs-nav {
+                display: none !important; /* إخفاء الأزرار في الطباعة */
+            }
+            .tab-content {
+                display: block !important;
+                opacity: 1 !important;
+                visibility: visible !important;
+                page-break-before: auto;
+            }
+            /* فواصل الصفحات الذكية */
+            h2 {
+                page-break-after: avoid;
+                margin-top: 30px;
+            }
+            table {
+                page-break-inside: avoid;
+                font-size: 10pt; /* تصغير الجداول قليلاً لتتسع الشاشة بالطباعة */
+            }
+            tr {
+                page-break-inside: avoid;
+            }
+            .footer {
+                page-break-inside: avoid;
+                margin-top: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📊 منصة التخطيط وإسناد المواد الدراسية</h1>
+        <p>دليل شامل لتوزيع المواد والتخصصات وفق أحدث المعايير (إصدار محدث)</p>
+    </div>
+
+    <!-- أزرار التنقل (تظهر في وضع الشاشة فقط) -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="openTab(event, 'tab-rules')">📚 القواعد العامة للإسناد</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-matrix')">📋 مصفوفة الإسناد المحدثة</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-diff')">🔄 مقارنة الأدلة (قبل وبعد)</button>
+        <button class="tab-btn" onclick="openTab(event, 'tab-projects')">🎯 المشاريع والمواد الاختيارية</button>
+    </div>
+
+    <!-- التبويب الأول: القواعد العامة -->
+    <div id="tab-rules" class="tab-content active">
+        <h2>القواعد والضوابط الأساسية</h2>
+        <ul class="rules-list">
+            <li>يتم إسناد تدريس جميع المواد الدراسية في جميع المراحل إلى <strong>المتخصصين</strong>، مع الاستفادة من وفر التخصصات الأخرى في حال عدم وجود المتخصصين.</li>
+            <li>يتم إسناد تدريس جميع تخصصات <strong>ذوي الإعاقة</strong> إلى المتخصصين، ثم إلى تخصصات الوفر من نفس المجال، ثم من وفر التعليم العام.</li>
+            <li>تفعيل التعليم عن بعد (<strong>المدرسة الافتراضية</strong>) والاستفادة من النماذج التشغيلية للتعليم الإلكتروني في حال وجود احتياج تدريسي في الصف الدراسي.</li>
+            <li>يتم استثمار وفر جميع المعلمين في جميع المراحل التعليمية لتغطية الاحتياج، بما في ذلك حصص النشاط والمواد التي لا يتوفر لها متخصص.</li>
+        </ul>
+    </div>
+
+    <!-- التبويب الثاني: المصفوفة الجديدة -->
+    <div id="tab-matrix" class="tab-content">
+        <h2>مصفوفة إسناد المواد (الدليل المحدث)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>المادة الدراسية</th>
+                    <th>المرحلة</th>
+                    <th>التخصص المسند إليه</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>علم الأرض والفضاء</td>
+                    <td>الثانوية</td>
+                    <td>علم الأرض - الأحياء</td>
+                </tr>
+                <tr>
+                    <td>مواد العلوم الصحية (مبادئ، رعاية، أنظمة، تطبيقات، ابتكار)</td>
+                    <td>الثانوية</td>
+                    <td>الأحياء - جميع مسارات العلوم</td>
+                </tr>
+                <tr>
+                    <td>علم البيئة</td>
+                    <td>الثانوية</td>
+                    <td>الأحياء - جميع مسارات العلوم - علم الأرض</td>
+                </tr>
+                <tr>
+                    <td>المهارات الرقمية</td>
+                    <td>الابتدائية والمتوسطة</td>
+                    <td>الحاسب الآلي (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>المهارات الرقمية، الذكاء الاصطناعي، الأمن السيبراني، إنترنت الأشياء، التصميم الهندسي</td>
+                    <td>الثانوية</td>
+                    <td>الحاسب الآلي (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>مواد العلوم والمهارات الإدارية (اقتصاد، إدارة، محاسبة، تسويق، فعاليات...)</td>
+                    <td>الثانوية</td>
+                    <td>علم الإدارة أو أحد فروعها</td>
+                </tr>
+                <tr>
+                    <td>المواطنة الرقمية</td>
+                    <td>الثانوية</td>
+                    <td>الدراسات الاجتماعية (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>الفنون</td>
+                    <td>الثانوية</td>
+                    <td>التربية الفنية - الاقتصاد المنزلي (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>التربية البدنية، الدفاع عن النفس، اللياقة والثقافة الصحية</td>
+                    <td>جميع المراحل</td>
+                    <td>التربية البدنية (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>الإحصاء</td>
+                    <td>الثانوية</td>
+                    <td>الرياضيات (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>الدراسات النفسية والاجتماعية</td>
+                    <td>الثانوية</td>
+                    <td>علم النفس وعلم الاجتماع أو المكلف بالتوجيه الطلابي</td>
+                </tr>
+                <tr>
+                    <td>مبادئ القانون - تطبيقات في القانون</td>
+                    <td>الثانوية</td>
+                    <td>الدراسات الإسلامية (مؤهل جامعي)</td>
+                </tr>
+                <tr>
+                    <td>مهارات البحث ومصادر المعلومات</td>
+                    <td>الثانوية</td>
+                    <td>المكتبات - اللغة العربية (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>التربية المهنية</td>
+                    <td>الثانوية</td>
+                    <td>علم الإدارة - المكتبات - الدراسات الاجتماعية (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>المهارات الحياتية والأسرية</td>
+                    <td>جميع المراحل</td>
+                    <td>الاقتصاد المنزلي - الدراسات الاجتماعية - علم نفس واجتماع - الدراسات الإسلامية (جميع المؤهلات) ومن وفر التخصصات</td>
+                </tr>
+                <tr>
+                    <td>الهندسة</td>
+                    <td>الثانوية</td>
+                    <td>الفيزياء - مسار الفيزياء - الرياضيات (جميع المؤهلات)</td>
+                </tr>
+                <tr>
+                    <td>التفكير الناقد</td>
+                    <td>المتوسطة والثانوية</td>
+                    <td>علم نفس واجتماع - الدراسات الاجتماعية (جميع المؤهلات) ومن وفر جميع التخصصات</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- التبويب الثالث: المقارنة -->
+    <div id="tab-diff" class="tab-content diff-table">
+        <h2>المقارنة بين دليل الاستثمار الأمثل ودليل التخطيط المحدث</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th width="20%">المادة الدراسية</th>
+                    <th width="40%">قبل (دليل الاستثمار الأمثل 1446)</th>
+                    <th width="40%">بعد (دليل تخطيط شاغلي الوظائف التعليمية)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>علم الأرض والفضاء</strong></td>
+                    <td><span class="old-val">أحياء، فيزياء، كيمياء (ومساراتها)، علوم، علم بيئة، استثمار أمثل صحة وحياة</span></td>
+                    <td><span class="new-val">علم الأرض - الأحياء</span></td>
+                </tr>
+                <tr>
+                    <td><strong>علم البيئة</strong></td>
+                    <td><span class="old-val">علم الأرض، علوم</span></td>
+                    <td><span class="new-val">الأحياء - جميع مسارات العلوم - علم الأرض</span></td>
+                </tr>
+                <tr>
+                    <td><strong>المهارات الرقمية (ابتدائي/متوسط)</strong></td>
+                    <td><span class="old-val">حاسب آلي، رياضيات، استثمار أمثل مهارات رقمية</span></td>
+                    <td><span class="new-val">الحاسب الآلي (جميع المؤهلات)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>العلوم والمهارات الإدارية والتجارية</strong></td>
+                    <td><span class="old-val">استثمار أمثل في الإدارة/التسويق، رياضيات ومسار رياضيات</span></td>
+                    <td><span class="new-val">علم الإدارة أو أحد فروعها</span></td>
+                </tr>
+                <tr>
+                    <td><strong>المواطنة الرقمية</strong></td>
+                    <td><span class="old-val">حاسب آلي، استثمار أمثل مهارات رقمية</span></td>
+                    <td><span class="new-val">الدراسات الاجتماعية (جميع المؤهلات)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>الفنون</strong></td>
+                    <td><span class="old-val">تربية فنية، استثمار أمثل في الفنون</span></td>
+                    <td><span class="new-val">التربية الفنية - الاقتصاد المنزلي (جميع المؤهلات)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>التربية البدنية</strong></td>
+                    <td><span class="old-val">استثمار أمثل، دبلوم عالي، اقتصاد منزلي بنات، تربية فنية، وفر جميع التخصصات</span></td>
+                    <td><span class="new-val">التربية البدنية (جميع المراحل)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>الدراسات النفسية والاجتماعية</strong></td>
+                    <td><span class="old-val">دراسات اجتماعية، مكتبات، تدريبات سلوكية، علم إدارة، استثمار وفر التخصصات</span></td>
+                    <td><span class="new-val">علم النفس وعلم الاجتماع أو المكلف بالتوجيه الطلابي</span></td>
+                </tr>
+                <tr>
+                    <td><strong>مبادئ القانون</strong></td>
+                    <td><span class="old-val">دين، استثمار أمثل في القانون</span></td>
+                    <td><span class="new-val">الدراسات الإسلامية (مؤهل جامعي)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>مهارات البحث ومصادر المعلومات</strong></td>
+                    <td><span class="old-val">عربي، حاسب آلي، علم إدارة</span></td>
+                    <td><span class="new-val">مكتبات - اللغة العربية (جميع المؤهلات)</span></td>
+                </tr>
+                <tr>
+                    <td><strong>التربية المهنية</strong></td>
+                    <td><span class="old-val">دراسات نفسية واجتماعية، مكتبات</span></td>
+                    <td><span class="new-val">علم الإدارة - المكتبات - الدراسات الاجتماعية</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- التبويب الرابع: المشاريع والمجالات الاختيارية -->
+    <div id="tab-projects" class="tab-content">
+        <h2>إسناد المشاريع والمجالات الاختيارية (المرحلة الثانوية)</h2>
+        
+        <h3>أولاً: مشروع التخرج</h3>
+        <ul class="rules-list">
+            <li><strong>العلوم والهندسة:</strong> يُسند لتخصص الحاسب الآلي (جميع المؤهلات).</li>
+            <li><strong>الصحة والحياة:</strong> يُسند لتخصص الأحياء - جميع مسارات العلوم.</li>
+            <li><strong>إدارة الأعمال:</strong> يُسند لتخصص علم الإدارة.</li>
+        </ul>
+
+        <h3>ثانياً: مواد المجال الاختياري</h3>
+        <p style="color: var(--text-muted); margin-bottom: 15px;">يتم التنسيق مع قسم شؤون المعلمين لتحديد المجالات لكل مدرسة حسب التخصصات والوفر المتاح وفق الآتي:</p>
+        <ul class="rules-list">
+            <li><strong>المهارات الإدارية:</strong> تُسند لتخصص (علم الإدارة - المكتبات).</li>
+            <li><strong>التنمية المستدامة:</strong> تُسند لتخصص (الأحياء - الكيمياء - الفيزياء - علم الأرض - جميع مسارات العلوم).</li>
+            <li><strong>التصميم الرقمي:</strong> يُسند لتخصص (الحاسب الآلي - التربية الفنية - الاقتصاد المنزلي).</li>
+            <li><strong>اللغة الصينية:</strong> تُسند لتخصص (اللغة الصينية - دبلوم اللغة الصينية).</li>
+        </ul>
+    </div>
+
+    <!-- التذييل -->
+    <div class="footer">
+        <div>تصميم د/ فواز</div>
+        <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد / https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+</div>
+
+<!-- سكريبت التنقل بين التبويبات للشاشة فقط -->
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        
+        // إخفاء جميع المحتويات
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        
+        // إزالة الكلاس نشط من جميع الأزرار
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        
+        // إظهار المحتوى المطلوب وتنشيط الزر الخاص به
+        document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.className += " active";
+    }
+</script>
+
+</body>
+</html>

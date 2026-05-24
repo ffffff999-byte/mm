@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة التقاعد التعليمية — د/ فواز</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --navy:#0D1B2A;--navy2:#1A2E45;--navy3:#243B55;
+  --gold:#C9A84C;--gold2:#F5E6C0;--gold3:#8B6914;
+  --blue:#1565C0;--blue2:#1976D2;--blue3:#BBDEFB;--blue4:#E3F2FD;
+  --teal:#00695C;--teal2:#00897B;--teal3:#B2DFDB;--teal4:#E0F2F1;
+  --green:#2E7D32;--green2:#388E3C;--green3:#C8E6C9;--green4:#E8F5E9;
+  --amber:#E65100;--amber2:#F57C00;--amber3:#FFE0B2;--amber4:#FFF8F0;
+  --purple:#4A148C;--purple2:#6A1B9A;--purple3:#E1BEE7;--purple4:#F3E5F5;
+  --red:#B71C1C;--red2:#C62828;--red3:#FFCDD2;--red4:#FFF5F5;
+  --white:#FFFFFF;--gray1:#F8FAFB;--gray2:#EEF2F5;--gray3:#DDE3EA;
+  --gray4:#B0BEC5;--gray5:#607D8B;--gray6:#37474F;
+  --radius:18px;--radius-sm:10px;--radius-xs:6px;
+  --shadow:0 2px 16px rgba(13,27,42,.08);
+  --shadow-md:0 4px 32px rgba(13,27,42,.14);
+  --shadow-lg:0 8px 56px rgba(13,27,42,.20);
+}
+
+body{
+  font-family:'Tajawal',sans-serif;
+  background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 45%,var(--navy3) 100%);
+  min-height:100vh;color:var(--gray6);direction:rtl;
+}
+
+/* ── HERO ── */
+.hero{
+  padding:60px 20px 90px;text-align:center;position:relative;overflow:hidden;
+  background:linear-gradient(160deg,#06101C 0%,var(--navy) 60%,var(--navy2) 100%);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 90% 70% at 50% -10%,rgba(201,168,76,.18) 0%,transparent 65%);
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.3);
+  color:var(--gold);font-size:12px;font-weight:600;letter-spacing:1.5px;
+  padding:6px 18px;border-radius:99px;margin-bottom:22px;
+}
+.hero h1{
+  font-family:'Cairo',sans-serif;font-size:clamp(28px,5.5vw,50px);
+  font-weight:900;color:#fff;line-height:1.15;margin-bottom:12px;
+}
+.hero h1 em{color:var(--gold);font-style:normal;}
+.hero p{font-size:15px;color:rgba(255,255,255,.5);font-weight:300;max-width:500px;margin:0 auto 28px;}
+.hero-line{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:0 auto;}
+
+/* ── TABS ── */
+.tabs-wrap{
+  display:flex;justify-content:center;gap:6px;padding:0 16px;
+  margin-top:-32px;position:relative;z-index:20;flex-wrap:wrap;
+}
+.tab-btn{
+  flex:1;max-width:180px;min-width:120px;
+  padding:13px 16px;border:none;cursor:pointer;
+  font-family:'Tajawal',sans-serif;font-size:13px;font-weight:600;
+  border-radius:var(--radius-sm) var(--radius-sm) 0 0;
+  transition:all .25s;
+  background:rgba(255,255,255,.07);color:rgba(255,255,255,.5);
+  border:1px solid rgba(255,255,255,.1);border-bottom:none;
+  backdrop-filter:blur(10px);
+}
+.tab-btn.active{background:var(--white);color:var(--navy);border-color:transparent;}
+.tab-btn.active.t-ai{border-top:3px solid var(--blue2);}
+.tab-btn.active.t-civil{border-top:3px solid var(--green2);}
+.tab-btn.active.t-gosi{border-top:3px solid var(--amber2);}
+.tab-btn.active.t-scale{border-top:3px solid var(--purple2);}
+.tab-btn.active.t-cmp{border-top:3px solid var(--gold3);}
+.tab-btn:hover:not(.active){background:rgba(255,255,255,.14);color:#fff;}
+
+/* ── MAIN CARD ── */
+.main-card{
+  background:var(--white);max-width:1050px;margin:0 auto 40px;
+  border-radius:0 0 var(--radius) var(--radius);
+  box-shadow:var(--shadow-lg);overflow:hidden;
+}
+.tab-panel{display:none;}.tab-panel.active{display:block;}
+
+/* ── SECTION HEADER ── */
+.sec-hd{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 24px;font-size:13px;font-weight:700;
+  letter-spacing:.5px;color:var(--white);
+}
+.sec-hd.blue{background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);}
+.sec-hd.green{background:linear-gradient(135deg,var(--green) 0%,var(--green2) 100%);}
+.sec-hd.amber{background:linear-gradient(135deg,#B84000 0%,var(--amber2) 100%);}
+.sec-hd.purple{background:linear-gradient(135deg,var(--purple) 0%,var(--purple2) 100%);}
+.sec-hd.gold{background:linear-gradient(135deg,var(--gold3) 0%,var(--gold) 100%);}
+.sec-hd.navy{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);}
+
+/* ── FORMULA BANNER ── */
+.formula-banner{
+  padding:16px 24px;font-family:'Cairo',sans-serif;font-size:14px;
+  font-weight:700;text-align:center;
+}
+.formula-banner.blue{background:var(--blue4);color:var(--blue);}
+.formula-banner.green{background:var(--green4);color:var(--green);}
+.formula-banner.amber{background:var(--amber4);color:var(--amber);}
+
+/* ── BODY PADDING ── */
+.p-body{padding:24px;}
+
+/* ── INPUT ROW ── */
+.inp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+@media(max-width:600px){.inp-grid{grid-template-columns:1fr;}}
+.inp-group{display:flex;flex-direction:column;gap:6px;}
+.inp-group label{font-size:12px;font-weight:700;color:var(--gray5);letter-spacing:.3px;}
+.inp-wrap{position:relative;}
+.inp-wrap input,.inp-wrap select{
+  width:100%;height:46px;border:1.5px solid var(--gray3);border-radius:var(--radius-xs);
+  font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;
+  color:var(--navy);background:#FFFDF5;outline:none;
+  transition:all .2s;padding:0 14px 0 50px;text-align:right;direction:rtl;
+  appearance:none;-webkit-appearance:none;
+}
+.inp-wrap select{cursor:pointer;padding-left:32px;}
+.inp-wrap input:focus,.inp-wrap select:focus{
+  border-color:var(--blue2);background:#fff;
+  box-shadow:0 0 0 3px rgba(21,101,192,.1);
+}
+.inp-wrap.green input:focus,.inp-wrap.green select:focus{
+  border-color:var(--green2);box-shadow:0 0 0 3px rgba(46,125,50,.1);
+}
+.inp-wrap.amber input:focus{border-color:var(--amber2);box-shadow:0 0 0 3px rgba(230,81,0,.1);}
+.inp-unit{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-size:10px;font-weight:800;letter-spacing:.5px;pointer-events:none;
+}
+.inp-unit.blue{color:var(--blue2);}
+.inp-unit.green{color:var(--green2);}
+.inp-unit.amber{color:var(--amber2);}
+
+/* ── AI TYPING EFFECT ── */
+.ai-result-box{
+  border:1.5px solid var(--blue3);border-radius:var(--radius-sm);
+  padding:16px 20px;margin-bottom:16px;background:var(--blue4);
+  position:relative;overflow:hidden;
+}
+.ai-result-box::before{
+  content:'🤖';position:absolute;left:14px;top:50%;transform:translateY(-50%);
+  font-size:18px;opacity:.5;
+}
+.ai-label{font-size:11px;font-weight:700;color:var(--blue2);letter-spacing:.5px;margin-bottom:4px;}
+.ai-value{
+  font-family:'Cairo',sans-serif;font-size:22px;font-weight:800;
+  color:var(--blue);padding-left:36px;
+}
+.ai-thinking{
+  display:inline-flex;gap:4px;align-items:center;
+  font-size:13px;color:var(--blue2);padding-left:36px;
+}
+.ai-thinking span{
+  width:6px;height:6px;border-radius:50%;background:var(--blue2);
+  animation:pulse 1.2s ease-in-out infinite;
+}
+.ai-thinking span:nth-child(2){animation-delay:.2s;}
+.ai-thinking span:nth-child(3){animation-delay:.4s;}
+@keyframes pulse{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
+
+/* ── RESULT CARDS ── */
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+@media(max-width:560px){.res-grid{grid-template-columns:1fr 1fr;}}
+.res-card{
+  background:var(--gray1);border:1px solid var(--gray3);
+  border-radius:var(--radius-xs);padding:12px 14px;text-align:center;
+}
+.res-card.highlight-blue{background:var(--blue4);border-color:var(--blue3);}
+.res-card.highlight-green{background:var(--green4);border-color:var(--green3);}
+.res-card.highlight-amber{background:var(--amber4);border-color:var(--amber3);}
+.res-lbl{font-size:10px;color:var(--gray4);font-weight:700;letter-spacing:.3px;margin-bottom:5px;}
+.res-val{font-family:'Cairo',sans-serif;font-size:19px;font-weight:800;color:var(--navy);line-height:1;}
+.res-unit{font-size:10px;color:var(--gray4);margin-top:3px;}
+
+/* ── TOTAL BANNER ── */
+.total-banner{
+  border-radius:var(--radius-sm);padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:16px;position:relative;overflow:hidden;
+}
+.total-banner::after{
+  content:'';position:absolute;left:-20px;top:-20px;
+  width:100px;height:100px;border-radius:50%;
+  background:rgba(255,255,255,.06);pointer-events:none;
+}
+.total-banner.green{background:linear-gradient(135deg,var(--green) 0%,#4CAF50 100%);}
+.total-banner.amber{background:linear-gradient(135deg,#B84000 0%,var(--amber2) 100%);}
+.total-banner.blue{background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);}
+.total-lbl{font-size:14px;font-weight:600;color:rgba(255,255,255,.85);}
+.total-amt{font-family:'Cairo',sans-serif;font-size:32px;font-weight:900;color:#fff;direction:ltr;text-align:left;}
+.total-sub{font-size:11px;color:rgba(255,255,255,.55);text-align:left;}
+.annual-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 18px;border-radius:var(--radius-xs);
+  border:1.5px dashed var(--gray3);margin-bottom:20px;
+}
+.ann-lbl{font-size:13px;font-weight:600;color:var(--gray5);}
+.ann-val{font-family:'Cairo',sans-serif;font-size:18px;font-weight:800;}
+
+/* ── PROGRESS ── */
+.prog-wrap{margin-bottom:20px;}
+.prog-hd{display:flex;justify-content:space-between;margin-bottom:6px;}
+.prog-title{font-size:12px;font-weight:600;color:var(--gray5);}
+.prog-pct{font-family:'Cairo',sans-serif;font-size:13px;font-weight:800;}
+.prog-bg{height:8px;background:var(--gray3);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:99px;transition:width .7s cubic-bezier(.4,0,.2,1);}
+.prog-fill.blue{background:linear-gradient(90deg,var(--blue3),var(--blue2));}
+.prog-fill.green{background:linear-gradient(90deg,var(--green3),var(--green2));}
+.prog-fill.amber{background:linear-gradient(90deg,var(--amber3),var(--amber2));}
+
+/* ── NOTES ── */
+.notes{background:var(--gray1);border-radius:var(--radius-xs);padding:14px 18px;border:1px solid var(--gray3);}
+.notes p{font-size:12px;color:var(--gray5);padding:4px 0;border-bottom:1px solid var(--gray3);
+  display:flex;align-items:flex-start;gap:8px;line-height:1.6;}
+.notes p:last-child{border-bottom:none;}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:7px;}
+.dot.blue{background:var(--blue2);}
+.dot.green{background:var(--green2);}
+.dot.amber{background:var(--amber2);}
+.dot.gold{background:var(--gold);}
+
+/* ── SALARY SCALE TABLE ── */
+.scale-wrap{padding:20px;overflow-x:auto;}
+.level-block{margin-bottom:24px;border-radius:var(--radius-sm);overflow:hidden;box-shadow:var(--shadow);}
+.level-title{
+  padding:10px 18px;font-family:'Cairo',sans-serif;font-size:13px;
+  font-weight:700;color:#fff;letter-spacing:.5px;
+}
+.level-title.l1{background:linear-gradient(90deg,#1A237E,#283593);}
+.level-title.l2{background:linear-gradient(90deg,#004D40,#00695C);}
+.level-title.l3{background:linear-gradient(90deg,#B71C1C,#C62828);}
+.level-title.l4{background:linear-gradient(90deg,#4A148C,#6A1B9A);}
+.level-title.l5{background:linear-gradient(90deg,#E65100,#F57C00);}
+.level-title.l6{background:linear-gradient(90deg,#37474F,#546E7A);}
+
+.scale-table{width:100%;border-collapse:collapse;font-size:12px;}
+.scale-table th{
+  padding:9px 10px;text-align:center;font-size:11px;font-weight:700;letter-spacing:.3px;
+}
+.scale-table td{padding:8px 10px;text-align:center;border-bottom:1px solid var(--gray3);}
+.scale-table tr:last-child td{border-bottom:none;}
+.scale-table tr:nth-child(even) td{background:rgba(0,0,0,.025);}
+.th-rank{background:var(--gray2);color:var(--gray6);}
+.th-asst{background:#E3F2FD;color:#0D47A1;}
+.th-mmares{background:#E8F5E9;color:#1B5E20;}
+.th-mtaq{background:#FFF8E1;color:#E65100;}
+.th-khabeer{background:#FCE4EC;color:#880E4F;}
+.cat-header{padding:6px 12px;text-align:center;font-size:12px;font-weight:700;border-top:2px solid;}
+.cat-header.asst{border-color:#1565C0;background:#E3F2FD;color:#1565C0;}
+.cat-header.mmares{border-color:#2E7D32;background:#E8F5E9;color:#2E7D32;}
+.cat-header.mtaq{border-color:#E65100;background:#FFF8E1;color:#E65100;}
+.cat-header.khabeer{border-color:#880E4F;background:#FCE4EC;color:#880E4F;}
+.ann-row td{background:#FFFDE7;font-weight:700;color:var(--amber);font-size:12px;}
+.na-cell{color:var(--gray4);font-style:italic;}
+.total-cell{font-weight:800;color:var(--navy);}
+
+/* ── COMPARE TABLE ── */
+.cmp-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:20px;}
+.cmp-table th{padding:12px 14px;text-align:center;font-weight:700;font-size:12px;}
+.cmp-table td{padding:10px 14px;border-bottom:1px solid var(--gray3);text-align:center;vertical-align:middle;}
+.cmp-table td:first-child{text-align:right;font-weight:600;color:var(--gray5);}
+.cmp-table tr:nth-child(even) td{background:var(--gray1);}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700;}
+.badge-yes{background:var(--green3);color:var(--green);}
+.badge-no{background:var(--red3);color:var(--red2);}
+
+/* ── CMP RESULT CARDS ── */
+.cmp-res{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+.cmp-card{padding:18px;border-radius:var(--radius-sm);text-align:center;}
+.cmp-card.civil{background:var(--green4);border:1.5px solid var(--green3);}
+.cmp-card.gosi{background:var(--amber4);border:1.5px solid var(--amber3);}
+.cmp-ttl{font-size:12px;font-weight:700;margin-bottom:8px;}
+.cmp-ttl.civil{color:var(--green);}
+.cmp-ttl.gosi{color:var(--amber);}
+.cmp-amt{font-family:'Cairo',sans-serif;font-size:26px;font-weight:900;line-height:1;}
+.cmp-amt.civil{color:var(--green2);}
+.cmp-amt.gosi{color:var(--amber2);}
+.cmp-sub{font-size:11px;color:var(--gray4);margin-top:4px;}
+
+/* ── FOOTER ── */
+.site-footer{
+  text-align:center;padding:28px 20px;
+}
+.tg-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#0088cc,#006aaa);
+  color:#fff;text-decoration:none;
+  padding:13px 32px;border-radius:50px;
+  font-family:'Tajawal',sans-serif;font-size:15px;font-weight:700;
+  margin-bottom:14px;transition:transform .15s,opacity .15s;
+  box-shadow:0 4px 18px rgba(0,136,204,.35);
+}
+.tg-btn:hover{opacity:.9;transform:translateY(-1px);}
+.tg-icon{width:20px;height:20px;flex-shrink:0;}
+.footer-credit{font-size:13px;color:rgba(255,255,255,.35);}
+
+/* ── SLIDERS ── */
+.slider-row{margin-top:5px;}
+input[type=range]{width:100%;accent-color:var(--blue2);cursor:pointer;}
+input[type=range].green{accent-color:var(--green2);}
+input[type=range].amber{accent-color:var(--amber2);}
+.sl-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--gray4);margin-top:2px;}
+
+/* ── AI STREAM TEXT ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.ai-streamed{animation:fadeIn .3s ease forwards;}
+
+/* ── SELECTED ROW HIGHLIGHT ── */
+.scale-table tr.selected td{background:#FFF9C4!important;font-weight:700;}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-badge">وزارة التعليم — المملكة العربية السعودية</div>
+  <h1>حاسبة الرواتب و<em>التقاعد</em> التعليمية</h1>
+  <p>منظومة متكاملة: سلم الرواتب · الحاسبة الذكية · التقاعد المدني · التأمينات</p>
+  <div class="hero-line"></div>
+</div>
+
+<!-- ═══ TABS ═══ -->
+<div class="tabs-wrap">
+  <button class="tab-btn t-ai active"    onclick="switchTab('ai')">🤖 الحاسبة الذكية</button>
+  <button class="tab-btn t-civil"        onclick="switchTab('civil')">🏛️ التقاعد المدني</button>
+  <button class="tab-btn t-gosi"         onclick="switchTab('gosi')">🏢 التأمينات</button>
+  <button class="tab-btn t-scale"        onclick="switchTab('scale')">📋 سلم الرواتب</button>
+  <button class="tab-btn t-cmp"          onclick="switchTab('cmp')">⚖️ مقارنة</button>
+</div>
+
+<div class="main-card">
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 1 — AI CALCULATOR (reads salary from scale)
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="panel-ai">
+  <div class="sec-hd blue">🤖 الحاسبة الذكية — تستخرج راتبك من سلم الرواتب تلقائياً</div>
+
+  <div class="p-body">
+    <div style="background:var(--blue4);border:1px solid var(--blue3);border-radius:var(--radius-sm);padding:14px 18px;margin-bottom:20px;font-size:13px;color:var(--blue);line-height:1.7;">
+      🧠 اختر فئتك ومستواك ورتبتك — سيبحث النظام تلقائياً في سلم الرواتب ويعرض راتبك وحساب معاشك التقاعدي فورياً
+    </div>
+
+    <div class="inp-grid" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="inp-group">
+        <label>الفئة الوظيفية</label>
+        <div class="inp-wrap">
+          <select id="ai-cat" onchange="aiLookup()">
+            <option value="1">مساعد معلم / معلم</option>
+            <option value="2" selected>معلم ممارس</option>
+            <option value="3">معلم متقدم</option>
+            <option value="4">معلم خبير</option>
+          </select>
+          <span class="inp-unit blue">فئة</span>
+        </div>
+      </div>
+      <div class="inp-group">
+        <label>المستوى</label>
+        <div class="inp-wrap">
+          <select id="ai-lvl" onchange="aiLookup()">
+            <option value="1">الأول</option>
+            <option value="2" selected>الثاني</option>
+            <option value="3">الثالث</option>
+            <option value="4">الرابع</option>
+            <option value="5">الخامس</option>
+            <option value="6">السادس</option>
+          </select>
+          <span class="inp-unit blue">مستوى</span>
+        </div>
+      </div>
+      <div class="inp-group">
+        <label>الرتبة</label>
+        <div class="inp-wrap">
+          <select id="ai-rank" onchange="aiLookup()">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3" selected>3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+          <span class="inp-unit blue">رتبة</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI thinking animation then result -->
+    <div id="ai-stream-area" style="margin-bottom:20px;">
+      <div class="ai-result-box" id="ai-basic-box">
+        <div class="ai-label">الراتب الأساسي</div>
+        <div class="ai-value" id="ai-basic-val">—</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div class="ai-result-box">
+          <div class="ai-label">اقتطاع التقاعد</div>
+          <div class="ai-value" id="ai-pension-val">—</div>
+        </div>
+        <div class="ai-result-box">
+          <div class="ai-label">بدل النقل</div>
+          <div class="ai-value" id="ai-transp-val">—</div>
+        </div>
+        <div class="ai-result-box" style="border-color:var(--green3);background:var(--green4);">
+          <div class="ai-label" style="color:var(--green2);">صافي الراتب</div>
+          <div class="ai-value" id="ai-net-val" style="color:var(--green);">—</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Retirement section -->
+    <div class="sec-hd green" style="margin:0 -24px 16px;padding:12px 24px;font-size:12px;">
+      🏛️ حساب المعاش التقاعدي المدني — أدخل سنوات الخدمة
+    </div>
+
+    <div class="inp-grid">
+      <div class="inp-group">
+        <label>سنوات الخدمة الفعلية</label>
+        <div class="inp-wrap green">
+          <input type="number" id="ai-years" value="20" min="1" max="40" oninput="aiCalcRetire()">
+          <span class="inp-unit green">سنة</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" class="green" min="1" max="40" value="20" id="ai-years-r"
+            oninput="document.getElementById('ai-years').value=this.value;aiCalcRetire()">
+          <div class="sl-labels"><span>1</span><span>40</span></div>
+        </div>
+      </div>
+      <div class="inp-group" style="justify-content:flex-end;">
+        <div style="background:var(--green4);border:1px solid var(--green3);border-radius:var(--radius-sm);padding:14px 18px;">
+          <div style="font-size:11px;color:var(--green2);font-weight:700;margin-bottom:6px;">المعادلة</div>
+          <div style="font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;color:var(--green);line-height:1.8;">
+            المعاش = (الراتب الأساسي × الأشهر) ÷ 480
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-grid" style="grid-template-columns:repeat(4,1fr);">
+      <div class="res-card"><div class="res-lbl">أشهر الخدمة</div><div class="res-val" id="ai-months">240</div><div class="res-unit">شهر</div></div>
+      <div class="res-card highlight-green"><div class="res-lbl">المعاش الشهري</div><div class="res-val" id="ai-ret-monthly" style="color:var(--green);">—</div><div class="res-unit">ريال/شهر</div></div>
+      <div class="res-card"><div class="res-lbl">نسبة المعاش</div><div class="res-val" id="ai-ret-pct">50.0%</div><div class="res-unit">من الراتب</div></div>
+      <div class="res-card"><div class="res-lbl">سنوات للحد الأقصى</div><div class="res-val" id="ai-ret-rem">20</div><div class="res-unit">سنة</div></div>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-hd"><span class="prog-title">نسبة الإنجاز نحو التقاعد الكامل (40 سنة)</span><span class="prog-pct" style="color:var(--green2)" id="ai-prog-lbl">50.0%</span></div>
+      <div class="prog-bg"><div class="prog-fill green" id="ai-prog-bar" style="width:50%"></div></div>
+    </div>
+
+    <div class="total-banner green">
+      <div class="total-lbl">💰 إجمالي المعاش الشهري</div>
+      <div><div class="total-amt" id="ai-total-retire">—</div><div class="total-sub">ريال سعودي / شهر</div></div>
+    </div>
+    <div class="annual-row">
+      <span class="ann-lbl">المعاش السنوي</span>
+      <span class="ann-val" style="color:var(--green2)" id="ai-annual-retire">— ريال</span>
+    </div>
+
+    <div class="notes">
+      <p><span class="dot blue"></span>البيانات مستخرجة تلقائياً من سلم الرواتب المضمّن في هذه الصفحة</p>
+      <p><span class="dot blue"></span>المعاش يُحسب على أساس الراتب الأساسي فقط دون البدلات</p>
+      <p><span class="dot blue"></span>الحد الأقصى للمعاش 100% من الراتب عند 40 سنة خدمة كاملة</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 2 — CIVIL RETIREMENT
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-civil">
+  <div class="formula-banner green">المعاش  =  ( آخر راتب أساسي  ×  أشهر الخدمة )  ÷  480</div>
+  <div class="p-body">
+    <div class="inp-grid">
+      <div class="inp-group">
+        <label>آخر راتب أساسي (ريال)</label>
+        <div class="inp-wrap green">
+          <input type="number" id="c-sal" value="10000" min="1000" max="100000" step="500" oninput="calcCivil()">
+          <span class="inp-unit green">ريال</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" class="green" id="c-sal-r" min="1000" max="50000" step="500" value="10000"
+            oninput="document.getElementById('c-sal').value=this.value;calcCivil()">
+          <div class="sl-labels"><span>1,000</span><span>50,000</span></div>
+        </div>
+      </div>
+      <div class="inp-group">
+        <label>مدة الخدمة (سنوات)</label>
+        <div class="inp-wrap green">
+          <input type="number" id="c-yrs" value="25" min="1" max="40" oninput="calcCivil()">
+          <span class="inp-unit green">سنة</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" class="green" id="c-yrs-r" min="1" max="40" value="25"
+            oninput="document.getElementById('c-yrs').value=this.value;calcCivil()">
+          <div class="sl-labels"><span>1</span><span>40</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-grid">
+      <div class="res-card"><div class="res-lbl">أشهر الخدمة</div><div class="res-val" id="c-months">300</div><div class="res-unit">شهر</div></div>
+      <div class="res-card highlight-green"><div class="res-lbl">المعاش الأساسي</div><div class="res-val" id="c-base" style="color:var(--green)">6,250</div><div class="res-unit">ريال/شهر</div></div>
+      <div class="res-card"><div class="res-lbl">نسبة المعاش</div><div class="res-val" id="c-pct">62.5%</div><div class="res-unit">من الراتب</div></div>
+      <div class="res-card"><div class="res-lbl">سنوات للحد الأقصى</div><div class="res-val" id="c-rem">15</div><div class="res-unit">سنة</div></div>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-hd"><span class="prog-title">نسبة الإنجاز نحو الحد الأقصى (40 سنة)</span><span class="prog-pct" style="color:var(--green2)" id="c-prog-lbl">62.5%</span></div>
+      <div class="prog-bg"><div class="prog-fill green" id="c-prog" style="width:62.5%"></div></div>
+    </div>
+
+    <div class="total-banner green">
+      <div class="total-lbl">💰 إجمالي المعاش الشهري</div>
+      <div><div class="total-amt" id="c-total">6,250</div><div class="total-sub">ريال سعودي / شهر</div></div>
+    </div>
+    <div class="annual-row">
+      <span class="ann-lbl">المعاش السنوي</span>
+      <span class="ann-val" style="color:var(--green2)" id="c-annual">75,000 ريال</span>
+    </div>
+    <div class="notes">
+      <p><span class="dot green"></span>الحد الأقصى 100% من الراتب عند 40 سنة خدمة</p>
+      <p><span class="dot green"></span>الراتب الأساسي لا يشمل البدلات أو العلاوات</p>
+      <p><span class="dot green"></span>للحصول على رقمك الدقيق راجع المؤسسة العامة للتقاعد</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 3 — GOSI
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-gosi">
+  <div class="formula-banner amber">المعاش  =  ( متوسط أجر السنتين الأخيرتين  ×  أشهر الاشتراك )  ÷  600</div>
+  <div class="p-body">
+    <div class="inp-grid">
+      <div class="inp-group">
+        <label>متوسط الراتب — آخر سنتين</label>
+        <div class="inp-wrap amber">
+          <input type="number" id="g-sal" value="8500" min="1000" max="100000" step="500" oninput="calcGosi()">
+          <span class="inp-unit amber">ريال</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" class="amber" id="g-sal-r" min="1000" max="50000" step="500" value="8500"
+            oninput="document.getElementById('g-sal').value=this.value;calcGosi()">
+          <div class="sl-labels"><span>1,000</span><span>50,000</span></div>
+        </div>
+      </div>
+      <div class="inp-group">
+        <label>مدة الاشتراك (سنوات)</label>
+        <div class="inp-wrap amber">
+          <input type="number" id="g-yrs" value="20" min="1" max="45" oninput="calcGosi()">
+          <span class="inp-unit amber">سنة</span>
+        </div>
+        <div class="slider-row">
+          <input type="range" class="amber" id="g-yrs-r" min="1" max="45" value="20"
+            oninput="document.getElementById('g-yrs').value=this.value;calcGosi()">
+          <div class="sl-labels"><span>1</span><span>45</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="res-grid">
+      <div class="res-card"><div class="res-lbl">أشهر الاشتراك</div><div class="res-val" id="g-months">240</div><div class="res-unit">شهر</div></div>
+      <div class="res-card highlight-amber"><div class="res-lbl">المعاش المحسوب</div><div class="res-val" id="g-base" style="color:var(--amber)">3,400</div><div class="res-unit">ريال/شهر</div></div>
+      <div class="res-card"><div class="res-lbl">اشتراك صاحب العمل 9%</div><div class="res-val" id="g-emp">765</div><div class="res-unit">ريال/شهر</div></div>
+      <div class="res-card"><div class="res-lbl">اشتراكك الشخصي 9%</div><div class="res-val" id="g-self">765</div><div class="res-unit">ريال/شهر</div></div>
+      <div class="res-card"><div class="res-lbl">الحد الأدنى المضمون</div><div class="res-val">1,984</div><div class="res-unit">ريال/شهر</div></div>
+      <div class="res-card"><div class="res-lbl">أهلية المعاش</div><div class="res-val" id="g-elig" style="font-size:14px">✅ مستحق</div><div class="res-unit">120 شهر حد أدنى</div></div>
+    </div>
+
+    <div class="prog-wrap">
+      <div class="prog-hd"><span class="prog-title">نسبة الاشتراك من الحد الأدنى (120 شهر)</span><span class="prog-pct" style="color:var(--amber2)" id="g-prog-lbl">100%</span></div>
+      <div class="prog-bg"><div class="prog-fill amber" id="g-prog" style="width:100%"></div></div>
+    </div>
+
+    <div class="total-banner amber">
+      <div class="total-lbl">💰 إجمالي المعاش الشهري</div>
+      <div><div class="total-amt" id="g-total">3,400</div><div class="total-sub">ريال سعودي / شهر</div></div>
+    </div>
+    <div class="annual-row">
+      <span class="ann-lbl">المعاش السنوي</span>
+      <span class="ann-val" style="color:var(--amber2)" id="g-annual">40,800 ريال</span>
+    </div>
+    <div class="notes">
+      <p><span class="dot amber"></span>الحد الأدنى للمعاش لا يقل عن 1,983.75 ريال شهرياً</p>
+      <p><span class="dot amber"></span>نسبة الاشتراك الإجمالية 18% (9% صاحب عمل + 9% الموظف)</p>
+      <p><span class="dot amber"></span>يشترط الاشتراك 120 شهراً على الأقل للحصول على المعاش</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 4 — SALARY SCALE
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-scale">
+  <div class="sec-hd purple">📋 سلم رواتب وعلاوات الوظائف التعليمية — وزارة التعليم</div>
+  <div class="scale-wrap" id="scale-container"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 5 — COMPARE
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-cmp">
+  <div class="sec-hd gold">⚖️ مقارنة نظامي التقاعد</div>
+  <div class="p-body">
+    <div class="cmp-res">
+      <div class="cmp-card civil"><div class="cmp-ttl civil">🏛️ التقاعد المدني</div><div class="cmp-amt civil" id="cmp-civil">6,250</div><div class="cmp-sub">ريال / شهر</div></div>
+      <div class="cmp-card gosi"><div class="cmp-ttl gosi">🏢 التأمينات</div><div class="cmp-amt gosi" id="cmp-gosi">3,400</div><div class="cmp-sub">ريال / شهر</div></div>
+    </div>
+    <table class="cmp-table">
+      <thead><tr><th style="text-align:right;background:var(--gray2)">البند</th><th style="background:#E8F5E9;color:var(--green)">التقاعد المدني</th><th style="background:#FFF8E1;color:var(--amber)">التأمينات</th></tr></thead>
+      <tbody>
+        <tr><td>المعادلة</td><td>آخر راتب × أشهر ÷ 480</td><td>متوسط الراتب × أشهر ÷ 600</td></tr>
+        <tr><td>جهة الإشراف</td><td>المؤسسة العامة للتقاعد</td><td>التأمينات الاجتماعية</td></tr>
+        <tr><td>الفئة</td><td>موظفو الحكومة</td><td>القطاع الخاص</td></tr>
+        <tr><td>نسبة الاشتراك</td><td>18%</td><td>18%</td></tr>
+        <tr><td>الحد الأقصى</td><td>100% عند 40 سنة</td><td>غير محدد</td></tr>
+        <tr><td>الحد الأدنى</td><td>غير محدد</td><td>1,983.75 ريال</td></tr>
+        <tr><td>حد أدنى اشتراك</td><td>غير مشترط</td><td>120 شهراً</td></tr>
+        <tr><td>التقاعد المبكر</td><td><span class="badge badge-yes">✓ متاح</span></td><td><span class="badge badge-yes">✓ متاح</span></td></tr>
+      </tbody>
+    </table>
+    <div class="notes">
+      <p><span class="dot gold"></span>الأرقام المعروضة مبنية على البيانات المدخلة في التبويبين السابقين</p>
+      <p><span class="dot gold"></span>هذه الحاسبة للاسترشاد — يُرجى مراجعة الجهات الرسمية للرقم الدقيق</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.main-card -->
+
+<!-- ═══ FOOTER ═══ -->
+<div class="site-footer">
+  <div style="margin-bottom:14px;font-size:13px;color:rgba(255,255,255,.4);">حاسبة تقريبية للاسترشاد — المملكة العربية السعودية 2026</div>
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="tg-btn">
+    <svg class="tg-icon" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.04 9.61c-.152.67-.548.835-1.11.52l-3.06-2.254-1.476 1.42c-.163.163-.3.3-.615.3l.22-3.11 5.662-5.114c.246-.22-.054-.34-.382-.12L7.26 14.4l-3.02-.944c-.657-.205-.67-.657.137-.973l11.79-4.546c.547-.198 1.026.133.395.31z"/></svg>
+    تفضل للمزيد
+  </a>
+  <div class="footer-credit">تصميم د/ فواز</div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// SALARY DATABASE (from salary scale image)
+// Key: "cat-level-rank" → {basic, pension, transport, net}
+// cat: 1=asst, 2=mmares, 3=mtaqadam, 4=mkhabeer
+// ═══════════════════════════════════════════════════════
+const SALARY_DB = {
+  // مساعد معلم / معلم — Level 1
+  '1-1-1':{basic:5200,pension:468,transp:500,net:5232},
+  '1-1-2':{basic:5500,pension:495,transp:500,net:5505},
+  '1-1-3':{basic:5800,pension:522,transp:500,net:5778},
+  '1-1-4':{basic:6100,pension:549,transp:500,net:6051},
+  '1-1-5':{basic:6400,pension:576,transp:500,net:6324},
+  '1-1-6':{basic:6700,pension:603,transp:500,net:6597},
+  // Level 2
+  '1-2-1':{basic:7000,pension:630,transp:700,net:7070},
+  '1-2-2':{basic:7320,pension:658.8,transp:700,net:7361.2},
+  '1-2-3':{basic:7640,pension:687.6,transp:700,net:7652.4},
+  '1-2-4':{basic:7960,pension:716.4,transp:700,net:7943.6},
+  '1-2-5':{basic:8280,pension:745.2,transp:700,net:8234.8},
+  '1-2-6':{basic:8600,pension:774,transp:700,net:8526},
+  // Level 3
+  '1-3-1':{basic:8920,pension:802.8,transp:700,net:8817.2},
+  '1-3-2':{basic:9260,pension:833.4,transp:700,net:9126.6},
+  '1-3-3':{basic:9600,pension:864,transp:700,net:9436},
+  '1-3-4':{basic:9940,pension:894.6,transp:700,net:9745.4},
+  '1-3-5':{basic:10280,pension:925.2,transp:700,net:10054.8},
+  '1-3-6':{basic:10620,pension:955.8,transp:700,net:10364.2},
+  // Level 4
+  '1-4-1':{basic:10960,pension:986.4,transp:700,net:10673.6},
+  '1-4-2':{basic:11320,pension:1018.8,transp:700,net:11001.2},
+  '1-4-3':{basic:11680,pension:1051.2,transp:700,net:11328.8},
+  '1-4-4':{basic:12040,pension:1083.6,transp:700,net:11656.4},
+  '1-4-5':{basic:12400,pension:1116,transp:700,net:11984},
+  '1-4-6':{basic:12760,pension:1148.4,transp:700,net:12311.6},
+  // Level 5
+  '1-5-1':{basic:13120,pension:1180.8,transp:700,net:12639.2},
+  '1-5-2':{basic:13500,pension:1215,transp:700,net:12985},
+  '1-5-3':{basic:13880,pension:1249.2,transp:700,net:13330.8},
+  '1-5-4':{basic:14260,pension:1283.4,transp:700,net:13676.6},
+  '1-5-5':{basic:14640,pension:1317.6,transp:700,net:14022.4},
+  '1-5-6':{basic:15020,pension:1351.8,transp:700,net:14368.2},
+  // Level 6
+  '1-6-1':{basic:15400,pension:1386,transp:700,net:14714},
+  '1-6-2':{basic:15800,pension:1422,transp:700,net:15078},
+  '1-6-3':{basic:16200,pension:1458,transp:700,net:15442},
+  '1-6-4':{basic:16600,pension:1494,transp:700,net:15806},
+  '1-6-5':{basic:17000,pension:1530,transp:700,net:16170},
+  '1-6-6':{basic:17400,pension:1566,transp:700,net:16534},
+  // معلم ممارس — Level 1
+  '2-1-1':{basic:7570,pension:681.3,transp:700,net:7588.7},
+  '2-1-2':{basic:8070,pension:726.3,transp:700,net:8043.7},
+  '2-1-3':{basic:8570,pension:771.3,transp:700,net:8498.7},
+  '2-1-4':{basic:9070,pension:816.3,transp:700,net:8953.7},
+  '2-1-5':{basic:9570,pension:861.3,transp:700,net:9408.7},
+  '2-1-6':{basic:10070,pension:906.3,transp:700,net:9863.7},
+  // Level 2
+  '2-2-1':{basic:10570,pension:951.3,transp:700,net:10318.7},
+  '2-2-2':{basic:11090,pension:998.1,transp:700,net:10791.9},
+  '2-2-3':{basic:11610,pension:1044.9,transp:700,net:11265.1},
+  '2-2-4':{basic:12130,pension:1091.7,transp:700,net:11738.3},
+  '2-2-5':{basic:12650,pension:1138.5,transp:700,net:12211.5},
+  '2-2-6':{basic:13170,pension:1185.3,transp:700,net:12684.7},
+  // Level 3
+  '2-3-1':{basic:13690,pension:1232.1,transp:700,net:13157.9},
+  '2-3-2':{basic:14230,pension:1280.7,transp:700,net:13649.3},
+  '2-3-3':{basic:14770,pension:1329.3,transp:700,net:14140.7},
+  '2-3-4':{basic:15310,pension:1377.9,transp:700,net:14632.1},
+  '2-3-5':{basic:15850,pension:1426.5,transp:700,net:15123.5},
+  '2-3-6':{basic:16390,pension:1475.1,transp:700,net:15614.9},
+  // Level 4
+  '2-4-1':{basic:16930,pension:1523.7,transp:700,net:16106.3},
+  '2-4-2':{basic:17470,pension:1572.3,transp:700,net:16597.7},
+  '2-4-3':{basic:18010,pension:1620.9,transp:700,net:17089.1},
+  '2-4-4':{basic:18550,pension:1669.5,transp:700,net:17580.5},
+  '2-4-5':{basic:19090,pension:1718.1,transp:700,net:18071.9},
+  '2-4-6':{basic:19630,pension:1766.7,transp:700,net:18563.3},
+  // Level 5
+  '2-5-1':{basic:20170,pension:1815.3,transp:700,net:19054.7},
+  '2-5-2':{basic:20710,pension:1863.9,transp:700,net:19546.1},
+  '2-5-3':{basic:21250,pension:1912.5,transp:700,net:20037.5},
+  // معلم متقدم — Level 1
+  '3-1-1':{basic:9950,pension:895.5,transp:700,net:9754.5},
+  '3-1-2':{basic:10490,pension:944.1,transp:700,net:10245.9},
+  '3-1-3':{basic:11030,pension:992.7,transp:700,net:10737.3},
+  '3-1-4':{basic:11570,pension:1041.3,transp:700,net:11228.7},
+  '3-1-5':{basic:12110,pension:1089.9,transp:700,net:11720.1},
+  '3-1-6':{basic:12650,pension:1138.5,transp:700,net:12211.5},
+  // Level 2
+  '3-2-1':{basic:13190,pension:1187.1,transp:700,net:12702.9},
+  '3-2-2':{basic:13750,pension:1237.5,transp:700,net:13212.5},
+  '3-2-3':{basic:14310,pension:1287.9,transp:700,net:13722.1},
+  '3-2-4':{basic:14870,pension:1338.3,transp:700,net:14231.7},
+  '3-2-5':{basic:15430,pension:1388.7,transp:700,net:14741.3},
+  '3-2-6':{basic:15990,pension:1439.1,transp:700,net:15250.9},
+  // Level 3
+  '3-3-1':{basic:16550,pension:1489.5,transp:700,net:15760.5},
+  '3-3-2':{basic:17130,pension:1541.7,transp:700,net:16288.3},
+  '3-3-3':{basic:17710,pension:1593.9,transp:700,net:16816.1},
+  '3-3-4':{basic:18290,pension:1646.1,transp:700,net:17343.9},
+  '3-3-5':{basic:18870,pension:1698.3,transp:700,net:17871.7},
+  '3-3-6':{basic:19450,pension:1750.5,transp:700,net:18399.5},
+  // Level 4
+  '3-4-1':{basic:20030,pension:1802.7,transp:900,net:19127.3},
+  '3-4-2':{basic:20610,pension:1854.9,transp:900,net:19655.1},
+  '3-4-3':{basic:21190,pension:1907.1,transp:900,net:20182.9},
+  '3-4-4':{basic:21770,pension:1959.3,transp:900,net:20710.7},
+  // معلم خبير — Level 1
+  '4-1-1':{basic:12650,pension:1138.5,transp:700,net:12211.5},
+  '4-1-2':{basic:13250,pension:1192.5,transp:700,net:12757.5},
+  '4-1-3':{basic:13850,pension:1246.5,transp:700,net:13303.5},
+  '4-1-4':{basic:14450,pension:1300.5,transp:700,net:13849.5},
+  '4-1-5':{basic:15050,pension:1354.5,transp:700,net:14395.5},
+  '4-1-6':{basic:15650,pension:1408.5,transp:700,net:14941.5},
+  // Level 2
+  '4-2-1':{basic:16250,pension:1462.5,transp:900,net:15687.5},
+  '4-2-2':{basic:16870,pension:1518.3,transp:900,net:16251.7},
+  '4-2-3':{basic:17490,pension:1574.1,transp:900,net:16815.9},
+  '4-2-4':{basic:18110,pension:1629.9,transp:900,net:17380.1},
+  '4-2-5':{basic:18730,pension:1685.7,transp:900,net:17944.3},
+  '4-2-6':{basic:19350,pension:1741.5,transp:900,net:18508.5},
+  // Level 3
+  '4-3-1':{basic:19970,pension:1797.3,transp:900,net:19072.7},
+  '4-3-2':{basic:20610,pension:1854.9,transp:900,net:19655.1},
+  '4-3-3':{basic:21250,pension:1912.5,transp:900,net:20237.5},
+  '4-3-4':{basic:21890,pension:1970.1,transp:900,net:20819.9},
+  '4-3-5':{basic:22530,pension:2027.7,transp:900,net:21402.3},
+  '4-3-6':{basic:23170,pension:2085.3,transp:900,net:21984.7},
+};
+
+const ANNUAL_ALLOWANCES = {
+  '1':{1:300,2:320,3:340,4:360,5:380,6:400},
+  '2':{1:500,2:520,3:540,4:540,5:540},
+  '3':{1:540,2:560,3:580,4:580},
+  '4':{1:600,2:620,3:640},
+};
+
+const CAT_NAMES={1:'مساعد معلم / معلم',2:'معلم ممارس',3:'معلم متقدم',4:'معلم خبير'};
+const LEVEL_NAMES={1:'الأول',2:'الثاني',3:'الثالث',4:'الرابع',5:'الخامس',6:'السادس'};
+const MAX_RANKS={
+  '1':{1:6,2:6,3:6,4:6,5:6,6:6},
+  '2':{1:6,2:6,3:6,4:6,5:3,6:0},
+  '3':{1:6,2:6,3:6,4:4,5:0,6:0},
+  '4':{1:6,2:6,3:6,4:0,5:0,6:0},
+};
+
+function fmt(n){return n?Number(n).toLocaleString('ar-SA',{minimumFractionDigits:2,maximumFractionDigits:2}):'—';}
+function fmtI(n){return Number(n).toLocaleString('ar-SA');}
+
+// ── AI LOOKUP ──────────────────────────────────────────
+let aiTypingTimer=null;
+let currentBasic=0;
+
+function aiLookup(){
+  const cat  = document.getElementById('ai-cat').value;
+  const lvl  = document.getElementById('ai-lvl').value;
+  const rank = document.getElementById('ai-rank').value;
+
+  // Update rank options based on available data
+  updateRankOptions(cat, lvl);
+
+  const key = `${cat}-${lvl}-${rank}`;
+  const data = SALARY_DB[key];
+
+  // Show thinking animation
+  showThinking();
+
+  clearTimeout(aiTypingTimer);
+  aiTypingTimer = setTimeout(()=>{
+    if(data){
+      typeValue('ai-basic-val', fmt(data.basic), 'ريال');
+      typeValue('ai-pension-val', fmt(data.pension), 'ريال');
+      typeValue('ai-transp-val', fmt(data.transp), 'ريال');
+      typeValue('ai-net-val', fmt(data.net), 'ريال');
+      currentBasic = data.basic;
+
+      // Highlight matching row in salary scale
+      highlightScaleRow(cat, lvl, rank);
+    } else {
+      ['ai-basic-val','ai-pension-val','ai-transp-val','ai-net-val'].forEach(id=>{
+        document.getElementById(id).textContent = 'غير متوفر';
+      });
+      currentBasic = 0;
+    }
+    aiCalcRetire();
+  }, 600);
+}
+
+function updateRankOptions(cat, lvl){
+  const maxR = (MAX_RANKS[cat] && MAX_RANKS[cat][parseInt(lvl)]) || 6;
+  const sel  = document.getElementById('ai-rank');
+  const cur  = parseInt(sel.value);
+  sel.innerHTML='';
+  for(let r=1;r<=maxR;r++){
+    const opt=document.createElement('option');
+    opt.value=r; opt.text=r;
+    if(r===Math.min(cur,maxR)) opt.selected=true;
+    sel.appendChild(opt);
+  }
+}
+
+function showThinking(){
+  ['ai-basic-val','ai-pension-val','ai-transp-val','ai-net-val'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.innerHTML = `<span class="ai-thinking"><span></span><span></span><span></span></span>`;
+  });
+}
+
+function typeValue(elId, val, unit){
+  const el = document.getElementById(elId);
+  el.className = 'ai-value ai-streamed';
+  el.textContent = val + ' ' + unit;
+}
+
+function aiCalcRetire(){
+  const yrs = parseFloat(document.getElementById('ai-years').value)||0;
+  document.getElementById('ai-years-r').value = Math.min(yrs,40);
+  const months = yrs * 12;
+  const monthly = currentBasic ? (currentBasic * months) / 480 : 0;
+  const pct = Math.min((months/480)*100, 100);
+  const rem = Math.max(40-yrs, 0);
+
+  document.getElementById('ai-months').textContent = fmtI(months);
+  document.getElementById('ai-ret-monthly').textContent = currentBasic ? fmt(monthly) : '—';
+  document.getElementById('ai-ret-pct').textContent = pct.toFixed(1)+'%';
+  document.getElementById('ai-ret-rem').textContent = rem;
+  document.getElementById('ai-total-retire').textContent = currentBasic ? fmt(monthly) : '—';
+  document.getElementById('ai-annual-retire').textContent = currentBasic ? fmt(monthly*12)+' ريال' : '—';
+  document.getElementById('ai-prog-bar').style.width = pct+'%';
+  document.getElementById('ai-prog-lbl').textContent = pct.toFixed(1)+'%';
+
+  // Sync to compare
+  if(currentBasic) document.getElementById('cmp-civil').textContent = fmt(monthly);
+}
+
+// ── CIVIL ──────────────────────────────────────────────
+function calcCivil(){
+  const sal  = parseFloat(document.getElementById('c-sal').value)||0;
+  const yrs  = parseFloat(document.getElementById('c-yrs').value)||0;
+  document.getElementById('c-sal-r').value = Math.min(sal,50000);
+  document.getElementById('c-yrs-r').value = Math.min(yrs,40);
+  const months  = yrs*12;
+  const base    = (sal*months)/480;
+  const pct     = Math.min((months/480)*100,100);
+  document.getElementById('c-months').textContent = fmtI(months);
+  document.getElementById('c-base').textContent   = fmt(base);
+  document.getElementById('c-pct').textContent    = pct.toFixed(1)+'%';
+  document.getElementById('c-rem').textContent    = Math.max(40-yrs,0);
+  document.getElementById('c-total').textContent  = fmt(base);
+  document.getElementById('c-annual').textContent = fmt(base*12)+' ريال';
+  document.getElementById('c-prog').style.width   = pct+'%';
+  document.getElementById('c-prog-lbl').textContent = pct.toFixed(1)+'%';
+  document.getElementById('cmp-civil').textContent  = fmt(base);
+}
+
+// ── GOSI ───────────────────────────────────────────────
+function calcGosi(){
+  const sal = parseFloat(document.getElementById('g-sal').value)||0;
+  const yrs = parseFloat(document.getElementById('g-yrs').value)||0;
+  document.getElementById('g-sal-r').value = Math.min(sal,50000);
+  document.getElementById('g-yrs-r').value = Math.min(yrs,45);
+  const months = yrs*12;
+  const raw    = (sal*months)/600;
+  const pension= Math.max(raw, months>=120?1983.75:0);
+  const prog   = Math.min((months/120)*100,100);
+  document.getElementById('g-months').textContent = fmtI(months);
+  document.getElementById('g-base').textContent   = fmt(raw);
+  document.getElementById('g-emp').textContent    = fmt(sal*.09);
+  document.getElementById('g-self').textContent   = fmt(sal*.09);
+  document.getElementById('g-elig').textContent   = months>=120?'✅ مستحق':'❌ '+(120-months)+' شهر إضافي';
+  document.getElementById('g-total').textContent  = fmt(pension);
+  document.getElementById('g-annual').textContent = fmt(pension*12)+' ريال';
+  document.getElementById('g-prog').style.width   = prog+'%';
+  document.getElementById('g-prog-lbl').textContent = prog.toFixed(1)+'%';
+  document.getElementById('cmp-gosi').textContent   = fmt(pension);
+}
+
+// ── SALARY SCALE TABLE BUILDER ─────────────────────────
+function buildSalaryScale(){
+  const container = document.getElementById('scale-container');
+  const levelColors=['l1','l2','l3','l4','l5','l6'];
+  const levelTitles=['الأول','الثاني','الثالث','الرابع','الخامس','السادس'];
+
+  let html='';
+  for(let lvl=1;lvl<=6;lvl++){
+    html+=`<div class="level-block">
+      <div class="level-title ${levelColors[lvl-1]}">المستوى ${levelTitles[lvl-1]}</div>
+      <table class="scale-table">
+        <thead>
+          <tr>
+            <th class="th-rank" rowspan="2">الرتبة</th>
+            <th class="cat-header asst" colspan="4">مساعد معلم / معلم</th>
+            <th class="cat-header mmares" colspan="4">معلم ممارس</th>
+            <th class="cat-header mtaq" colspan="4">معلم متقدم</th>
+            <th class="cat-header khabeer" colspan="4">معلم خبير</th>
+          </tr>
+          <tr>`;
+
+    for(let c=0;c<4;c++){
+      const cls=['th-asst','th-mmares','th-mtaq','th-khabeer'][c];
+      html+=`<th class="${cls}">الأساسي</th><th class="${cls}">تقاعد</th><th class="${cls}">نقل</th><th class="${cls}">الصافي</th>`;
+    }
+    html+='</tr></thead><tbody>';
+
+    for(let rank=1;rank<=6;rank++){
+      html+=`<tr>`;
+      html+=`<td><strong>${rank}</strong></td>`;
+      for(let cat=1;cat<=4;cat++){
+        const key=`${cat}-${lvl}-${rank}`;
+        const d=SALARY_DB[key];
+        if(d){
+          html+=`<td>${d.basic.toLocaleString()}</td>`;
+          html+=`<td>${d.pension.toLocaleString()}</td>`;
+          html+=`<td>${d.transp.toLocaleString()}</td>`;
+          html+=`<td class="total-cell">${d.net.toLocaleString()}</td>`;
+        } else {
+          html+=`<td class="na-cell" colspan="4">—</td>`;
+        }
+      }
+      html+=`</tr>`;
+    }
+
+    // Annual allowance row
+    html+=`<tr class="ann-row"><td colspan="1">العلاوة السنوية</td>`;
+    for(let cat=1;cat<=4;cat++){
+      const ann=(ANNUAL_ALLOWANCES[cat]&&ANNUAL_ALLOWANCES[cat][lvl]);
+      html+=`<td colspan="4">${ann?ann+' ريال':'—'}</td>`;
+    }
+    html+=`</tr></tbody></table></div>`;
+  }
+  container.innerHTML=html;
+}
+
+// ── HIGHLIGHT SCALE ROW ────────────────────────────────
+function highlightScaleRow(cat, lvl, rank){
+  // Remove previous highlights
+  document.querySelectorAll('.scale-table tr.selected').forEach(r=>r.classList.remove('selected'));
+  // Find row in scale (rank = row index in tbody, but we skip the ann row)
+  // Scale is built per level block; each block has 6+1 rows
+  // We need to find the correct table and row
+  const blocks=document.querySelectorAll('.level-block');
+  if(!blocks[parseInt(lvl)-1]) return;
+  const tbl=blocks[parseInt(lvl)-1].querySelector('.scale-table');
+  if(!tbl) return;
+  const rows=tbl.querySelectorAll('tbody tr');
+  if(rows[parseInt(rank)-1]) rows[parseInt(rank)-1].classList.add('selected');
+}
+
+// ── TAB SWITCH ─────────────────────────────────────────
+function switchTab(tab){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.querySelector('.t-'+tab).classList.add('active');
+}
+
+// ── INIT ───────────────────────────────────────────────
+buildSalaryScale();
+aiLookup();
+calcCivil();
+calcGosi();
+</script>
+</body>
+</html>

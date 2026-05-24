@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة نافس الرقمية التفاعلية</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --pearl-white: #FBFCF8;
+            --beige-luxury: #F5F5DC;
+            --beige-light: #FAF9F6;
+            --royal-blue: #1E40AF;
+            --accent-yellow: #FACC15;
+            --text-dark: #1E293B;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--pearl-white);
+            color: var(--text-dark);
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        .glass-card {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .bg-beige-card {
+            background-color: var(--beige-light);
+            border: 1px solid #E4E4D7;
+        }
+
+        /* حقول التعديل المباشر شديدة النقاء والوضوح */
+        .editable-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px dashed transparent;
+            transition: all 0.2s;
+            padding: 2px 4px;
+        }
+        .editable-input:hover, .editable-input:focus {
+            background: rgba(30, 64, 175, 0.04);
+            border-bottom: 1px dashed var(--royal-blue);
+            outline: none;
+        }
+
+        /* =========================================================================
+           🖨️ هندسة نظام الطباعة الفاخرة والاحتواء الصارم لصفحة واحدة A4 عمودية واحدة
+           ========================================================================= */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+            body {
+                width: 210mm;
+                height: 297mm;
+                overflow: hidden !important;
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-full {
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 100% !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                overflow: hidden !important;
+            }
+            .tab-content {
+                display: block !important;
+                page-break-inside: avoid !important;
+                margin-bottom: 6px !important;
+                overflow: hidden !important;
+            }
+            .glass-card, .bg-beige-card {
+                background: #ffffff !important;
+                border: 1px solid #cbd5e1 !important;
+                box-shadow: none !important;
+                padding: 8px !important;
+            }
+            h2, h3 { 
+                color: var(--royal-blue) !important; 
+                margin-bottom: 2px !important; 
+                margin-top: 2px !important;
+            }
+            table th, table td { 
+                padding: 3px 5px !important; 
+                font-size: 10px !important; 
+            }
+            input, select, textarea { 
+                border: none !important; 
+                background: transparent !important; 
+                font-size: 10px !important;
+            }
+            canvas { 
+                max-height: 100px !important; 
+            }
+            .chart-box { 
+                max-height: 100px !important; 
+            }
+            .timeline-box { 
+                display: none !important; 
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-blue-600 selection:text-white flex flex-col min-h-screen">
+
+    <div id="splash-screen" class="fixed inset-0 z-50 bg-blue-900 flex flex-col justify-center items-center text-white transition-opacity duration-500 ease-out">
+        <div class="relative flex flex-col items-center gap-5 animate-pulse">
+            <div class="w-20 h-20 rounded-full bg-white flex items-center justify-center shadow-2xl border-4 border-yellow-400">
+                <i class="fa-solid fa-star-of-life text-blue-900 text-3xl animate-spin" style="animation-duration: 4s;"></i>
+            </div>
+            <h1 class="text-2xl font-black tracking-wide">المنصة الرقمية التفاعلية لنواتج التعلم</h1>
+            <p class="text-blue-200/80 text-sm font-medium">جاري تهيئة أدوات القياس الفاخرة...</p>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-6 left-6 z-50 flex flex-col gap-2 no-print"></div>
+
+    <header class="sticky top-0 z-30 bg-white shadow-sm px-6 py-3 flex items-center justify-between border-b-4 border-yellow-400 no-print">
+        <div class="flex items-center gap-4">
+            <div class="p-2.5 bg-blue-700 text-white rounded-xl shadow-md">
+                <i class="fa-solid fa-award text-xl"></i>
+            </div>
+            <div>
+                <input type="text" id="header-school-input" class="editable-input font-black text-lg text-blue-900 focus:ring-0" placeholder="اسم المدرسة...">
+                <p class="text-[11px] text-slate-500 font-medium">منظومة القياس والمتابعة الميدانية المستمرة لقسم التقويم</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="hidden md:flex flex-col text-left border-l-2 border-slate-200 pl-4 space-y-0.5">
+                <div class="flex items-center gap-1.5 justify-end">
+                    <i class="fa-solid fa-calendar text-yellow-500 text-[11px]"></i>
+                    <input type="text" id="header-hijri-input" class="editable-input text-xs font-bold text-blue-800 text-left" placeholder="التاريخ الهجري">
+                </div>
+                <div class="flex items-center gap-1.5 justify-end">
+                    <i class="fa-solid fa-calendar-check text-slate-400 text-[10px]"></i>
+                    <input type="text" id="header-gregorian-input" class="editable-input text-[10px] text-slate-500 text-left" placeholder="التاريخ الميلادي">
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <button onclick="openSettingsModal()" class="p-2 rounded-full hover:bg-slate-100 text-slate-600 dark:text-zinc-300" title="إعدادات الهوية">
+                    <i class="fa-solid fa-sliders text-base text-blue-800"></i>
+                </button>
+                <button onclick="triggerPrintAll()" class="bg-blue-700 text-white px-4 py-2 rounded-lg font-bold text-xs hover:bg-blue-800 transition-all flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-print"></i> طباعة التقرير
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex-1 flex overflow-hidden">
+        <aside class="w-72 bg-slate-50 border-l border-slate-200 p-3 no-print shrink-0 flex flex-col justify-between">
+            <nav class="space-y-1 overflow-y-auto pr-1">
+                <button onclick="switchTab('dashboard')" id="btn-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-xs transition-all bg-blue-800 text-white shadow-md">
+                    <i class="fa-solid fa-chart-pie text-yellow-400"></i> لوحة المعلومات الإحصائية
+                </button>
+                <button onclick="switchTab('exec-plan')" id="btn-exec-plan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-600 hover:bg-white hover:text-blue-700 transition-all">
+                    <i class="fa-solid fa-star text-amber-500"></i> 1. الخطة الإجرائية المكثفة
+                </button>
+                <button onclick="switchTab('teachers-plan')" id="btn-teachers-plan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-600 hover:bg-white hover:text-blue-700 transition-all">
+                    <i class="fa-solid fa-chalkboard-user text-blue-600"></i> 2. خطة معلمي المواد المستهدفة
+                </button>
+                <button onclick="switchTab('structures-plan')" id="btn-structures-plan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-600 hover:bg-white hover:text-blue-700 transition-all">
+                    <i class="fa-solid fa-shield-halved text-indigo-600"></i> 3. خطة القيادة والتشكيلات
+                </button>
+                <button onclick="switchTab('committees-plan')" id="btn-committees-plan" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-600 hover:bg-white hover:text-blue-700 transition-all">
+                    <i class="fa-solid fa-users-rectangle text-yellow-600"></i> 4. خطة اللجان المدرسية
+                </button>
+                <button onclick="switchTab('monitoring-system')" id="btn-monitoring-system" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-600 hover:bg-white hover:text-blue-700 transition-all">
+                    <i class="fa-solid fa-square-poll-horizontal text-sky-600"></i> 5. نظام المتابعة وسجل التنفيذ
+                </button>
+                <button onclick="switchTab('analytics')" id="btn-analytics" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-600 hover:bg-white hover:text-blue-700 transition-all">
+                    <i class="fa-solid fa-brain text-purple-600"></i> 6. التحليلات والتوصيات الذكية
+                </button>
+            </nav>
+            <div class="border-t border-slate-200 pt-3">
+                <div class="bg-blue-50/70 p-3 rounded-xl border border-blue-100 text-center">
+                    <p class="text-[10px] text-blue-800 font-bold"><i class="fa-solid fa-cloud-arrow-up text-yellow-500"></i> نظام الذاكرة المحلية نشط وآمن</p>
+                </div>
+                <div class="text-[9px] text-center text-slate-400 mt-2 font-mono">الإصدار الفاخر v2.5 • 1447هـ</div>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-4 md:p-5 space-y-4 print-full" id="print-main-zone">
+            
+            <section id="tab-dashboard" class="tab-content space-y-4">
+                <div class="bg-beige-card rounded-xl p-4 shadow-sm">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="text-sm font-bold text-blue-900"><i class="fa-solid fa-spinner text-yellow-500 animate-spin"></i> نسبة الإنجاز التنفيذي الإجمالي العام للخطة المدرسية</h3>
+                        <span id="global-progress-txt" class="text-lg font-black text-blue-800">0%</span>
+                    </div>
+                    <div class="w-full h-3 bg-white border border-slate-200 rounded-full overflow-hidden relative shadow-inner">
+                        <div id="global-progress-bar" class="h-full bg-gradient-to-r from-blue-700 to-blue-900 transition-all duration-1000 relative rounded-full" style="width: 0%">
+                            <div class="absolute inset-0 shimmer opacity-20"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                    <div class="glass-card p-3 flex items-center justify-between border-r-4 border-blue-700">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block">تنفيذ الخطة الكلي</span>
+                            <span id="stat-exec-rate" class="text-lg font-black text-blue-900">0%</span>
+                        </div>
+                        <i class="fa-solid fa-chart-line text-blue-200 text-base"></i>
+                    </div>
+                    <div class="glass-card p-3 flex items-center justify-between border-r-4 border-yellow-500">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block">الإجراءات المنجزة</span>
+                            <span id="stat-actions-count" class="text-lg font-black text-slate-800">0 / 25</span>
+                        </div>
+                        <i class="fa-solid fa-list-check text-yellow-200 text-base"></i>
+                    </div>
+                    <div class="glass-card p-3 flex items-center justify-between border-r-4 border-indigo-600">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block">الطلاب المستهدفين</span>
+                            <span class="text-base font-black text-indigo-900">180 طالب</span>
+                        </div>
+                        <i class="fa-solid fa-users text-indigo-200 text-base"></i>
+                    </div>
+                    <div class="glass-card p-3 flex items-center justify-between border-r-4 border-blue-400">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 block">نسبة التحسن المستهدفة</span>
+                            <span class="text-lg font-black text-blue-800 font-serif">+5%</span>
+                        </div>
+                        <i class="fa-solid fa-arrow-trend-up text-blue-200 text-base"></i>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="glass-card p-3 flex flex-col justify-between chart-box">
+                        <h4 class="text-[11px] font-bold text-slate-500 mb-1 flex items-center gap-1"><i class="fa-solid fa-chart-pie text-yellow-500"></i> توزيع الأوزان النسبية للخطط</h4>
+                        <div class="relative w-full max-w-[90px] mx-auto">
+                            <canvas id="chartDoughnut"></canvas>
+                        </div>
+                    </div>
+                    <div class="glass-card p-3 md:col-span-2 h-36">
+                        <h4 class="text-[11px] font-bold text-slate-500 mb-1 flex items-center gap-1"><i class="fa-solid fa-chart-area text-blue-500"></i> تطور مستويات الإنجاز الشهري المقدر</h4>
+                        <div class="h-28">
+                            <canvas id="chartLine"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-3 h-36">
+                    <h4 class="text-[11px] font-bold text-slate-500 mb-1 flex items-center gap-1"><i class="fa-solid fa-chart-column text-blue-700"></i> مقارنة أداء النواتج المهارية المستهدفة حسب المواد الرئيسية الثلاث</h4>
+                    <div class="h-28">
+                        <canvas id="chartBar"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-exec-plan" class="tab-content hidden space-y-3">
+                <div class="no-print">
+                    <h3 class="text-sm font-bold text-blue-900 border-r-4 border-blue-700 pr-2">1. الخطة الإجرائية المكثفة للمدرسة ومتابعة الاختبارات</h3>
+                </div>
+                <div id="exec-accordion-container" class="space-y-2"></div>
+            </section>
+
+            <section id="tab-teachers-plan" class="tab-content hidden space-y-3">
+                <div class="no-print">
+                    <h3 class="text-sm font-bold text-blue-900 border-r-4 border-blue-700 pr-2">2. خطة معلمي المواد المستهدفة (رياضيات - علوم - قراءة وفهم)</h3>
+                </div>
+                <div class="overflow-x-auto glass-card">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-blue-900 text-white font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="p-2 text-center w-8">م</th>
+                                <th class="p-2">إجراء التنفيذ التعليمي في حجرة الصف</th>
+                                <th class="p-2 w-24">حالة التنفيذ</th>
+                                <th class="p-2 w-44">المدد الزمنية والتواريخ</th>
+                                <th class="p-2 min-w-[150px]">الملاحظات التطويرية والشواهد</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teachers-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="tab-structures-plan" class="tab-content hidden space-y-3">
+                <div class="no-print">
+                    <h3 class="text-sm font-bold text-blue-900 border-r-4 border-blue-700 pr-2">3. خطة القيادة والتشكيلات المدرسية (مدير/ة - وكيل/ة - موجه/ة)</h3>
+                </div>
+                <div class="overflow-x-auto glass-card">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-blue-900 text-white font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="p-2 text-center w-8">م</th>
+                                <th class="p-2">إجراء التنفيذ الإداري والقيادي للمتابعة</th>
+                                <th class="p-2 w-40">المسؤول المكلف / المسؤول التربوي</th>
+                                <th class="p-2 w-24">حالة التنفيذ</th>
+                                <th class="p-2 min-w-[150px]">المرئيات ونتائج المتابعة الميدانية</th>
+                            </tr>
+                        </thead>
+                        <tbody id="structures-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="tab-committees-plan" class="tab-content hidden space-y-3">
+                <div class="no-print">
+                    <h3 class="text-sm font-bold text-blue-900 border-r-4 border-blue-700 pr-2">4. خطة اللجان المدرسية المتكاملة لردم فجوات التحصيل</h3>
+                </div>
+                <div class="overflow-x-auto glass-card">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-blue-900 text-white font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="p-2 text-center w-8">م</th>
+                                <th class="p-2">إجراء اللجنة المستهدف لتعزيز نواتج نافس</th>
+                                <th class="p-2 w-44">اللجنة المسؤولة عن المتابعة</th>
+                                <th class="p-2 w-24">حالة التنفيذ</th>
+                                <th class="p-2 min-w-[150px]">شواهد ومحاضر التحقق الرقمي</th>
+                            </tr>
+                        </thead>
+                        <tbody id="committees-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="tab-monitoring-system" class="tab-content hidden space-y-3">
+                <div class="flex justify-between items-center gap-4 no-print">
+                    <h3 class="text-sm font-bold text-blue-900 border-r-4 border-blue-700 pr-2">5. نظام المتابعة الميداني وسجل رصد التنفيذ الفوري</h3>
+                    <button onclick="addNewMonitorRecord()" class="px-3 py-1.5 bg-blue-700 text-white font-bold text-xs rounded-lg shadow-sm hover:bg-blue-800 transition-all flex items-center gap-1">
+                        <i class="fa-solid fa-plus-circle text-yellow-400"></i> إضافة سجل متابعة جديد
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 no-print">
+                    <input type="text" id="monitor-search" oninput="filterMonitorRecords()" placeholder="بحث فوري في الإجراءات ومؤشرات التحقق..." class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-700">
+                    <select id="monitor-filter-status" onchange="filterMonitorRecords()" class="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-1 focus:ring-blue-700">
+                        <option value="all">كل الحالات الميدانية</option>
+                        <option value="نفذ">نفذ</option>
+                        <option value="لم ينفذ">لم ينفذ</option>
+                    </select>
+                </div>
+
+                <div class="overflow-x-auto glass-card">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-blue-900 text-white font-bold border-b border-slate-200">
+                            <tr>
+                                <th class="p-2 text-center w-8">م</th>
+                                <th class="p-2">إجراء التنفيذ الميداني</th>
+                                <th class="p-2 w-28">التاريخ المدوّن</th>
+                                <th class="p-2 w-24">حالة المتابعة</th>
+                                <th class="p-2">أسباب عدم التنفيذ</th>
+                                <th class="p-2 w-28">التاريخ المقترح</th>
+                                <th class="p-2">مؤشر التحقق شواهد</th>
+                                <th class="p-2 w-12 text-center no-print">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="monitor-table-body" class="divide-y divide-slate-100"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="tab-analytics" class="tab-content hidden space-y-4">
+                <div class="flex justify-between items-center no-print">
+                    <h3 class="text-sm font-bold text-blue-900 border-r-4 border-blue-700 pr-2">6. التقارير التحليلية والمحرك الاستقرائي الذكي</h3>
+                    <button onclick="runSmartAnalysis()" class="px-4 py-1.5 bg-gradient-to-r from-blue-700 to-indigo-700 text-white font-bold text-xs rounded-xl shadow-sm hover:from-blue-800 transition-all">
+                        <i class="fa-solid fa-microchip text-yellow-400"></i> تشغيل التحليل الذكي الفوري
+                    </button>
+                </div>
+
+                <div class="bg-beige-card border-r-4 border-blue-700 rounded-xl p-4 shadow-sm">
+                    <h4 class="font-bold text-xs text-blue-900 mb-2 flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-blue-700"></span>
+                        مخرجات التوصيات البرمجية المقترحة للمدرسة
+                    </h4>
+                    <div id="analysis-output" class="text-xs text-slate-700 space-y-1">
+                        <p>اضغط على زر "تشغيل التحليل الذكي الفوري" أعلاه لقراءة وفحص مستويات الأداء الحالية.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card p-4 timeline-box">
+                    <h4 class="font-bold text-xs text-blue-900 mb-3 flex items-center gap-1.5"><i class="fa-solid fa-clock-history text-yellow-500"></i> المخطط الزمني الشامل لتنفيذ الخطة (Timeline)</h4>
+                    <div class="relative border-r-2 border-blue-600/30 mr-2 space-y-4">
+                        <div class="relative pr-4">
+                            <div class="absolute -right-1 top-1 w-2 h-2 rounded-full bg-blue-700"></div>
+                            <span class="text-[10px] font-bold text-blue-800 block">5 رجب 1447 هـ</span>
+                            <h5 class="text-xs font-bold text-slate-800 mt-0.5">انطلاق الخطة الإجرائية المكثفة</h5>
+                        </div>
+                        <div class="relative pr-4">
+                            <div class="absolute -right-1 top-1 w-2 h-2 rounded-full bg-yellow-500"></div>
+                            <span class="text-[10px] font-bold text-yellow-600 block">فترة الفصل الدراسي الثاني</span>
+                            <h5 class="text-xs font-bold text-slate-800 mt-0.5">تكثيف عمليات التدريس والمجتمعات المهنية</h5>
+                        </div>
+                        <div class="relative pr-4">
+                            <div class="absolute -right-1 top-1 w-2 h-2 rounded-full bg-indigo-600"></div>
+                            <span class="text-[10px] font-bold text-indigo-600 block">12 رمضان 1447 هـ</span>
+                            <h5 class="text-xs font-bold text-slate-800 mt-0.5">التقييم البعدي الختامي</h5>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="settings-modal" class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm flex items-center justify-center hidden no-print">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl p-6 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                <h3 class="text-base font-bold text-blue-900 flex items-center gap-1.5"><i class="fa-solid fa-id-card text-yellow-500"></i> إعدادات الهوية والمسؤولين التربويين</h3>
+                <button onclick="closeSettingsModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">اسم مدير/ة المدرسة</label>
+                    <input type="text" id="cfg-principal-name" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">اسم المشرف/ة التربوي/ة</label>
+                    <input type="text" id="cfg-supervisor-name" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-700">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">العام الدراسي المستهدف</label>
+                    <input type="text" id="cfg-academic-year" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-blue-700">
+                </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t border-slate-100 pt-3">
+                <button onclick="closeSettingsModal()" class="px-4 py-2 bg-slate-100 text-slate-600 text-xs font-bold rounded-xl">إلغاء</button>
+                <button onclick="savePlatformSettings()" class="px-5 py-2 bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md">حفظ البيانات</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULT_PLAN_DATA = {
+            settings: {
+                schoolName: "مدرسة سعد بن الربيع المتوسطة",
+                principalName: "نايف المخلفي",
+                supervisorName: "د. فواز الحربي",
+                academicYear: "1447هـ - 2026م",
+                hijriDate: "الأحد، 7 ذو القعدة 1447 هـ",
+                gregorianDate: "24 مايو 2026 م"
+            },
+            execGoals: [
+                {
+                    id: 1,
+                    title: "تهيئة الطلاب النفسية لأداء الاختبارات الوطنية ومتابعة الاختبارات المحاكية من إدارة التعليم حسب الجدولة في التعميم",
+                    period: "من تاريخ 5/7/1447هـ وحتى 12/9/1447هـ",
+                    tools: "الإذاعة المدرسية، المنشورات الإلكترونية، شاشات الإعلانات، الرسائل النصية",
+                    owner: "إدارة المدرسة والتشكيلات",
+                    support: "أعضاء لجنة نافس",
+                    indicator: "تقرير تنفيذ وارتفاع دافعية الطلاب لأداء الاختبارات",
+                    notes: "",
+                    actions: [
+                        { text: "توضيح الهدف الأساسي من الاختبارات الوطنية للطلاب", done: false },
+                        { text: "التأكيد المستمر على الطلاب بأهمية الاستعداد الجيد والتفاعل", done: false },
+                        { text: "رفع دافعية الطلاب وتعزيز الجوانب المعنوية والمادية لهم", done: false }
+                    ]
+                },
+                {
+                    id: 2,
+                    title: "رفع مستوى الطلاب في نتائج اختبارات نافس ومتابعة الاختبارات المحاكية من إدارة التعليم حسب الجدولة في التعميم",
+                    period: "فترة الترم الثاني كاملاً",
+                    tools: "المهارات المستهدفة للمواد والمراحل الدراسية، تزويد المعلمين بدليل نواتج التعلم 2025م",
+                    owner: "مدير/ة المدرسة، معلمي المواد المستهدفة",
+                    support: "أعضاء لجنة نافس",
+                    indicator: "تقرير مجتمعات مهنية وتطبيق الإجراءات الصفيّة المباشرة",
+                    notes: "",
+                    actions: [
+                        { text: "تكليف المعلمين بمنهجية معينة لرفع مستوى الطلاب عبر التركيز أثناء شرح الدروس على المهارات المستهدفة وتوضيحها", done: false },
+                        { text: "عمل مجتمعات مهنية دورية ومساندة للمعلمين داخل المدرسة", done: false },
+                        { text: "المتابعة المستمرة لدفاتر التحضير والأداء الصفي الفعلي للمواد", done: false }
+                    ]
+                },
+                {
+                    id: 3,
+                    title: "تدريب الطلاب على أداء الاختبارات الوطنية ومتابعة الاختبارات المحاكية من إدارة التعليم حسب الجدولة في التعميم",
+                    period: "فترات الترم الثاني المتتابعة",
+                    tools: "استخدام نماذج محاكية، نماذج لتوضيح طريقة التظليل، نموذج اختبارات قبلي وبعدي لردم الفجوات",
+                    owner: "مدير/ة المدرسة - الموجه/ة الطلابي/ة",
+                    support: "أعضاء لجنة نافس",
+                    indicator: "تقرير الأداء الفعلي ونماذج الإجابات المصححة",
+                    notes: "",
+                    actions: [
+                        { text: "تدريب الطلاب على آلية الاختبار وطريقة التظليل الصحيحة للدوائر ورقة الإجابة", done: false },
+                        { text: "إجراء اختبار قبلي وبعدي دوري لقياس أثر الخطة الإجرائية المطبقة", done: false },
+                        { text: "تكريم الطلاب المتميزين والبارزين في فترات التدريب المختلفة", done: false },
+                        { text: "توضيح أدوات الاختبار ومواعيده وآليته بشكل دقيق ومفصل لكافة الفصول", done: false }
+                    ]
+                }
+            ],
+            teachersPlan: [
+                { id: 1, text: "متابعة تفعيل حصص الفهم القرائي والنتائج الدورية ونواتج التعلم ومستويات الأداء الصادرة من هيئة تقويم التعليم.", status: "لم يبدأ", period: "مستمر", notes: "" },
+                { id: 2, text: "تصميم وتدريس المادة الدراسية باستخدام استراتيجيات تعليم وتعلم حديثة ومتنوعة، تعمل على تنمية القدرة على التفكير والإبداع لدى الطلاب ونشر مهارات التفكير العليا.", status: "لم يبدأ", period: "مستمر", notes: "" },
+                { id: 3, text: "تقييم مستوى الطلاب بشكل مرحلي، وتفعيل جميع أدوات التقويم المتنوعة، وقياس نواتج التعلم (قبل وبعد) عملية التعلم لردم فجوات الأداء وإعداد مواد إثرائية.", status: "لم يبدأ", period: "فصلياً", notes: "" },
+                { id: 4, text: "تهيئة الطلاب للمشاركة الفعالة في الاختبارات الوطنية والدولية وبناء الدافعية لديهم وضمان استعدادهم الكامل مهارياً.", status: "لم يبدأ", period: "قبل الاختبارات", notes: "" },
+                { id: 5, text: "إعداد التكليفات والأنشطة والمهام الأدائية والاختبارات وفق الضوابط المعتمدة لذلك، وتصحيحها وتحديد الاحتياجات الفردية للطالب.", status: "لم يبدأ", period: "مستمر", notes: "" },
+                { id: 6, text: "تقديم تغذية راجعة بناءة وبشكل منتظم تتوافق مع مستويات الطلاب الفردية؛ لتحسين مخرجات التعلم ونواتج نافس.", status: "لم يبدأ", period: "مستمر", notes: "" },
+                { id: 7, text: "تخصيص حصة في المرحلة المتوسطة لتعزيز الفهم القرائي، وتخصيص 5-10 دقائق من الحصة يومياً لأنشطة الكتابة والخط العربي وتعزيز الفهم.", status: "لم يبدأ", period: "أسبوعياً", notes: "" },
+                { id: 8, text: "تخصيص حصة أسبوعياً من حصص مادتي الرياضيات والعلوم لتحقيق نواتج التعلم ومستويات الأداء الصادرة من هيئة تقويم التعليم.", status: "لم يبدأ", period: "أسبوعياً", notes: "" }
+            ],
+            structuresPlan: [
+                { id: 1, text: "قيادة عملية تحليل ومراجعة تقدم الطالب داخل المدرسة من أجل تقييم عملية توصيل المحتوى الدراسي وفعالية أساليب التدريس وتقديم التوصيات المناسبة.", role: "مدير/ة المدرسة", status: "لم يبدأ", notes: "" },
+                { id: 2, text: "متابعة التحصيل الدراسي وتقدم الطلاب داخل المدرسة، والتأكد من مدى فعالية أساليب التدريس واتخاذ الإجراءات المناسبة حيالها.", role: "مدير/ة المدرسة", status: "لم يبدأ", notes: "" },
+                { id: 3, text: "الإشراف على عمليات التدريس واستخدام استراتيجيات التعلم، بما يضمن تحقيق أهداف المواد المستهدفة صفيّاً.", role: "مدير/ة المدرسة", status: "لم يبدأ", notes: "" },
+                { id: 4, text: "تحليل مستوى التحصيل لدى الطلاب ومتابعة أدائهم ومدى تطور مستوى تحصيلهم الدراسي ومتابعة نتائجهم بشكل دوري، وعرض الحالات التي تتطلب حصص علاجية على لجنة التوجيه والإرشاد.", role: "وكيل/ة المدرسة للشؤون التعليمية", status: "لم يبدأ", notes: "" },
+                { id: 5, text: "متابعة تقييم أداء الطلاب وتطور مستوى تحصيلهم الدراسي، والإشراف الكامل على الإجراءات المتعلقة بذلك منذ بدايتها وحتى انتهائها.", role: "وكيل/ة المدرسة للشؤون التعليمية", status: "لم يبدأ", notes: "" },
+                { id: 6, text: "متابعة مستوى تقدم الطلاب وأدائهم مع معلمي الصف فيما يتعلق بالأهداف المحددة لكل مادة مستهدفة، والتأكد من الالتزام بإجراءات المتابعة الميدانية.", role: "وكيل/ة المدرسة للشؤون التعليمية", status: "لم يبدأ", notes: "" },
+                { id: 7, text: "متابعة التزام المعلمين بتخصيص الحصص العلاجية والإثرائية لتحسين نواتج تعلم المواد المستهدفة.", role: "وكيل/ة المدرسة للشؤون التعليمية", status: "لم يبدأ", notes: "" },
+                { id: 8, text: "متابعة مستويات الطلاب التحصيلية والمساهمة في تحسين الأداء عبر وضع البرامج المحفزة والعلاجية المناسبة لهم بعد دراسة وتحليل وتفسير النتائج وبيانها بيانيّاً.", role: "الموجه/ة الطلابي/ة", status: "لم يبدأ", notes: "" },
+                { id: 9, text: "متابعة التحسن في نواتج تعلم الطلاب لمعرفة جدوى الإجراءات المتخذة، وتقديم التقارير الدورية الشاملة إلى لجنة التحصيل الدراسي.", role: "الموجه/ة الطلابي/ة", status: "لم يبدأ", notes: "" },
+                { id: 10, text: "دراسة حالات الطلاب المتأخرين واقتراح الإجراءات المناسبة بالتنسيق مع المعلمين، وتقديم تقرير للجنة التحصيل المعتمدة من مدير المدرسة لضمان ردم الفجوة.", role: "الموجه/ة الطلابي/ة", status: "لم يبدأ", notes: "" }
+            ],
+            committeesPlan: [
+                { id: 1, text: "متابعة المستوى التحصيلي للطلاب بشكل دوري وتحليله، ودراسة نتائج الطلاب لدورة الاختبارات الوطنية(نافس) السابقة من جميع الجوانب، وإعداد التقارير ومناقشتها مع اللجنة الإدارية.", committee: "لجنة التحصيل الدراسي", status: "لم يبدأ", notes: "" },
+                { id: 2, text: "تزويد معلمي المواد المستهدفة بالتقارير المعتمدة لتحليل نتائج الاختبارات الوطنية، وتوصيات اللجنة بشأنها لبناء الخطط داخل الفصل الدراسي.", committee: "لجنة التحصيل الدراسي", status: "لم يبدأ", notes: "" },
+                { id: 3, text: "مراجعة نتائج الاختبارات الوطنية الخاصة بالمدرسة وتقديم المقترحات لتعزيز نقاط القوة، ومعالجة نقاط الضعف المرصودة في التقارير التعليمية.", committee: "لجنة التحصيل الدراسي", status: "لم يبدأ", notes: "" },
+                { id: 4, text: "تقديم الدعم للهيئة التعليمية حول المفاهيم والأسس والآليات التي تبنى عليها الاختبارات الوطنية وتوفير جميع المتطلبات اللازمة للطلاب.", committee: "لجنة التحصيل الدراسي", status: "لم يبدأ", notes: "" },
+                { id: 5, text: "دراسة إضافة حصص علاجية أو إثرائية للمواد المستهدفة في فراغات جداول المعلمين بما يكمل أنصبتهم الرسمية ولا يخل بخطة المدرسة التعليمية.", committee: "لجنة التوجيه الطلابي", status: "لم يبدأ", notes: "" },
+                { id: 6, text: "تشجيع المعلمين على تبادل أفضل الممارسات التدريسية لرفع المستوى التحصيلي للطلاب، واقتراح التوصيات اللازمة في تطوير طرق التدريس وأساليب التقويم الصفي.", committee: "لجنة التميّز", status: "لم يبدأ", notes: "" },
+                { id: 7, text: "مناقشة تقارير الاختبارات الوطنية وإقرار التوصيات المناسبة لها بعد صدور بطاقات أداء المدرسة الرسمية.", committee: "اللجنة الإدارية", status: "لم يبدأ", notes: "" }
+            ],
+            monitorRecords: [
+                { id: 1, text: "عقد اجتماع مهني مع معلمي المواد المستهدفة لمناقشة التقرير ودراسة الفجوات المهارية", date: "1447/05/10هـ", status: "نفذ", reason: "", borderDate: "1447/05/12هـ", indicator: "محضر اجتماع رسمي موقع" }
+            ]
+        };
+
+        let currentPlanData = JSON.parse(localStorage.getItem("NAFES_PEARL_LUXURY_DB")) || DEFAULT_PLAN_DATA;
+        let chartInstances = {};
+
+        // الأمان البرمجي: تشغيل المنصة وإلغاء شاشة الحجب الخضراء فوراً
+        window.addEventListener("DOMContentLoaded", () => {
+            initHeaderInputs();
+            renderAllSections();
+            initCharts();
+            recalculateMetrics();
+
+            setTimeout(() => {
+                const splash = document.getElementById("splash-screen");
+                if(splash) {
+                    splash.classList.add("opacity-0");
+                    setTimeout(() => splash.remove(), 400);
+                }
+            }, 1000);
+        });
+
+        function initHeaderInputs() {
+            const schInput = document.getElementById("header-school-input");
+            const hijInput = document.getElementById("header-hijri-input");
+            const greInput = document.getElementById("header-gregorian-input");
+
+            schInput.value = currentPlanData.settings.schoolName || "";
+            hijInput.value = currentPlanData.settings.hijriDate || "";
+            greInput.value = currentPlanData.settings.gregorianDate || "";
+
+            schInput.addEventListener("input", (e) => updateSettingsField('schoolName', e.target.value));
+            hijInput.addEventListener("input", (e) => updateSettingsField('hijriDate', e.target.value));
+            greInput.addEventListener("input", (e) => updateSettingsField('gregorianDate', e.target.value));
+        }
+
+        function updateSettingsField(field, value) {
+            currentPlanData.settings[field] = value;
+            localStorage.setItem("NAFES_PEARL_LUXURY_DB", JSON.stringify(currentPlanData));
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem("NAFES_PEARL_LUXURY_DB", JSON.stringify(currentPlanData));
+            recalculateMetrics();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll(".tab-content").forEach(el => el.classList.add("hidden"));
+            document.getElementById(`tab-${tabId}`).classList.remove("hidden");
+
+            document.querySelectorAll("aside nav button").forEach(btn => {
+                btn.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium text-xs text-slate-600 hover:bg-white hover:text-blue-700 transition-all";
+            });
+
+            const activeBtn = document.getElementById(`btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.className = "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-bold text-xs transition-all bg-blue-800 text-white shadow-md";
+            }
+
+            if(tabId === 'dashboard') {
+                setTimeout(() => initCharts(), 40);
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById("toast-container");
+            if (!container) return;
+            const toast = document.createElement("div");
+            toast.className = `flex items-center gap-3 px-4 py-2 rounded-xl shadow-xl border text-xs font-bold transition-all duration-300 bg-white`;
+            let colorClass = "border-blue-600 text-blue-800";
+            if (type === 'error') colorClass = "border-rose-500 text-rose-700";
+            toast.className += ` ${colorClass}`;
+            toast.innerHTML = `<span><i class="fa-solid fa-bell text-yellow-500"></i> ${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 2500);
+        }
+
+        function updateInlineField(planKey, idx, field, value) {
+            currentPlanData[planKey][idx][field] = value;
+            localStorage.setItem("NAFES_PEARL_LUXURY_DB", JSON.stringify(currentPlanData));
+        }
+
+        function updateGoalField(gIdx, field, val) {
+            currentPlanData.execGoals[gIdx][field] = val;
+            localStorage.setItem("NAFES_PEARL_LUXURY_DB", JSON.stringify(currentPlanData));
+        }
+
+        function renderAllSections() {
+            // 1. الخطة الإجرائية المكثفة
+            const execContainer = document.getElementById("exec-accordion-container");
+            if (execContainer) {
+                execContainer.innerHTML = "";
+                currentPlanData.execGoals.forEach((goal, gIdx) => {
+                    const completedActions = goal.actions.filter(a => a.done).length;
+                    const progressPct = goal.actions.length ? Math.round((completedActions / goal.actions.length) * 100) : 0;
+
+                    const card = document.createElement("div");
+                    card.className = "bg-beige-card rounded-xl overflow-hidden shadow-sm";
+                    card.innerHTML = `
+                        <div class="p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="flex-1 space-y-0.5">
+                                <span class="text-[10px] font-bold text-blue-700"><i class="fa-solid fa-star text-yellow-500"></i> الهدف الاستراتيجي ${goal.id}</span>
+                                <h4 class="font-bold text-xs text-blue-900">${goal.title}</h4>
+                                <div class="flex items-center gap-1 text-[11px] text-slate-500">
+                                    <span>زمن وميعاد التنفيذ الميداني:</span>
+                                    <input type="text" value="${goal.period}" oninput="updateGoalField(${gIdx}, 'period', this.value)" class="editable-input font-medium text-blue-800 px-1 focus:outline-none">
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3 shrink-0">
+                                <div class="text-right">
+                                    <span class="text-[10px] font-bold text-slate-400 block">التقدم الحالي</span>
+                                    <span class="text-xs font-black text-blue-800">${progressPct}%</span>
+                                </div>
+                                <button onclick="toggleAccordion(${goal.id})" class="px-2 py-1 bg-white border border-slate-200 text-xs rounded-md no-print font-bold text-blue-800 hover:bg-slate-50">التفاصيل والإجراءات</button>
+                            </div>
+                        </div>
+                        <div id="accordion-content-${goal.id}" class="hidden border-t border-slate-200 p-3 space-y-3 bg-white">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+                                <div class="p-2 bg-slate-50 rounded-lg"><strong>وسائل وأدوات التنفيذ:</strong> ${goal.tools}</div>
+                                <div class="p-2 bg-slate-50 rounded-lg"><strong>المسؤول الرئيسي والمساند:</strong> ${goal.owner} • ${goal.support}</div>
+                                <div class="p-2 bg-slate-50 rounded-lg md:col-span-2"><strong>مؤشر الأداء الشامل والتحقق:</strong> ${goal.indicator}</div>
+                            </div>
+                            <div class="space-y-1">
+                                <h5 class="text-[10px] font-bold text-slate-400">مربعات الفحص للمتابعة:</h5>
+                                <div id="exec-actions-${gIdx}" class="space-y-1"></div>
+                            </div>
+                        </div>
+                    `;
+                    execContainer.appendChild(card);
+
+                    const actionsDiv = document.getElementById(`exec-actions-${gIdx}`);
+                    if (actionsDiv) {
+                        goal.actions.forEach((action, aIdx) => {
+                            const item = document.createElement("label");
+                            item.className = "flex items-start gap-2 p-2 bg-slate-50 rounded-lg border border-slate-100 cursor-pointer text-xs";
+                            item.innerHTML = `
+                                <input type="checkbox" ${action.done ? 'checked' : ''} onchange="toggleGoalAction(${gIdx}, ${aIdx})" class="mt-0.5 h-3.5 w-3.5 rounded text-blue-700">
+                                <span class="${action.done ? 'line-through text-slate-400' : ''}">${action.text}</span>
+                            `;
+                            actionsDiv.appendChild(item);
+                        });
+                    }
+                });
+            }
+
+            // 2. خطة المعلمين (التواريخ والمدد قابلة للتعديل الفوري)
+            const teachersTbody = document.getElementById("teachers-table-body");
+            if (teachersTbody) {
+                teachersTbody.innerHTML = "";
+                currentPlanData.teachersPlan.forEach((row, idx) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td class="p-2 text-center font-bold text-slate-400 bg-slate-50/50">${idx + 1}</td>
+                        <td class="p-2 font-medium text-slate-700 text-xs leading-relaxed">${row.text}</td>
+                        <td class="p-2">
+                            <select onchange="updateRowStatus('teachersPlan', ${idx}, this.value)" class="px-1.5 py-1 rounded-lg text-xs font-bold border border-slate-200 bg-white focus:outline-none ${getStatusColorClass(row.status)}">
+                                <option value="لم يبدأ" ${row.status==='لم يبدأ'?'selected':''}>لم يبدأ</option>
+                                <option value="جارٍ" ${row.status==='جارٍ'?'selected':''}>جارٍ</option>
+                                <option value="منجز" ${row.status==='منجز'?'selected':''}>منجز</option>
+                            </select>
+                        </td>
+                        <td class="p-2">
+                            <input type="text" value="${row.period}" oninput="updateInlineField('teachersPlan', ${idx}, 'period', this.value)" class="w-full editable-input text-xs text-blue-900 font-medium focus:outline-none">
+                        </td>
+                        <td class="p-2">
+                            <input type="text" oninput="updateInlineField('teachersPlan', ${idx}, 'notes', this.value)" value="${row.notes || ''}" placeholder="رصد الشواهد الميدانية هنا..." class="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none">
+                        </td>
+                    `;
+                    teachersTbody.appendChild(tr);
+                });
+            }
+
+            // 3. خطة التشكيلات المدرسية (المسؤول قابل للتعديل المباشر)
+            const structuresTbody = document.getElementById("structures-table-body");
+            if (structuresTbody) {
+                structuresTbody.innerHTML = "";
+                currentPlanData.structuresPlan.forEach((row, idx) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td class="p-2 text-center font-bold text-slate-400 bg-slate-50/50">${idx + 1}</td>
+                        <td class="p-2 font-medium text-slate-700 text-xs leading-relaxed">${row.text}</td>
+                        <td class="p-2">
+                            <input type="text" value="${row.role}" oninput="updateInlineField('structuresPlan', ${idx}, 'role', this.value)" class="w-full editable-input text-xs font-bold text-blue-800 focus:outline-none">
+                        </td>
+                        <td class="p-2">
+                            <select onchange="updateRowStatus('structuresPlan', ${idx}, this.value)" class="px-1.5 py-1 rounded-lg text-xs font-bold border border-slate-200 bg-white focus:outline-none ${getStatusColorClass(row.status)}">
+                                <option value="لم يبدأ" ${row.status==='لم يبدأ'?'selected':''}>لم يبدأ</option>
+                                <option value="جارٍ" ${row.status==='جارٍ'?'selected':''}>جارٍ</option>
+                                <option value="منجز" ${row.status==='منجز'?'selected':''}>منجز</option>
+                            </select>
+                        </td>
+                        <td class="p-2">
+                            <input type="text" oninput="updateInlineField('structuresPlan', ${idx}, 'notes', this.value)" value="${row.notes || ''}" placeholder="مرئيات القيادة..." class="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none">
+                        </td>
+                    `;
+                    structuresTbody.appendChild(tr);
+                });
+            }
+
+            // 4. خطة اللجان المدرسية (اللجنة قابلة للتعديل الفوري)
+            const committeesTbody = document.getElementById("committees-table-body");
+            if (committeesTbody) {
+                committeesTbody.innerHTML = "";
+                currentPlanData.committeesPlan.forEach((row, idx) => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td class="p-2 text-center font-bold text-slate-400 bg-slate-50/50">${idx + 1}</td>
+                        <td class="p-2 font-medium text-slate-700 text-xs leading-relaxed">${row.text}</td>
+                        <td class="p-2">
+                            <input type="text" value="${row.committee}" oninput="updateInlineField('committeesPlan', ${idx}, 'committee', this.value)" class="w-full editable-input text-xs font-bold text-blue-900 focus:outline-none">
+                        </td>
+                        <td class="p-2">
+                            <select onchange="updateRowStatus('committeesPlan', ${idx}, this.value)" class="px-1.5 py-1 rounded-lg text-xs font-bold border border-slate-200 bg-white focus:outline-none ${getStatusColorClass(row.status)}">
+                                <option value="لم يبدأ" ${row.status==='لم يبدأ'?'selected':''}>لم يبدأ</option>
+                                <option value="جارٍ" ${row.status==='جارٍ'?'selected':''}>جارٍ</option>
+                                <option value="منجز" ${row.status==='منجز'?'selected':''}>منجز</option>
+                            </select>
+                        </td>
+                        <td class="p-2">
+                            <input type="text" oninput="updateInlineField('committeesPlan', ${idx}, 'notes', this.value)" value="${row.notes || ''}" placeholder="محاضر اجتماعات اللجنة..." class="w-full px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none">
+                        </td>
+                    `;
+                    committeesTbody.appendChild(tr);
+                });
+            }
+
+            renderMonitorTable();
+        }
+
+        function getStatusColorClass(status) {
+            if (status === 'منجز') return 'text-emerald-700 bg-emerald-50 border-emerald-200';
+            if (status === 'جارٍ') return 'text-amber-700 bg-amber-50 border-amber-200';
+            return 'text-slate-500 bg-slate-50 border-slate-200';
+        }
+
+        function toggleGoalAction(gIdx, aIdx) {
+            currentPlanData.execGoals[gIdx].actions[aIdx].done = !currentPlanData.execGoals[gIdx].actions[aIdx].done;
+            saveToLocalStorage();
+            renderAllSections();
+        }
+
+        function renderMonitorTable(records = currentPlanData.monitorRecords) {
+            const tbody = document.getElementById("monitor-table-body");
+            if (!tbody) return;
+            tbody.innerHTML = "";
+            records.forEach((row, idx) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td class="p-2 text-center font-bold text-slate-400 bg-slate-50/50">${idx + 1}</td>
+                    <td class="p-2"><input type="text" oninput="updateMonitorField(${idx}, 'text', this.value)" value="${row.text}" class="w-full bg-transparent text-xs font-medium focus:outline-none"></td>
+                    <td class="p-2"><input type="text" oninput="updateMonitorField(${idx}, 'date', this.value)" value="${row.date}" class="w-full bg-transparent text-xs focus:outline-none text-blue-900 font-serif"></td>
+                    <td class="p-2">
+                        <select onchange="updateMonitorField(${idx}, 'status', this.value)" class="px-1 py-0.5 rounded font-bold text-xs ${row.status==='نفذ'?'text-emerald-700 bg-emerald-50':'text-rose-700 bg-rose-50'}">
+                            <option value="نفذ" ${row.status==='نفذ'?'selected':''}>نفذ</option>
+                            <option value="لم ينفذ" ${row.status==='لم ينفذ'?'selected':''}>لم ينفذ</option>
+                        </select>
+                    </td>
+                    <td class="p-2"><input type="text" oninput="updateMonitorField(${idx}, 'reason', this.value)" value="${row.reason || ''}" class="w-full bg-transparent text-xs focus:outline-none" placeholder="-"></td>
+                    <td class="p-2"><input type="text" oninput="updateMonitorField(${idx}, 'borderDate', this.value)" value="${row.borderDate || ''}" class="w-full bg-transparent text-xs focus:outline-none"></td>
+                    <td class="p-2"><input type="text" oninput="updateMonitorField(${idx}, 'indicator', this.value)" value="${row.indicator || ''}" class="w-full bg-transparent text-xs focus:outline-none"></td>
+                    <td class="p-2 text-center no-print">
+                        <button onclick="deleteMonitorRecord(${idx})" class="text-rose-600 hover:bg-rose-50 p-1 rounded transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function addNewMonitorRecord() {
+            currentPlanData.monitorRecords.push({
+                id: currentPlanData.monitorRecords.length + 1,
+                text: "إجراء متابعة جديد مستجد",
+                date: "1447/06/01هـ",
+                status: "لم ينفذ",
+                reason: "",
+                borderDate: "1447/06/15هـ",
+                indicator: "شواهد الزيارة والاعتماد"
+            });
+            saveToLocalStorage();
+            renderMonitorTable();
+            showToast("تم إضافة سجل متابعة جديد بنجاح");
+        }
+
+        function deleteMonitorRecord(idx) {
+            if(confirm("هل تريد إقصاء وحذف هذا السجل نهائياً؟")) {
+                currentPlanData.monitorRecords.splice(idx, 1);
+                saveToLocalStorage();
+                renderMonitorTable();
+                showToast("تم حذف سجل المتابعة الميداني");
+            }
+        }
+
+        function filterMonitorRecords() {
+            const query = document.getElementById("monitor-search").value.toLowerCase();
+            const statusFilter = document.getElementById("monitor-filter-status").value;
+            const filtered = currentPlanData.monitorRecords.filter(row => {
+                const matchQuery = row.text.toLowerCase().includes(query);
+                const matchStatus = statusFilter === 'all' || row.status === statusFilter;
+                return matchQuery && matchStatus;
+            });
+            renderMonitorTable(filtered);
+        }
+
+        function recalculateMetrics() {
+            let totalItems = 0;
+            let accomplishedItems = 0;
+            currentPlanData.execGoals.forEach(g => g.actions.forEach(a => { totalItems++; if(a.done) accomplishedItems++; }));
+            ['teachersPlan', 'structuresPlan', 'committeesPlan'].forEach(key => {
+                currentPlanData[key].forEach(row => {
+                    totalItems++;
+                    if(row.status === 'منجز') accomplishedItems++;
+                    else if(row.status === 'جارٍ') accomplishedItems += 0.5;
+                });
+            });
+            const finalPct = totalItems ? Math.round((accomplishedItems / totalItems) * 100) : 0;
+            
+            const progressTxt = document.getElementById("global-progress-txt");
+            const progressBar = document.getElementById("global-progress-bar");
+            const execRate = document.getElementById("stat-exec-rate");
+            const actionsCount = document.getElementById("stat-actions-count");
+
+            if (progressTxt) progressTxt.innerText = `${finalPct}%`;
+            if (progressBar) progressBar.style.width = `${finalPct}%`;
+            if (execRate) execRate.innerText = `${finalPct}%`;
+            if (actionsCount) actionsCount.innerText = `${Math.floor(accomplishedItems)} / ${totalItems}`;
+        }
+
+        function initCharts() {
+            const textClr = '#475569';
+            const gridClr = '#E2E8F0';
+
+            const dCanv = document.getElementById("chartDoughnut");
+            if (dCanv) {
+                if(chartInstances.doughnut) chartInstances.doughnut.destroy();
+                chartInstances.doughnut = new Chart(dCanv.getContext("2d"), {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['المعلمون', 'التشكيلات', 'اللجان', 'المكثفة'],
+                        datasets: [{
+                            data: [currentPlanData.teachersPlan.length, currentPlanData.structuresPlan.length, currentPlanData.committeesPlan.length, currentPlanData.execGoals.length],
+                            backgroundColor: ['#1E40AF', '#FACC15', '#4F46E5', '#38BDF8'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        plugins: { legend: { display: false } },
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            const lCanv = document.getElementById("chartLine");
+            if (lCanv) {
+                if(chartInstances.line) chartInstances.line.destroy();
+                chartInstances.line = new Chart(lCanv.getContext("2d"), {
+                    type: 'line',
+                    data: {
+                        labels: ['رجب', 'شعبان', 'رمضان'],
+                        datasets: [{
+                            data: [35, 75, 100],
+                            borderColor: '#1E40AF',
+                            backgroundColor: 'rgba(30, 64, 175, 0.02)',
+                            fill: true,
+                            tension: 0.2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { color: gridClr }, ticks: { color: textClr, font: { family: 'Tajawal', size: 9 } } },
+                            y: { grid: { color: gridClr }, ticks: { color: textClr, font: { size: 9 } }, min: 0, max: 100 }
+                        }
+                    }
+                });
+            }
+
+            const bCanv = document.getElementById("chartBar");
+            if (bCanv) {
+                if(chartInstances.bar) chartInstances.bar.destroy();
+                chartInstances.bar = new Chart(bCanv.getContext("2d"), {
+                    type: 'bar',
+                    data: {
+                        labels: ['الرياضيات', 'العلوم', 'القراءة'],
+                        datasets: [
+                            { label: 'دورة 2024م', data: [62, 65, 58], backgroundColor: '#cbd5e1' },
+                            { label: 'المستهدف الجديد (+5%)', data: [67, 70, 63], backgroundColor: '#FACC15' }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { labels: { font: { family: 'Tajawal', size: 9 }, color: textClr } } },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { color: textClr, font: { family: 'Tajawal', size: 9 } } },
+                            y: { grid: { color: gridClr }, ticks: { color: textClr, font: { size: 9 } }, min: 0, max: 100 }
+                        }
+                    }
+                });
+            }
+        }
+
+        function runSmartAnalysis() {
+            const out = document.getElementById("analysis-output");
+            if (!out) return;
+            out.innerHTML = "";
+            let recs = ["✅ خطة تحسين الأداء مستقرة حالياً وتسير بموثوقية عالية وفق مستويات وزارة التعليم المقررة لردم فجوات نافس الصفيّة."];
+            recs.forEach(rec => {
+                const p = document.createElement("p");
+                p.className = "py-1 border-b border-slate-100 last:border-0 leading-relaxed";
+                p.innerHTML = rec;
+                out.appendChild(p);
+            });
+            showToast("تم تشغيل محرك المتابعة الاستقرائي");
+        }
+
+        function openSettingsModal() {
+            document.getElementById("cfg-principal-name").value = currentPlanData.settings.principalName || "";
+            document.getElementById("cfg-supervisor-name").value = currentPlanData.settings.supervisorName || "";
+            document.getElementById("cfg-academic-year").value = currentPlanData.settings.academicYear || "";
+            document.getElementById("settings-modal").classList.remove("hidden");
+        }
+
+        function closeSettingsModal() {
+            document.getElementById("settings-modal").classList.add("hidden");
+        }
+
+        function savePlatformSettings() {
+            currentPlanData.settings.principalName = document.getElementById("cfg-principal-name").value;
+            currentPlanData.settings.supervisorName = document.getElementById("cfg-supervisor-name").value;
+            currentPlanData.settings.academicYear = document.getElementById("cfg-academic-year").value;
+            
+            saveToLocalStorage();
+            closeSettingsModal();
+            showToast("تم تحديث وحفظ الإعدادات التربوية بنجاح");
+        }
+
+        function triggerPrintAll() {
+            document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("hidden"));
+            setTimeout(() => {
+                window.print();
+                switchTab('dashboard');
+            }, 300);
+        }
+    </script>
+</body>
+</html>

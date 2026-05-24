@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>منصة نافس التفاعلية</title>
+<style>
+:root{
+  --bg:#f3f8fb;--ink:#102a34;--muted:#657985;--brand:#063a46;--brand2:#0e8177;--gold:#d9a72e;
+  --card:#fff;--line:#d7e6ed;--soft:#eaf8f6;--red:#b91c1c;--green:#15803d;--blue:#1d4ed8;
+}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at top left,#dff7f3,#f7fbff 50%,#eef7fb);font-family:Tahoma,Arial,sans-serif;color:var(--ink)}
+.app{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+aside{background:linear-gradient(180deg,var(--brand),#06252d);color:#fff;padding:20px;position:sticky;top:0;height:100vh;overflow:auto}
+.logo{border:1px solid rgba(255,255,255,.25);border-radius:24px;padding:18px;background:rgba(255,255,255,.08);box-shadow:0 20px 50px rgba(0,0,0,.22)}
+.logo h1{font-size:24px;margin:8px 0}.logo p{margin:0;color:#d8fffb;line-height:1.8;font-size:13px}
+.badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:7px 11px;border-radius:99px}
+nav button,.sideBtn{width:100%;margin:7px 0;padding:12px;border:0;border-radius:14px;background:rgba(255,255,255,.10);color:#fff;text-align:right;cursor:pointer;font-weight:800}
+nav button.active,nav button:hover,.sideBtn:hover{background:linear-gradient(90deg,var(--brand2),#23a99c)}
+main{padding:22px}
+.hero{background:linear-gradient(135deg,var(--brand),#0b766f);color:white;border-radius:28px;padding:24px;position:relative;overflow:hidden;box-shadow:0 20px 55px rgba(7,59,70,.18)}
+.hero:after{content:"نافس";position:absolute;left:25px;bottom:-42px;font-size:140px;font-weight:900;opacity:.08}
+.hero h2{margin:8px 0;font-size:32px}.hero p{line-height:1.9;margin:0;color:#e9fffc}
+.section{display:none}.section.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 14px 34px rgba(0,0,0,.06)}
+.stat b{font-size:30px;color:var(--brand2)}.stat span{display:block;color:var(--muted);margin-top:7px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:20px;margin:16px 0;box-shadow:0 14px 36px rgba(0,0,0,.055)}
+.card h3{margin:0 0 14px;color:var(--brand);font-size:22px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+button.primary,.mini{border:0;border-radius:13px;padding:11px 14px;cursor:pointer;font-weight:800;background:var(--brand2);color:white}
+button.secondary{background:#eef6f5;color:var(--brand);border:1px solid #cfe4e2}
+button.warn{background:#fff7ed;color:#9a3412;border:1px solid #fed7aa}
+button.danger{background:#fee2e2;color:#991b1b;border:1px solid #fecaca}
+input,select,textarea{width:100%;border:1px solid var(--line);border-radius:14px;padding:11px;background:#fff;font:inherit}
+textarea{min-height:90px}
+.formgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+label{font-weight:800;color:#30414b;font-size:13px}
+table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:16px;border:1px solid var(--line);background:#fff}
+th,td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:right}
+th{background:#dff3f0;color:#063f43}tr:last-child td{border-bottom:0}
+td[contenteditable],.editable{outline:1px dashed transparent}
+td[contenteditable]:focus,.editable:focus{outline-color:var(--gold);background:#fffbea}
+.phase{border-right:5px solid var(--brand2);padding:12px 14px;background:#f6fffd;border-radius:16px;margin:10px 0}
+.kpi{display:grid;grid-template-columns:170px 1fr 45px;gap:8px;align-items:center;margin:10px 0}
+.progress{height:14px;background:#e6eef1;border-radius:99px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--brand2),var(--gold));width:0%;transition:.4s}
+.pill{display:inline-block;padding:6px 10px;border-radius:99px;background:#eef8f7;color:#08736a;font-weight:800;margin:3px}
+.status{border-radius:99px;padding:5px 9px;font-weight:800;font-size:12px;display:inline-block}
+.done{background:#dcfce7;color:#166534}.doing{background:#fef9c3;color:#854d0e}.late{background:#fee2e2;color:#991b1b}
+.cards2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.toast{position:fixed;bottom:18px;left:18px;background:#063a46;color:#fff;padding:12px 16px;border-radius:16px;box-shadow:0 10px 30px #0003;opacity:0;transform:translateY(12px);transition:.25s;z-index:20}
+.toast.show{opacity:1;transform:none}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:center;justify-content:center;z-index:30;padding:20px}
+.modal.show{display:flex}.modalBox{background:#fff;border-radius:24px;padding:20px;max-width:760px;width:100%;max-height:85vh;overflow:auto}
+.printArea{background:#fff;width:210mm;min-height:297mm;margin:auto;padding:10mm;border:1px solid #ddd}
+.printHeader{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--brand2);padding-bottom:10px;margin-bottom:12px}
+.printTitle{text-align:center}.printTitle h1{margin:6px 0;color:var(--brand);font-size:25px}
+.sign{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:26px;text-align:center;font-weight:800}
+.small{font-size:12px;color:var(--muted)}
+.sidebarCredit{
+  margin-top:18px;
+  padding:14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.22);
+  text-align:center;
+  line-height:1.9;
+}
+.sidebarCredit strong{display:block;color:#fff}
+.sidebarCredit a{color:#ffe8a3;text-decoration:none;font-weight:800}
+.sidebarCredit a:hover{text-decoration:underline}
+@media(max-width:950px){.app{grid-template-columns:1fr}aside{position:relative;height:auto}.grid,.formgrid,.cards2{grid-template-columns:1fr}.kpi{grid-template-columns:1fr}}
+@media print{
+  @page{
+    size:A4 portrait;
+    margin:10mm;
+  }
+
+  html,body{
+    width:210mm !important;
+    height:297mm !important;
+    margin:0 !important;
+    padding:0 !important;
+    overflow:hidden !important;
+    background:white !important;
+  }
+
+  body{
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  aside,
+  .toolbar,
+  .noPrint,
+  nav,
+  .hero,
+  .sidebarCredit,
+  .section:not(.printOnly){
+    display:none !important;
+  }
+
+  .app{
+    display:block !important;
+    min-height:0 !important;
+  }
+
+  main{
+    display:block !important;
+    width:190mm !important;
+    height:277mm !important;
+    padding:0 !important;
+    margin:0 auto !important;
+    overflow:hidden !important;
+  }
+
+  .printOnly{
+    display:block !important;
+    width:190mm !important;
+    height:277mm !important;
+    overflow:hidden !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+  .printArea{
+    width:190mm !important;
+    height:277mm !important;
+    min-height:0 !important;
+    max-height:277mm !important;
+    margin:0 auto !important;
+    padding:0 !important;
+    border:0 !important;
+    overflow:hidden !important;
+    box-shadow:none !important;
+    background:white !important;
+    transform-origin:top center !important;
+  }
+
+  .printHeader{
+    display:grid !important;
+    grid-template-columns:1fr 1.25fr 1fr !important;
+    gap:5mm !important;
+    align-items:center !important;
+    padding:0 0 3mm 0 !important;
+    margin:0 0 3mm 0 !important;
+    border-bottom:2px solid var(--brand2) !important;
+    font-size:10.5px !important;
+    line-height:1.45 !important;
+  }
+
+  .printTitle h1{
+    font-size:19px !important;
+    line-height:1.25 !important;
+    margin:0 0 2mm 0 !important;
+  }
+
+  .printTitle div{
+    font-size:12px !important;
+    font-weight:800 !important;
+  }
+
+  h3{
+    font-size:12px !important;
+    line-height:1.25 !important;
+    margin:2.2mm 0 1.3mm 0 !important;
+    color:var(--brand) !important;
+  }
+
+  p{
+    font-size:10.2px !important;
+    line-height:1.45 !important;
+    margin:0 0 1.8mm 0 !important;
+  }
+
+  table{
+    width:100% !important;
+    table-layout:fixed !important;
+    border-collapse:collapse !important;
+    border-spacing:0 !important;
+    border-radius:0 !important;
+    overflow:hidden !important;
+    margin:0 0 2mm 0 !important;
+  }
+
+  th,td{
+    padding:2.6px 3px !important;
+    font-size:8.7px !important;
+    line-height:1.22 !important;
+    border:1px solid #d7e6ed !important;
+    word-break:break-word !important;
+    overflow:hidden !important;
+    vertical-align:top !important;
+  }
+
+  th{
+    background:#dff3f0 !important;
+    font-weight:800 !important;
+  }
+
+  #printPlan table th:nth-child(1),
+  #printPlan table td:nth-child(1){
+    width:6mm !important;
+  }
+
+  #printPlan table th:nth-child(2),
+  #printPlan table td:nth-child(2){
+    width:54mm !important;
+  }
+
+  #printPlan table th:nth-child(3),
+  #printPlan table td:nth-child(3){
+    width:25mm !important;
+  }
+
+  #printPlan table th:nth-child(4),
+  #printPlan table td:nth-child(4){
+    width:22mm !important;
+  }
+
+  #printPlan table th:nth-child(5),
+  #printPlan table td:nth-child(5){
+    width:34mm !important;
+  }
+
+  #printPlan table th:nth-child(6),
+  #printPlan table td:nth-child(6){
+    width:18mm !important;
+  }
+
+  #printPlan table th:nth-child(7),
+  #printPlan table td:nth-child(7){
+    width:31mm !important;
+  }
+
+  #printEvidence table th,
+  #printEvidence table td{
+    font-size:8.4px !important;
+    padding:2.3px !important;
+  }
+
+  .status{
+    font-size:8px !important;
+    padding:1px 4px !important;
+    border-radius:99px !important;
+    display:inline-block !important;
+  }
+
+  .sign{
+    display:grid !important;
+    grid-template-columns:repeat(3,1fr) !important;
+    gap:8mm !important;
+    margin-top:4mm !important;
+    font-size:10px !important;
+    line-height:1.5 !important;
+  }
+
+  .card{
+    box-shadow:none !important;
+    border:0 !important;
+    margin:0 !important;
+    padding:0 !important;
+  }
+
+  *{
+    page-break-inside:avoid !important;
+    break-inside:avoid !important;
+  }
+}
+</style></style>
+</head>
+<body>
+<div class="app">
+<aside class="noPrint">
+  <div class="logo">
+    <span class="badge">⚡ تفاعلية كاملة</span>
+    <h1>منصة نافس الذكية</h1>
+    <p>خطة قابلة للتعديل، متابعة إنجاز، شواهد، تصدير واستيراد، تقرير A4، ولوحة مؤشرات مباشرة.</p>
+  </div>
+  <nav id="nav">
+    <button class="active" data-target="dash">📊 لوحة التحكم</button>
+    <button data-target="settings">🏫 بيانات المدرسة</button>
+    <button data-target="plan">🧭 الخطة التنفيذية</button>
+    <button data-target="skills">📚 مهارات المواد</button>
+    <button data-target="family">👨‍👩‍👧 دور الأسرة</button>
+    <button data-target="evidence">📎 الشواهد والمتابعة</button>
+    <button data-target="smart">🤖 المساعد الذكي</button>
+    <button data-target="print">🖨️ التقرير النهائي</button>
+  </nav>
+  <button class="sideBtn" onclick="saveAll()">💾 حفظ محلي</button>
+  <button class="sideBtn" onclick="loadAll()">↩️ استرجاع</button>
+  <button class="sideBtn" onclick="clearAll()">🧹 تفريغ</button>
+  <div class="sidebarCredit">
+    <strong>تصميم د/فواز</strong>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">تفضل للمزيد هنا</a>
+  </div>
+</aside>
+
+<main>
+<section class="hero noPrint">
+  <span class="badge">1447هـ / 2026م</span>
+  <h2 contenteditable class="editable" data-key="heroTitle">خطة تحسين ومتابعة نتائج الاختبارات الوطنية (نافس)</h2>
+  <p contenteditable class="editable" data-key="heroText">منصة مدرسية تفاعلية لإدارة خطة نافس: تحليل الفجوات، تنفيذ التدخلات، متابعة الإنجاز، توثيق الشواهد، وطباعة تقرير احترافي.</p>
+</section>
+
+<section id="dash" class="section active">
+  <div class="grid">
+    <div class="stat"><b id="completion">0%</b><span>نسبة إنجاز الخطة</span></div>
+    <div class="stat"><b id="doneCount">0</b><span>إجراءات منجزة</span></div>
+    <div class="stat"><b id="evidenceCount">0</b><span>عدد الشواهد</span></div>
+    <div class="stat"><b id="lateCount">0</b><span>إجراءات متأخرة</span></div>
+  </div>
+  <div class="cards2">
+    <div class="card">
+      <h3>مؤشرات مباشرة</h3>
+      <div class="kpi"><span>الإنجاز العام</span><div class="progress"><div id="barCompletion" class="bar"></div></div><b id="barCompletionTxt">0%</b></div>
+      <div class="kpi"><span>توثيق الشواهد</span><div class="progress"><div id="barEvidence" class="bar"></div></div><b id="barEvidenceTxt">0%</b></div>
+      <div class="kpi"><span>الجاهزية</span><div class="progress"><div id="barReady" class="bar"></div></div><b id="barReadyTxt">0%</b></div>
+    </div>
+    <div class="card">
+      <h3>مسار التنفيذ</h3>
+      <div class="phase"><b>1) تحليل:</b> قراءة النتائج السابقة وتحديد فجوات المهارات.</div>
+      <div class="phase"><b>2) تدخل:</b> حصص علاجية، اختبارات محاكية، مجتمعات تعلم.</div>
+      <div class="phase"><b>3) تقويم:</b> قياس أثر، توثيق شواهد، تقرير ختامي.</div>
+    </div>
+  </div>
+</section>
+
+<section id="settings" class="section">
+  <div class="card">
+    <h3>بيانات المدرسة</h3>
+    <div class="formgrid">
+      <div><label>الإدارة التعليمية</label><input data-key="edu" value="الإدارة العامة للتعليم بـ ........"></div>
+      <div><label>مكتب التعليم</label><input data-key="office" value="مكتب التعليم بـ ........"></div>
+      <div><label>اسم المدرسة</label><input data-key="school" value="اسم المدرسة"></div>
+      <div><label>المرحلة</label><input data-key="stage" value="المتوسطة"></div>
+      <div><label>الفصل الدراسي</label><input data-key="term" value="الفصل الدراسي الثاني"></div>
+      <div><label>التاريخ</label><input type="date" data-key="date"></div>
+      <div><label>قائد/ة المدرسة</label><input data-key="principal" value="........................"></div>
+      <div><label>منسق/ة نافس</label><input data-key="coord" value="........................"></div>
+      <div><label>العام الدراسي</label><input data-key="year" value="1447هـ"></div>
+    </div>
+  </div>
+</section>
+
+<section id="plan" class="section">
+  <div class="toolbar noPrint">
+    <button class="primary" onclick="addPlanRow()">إضافة إجراء</button>
+    <button class="primary secondary" onclick="sortPlan()">ترتيب حسب الحالة</button>
+    <button class="primary warn" onclick="deleteLastRow('planTable')">حذف آخر إجراء</button>
+  </div>
+  <div class="card">
+    <h3>الخطة التنفيذية التفاعلية</h3>
+    <table id="planTable">
+      <thead><tr><th>م</th><th>الإجراء التنفيذي</th><th>المسؤول</th><th>الفترة</th><th>مؤشر الإنجاز</th><th>الحالة</th><th>الشواهد</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td contenteditable>تشكيل لجنة نافس وتوزيع المهام بقرار إداري.</td><td contenteditable>قائد المدرسة</td><td contenteditable>بداية العام</td><td contenteditable>محضر تشكيل اللجنة</td><td><select onchange="refreshAll()"><option>منجز</option><option>قيد التنفيذ</option><option>متأخر</option></select></td><td contenteditable>قرار + توقيعات</td></tr>
+        <tr><td>2</td><td contenteditable>تحليل نتائج نافس السابقة وتحديد المهارات ذات الأولوية.</td><td contenteditable>لجنة التحصيل</td><td contenteditable>بداية الفصل</td><td contenteditable>تقرير تحليل فجوات</td><td><select onchange="refreshAll()"><option>قيد التنفيذ</option><option>منجز</option><option>متأخر</option></select></td><td contenteditable>جداول وبيانات</td></tr>
+        <tr><td>3</td><td contenteditable>تنفيذ حصص علاجية وإثرائية في القراءة والرياضيات والعلوم.</td><td contenteditable>معلمو المواد</td><td contenteditable>أسبوعيًا</td><td contenteditable>تحسن نتائج الاختبارات القصيرة</td><td><select onchange="refreshAll()"><option>قيد التنفيذ</option><option>منجز</option><option>متأخر</option></select></td><td contenteditable>خطط الدروس وأوراق العمل</td></tr>
+        <tr><td>4</td><td contenteditable>تدريب الطلبة على الاختبارات المحاكية وآلية التظليل.</td><td contenteditable>لجنة نافس</td><td contenteditable>شهريًا وقبل الاختبار</td><td contenteditable>إتقان آلية الاختبار</td><td><select onchange="refreshAll()"><option>قيد التنفيذ</option><option>منجز</option><option>متأخر</option></select></td><td contenteditable>نماذج قبلية وبعدية</td></tr>
+        <tr><td>5</td><td contenteditable>تهيئة الطلبة نفسيًا وتحفيزهم للمشاركة الجادة.</td><td contenteditable>التوجيه الطلابي</td><td contenteditable>مستمر</td><td contenteditable>ارتفاع الدافعية والحضور</td><td><select onchange="refreshAll()"><option>منجز</option><option>قيد التنفيذ</option><option>متأخر</option></select></td><td contenteditable>نشرات وصور لقاءات</td></tr>
+        <tr><td>6</td><td contenteditable>تفعيل دور الأسرة برسائل وخطة أسبوعية ونشرات إرشادية.</td><td contenteditable>المدرسة والأسرة</td><td contenteditable>فصليًا</td><td contenteditable>تفاعل أولياء الأمور</td><td><select onchange="refreshAll()"><option>قيد التنفيذ</option><option>منجز</option><option>متأخر</option></select></td><td contenteditable>رسائل واستبانات</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="skills" class="section">
+  <div class="card">
+    <h3>مهارات المواد المستهدفة</h3>
+    <table id="skillsTable">
+      <thead><tr><th>المادة</th><th>المهارات ذات الأولوية</th><th>أنشطة مقترحة</th><th>أداة قياس</th></tr></thead>
+      <tbody>
+        <tr><td><span class="pill">القراءة</span></td><td contenteditable>الفهم القرائي، الاستنتاج، تحليل النص، المفردات، وجهات النظر.</td><td contenteditable>قراءة نصوص، تلخيص، أسئلة تفكير عليا، نقاشات صفية.</td><td contenteditable>اختبار قبلي وبعدي.</td></tr>
+        <tr><td><span class="pill">الرياضيات</span></td><td contenteditable>حل المشكلات، تفسير البيانات، العمليات، التفكير المنطقي.</td><td contenteditable>مسائل حياتية، تحديات قصيرة، بطاقات مهارية.</td><td contenteditable>اختبارات محاكية.</td></tr>
+        <tr><td><span class="pill">العلوم</span></td><td contenteditable>الاستقصاء، تفسير الظواهر، تحليل البيانات، المفاهيم العلمية.</td><td contenteditable>تجارب مصغرة، أسئلة تفسير، خرائط مفاهيم.</td><td contenteditable>مهمة أداء.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="family" class="section">
+  <div class="card">
+    <h3>خطة مشاركة الأسرة</h3>
+    <table>
+      <thead><tr><th>المجال</th><th>دور الأسرة</th><th>آلية المتابعة</th></tr></thead>
+      <tbody>
+        <tr><td>التهيئة</td><td contenteditable>توفير بيئة هادئة ودعم نفسي وتشجيع يومي.</td><td contenteditable>رسائل أسبوعية واستبانة رضا.</td></tr>
+        <tr><td>القراءة</td><td contenteditable>تخصيص وقت أسبوعي لقراءة نص ومناقشته.</td><td contenteditable>بطاقة متابعة منزلية.</td></tr>
+        <tr><td>التحفيز</td><td contenteditable>تعزيز الالتزام والمشاركة في الاختبارات المحاكية.</td><td contenteditable>متابعة حضور ونتائج.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="evidence" class="section">
+  <div class="toolbar noPrint">
+    <button class="primary" onclick="addEvidence()">إضافة شاهد</button>
+    <button class="primary secondary" onclick="openEvidenceSummary()">ملخص الشواهد</button>
+  </div>
+  <div class="card">
+    <h3>سجل الشواهد والمتابعة</h3>
+    <table id="evidenceTable">
+      <thead><tr><th>الشاهد</th><th>الوصف</th><th>الحالة</th><th>التاريخ</th></tr></thead>
+      <tbody>
+        <tr><td contenteditable>محضر لجنة نافس</td><td contenteditable>تشكيل وتوزيع مهام</td><td><select onchange="refreshAll()"><option>مكتمل</option><option>ناقص</option></select></td><td contenteditable>1447/07/05</td></tr>
+        <tr><td contenteditable>اختبار محاكي</td><td contenteditable>اختبار قبلي وبعدي</td><td><select onchange="refreshAll()"><option>ناقص</option><option>مكتمل</option></select></td><td contenteditable>1447/08/15</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="smart" class="section">
+  <div class="card">
+    <h3>المساعد الذكي المحلي</h3>
+    <p class="small">يولّد عبارات مدرسية جاهزة من بياناتك داخل الصفحة دون اتصال خارجي.</p>
+    <div class="formgrid">
+      <div><label>نوع النص</label><select id="smartType"><option>توصية شهرية</option><option>رسالة ولي أمر</option><option>عبارة تحفيزية للطلاب</option><option>محضر مختصر</option></select></div>
+      <div><label>المادة</label><select id="smartSubject"><option>القراءة</option><option>الرياضيات</option><option>العلوم</option><option>عام</option></select></div>
+      <div><label>مستوى الأداء</label><select id="smartLevel"><option>متوسط</option><option>منخفض</option><option>مرتفع</option></select></div>
+    </div>
+    <div class="toolbar"><button class="primary" onclick="generateSmart()">توليد النص</button><button class="primary secondary" onclick="copySmart()">نسخ</button></div>
+    <textarea id="smartOut" placeholder="سيظهر النص هنا..."></textarea>
+  </div>
+</section>
+
+<section id="print" class="section printOnly">
+  <div class="toolbar noPrint">
+    <button class="primary" onclick="syncPrint();fitReportToOnePage();window.print()">طباعة / حفظ PDF</button>
+    <button class="primary secondary" onclick="syncPrint()">تحديث التقرير</button>
+  </div>
+  <div class="printArea" id="report">
+    <div class="printHeader">
+      <div><b>المملكة العربية السعودية</b><br>وزارة التعليم<br><span id="pEdu">الإدارة العامة للتعليم بـ ........</span></div>
+      <div class="printTitle"><h1>خطة تحسين ومتابعة نتائج نافس</h1><div id="pSchool">اسم المدرسة</div></div>
+      <div>العام الدراسي: <span id="pYear">1447هـ</span><br>المرحلة: <span id="pStage">المتوسطة</span><br>التاريخ: <span id="pDate">........</span></div>
+    </div>
+    <h3>الهدف العام</h3>
+    <p>رفع مستوى نواتج التعلم وتحسين نتائج الطلبة في الاختبارات الوطنية (نافس) من خلال خطة مدرسية منظمة قائمة على التحليل والتدخل والمتابعة والتقويم.</p>
+    <h3>مؤشرات المنصة</h3>
+    <p id="printStats"></p>
+    <h3>الخطة التنفيذية</h3><div id="printPlan"></div>
+    <h3>الشواهد</h3><div id="printEvidence"></div>
+    <div class="sign"><div>منسق/ة نافس<br><br>................</div><div>وكيل/ة الشؤون التعليمية<br><br>................</div><div>قائد/ة المدرسة<br><br>................</div></div>
+  </div>
+</section>
+</main>
+</div>
+
+<div id="toast" class="toast">تم</div>
+<div id="modal" class="modal" onclick="if(event.target.id==='modal')closeModal()"><div class="modalBox"><div id="modalContent"></div><div class="toolbar"><button class="primary" onclick="closeModal()">إغلاق</button></div></div></div>
+
+<script>
+const qs=s=>document.querySelector(s), qsa=s=>[...document.querySelectorAll(s)];
+function toast(t){const x=qs('#toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1800)}
+qsa('nav button').forEach(btn=>btn.onclick=()=>{qsa('nav button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');qsa('.section').forEach(s=>s.classList.remove('active'));qs('#'+btn.dataset.target).classList.add('active');if(btn.dataset.target==='print') syncPrint();refreshAll();});
+function collect(){
+  const data={};
+  qsa('[data-key]').forEach(el=>data[el.dataset.key]=el.value!==undefined?el.value:el.innerHTML);
+  data.plan=qs('#planTable tbody').innerHTML;data.evidence=qs('#evidenceTable tbody').innerHTML;data.skills=qs('#skillsTable tbody').innerHTML;
+  return data;
+}
+function apply(data){
+  if(!data)return;
+  qsa('[data-key]').forEach(el=>{if(data[el.dataset.key]!==undefined){if(el.value!==undefined)el.value=data[el.dataset.key];else el.innerHTML=data[el.dataset.key];}});
+  if(data.plan)qs('#planTable tbody').innerHTML=data.plan;if(data.evidence)qs('#evidenceTable tbody').innerHTML=data.evidence;if(data.skills)qs('#skillsTable tbody').innerHTML=data.skills;
+  refreshAll();
+}
+function saveAll(){localStorage.setItem('nafsInteractive',JSON.stringify(collect()));toast('تم الحفظ محليًا')}
+function loadAll(){apply(JSON.parse(localStorage.getItem('nafsInteractive')||'null'));toast('تم الاسترجاع')}
+function clearAll(){if(confirm('تفريغ البيانات المحفوظة؟')){localStorage.removeItem('nafsInteractive');location.reload();}}
+function addPlanRow(){
+  const tb=qs('#planTable tbody'),n=tb.rows.length+1,tr=document.createElement('tr');
+  tr.innerHTML=`<td>${n}</td><td contenteditable>إجراء جديد قابل للتعديل</td><td contenteditable>المسؤول</td><td contenteditable>الفترة</td><td contenteditable>مؤشر الإنجاز</td><td><select onchange="refreshAll()"><option>قيد التنفيذ</option><option>منجز</option><option>متأخر</option></select></td><td contenteditable>الشواهد</td>`;
+  tb.appendChild(tr);refreshAll();toast('تمت إضافة إجراء')
+}
+function deleteLastRow(id){const tb=qs('#'+id+' tbody');if(tb.rows.length>1)tb.deleteRow(tb.rows.length-1);refreshAll()}
+function addEvidence(){
+  const tb=qs('#evidenceTable tbody'),tr=document.createElement('tr');
+  tr.innerHTML='<td contenteditable>شاهد جديد</td><td contenteditable>وصف الشاهد</td><td><select onchange="refreshAll()"><option>ناقص</option><option>مكتمل</option></select></td><td contenteditable>التاريخ</td>';
+  tb.appendChild(tr);refreshAll();toast('تمت إضافة شاهد')
+}
+function counts(){
+  const rows=qsa('#planTable tbody tr'), total=rows.length || 1;
+  let done=0,late=0,doing=0;
+  rows.forEach(r=>{const v=r.querySelector('select')?.value||''; if(v==='منجز')done++; else if(v==='متأخر')late++; else doing++;});
+  const ev=qsa('#evidenceTable tbody tr'), evDone=ev.filter(r=>r.querySelector('select')?.value==='مكتمل').length;
+  return {total,done,late,doing,evTotal:ev.length,evDone,comp:Math.round(done/total*100),evComp:ev.length?Math.round(evDone/ev.length*100):0}
+}
+function refreshAll(){
+  const c=counts();
+  qs('#completion').textContent=c.comp+'%';qs('#doneCount').textContent=c.done;qs('#evidenceCount').textContent=c.evTotal;qs('#lateCount').textContent=c.late;
+  qs('#barCompletion').style.width=c.comp+'%';qs('#barCompletionTxt').textContent=c.comp+'%';
+  qs('#barEvidence').style.width=c.evComp+'%';qs('#barEvidenceTxt').textContent=c.evComp+'%';
+  const ready=Math.round((c.comp+c.evComp)/2);qs('#barReady').style.width=ready+'%';qs('#barReadyTxt').textContent=ready+'%';
+  syncPrint(false);
+}
+function sortPlan(){
+  const tb=qs('#planTable tbody'), order={'متأخر':0,'قيد التنفيذ':1,'منجز':2};
+  [...tb.rows].sort((a,b)=>order[a.querySelector('select').value]-order[b.querySelector('select').value]).forEach((r,i)=>{r.cells[0].textContent=i+1;tb.appendChild(r)});
+  refreshAll();toast('تم ترتيب الإجراءات')
+}
+function getVal(k){let el=qs(`[data-key="${k}"]`);return el?el.value||el.innerText:''}
+function cleanCloneTable(id){
+  let clone=qs(id).cloneNode(true);
+  clone.querySelectorAll('select').forEach(sel=>{const span=document.createElement('span');span.textContent=sel.value;span.className=sel.value==='منجز'||sel.value==='مكتمل'?'status done':sel.value==='متأخر'?'status late':'status doing';sel.replaceWith(span)});
+  clone.removeAttribute('id');return clone;
+}
+function syncPrint(){
+  if(!qs('#printPlan'))return;
+  qs('#pEdu').innerText=getVal('edu');qs('#pSchool').innerText=getVal('school');qs('#pYear').innerText=getVal('year');qs('#pStage').innerText=getVal('stage');qs('#pDate').innerText=getVal('date')||'........';
+  const c=counts();qs('#printStats').innerText=`نسبة الإنجاز: ${c.comp}%، الإجراءات المنجزة: ${c.done}، الإجراءات المتأخرة: ${c.late}، الشواهد الموثقة: ${c.evDone} من ${c.evTotal}.`;
+  qs('#printPlan').innerHTML='';qs('#printPlan').appendChild(cleanCloneTable('#planTable'));
+  qs('#printEvidence').innerHTML='';qs('#printEvidence').appendChild(cleanCloneTable('#evidenceTable'));
+}
+function generateSmart(){
+  const type=qs('#smartType').value,sub=qs('#smartSubject').value,level=qs('#smartLevel').value,school=getVal('school')||'المدرسة';
+  const c=counts();
+  let text='';
+  if(type==='توصية شهرية') text=`توصية شهرية: بناءً على متابعة خطة نافس في ${school}، وظهور نسبة إنجاز قدرها ${c.comp}%، يوصى بتكثيف التدخلات التعليمية في مادة ${sub}، ومتابعة الطلبة ذوي الأداء ${level} من خلال اختبارات قصيرة محاكية، وحصص علاجية، وتوثيق أثر التحسن في نهاية الشهر.`;
+  if(type==='رسالة ولي أمر') text=`ولي الأمر الكريم، نعمل في ${school} على رفع جاهزية أبنائنا لاختبارات نافس، ونأمل دعم الطالب في مادة ${sub} عبر متابعة التدريب المنزلي، وتشجيعه على القراءة وحل النماذج القصيرة. تعاونكم هو الفرق بين خطة على الورق وخطة تعطي نتيجة.`;
+  if(type==='عبارة تحفيزية للطلاب') text=`أبطال نافس: مستواكم لا يُقاس بمحاولة واحدة، بل بإصراركم على التحسن. ركزوا في ${sub}، تدربوا بهدوء، واسألوا معلميكم. النتيجة القوية تبدأ من عادة يومية صغيرة.`;
+  if(type==='محضر مختصر') text=`محضر مختصر: تم استعراض مؤشرات خطة نافس في ${school}، وبلغت نسبة الإنجاز ${c.comp}%. أوصى الفريق بمتابعة مادة ${sub}، واستكمال الشواهد الناقصة، وتنفيذ اختبار محاكي لقياس أثر التدخلات التعليمية.`;
+  qs('#smartOut').value=text;
+}
+function copySmart(){navigator.clipboard.writeText(qs('#smartOut').value);toast('تم نسخ النص')}
+function openEvidenceSummary(){
+  const c=counts();
+  qs('#modalContent').innerHTML=`<h3>ملخص الشواهد</h3><p>الشواهد المكتملة: <b>${c.evDone}</b> من <b>${c.evTotal}</b></p><p>نسبة التوثيق: <b>${c.evComp}%</b></p>`;
+  qs('#modal').classList.add('show');
+}
+function closeModal(){qs('#modal').classList.remove('show')}
+
+function fitReportToOnePage(){
+  const area = qs('#report');
+  if(!area) return;
+  area.style.transform = 'none';
+  area.style.width = '190mm';
+  area.style.height = '277mm';
+  area.style.overflow = 'hidden';
+
+  const maxHeightPx = 277 * 96 / 25.4;
+  const actualHeight = area.scrollHeight;
+  let scale = Math.min(1, maxHeightPx / actualHeight);
+
+  if(scale < 0.72) scale = 0.72;
+  area.style.transform = `scale(${scale})`;
+  area.style.height = `${277 / scale}mm`;
+}
+window.addEventListener('beforeprint',()=>{syncPrint();fitReportToOnePage();});
+window.addEventListener('afterprint',()=>{
+  const area = qs('#report');
+  if(area){area.style.transform='none';area.style.height='277mm';}
+});
+
+window.addEventListener('input',e=>{if(e.target.matches('[data-key],td[contenteditable],textarea,input'))refreshAll()});
+apply(JSON.parse(localStorage.getItem('nafsInteractive')||'null'));refreshAll();
+</script>
+</body>
+</html>

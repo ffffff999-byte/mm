@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لجان المدرسة — انفوجرافيك</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --teal:        #0D9E87;
+  --teal-light:  #E6F7F5;
+  --teal-mid:    #B2E8E1;
+  --teal-dark:   #076E60;
+  --gold:        #C08B1A;
+  --gold-light:  #FDF3DC;
+  --gold-mid:    #F5D98B;
+  --gold-dark:   #8A600E;
+  --bg:          #E8F6FB;
+  --white:       #FFFFFF;
+  --text-dark:   #1A2535;
+  --text-mid:    #3D5166;
+  --text-light:  #6B84A0;
+  --border:      #DDE3EC;
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:   0 6px 24px rgba(0,0,0,0.10);
+  --r:           16px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  background:var(--bg);
+  font-family:'Tajawal','Cairo',sans-serif;
+  direction:rtl;color:var(--text-dark);
+  min-height:100vh;
+}
+
+/* ═══ HERO ═══ */
+.hero{
+  background:linear-gradient(145deg,#0D9E87 0%,#0A7A6A 40%,#065A4E 100%);
+  padding:56px 40px 72px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero-circles{position:absolute;inset:0;pointer-events:none;}
+.hero-circles span{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,0.10);}
+.hero-circles span:nth-child(1){width:320px;height:320px;top:-80px;right:-60px;}
+.hero-circles span:nth-child(2){width:200px;height:200px;bottom:-40px;left:60px;border-color:rgba(255,255,255,0.06);}
+.hero-circles span:nth-child(3){width:140px;height:140px;top:30px;left:200px;border-color:rgba(255,255,255,0.08);}
+.ministry-label{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.3);
+  border-radius:30px;padding:7px 20px;
+  color:#fff;font-size:12.5px;font-weight:600;
+  letter-spacing:.5px;margin-bottom:22px;
+  animation:fadeDown .7s ease both;
+}
+.hero h1{
+  font-size:clamp(32px,5vw,58px);font-weight:900;color:#fff;
+  line-height:1.15;margin-bottom:12px;
+  animation:fadeDown .8s .1s ease both;
+}
+.hero h1 em{font-style:normal;color:#FFE082;}
+.hero-sub{font-size:15px;color:rgba(255,255,255,.7);font-weight:400;animation:fadeDown .9s .2s ease both;}
+.hero-divider{
+  width:60px;height:3px;background:rgba(255,255,255,0.4);
+  border-radius:2px;margin:18px auto;animation:expandW .8s .3s ease both;
+}
+.hero-wave{position:absolute;bottom:-1px;left:0;width:100%;line-height:0;}
+.hero-wave svg{display:block;width:100%;}
+
+/* ═══ CONTAINER ═══ */
+.container{max-width:1260px;margin:0 auto;padding:0 24px 70px;}
+
+/* ═══ SECTION INTRO ═══ */
+.section-intro{
+  display:flex;align-items:center;gap:14px;
+  margin:52px 0 24px;animation:slideR .7s ease both;
+}
+.section-icon{
+  width:56px;height:56px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;box-shadow:var(--shadow-md);
+}
+.si-teal{background:linear-gradient(135deg,var(--teal),var(--teal-dark));}
+.si-gold{background:linear-gradient(135deg,#E8A820,var(--gold-dark));}
+.section-intro-text .badge{
+  display:inline-block;padding:3px 12px;border-radius:20px;
+  font-size:11px;font-weight:800;letter-spacing:.5px;margin-bottom:5px;
+}
+.badge-teal{background:var(--teal-light);color:var(--teal-dark);}
+.badge-gold{background:var(--gold-light);color:var(--gold-dark);}
+.section-intro-text h2{font-size:clamp(22px,3vw,32px);font-weight:900;color:var(--text-dark);line-height:1.2;}
+
+/* ═══ TOP 3-COL PANELS ═══ */
+.top-panels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
+@media(max-width:860px){.top-panels{grid-template-columns:1fr 1fr;}}
+@media(max-width:540px){.top-panels{grid-template-columns:1fr;}}
+
+.panel{
+  background:var(--white);border-radius:var(--r);
+  padding:22px 20px;border:1px solid var(--border);
+  box-shadow:var(--shadow-sm);animation:fadeUp .6s ease both;
+}
+.panel-head{
+  display:flex;align-items:center;gap:9px;
+  font-size:14px;font-weight:800;
+  margin-bottom:16px;padding-bottom:12px;
+  border-bottom:2px solid var(--border);
+}
+.ph-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.dot-teal{background:var(--teal);}
+.dot-gold{background:var(--gold);}
+
+.member-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 0;border-bottom:1px solid #F0F3F7;
+  font-size:12.5px;color:var(--text-mid);
+}
+.member-row:last-child{border-bottom:none;}
+.m-avatar{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.av-t{background:var(--teal-light);}
+.av-g{background:var(--gold-light);}
+.m-name{font-weight:600;flex:1;}
+.m-role{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;}
+.role-t{background:var(--teal-light);color:var(--teal-dark);}
+.role-g{background:var(--gold-light);color:var(--gold-dark);}
+
+.goal-text{
+  font-size:12.5px;color:var(--text-mid);line-height:1.75;
+  background:var(--teal-light);border-right:3px solid var(--teal);
+  padding:12px 14px;border-radius:10px;margin-bottom:12px;
+}
+.goal-text.gold-g{background:var(--gold-light);border-color:var(--gold);}
+.rules-list{display:flex;flex-direction:column;gap:8px;}
+.rule-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text-mid);line-height:1.55;}
+.rule-item .ri{font-size:14px;flex-shrink:0;margin-top:1px;}
+
+.meeting-row{
+  display:flex;gap:10px;padding:9px 0;
+  border-bottom:1px dashed #E8EDF3;
+  font-size:12px;color:var(--text-mid);line-height:1.6;
+}
+.meeting-row:last-child{border-bottom:none;}
+.mr-icon{font-size:16px;flex-shrink:0;margin-top:2px;}
+
+/* ═══ TASKS BLOCK ═══ */
+.tasks-block{
+  background:var(--white);border-radius:var(--r);
+  border:1px solid var(--border);box-shadow:var(--shadow-sm);
+  overflow:hidden;animation:fadeUp .7s .1s ease both;
+}
+.tasks-header{padding:18px 24px;display:flex;align-items:center;gap:12px;}
+.th-teal{background:linear-gradient(135deg,var(--teal-light),#D0F0EB);}
+.th-gold{background:linear-gradient(135deg,var(--gold-light),#FDE8A0);}
+.tasks-header-icon{font-size:22px;}
+.tasks-header-title{font-size:16px;font-weight:800;color:var(--text-dark);}
+.tasks-header-count{margin-right:auto;font-size:12px;font-weight:700;padding:3px 12px;border-radius:20px;}
+.tc-teal{background:var(--teal);color:#fff;}
+.tc-gold{background:var(--gold);color:#fff;}
+
+.tasks-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:4px 0 0;}
+@media(max-width:900px){.tasks-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.tasks-grid{grid-template-columns:1fr;}}
+
+.task-card{
+  padding:16px 18px;border-top:1px solid #EEF2F7;border-right:1px solid #EEF2F7;
+  transition:background .2s;display:flex;gap:12px;align-items:flex-start;
+}
+.task-card:hover{background:#F8FAFB;}
+.task-n{
+  width:26px;height:26px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px;
+}
+.tn-teal{background:var(--teal-light);color:var(--teal-dark);}
+.tn-gold{background:var(--gold-light);color:var(--gold-dark);}
+.task-text{font-size:12.5px;color:var(--text-mid);line-height:1.65;font-weight:500;}
+
+/* ═══ DIVIDER ═══ */
+.section-divider{display:flex;align-items:center;gap:16px;margin:48px 0;opacity:.5;}
+.div-line{flex:1;height:1px;background:var(--border);}
+.div-icon{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--white);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;box-shadow:var(--shadow-sm);
+}
+
+/* ═══ FOOTER ═══ */
+footer{
+  background:var(--white);border-top:1px solid var(--border);
+  padding:36px 24px 30px;text-align:center;
+}
+.credit{font-size:13.5px;color:var(--text-light);margin-bottom:20px;}
+.credit strong{color:var(--teal-dark);font-weight:800;}
+.tg-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#29B6E8,#0088CC);
+  color:#fff;text-decoration:none;
+  padding:14px 34px;border-radius:50px;
+  font-size:14px;font-weight:700;font-family:'Tajawal',sans-serif;
+  box-shadow:0 6px 20px rgba(0,136,204,.3);
+  transition:transform .2s,box-shadow .2s;
+}
+.tg-btn:hover{transform:translateY(-2px) scale(1.03);box-shadow:0 10px 30px rgba(0,136,204,.45);}
+.tg-btn svg{width:20px;height:20px;fill:#fff;flex-shrink:0;}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp  {from{opacity:0;transform:translateY(18px) }to{opacity:1;transform:translateY(0)}}
+@keyframes slideR  {from{opacity:0;transform:translateX(24px) }to{opacity:1;transform:translateX(0)}}
+@keyframes expandW {from{width:0}to{width:60px}}
+.panel:nth-child(1){animation-delay:.05s}
+.panel:nth-child(2){animation-delay:.10s}
+.panel:nth-child(3){animation-delay:.15s}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-circles"><span></span><span></span><span></span></div>
+  <div class="ministry-label">🏫 وزارة التعليم — الدليل التنظيمي</div>
+  <h1>لجان <em>المدرسة</em></h1>
+  <div class="hero-divider"></div>
+  <p class="hero-sub">مهام واختصاصات لجنة التحصيل الدراسي ولجنة التميز</p>
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,30 C360,70 1080,0 1440,40 L1440,60 L0,60 Z" fill="#E8F6FB"/>
+    </svg>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ══════════════════════════════════ -->
+  <!--      لجنة التحصيل الدراسي         -->
+  <!-- ══════════════════════════════════ -->
+  <div class="section-intro">
+    <div class="section-icon si-teal">📊</div>
+    <div class="section-intro-text">
+      <div class="badge badge-teal">لجنة التحصيل الدراسي</div>
+      <h2>لجنة التحصيل الدراسي</h2>
+    </div>
+  </div>
+
+  <div class="top-panels">
+    <div class="panel">
+      <div class="panel-head" style="color:var(--teal-dark)"><div class="ph-dot dot-teal"></div> أعضاء اللجنة</div>
+      <div class="member-row"><div class="m-avatar av-t">👨‍💼</div><div class="m-name">مدير المدرسة</div><div class="m-role role-t">رئيس</div></div>
+      <div class="member-row"><div class="m-avatar av-t">📚</div><div class="m-name">وكيل الشؤون التعليمية</div><div class="m-role role-t">نائب</div></div>
+      <div class="member-row"><div class="m-avatar av-t">🎓</div><div class="m-name">وكيل شؤون الطلاب</div><div class="m-role role-t">عضو</div></div>
+      <div class="member-row"><div class="m-avatar av-t">🧭</div><div class="m-name">الموجه الطلابي</div><div class="m-role role-t">مقرر</div></div>
+      <div class="member-row"><div class="m-avatar av-t">⚡</div><div class="m-name">رائد النشاط</div><div class="m-role role-t">عضو</div></div>
+      <div class="member-row"><div class="m-avatar av-t">👩‍🏫</div><div class="m-name">ثلاثة معلمين</div><div class="m-role role-t">أعضاء</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head" style="color:var(--teal-dark)"><div class="ph-dot dot-teal"></div> هدف اللجنة</div>
+      <div class="goal-text">ضمان تطبيق اختبارات التحصيل الدراسي بما يسهم في تجويد العمليات التربوية والتعليمية في المدرسة، والارتقاء بكفاءة الأداء، وتدقيق النتائج وفقاً للوائح المعتمدة.</div>
+      <div class="rules-list">
+        <div class="rule-item"><div class="ri">✅</div><div>يُختار المعلمون من قِبل مدير المدرسة</div></div>
+        <div class="rule-item"><div class="ri">✅</div><div>يُصدر المدير قراراً رسمياً بتشكيل اللجنة</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head" style="color:var(--teal-dark)"><div class="ph-dot dot-teal"></div> اجتماعات اللجنة</div>
+      <div class="meeting-row"><div class="mr-icon">🗓️</div><div>تعقد دورياً في كل فصل دراسي بما لا يقل عن <strong>اجتماعين</strong></div></div>
+      <div class="meeting-row"><div class="mr-icon">📨</div><div>لمدير المدرسة دعوة اللجنة لاجتماعات طارئة وفق الحاجة</div></div>
+      <div class="meeting-row"><div class="mr-icon">🚫</div><div>لا تُحتسب اجتماعات أيام بارك / تعطيل الدوام الدراسي</div></div>
+      <div class="meeting-row"><div class="mr-icon">📝</div><div>توثّق بمحاضر رسمية في سجل خاص يتضمن التوصيات والقرارات</div></div>
+    </div>
+  </div>
+
+  <div class="tasks-block">
+    <div class="tasks-header th-teal">
+      <div class="tasks-header-icon">📋</div>
+      <div class="tasks-header-title">مهام لجنة التحصيل الدراسي</div>
+      <div class="tasks-header-count tc-teal">18 مهمة</div>
+    </div>
+    <div class="tasks-grid">
+      <div class="task-card"><div class="task-n tn-teal">1</div><div class="task-text">متابعة المستوى التحصيلي بشكل دوري وإعداد التقارير اللازمة ورفعها للمدير</div></div>
+      <div class="task-card"><div class="task-n tn-teal">2</div><div class="task-text">تزويد المعلمين بالتقارير المعتمدة وتوصيات اللجنة المتعلقة بمواد تخصصاتهم</div></div>
+      <div class="task-card"><div class="task-n tn-teal">3</div><div class="task-text">مراجعة نتائج الاختبارات الوطنية ومعالجة نقاط الضعف وتقديم المقترحات</div></div>
+      <div class="task-card"><div class="task-n tn-teal">4</div><div class="task-text">اقتراح البرامج التعليمية والأنشطة الطلابية لرفع مستوى التحصيل الدراسي</div></div>
+      <div class="task-card"><div class="task-n tn-teal">5</div><div class="task-text">تقديم الدعم للبنية التعليمية حول الاختبارات الوطنية والدولية وتوفير المتطلبات</div></div>
+      <div class="task-card"><div class="task-n tn-teal">6</div><div class="task-text">تشكيل فرق العمل للاختبارات الفصلية وتحديد المهام والمسؤوليات لكل عضو</div></div>
+      <div class="task-card"><div class="task-n tn-teal">7</div><div class="task-text">إعداد جداول الاختبارات الفصلية والسجلات والمستندات المتعلقة بها</div></div>
+      <div class="task-card"><div class="task-n tn-teal">8</div><div class="task-text">استلام مظاريف الأسئلة والإجابات وحفظها في الأماكن الآمنة المخصصة لها</div></div>
+      <div class="task-card"><div class="task-n tn-teal">9</div><div class="task-text">إعداد الكشوفات وأرقام الجلوس وتسليمها للفرق الفرعية المسؤولة</div></div>
+      <div class="task-card"><div class="task-n tn-teal">10</div><div class="task-text">توضيح التعليمات للحالات الطارئة وتهيئة الأدوات والمكان المناسب</div></div>
+      <div class="task-card"><div class="task-n tn-teal">11</div><div class="task-text">الإشراف على سير الاختبارات والتأكد من سلامتها ومتابعة البرامج التنفيذية</div></div>
+      <div class="task-card"><div class="task-n tn-teal">12</div><div class="task-text">متابعة عمليات التصحيح والمراجعة وإخراج أعمال الطلاب والنتائج وحفظها</div></div>
+      <div class="task-card"><div class="task-n tn-teal">13</div><div class="task-text">تقديم المقترحات التطويرية لآلية الاختبار ومراجعة التعديلات وتطبيقها</div></div>
+      <div class="task-card"><div class="task-n tn-teal">14</div><div class="task-text">إعداد وتوثيق تقارير دورية عن أعمال اللجنة والمعوقات ورفعها للمدير</div></div>
+      <div class="task-card"><div class="task-n tn-teal">15</div><div class="task-text">اقتراح برامج معالجة التأخر الدراسي واعتماد الحصص الإضافية وإشعار أولياء الأمور</div></div>
+      <div class="task-card"><div class="task-n tn-teal">16</div><div class="task-text">اقتراح البرامج والأنشطة اللاصفية الداعمة لنواتج التعليم والتعلم</div></div>
+      <div class="task-card"><div class="task-n tn-teal">17</div><div class="task-text">قياس رضا أولياء الأمور عن التحصيل الدراسي وإشراكهم في معالجة الضعف</div></div>
+      <div class="task-card"><div class="task-n tn-teal">18</div><div class="task-text">متابعة برامج تحسين الأداء الكتابي والقرائي في المرحلة الابتدائية</div></div>
+    </div>
+  </div>
+
+  <!-- ════ DIVIDER ════ -->
+  <div class="section-divider">
+    <div class="div-line"></div>
+    <div class="div-icon">⭐</div>
+    <div class="div-line"></div>
+  </div>
+
+  <!-- ══════════════════════════════════ -->
+  <!--           لجنة التميز             -->
+  <!-- ══════════════════════════════════ -->
+  <div class="section-intro" style="animation-delay:.15s">
+    <div class="section-icon si-gold">🏆</div>
+    <div class="section-intro-text">
+      <div class="badge badge-gold">لجنة التميّز</div>
+      <h2>لجنة التميّز</h2>
+    </div>
+  </div>
+
+  <div class="top-panels">
+    <div class="panel">
+      <div class="panel-head" style="color:var(--gold-dark)"><div class="ph-dot dot-gold"></div> أعضاء اللجنة</div>
+      <div class="member-row"><div class="m-avatar av-g">👨‍💼</div><div class="m-name">مدير المدرسة</div><div class="m-role role-g">رئيس</div></div>
+      <div class="member-row"><div class="m-avatar av-g">📖</div><div class="m-name">وكلاء المدرسة</div><div class="m-role role-g">أعضاء</div></div>
+      <div class="member-row"><div class="m-avatar av-g">🧭</div><div class="m-name">الموجه الطلابي</div><div class="m-role role-g">عضو</div></div>
+      <div class="member-row"><div class="m-avatar av-g">⚡</div><div class="m-name">رائد النشاط</div><div class="m-role role-g">مقرر</div></div>
+      <div class="member-row"><div class="m-avatar av-g">👩‍🏫</div><div class="m-name">ثلاثة معلمين</div><div class="m-role role-g">أعضاء</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-head" style="color:var(--gold-dark)"><div class="ph-dot dot-gold"></div> هدف اللجنة</div>
+      <div class="goal-text gold-g">إعداد الخطة التشغيلية وتشجيع أفضل الممارسات لضمان التميز المؤسسي والتخصصي وتجويد العمليات التربوية والتعليمية والتنظيمية في المدرسة.</div>
+      <div class="rules-list">
+        <div class="rule-item"><div class="ri">✅</div><div>يُصدر مدير المدرسة قراراً بتشكيل اللجنة</div></div>
+        <div class="rule-item"><div class="ri">✅</div><div>اختيار معلمين خبراء أو متقدمين أو ممارسين</div></div>
+        <div class="rule-item"><div class="ri">✅</div><div>يُستعان بمعلمين ممارسين عند عدم توفر الخبراء</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head" style="color:var(--gold-dark)"><div class="ph-dot dot-gold"></div> اجتماعات اللجنة</div>
+      <div class="meeting-row"><div class="mr-icon">🗓️</div><div>تعقد <strong>مرة كل شهر</strong> وتُسجَّل محاضرها بتوقيع الأعضاء</div></div>
+      <div class="meeting-row"><div class="mr-icon">📨</div><div>لمدير المدرسة دعوة اللجنة لاجتماعات طارئة وفق الحاجة</div></div>
+      <div class="meeting-row"><div class="mr-icon">🗳️</div><div>يُتخذ القرار بالأغلبية وتُكسر الأصوات المتساوية برأي الرئيس</div></div>
+      <div class="meeting-row"><div class="mr-icon">📝</div><div>توثّق في سجل خاص يتضمن التوصيات ومتابعة القرارات</div></div>
+    </div>
+  </div>
+
+  <div class="tasks-block" style="animation-delay:.15s">
+    <div class="tasks-header th-gold">
+      <div class="tasks-header-icon">🏅</div>
+      <div class="tasks-header-title">مهام لجنة التميّز</div>
+      <div class="tasks-header-count tc-gold">14 مهمة</div>
+    </div>
+    <div class="tasks-grid">
+      <div class="task-card"><div class="task-n tn-gold">1</div><div class="task-text">إعداد الخطة التشغيلية وربطها بمؤشرات القياس المؤسسي والتخصصي المعتمدة</div></div>
+      <div class="task-card"><div class="task-n tn-gold">2</div><div class="task-text">تشجيع المعلمين على تبادل أفضل الممارسات لتطوير طرق التدريس وأساليب التقويم</div></div>
+      <div class="task-card"><div class="task-n tn-gold">3</div><div class="task-text">إعداد استطلاعات رضا المستفيدين وتحليل النتائج ووضع التوصيات التحسينية</div></div>
+      <div class="task-card"><div class="task-n tn-gold">4</div><div class="task-text">رصد اتجاهات الطلاب نحو المدرسة وتقديم التوصيات اللازمة للمدير</div></div>
+      <div class="task-card"><div class="task-n tn-gold">5</div><div class="task-text">تقديم الاقتراحات والدعم لتحويل المدرسة إلى مؤسسة متعلمة ذاتياً</div></div>
+      <div class="task-card"><div class="task-n tn-gold">6</div><div class="task-text">دراسة الملاحظات على برامج التعليم والتعلم وتقديم التوصيات اللازمة بشأنها</div></div>
+      <div class="task-card"><div class="task-n tn-gold">7</div><div class="task-text">دراسة بنية المدرسة وتقديم المقترحات التطويرية اللازمة بشأنها</div></div>
+      <div class="task-card"><div class="task-n tn-gold">8</div><div class="task-text">دراسة الصعوبات والتحديات التي تواجه سير العمل وتقديم التوصيات المناسبة</div></div>
+      <div class="task-card"><div class="task-n tn-gold">9</div><div class="task-text">المساهمة في نشر ثقافة التميز ودعم وتشجيع المتميزين من منسوبي المدرسة</div></div>
+      <div class="task-card"><div class="task-n tn-gold">10</div><div class="task-text">العمل على إعداد وتطوير معايير جوائز التميز والحوافز للمنسوبين</div></div>
+      <div class="task-card"><div class="task-n tn-gold">11</div><div class="task-text">دراسة تسمية بعض مرافق المدرسة بأسماء أصحاب الإنجازات البارزة</div></div>
+      <div class="task-card"><div class="task-n tn-gold">12</div><div class="task-text">الإشراف على التقويم الذاتي والتدقيق الداخلي وفق معايير التقويم والاعتماد</div></div>
+      <div class="task-card"><div class="task-n tn-gold">13</div><div class="task-text">دراسة تقارير الأداء المؤسسي وتحليلها واستثمارها في التخطيط لتطوير الأداء</div></div>
+      <div class="task-card"><div class="task-n tn-gold">14</div><div class="task-text">ترشيح المدرسة ومنسوبيها لجوائز التميز على المستوى المحلي والإقليمي والعالمي</div></div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <p class="credit">تصميم <strong>د/ فواز</strong> &nbsp;|&nbsp; جميع الحقوق محفوظة</p>
+  <a class="tg-btn" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.96 6.504-1.357 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+    </svg>
+    تفضل للمزيد — قناة التيليجرام
+  </a>
+</footer>
+
+</body>
+</html>

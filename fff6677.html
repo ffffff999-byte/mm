@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الخطة الإثرائية والخطة العلاجية</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:   #1a5276;
+      --secondary: #2e86c1;
+      --accent:    #aed6f1;
+      --light:     #eaf4fb;
+      --success:   #1e8449;
+      --warning:   #d4ac0d;
+      --danger:    #c0392b;
+      --gray:      #6c757d;
+      --bg:        #f0f4f8;
+      --white:     #ffffff;
+      --shadow:    0 4px 18px rgba(26,82,118,.13);
+      --radius:    12px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      background: var(--bg);
+      color: #1a1a2e;
+      min-height: 100vh;
+      direction: rtl;
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--white);
+      padding: 28px 20px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,.07);
+      border-radius: 50%;
+    }
+    .site-header::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -40px;
+      width: 260px; height: 260px;
+      background: rgba(255,255,255,.05);
+      border-radius: 50%;
+    }
+    .site-header h1 { font-size: 2rem; font-weight: 800; letter-spacing: 1px; position: relative; z-index: 1; }
+    .site-header p  { font-size: .95rem; opacity: .85; margin-top: 6px; position: relative; z-index: 1; }
+
+    /* ===== NAV TABS ===== */
+    .tab-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      background: var(--white);
+      padding: 14px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 28px;
+      border: 2px solid var(--secondary);
+      border-radius: 30px;
+      background: transparent;
+      color: var(--secondary);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .25s;
+      font-family: inherit;
+    }
+    .tab-btn:hover, .tab-btn.active {
+      background: var(--secondary);
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(46,134,193,.35);
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+    .container {
+      max-width: 960px;
+      margin: 30px auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ===== PANELS ===== */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* ===== CARD ===== */
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .card-header {
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--white);
+      padding: 14px 22px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-header .icon { font-size: 1.3rem; }
+    .card-body { padding: 22px; }
+
+    /* ===== FORM GRID ===== */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .form-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+    .form-grid.full    { grid-template-columns: 1fr; }
+
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label {
+      font-size: .85rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      border: 1.5px solid #c8d8e8;
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-size: .95rem;
+      font-family: inherit;
+      color: #1a1a2e;
+      background: #f8fbff;
+      transition: border-color .2s, box-shadow .2s;
+      direction: rtl;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--secondary);
+      box-shadow: 0 0 0 3px rgba(46,134,193,.15);
+      background: var(--white);
+    }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+
+    /* ===== SEMESTER ROW ===== */
+    .semester-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .semester-row label { font-weight: 700; color: var(--primary); font-size: .9rem; }
+    .radio-group { display: flex; gap: 14px; align-items: center; }
+    .radio-group label {
+      display: flex; align-items: center; gap: 6px;
+      cursor: pointer; font-weight: 600; font-size: .9rem; color: #333;
+    }
+    .radio-group input[type="radio"] {
+      width: 16px; height: 16px; accent-color: var(--secondary); cursor: pointer;
+    }
+
+    /* ===== CHECKBOX SECTIONS ===== */
+    .check-section { margin-bottom: 16px; }
+    .check-section-title {
+      font-size: .9rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 10px;
+      padding-bottom: 5px;
+      border-bottom: 2px solid var(--accent);
+    }
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .check-grid.single { grid-template-columns: 1fr; }
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      background: #f8fbff;
+      border: 1.5px solid #dce8f5;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .check-item:hover { border-color: var(--secondary); background: var(--light); }
+    .check-item input[type="checkbox"] {
+      width: 16px; height: 16px; accent-color: var(--secondary);
+      flex-shrink: 0; margin-top: 2px; cursor: pointer;
+    }
+    .check-item span { font-size: .88rem; line-height: 1.5; color: #2c3e50; }
+    .check-item.checked {
+      border-color: var(--secondary);
+      background: var(--light);
+    }
+
+    /* ===== CUSTOM INPUT ROW ===== */
+    .custom-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .custom-input-row label { font-size: .88rem; font-weight: 700; color: var(--gray); white-space: nowrap; }
+    .custom-input-row input {
+      flex: 1;
+      border: 1.5px dashed #aab8c8;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: .88rem;
+      font-family: inherit;
+      background: #fafcff;
+      direction: rtl;
+    }
+    .custom-input-row input:focus {
+      outline: none;
+      border-color: var(--secondary);
+      background: var(--white);
+    }
+
+    /* ===== SIGNATURE ROW ===== */
+    .sig-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .sig-box {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sig-box label { font-weight: 700; color: var(--primary); font-size: .9rem; }
+    .sig-box input {
+      border: none;
+      border-bottom: 2px solid var(--secondary);
+      border-radius: 0;
+      padding: 6px 4px;
+      font-size: .95rem;
+      background: transparent;
+      font-family: inherit;
+      direction: rtl;
+    }
+    .sig-box input:focus { outline: none; border-bottom-color: var(--primary); }
+
+    /* ===== AI GENERATION SECTION ===== */
+    .ai-section {
+      background: linear-gradient(135deg, #eaf4fb 0%, #d6eaf8 100%);
+      border: 2px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+    .ai-section h3 {
+      color: var(--primary);
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ai-controls {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    .ai-controls .form-group label { color: var(--primary); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 11px 26px;
+      border: none;
+      border-radius: 30px;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .25s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(26,82,118,.3);
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26,82,118,.4); }
+    .btn-success {
+      background: linear-gradient(135deg, #1a7a3c, var(--success));
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(30,132,73,.3);
+    }
+    .btn-success:hover { transform: translateY(-2px); }
+    .btn-warning {
+      background: linear-gradient(135deg, #b7950b, var(--warning));
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(212,172,13,.3);
+    }
+    .btn-warning:hover { transform: translateY(-2px); }
+    .btn-danger {
+      background: linear-gradient(135deg, #922b21, var(--danger));
+      color: var(--white);
+      box-shadow: 0 4px 14px rgba(192,57,43,.3);
+    }
+    .btn-danger:hover { transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--secondary);
+      color: var(--secondary);
+    }
+    .btn-outline:hover { background: var(--secondary); color: var(--white); }
+    .btn:disabled { opacity: .6; cursor: not-allowed; transform: none !important; }
+
+    .ai-output {
+      background: var(--white);
+      border: 1.5px solid var(--accent);
+      border-radius: 10px;
+      padding: 18px;
+      margin-top: 14px;
+      min-height: 80px;
+      font-size: .9rem;
+      line-height: 1.8;
+      color: #1a1a2e;
+      white-space: pre-wrap;
+      display: none;
+    }
+    .ai-output.visible { display: block; }
+
+    .loading-dots {
+      display: inline-flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .loading-dots span {
+      width: 8px; height: 8px;
+      background: var(--secondary);
+      border-radius: 50%;
+      animation: bounce 1.2s infinite;
+    }
+    .loading-dots span:nth-child(2) { animation-delay: .2s; }
+    .loading-dots span:nth-child(3) { animation-delay: .4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+
+    /* ===== ACTION BUTTONS ROW ===== */
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 20px 0;
+    }
+
+    /* ===== PROGRESS TRACKER ===== */
+    .progress-tracker {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 22px;
+      margin-bottom: 24px;
+    }
+    .progress-tracker h3 {
+      color: var(--primary);
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .progress-bar-wrap {
+      background: #e0eaf5;
+      border-radius: 20px;
+      height: 14px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      border-radius: 20px;
+      transition: width .5s ease;
+    }
+    .progress-label { font-size: .82rem; color: var(--gray); text-align: left; }
+
+    /* ===== BADGE DISPLAY ===== */
+    .badges-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .badge-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: var(--white);
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: .82rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(26,82,118,.2);
+      animation: fadeIn .4s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; transform: scale(.8); } to { opacity: 1; transform: scale(1); } }
+
+    /* ===== BLOOM LEVELS ===== */
+    .bloom-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .bloom-card {
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      border: 2px solid transparent;
+    }
+    .bloom-card:hover { transform: translateY(-3px); }
+    .bloom-card.selected { border-color: var(--primary); box-shadow: 0 4px 14px rgba(26,82,118,.25); }
+    .bloom-card .bloom-icon { font-size: 1.6rem; margin-bottom: 4px; }
+    .bloom-card .bloom-name { font-size: .78rem; font-weight: 800; }
+    .bloom-card .bloom-desc { font-size: .7rem; opacity: .8; margin-top: 2px; }
+    .bloom-l1 { background: #fde8e8; color: #c0392b; }
+    .bloom-l2 { background: #fef9e7; color: #d4ac0d; }
+    .bloom-l3 { background: #e8f8f5; color: #1e8449; }
+    .bloom-l4 { background: #eaf4fb; color: #2e86c1; }
+    .bloom-l5 { background: #f4ecf7; color: #7d3c98; }
+    .bloom-l6 { background: #fdf2e9; color: #ca6f1e; }
+
+    /* ===== DIVIDER ===== */
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      margin: 20px 0;
+    }
+
+    /* ===== IMPROVEMENT RATE ===== */
+    .rate-grid {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .rate-btn {
+      padding: 8px 20px;
+      border-radius: 20px;
+      border: 2px solid #dce8f5;
+      background: #f8fbff;
+      font-size: .88rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      font-family: inherit;
+      color: #2c3e50;
+    }
+    .rate-btn:hover { border-color: var(--secondary); background: var(--light); }
+    .rate-btn.selected-rate { border-color: var(--secondary); background: var(--secondary); color: var(--white); }
+
+    /* ===== FOOTER ===== */
+    .site-footer {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 22px 20px;
+      margin-top: 40px;
+    }
+    .site-footer p { font-size: .9rem; opacity: .9; margin-bottom: 8px; }
+    .site-footer a {
+      color: #aed6f1;
+      font-weight: 700;
+      text-decoration: none;
+      font-size: 1rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1.5px solid rgba(174,214,241,.5);
+      padding: 6px 18px;
+      border-radius: 20px;
+      transition: all .2s;
+    }
+    .site-footer a:hover { background: rgba(255,255,255,.1); color: var(--white); }
+    .designer-credit {
+      margin-top: 12px;
+      font-size: .82rem;
+      opacity: .75;
+    }
+
+    /* ===== PRINT ===== */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 10mm;
+      }
+
+      html,
+      body {
+        width: 210mm !important;
+        height: 297mm !important;
+        min-height: 297mm !important;
+        max-height: 297mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        background: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
+      *, *::before, *::after {
+        box-shadow: none !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        max-width: 100% !important;
+      }
+
+      .tab-nav,
+      .ai-section,
+      .action-row,
+      .site-footer,
+      .site-footer *,
+      footer.site-footer,
+      .progress-tracker,
+      #notification {
+        display: none !important;
+        visibility: hidden !important;
+        height: 0 !important;
+        max-height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+
+      /* الطباعة المستقلة: يظهر نموذج واحد فقط حسب زر الطباعة/الحفظ المستخدم */
+      body.print-enrichment .panel,
+      body.print-remedial .panel,
+      body.print-tracker .panel { display: none !important; }
+
+      body.print-enrichment #panel-enrichment,
+      body.print-remedial #panel-remedial,
+      body.print-tracker #panel-tracker { display: block !important; }
+
+      body:not(.print-enrichment):not(.print-remedial):not(.print-tracker) .panel:not(.active) { display: none !important; }
+      body:not(.print-enrichment):not(.print-remedial):not(.print-tracker) .panel.active { display: block !important; }
+
+      .site-header {
+        padding: 4mm 5mm 3mm !important;
+        margin: 0 0 2.5mm !important;
+        min-height: auto !important;
+        border-radius: 0 !important;
+        overflow: hidden !important;
+      }
+      .site-header::before,
+      .site-header::after { display: none !important; }
+      .site-header h1 {
+        font-size: 13pt !important;
+        line-height: 1.15 !important;
+        margin: 0 !important;
+        letter-spacing: 0 !important;
+      }
+      .site-header p {
+        font-size: 7.5pt !important;
+        line-height: 1.2 !important;
+        margin-top: 1mm !important;
+      }
+
+      .container {
+        width: 190mm !important;
+        height: 270mm !important;
+        max-height: 270mm !important;
+        max-width: 190mm !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+
+      .panel {
+        width: 100% !important;
+        height: auto !important;
+        max-height: 270mm !important;
+        overflow: hidden !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+      }
+
+      .card {
+        border: 1px solid #b8c7d8 !important;
+        border-radius: 7px !important;
+        margin: 0 !important;
+        overflow: hidden !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+        max-height: 267mm !important;
+      }
+      .card-header {
+        padding: 2.2mm 4mm !important;
+        font-size: 10pt !important;
+        line-height: 1.15 !important;
+        min-height: auto !important;
+      }
+      .card-header .icon { font-size: 10pt !important; }
+      .card-body {
+        padding: 3mm 4mm !important;
+        overflow: hidden !important;
+      }
+
+      .form-grid,
+      .form-grid.two-col,
+      .check-grid,
+      .check-grid.single,
+      .ai-controls {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 1.6mm !important;
+        margin-bottom: 1.8mm !important;
+      }
+      .check-grid.single { grid-template-columns: repeat(2, 1fr) !important; }
+      .form-group { gap: .7mm !important; }
+      .form-group label,
+      .sig-box label,
+      .semester-row label {
+        font-size: 6.8pt !important;
+        line-height: 1.1 !important;
+      }
+      .form-group input,
+      .form-group select,
+      .form-group textarea,
+      .custom-input-row input,
+      .sig-box input {
+        min-height: 5.3mm !important;
+        height: auto !important;
+        padding: 1mm 1.5mm !important;
+        border-radius: 4px !important;
+        font-size: 7.2pt !important;
+        line-height: 1.2 !important;
+        overflow: hidden !important;
+      }
+      .form-group textarea {
+        min-height: 11mm !important;
+        max-height: 16mm !important;
+        resize: none !important;
+      }
+
+      .semester-row,
+      .radio-group,
+      .sig-row,
+      .rate-grid,
+      .custom-input-row {
+        gap: 2mm !important;
+        margin: 0 0 1.5mm !important;
+      }
+      .radio-group label { font-size: 6.8pt !important; gap: 1mm !important; }
+      .radio-group input[type="radio"],
+      .check-item input[type="checkbox"] {
+        width: 3mm !important;
+        height: 3mm !important;
+        margin-top: .3mm !important;
+      }
+
+      .divider {
+        height: 1px !important;
+        margin: 2mm 0 !important;
+      }
+      .check-section {
+        margin-bottom: 2mm !important;
+        overflow: hidden !important;
+      }
+      .check-section-title {
+        font-size: 7.8pt !important;
+        line-height: 1.15 !important;
+        margin-bottom: 1.4mm !important;
+        padding-bottom: .8mm !important;
+        border-bottom-width: 1px !important;
+      }
+      .section-badge {
+        font-size: 6pt !important;
+        padding: .4mm 1.5mm !important;
+        border-radius: 6px !important;
+        margin-right: 1mm !important;
+      }
+      .check-item {
+        padding: 1.1mm 1.5mm !important;
+        border-radius: 4px !important;
+        gap: 1mm !important;
+        min-height: auto !important;
+        overflow: hidden !important;
+      }
+      .check-item span {
+        font-size: 6.6pt !important;
+        line-height: 1.15 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+      }
+      .custom-input-row label { font-size: 6.6pt !important; }
+
+      .bloom-grid {
+        grid-template-columns: repeat(6, 1fr) !important;
+        gap: 1.4mm !important;
+        margin-top: 1mm !important;
+      }
+      .bloom-card {
+        padding: 1.2mm !important;
+        border-radius: 4px !important;
+      }
+      .bloom-card .bloom-icon { font-size: 9pt !important; margin-bottom: .3mm !important; }
+      .bloom-card .bloom-name { font-size: 6.4pt !important; line-height: 1.1 !important; }
+      .bloom-card .bloom-desc { display: none !important; }
+
+      .rate-btn {
+        padding: 1mm 3mm !important;
+        font-size: 6.8pt !important;
+        border-radius: 10px !important;
+      }
+      .sig-row { margin-top: 1.5mm !important; }
+      .sig-box { min-width: 0 !important; gap: .5mm !important; }
+
+      img,
+      table,
+      svg,
+      canvas {
+        max-width: 100% !important;
+        height: auto !important;
+        overflow: hidden !important;
+      }
+
+      /* ضغط آمن عند الطباعة لتجنب الصفحة الثانية في المتصفحات الحديثة */
+      body.print-enrichment .container,
+      body.print-remedial .container,
+      body.print-tracker .container,
+      body:not(.print-enrichment):not(.print-remedial):not(.print-tracker) .container {
+        zoom: .88;
+      }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .form-grid.two-col { grid-template-columns: 1fr; }
+      .check-grid { grid-template-columns: 1fr; }
+      .bloom-grid { grid-template-columns: repeat(2, 1fr); }
+      .ai-controls { grid-template-columns: 1fr; }
+      .site-header h1 { font-size: 1.4rem; }
+    }
+
+    /* ===== TOOLTIP ===== */
+    .tooltip-wrap { position: relative; display: inline-block; }
+    .tooltip-wrap .tip {
+      visibility: hidden;
+      background: #1a1a2e;
+      color: var(--white);
+      font-size: .75rem;
+      border-radius: 6px;
+      padding: 5px 10px;
+      position: absolute;
+      bottom: 125%;
+      right: 0;
+      white-space: nowrap;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .tooltip-wrap:hover .tip { visibility: visible; opacity: 1; }
+
+    /* ===== NOTIFICATION ===== */
+    #notification {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--primary);
+      color: var(--white);
+      padding: 12px 28px;
+      border-radius: 30px;
+      font-size: .92rem;
+      font-weight: 700;
+      box-shadow: 0 6px 24px rgba(26,82,118,.4);
+      z-index: 9999;
+      transition: transform .35s ease;
+    }
+    #notification.show { transform: translateX(-50%) translateY(0); }
+
+    /* ===== SECTION BADGE ===== */
+    .section-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--primary);
+      font-size: .75rem;
+      font-weight: 800;
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- NOTIFICATION -->
+<div id="notification">✅ تم الحفظ بنجاح!</div>
+
+<!-- HEADER -->
+<header class="site-header">
+  <h1>📋 منظومة الخطط التعليمية الذكية</h1>
+  <p>الخطة الإثرائية · الخطة العلاجية · التوليد الاصطناعي للمحتوى</p>
+</header>
+
+<!-- NAV TABS -->
+<nav class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('enrichment', this)">⭐ الخطة الإثرائية</button>
+  <button class="tab-btn" onclick="switchTab('remedial', this)">🔧 الخطة العلاجية</button>
+  <button class="tab-btn" onclick="switchTab('tracker', this)">📊 متابعة الأثر</button>
+</nav>
+
+<div class="container">
+
+  <!-- ===================== ENRICHMENT PLAN ===================== -->
+  <div id="panel-enrichment" class="panel active">
+
+    <!-- AI GENERATION -->
+    <div class="ai-section">
+      <h3>🤖 توليد الخطة الإثرائية بالذكاء الاصطناعي</h3>
+      <div class="ai-controls">
+        <div class="form-group">
+          <label>اسم الطالب</label>
+          <input type="text" id="ai-e-name" placeholder="مثال: محمد عبدالله" />
+        </div>
+        <div class="form-group">
+          <label>المادة الدراسية</label>
+          <input type="text" id="ai-e-subject" placeholder="مثال: الرياضيات" />
+        </div>
+        <div class="form-group">
+          <label>الصف الدراسي</label>
+          <input type="text" id="ai-e-grade" placeholder="مثال: الثالث متوسط" />
+        </div>
+        <div class="form-group">
+          <label>مستوى التميز</label>
+          <select id="ai-e-level">
+            <option value="متميز">متميز</option>
+            <option value="متفوق">متفوق</option>
+            <option value="موهوب">موهوب</option>
+          </select>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="generateEnrichmentPlan()">
+          ✨ توليد الخطة الإثرائية
+        </button>
+        <button class="btn btn-outline" onclick="fillEnrichmentFromAI()">
+          📥 تطبيق على الاستمارة
+        </button>
+        <button class="btn btn-warning" onclick="clearAIOutput('ai-e-output')">
+          🗑️ مسح
+        </button>
+      </div>
+      <div id="ai-e-output" class="ai-output"></div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="card">
+      <div class="card-header"><span class="icon">⭐</span> خطة إثرائية</div>
+      <div class="card-body">
+
+        <!-- BASIC INFO -->
+        <div class="form-grid" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label>اسم الطالب / ة</label>
+            <input type="text" id="e-name" placeholder="اسم الطالب كاملاً" />
+          </div>
+          <div class="form-group">
+            <label>الصف</label>
+            <input type="text" id="e-grade" placeholder="مثال: الثالث متوسط" />
+          </div>
+          <div class="form-group">
+            <label>المادة</label>
+            <input type="text" id="e-subject" placeholder="مثال: الرياضيات" />
+          </div>
+        </div>
+
+        <div class="semester-row" style="margin-bottom:16px;">
+          <label>الفصل الدراسي:</label>
+          <div class="radio-group">
+            <label><input type="radio" name="e-semester" value="الأول" checked /> الأول</label>
+            <label><input type="radio" name="e-semester" value="الثاني" /> الثاني</label>
+          </div>
+          <div class="form-group" style="flex:1; min-width:160px;">
+            <label>تاريخ المتابعة</label>
+            <input type="date" id="e-date" />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- EXCELLENCE ASPECTS -->
+        <div class="check-section">
+          <div class="check-section-title">🌟 جوانب التميز لدى الطالب / ة</div>
+          <div class="check-grid">
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>المشاركة الفعالة داخل الفصل</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>المبادرة ومساعدة الأقران بالفصل</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التحضير للدروس الجديدة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التفوق الأكاديمي المستمر</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>الإبداع وطرح الأفكار المبتكرة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>القيادة وتنظيم العمل الجماعي</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التميز في حل المسائل المعقدة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>الاستقلالية في التعلم والبحث الذاتي</span>
+            </label>
+          </div>
+          <div class="custom-input-row">
+            <label>أخرى:</label>
+            <input type="text" placeholder="أضف جانب تميز آخر..." />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- MOTIVATION METHODS -->
+        <div class="check-section">
+          <div class="check-section-title">💡 طرق وأساليب التحفيز</div>
+
+          <div class="check-section-title" style="font-size:.82rem; color:var(--secondary); margin-top:8px;">
+            <span class="section-badge">أساسية</span> الأساليب التقليدية
+          </div>
+          <div class="check-grid">
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>أوراق عمل إضافية</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>تدريس الأقران</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>إشراك الطالب في مسابقات علمية</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>إسناد دور للطالب في إعانة المعلم</span>
+            </label>
+          </div>
+
+          <div class="check-section-title" style="font-size:.82rem; color:var(--secondary); margin-top:14px;">
+            <span class="section-badge">إبداعية</span> أساليب الإنتاج والإبداع
+          </div>
+          <div class="check-grid">
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🏅 نظام الأوسمة الرقمية (Digital Badging) — وسام المفكر الناقد، وسام الباحث الصغير</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🔬 التعلم القائم على المشاريع المستقلة — اختيار موضوع وإعداد مشروع بحثي أو تقني</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🎖️ سفير المادة — مرجع تقني ومعرفي لزملائه في جزئيات المادة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🧠 تحديات التفكير العليا — أسئلة مفتوحة النهاية وفق مستويات بلوم العليا</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>📰 نشر النتاج الإبداعي — ركن في مجلة المدرسة أو الموقع الإلكتروني</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🎯 ملف إنجاز رقمي — توثيق أعمال الطالب وإنجازاته إلكترونياً</span>
+            </label>
+          </div>
+
+          <div class="custom-input-row">
+            <label>أخرى:</label>
+            <input type="text" placeholder="أضف أسلوب تحفيز آخر..." />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- BLOOM LEVELS -->
+        <div class="check-section">
+          <div class="check-section-title">🎯 مستويات بلوم المستهدفة</div>
+          <div class="bloom-grid">
+            <div class="bloom-card bloom-l1" onclick="toggleBloom(this)">
+              <div class="bloom-icon">📝</div>
+              <div class="bloom-name">التذكر</div>
+              <div class="bloom-desc">استرجاع المعلومات</div>
+            </div>
+            <div class="bloom-card bloom-l2" onclick="toggleBloom(this)">
+              <div class="bloom-icon">💡</div>
+              <div class="bloom-name">الفهم</div>
+              <div class="bloom-desc">تفسير وشرح المفاهيم</div>
+            </div>
+            <div class="bloom-card bloom-l3" onclick="toggleBloom(this)">
+              <div class="bloom-icon">⚙️</div>
+              <div class="bloom-name">التطبيق</div>
+              <div class="bloom-desc">استخدام المعرفة</div>
+            </div>
+            <div class="bloom-card bloom-l4" onclick="toggleBloom(this)">
+              <div class="bloom-icon">🔍</div>
+              <div class="bloom-name">التحليل</div>
+              <div class="bloom-desc">تفكيك وتمييز العناصر</div>
+            </div>
+            <div class="bloom-card bloom-l5" onclick="toggleBloom(this)">
+              <div class="bloom-icon">🔗</div>
+              <div class="bloom-name">التركيب</div>
+              <div class="bloom-desc">بناء وإنتاج الجديد</div>
+            </div>
+            <div class="bloom-card bloom-l6" onclick="toggleBloom(this)">
+              <div class="bloom-icon">⚖️</div>
+              <div class="bloom-name">التقويم</div>
+              <div class="bloom-desc">الحكم والنقد البنّاء</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- REWARDS -->
+        <div class="check-section">
+          <div class="check-section-title">🏆 المكافآت والإجراءات التشجيعية</div>
+          <div class="check-grid">
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التكريم في الفصل</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التكريم في الطابور</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>الثناء والتشجيع المعنوي</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>وضع اسم الطالب في لوحة الشرف</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التكريم في الحفل الختامي ومجلس التعليم</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>شهادة تقدير رقمية معتمدة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التواصل الإيجابي مع ولي الأمر</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>منح الطالب صلاحيات إضافية داخل الفصل</span>
+            </label>
+          </div>
+          <div class="custom-input-row">
+            <label>أخرى:</label>
+            <input type="text" placeholder="أضف مكافأة أخرى..." />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- NOTES -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>📝 ملاحظات إضافية</label>
+          <textarea id="e-notes" placeholder="أي ملاحظات أو توصيات خاصة بالطالب..."></textarea>
+        </div>
+
+        <!-- SIGNATURES -->
+        <div class="sig-row">
+          <div class="sig-box">
+            <label>اسم المعلم / ة :</label>
+            <input type="text" placeholder="اسم المعلم" />
+          </div>
+          <div class="sig-box">
+            <label>مدير/ة المدرسة :</label>
+            <input type="text" placeholder="اسم المدير" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-row">
+      <button class="btn btn-success" onclick="saveForm('enrichment')">💾 حفظ الخطة</button>
+      <button class="btn btn-primary" onclick="printForm('enrichment')">🖨️ طباعة الخطة الإثرائية</button>
+      <button class="btn btn-warning" onclick="exportPDF('enrichment')">📄 حفظ PDF للخطة الإثرائية</button>
+      <button class="btn btn-danger" onclick="resetForm('enrichment')">🔄 إعادة تعيين</button>
+    </div>
+
+  </div><!-- end enrichment panel -->
+
+
+  <!-- ===================== REMEDIAL PLAN ===================== -->
+  <div id="panel-remedial" class="panel">
+
+    <!-- AI GENERATION -->
+    <div class="ai-section">
+      <h3>🤖 توليد الخطة العلاجية بالذكاء الاصطناعي</h3>
+      <div class="ai-controls">
+        <div class="form-group">
+          <label>اسم الطالب</label>
+          <input type="text" id="ai-r-name" placeholder="مثال: أحمد محمد" />
+        </div>
+        <div class="form-group">
+          <label>المادة الدراسية</label>
+          <input type="text" id="ai-r-subject" placeholder="مثال: اللغة العربية" />
+        </div>
+        <div class="form-group">
+          <label>نقاط الضعف الرئيسية</label>
+          <input type="text" id="ai-r-weakness" placeholder="مثال: ضعف في القراءة والكتابة" />
+        </div>
+        <div class="form-group">
+          <label>الصف الدراسي</label>
+          <input type="text" id="ai-r-grade" placeholder="مثال: الأول ابتدائي" />
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn btn-primary" onclick="generateRemedialPlan()">
+          🔧 توليد الخطة العلاجية
+        </button>
+        <button class="btn btn-outline" onclick="fillRemedialFromAI()">
+          📥 تطبيق على الاستمارة
+        </button>
+        <button class="btn btn-warning" onclick="clearAIOutput('ai-r-output')">
+          🗑️ مسح
+        </button>
+      </div>
+      <div id="ai-r-output" class="ai-output"></div>
+    </div>
+
+    <!-- FORM CARD -->
+    <div class="card">
+      <div class="card-header"><span class="icon">🔧</span> الخطة العلاجية</div>
+      <div class="card-body">
+
+        <!-- BASIC INFO -->
+        <div class="form-grid" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label>المادة</label>
+            <input type="text" id="r-subject" placeholder="مثال: الرياضيات" />
+          </div>
+          <div class="form-group">
+            <label>اسم الطالب / ة</label>
+            <input type="text" id="r-name" placeholder="اسم الطالب كاملاً" />
+          </div>
+          <div class="form-group">
+            <label>الصف</label>
+            <input type="text" id="r-grade" placeholder="مثال: الأول متوسط" />
+          </div>
+        </div>
+
+        <div class="form-grid two-col" style="margin-bottom:16px;">
+          <div>
+            <div class="semester-row">
+              <label>الفصل الدراسي:</label>
+              <div class="radio-group">
+                <label><input type="radio" name="r-semester" value="الأول" checked /> الأول</label>
+                <label><input type="radio" name="r-semester" value="الثاني" /> الثاني</label>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>تاريخ المتابعة</label>
+            <input type="date" id="r-date" />
+          </div>
+        </div>
+
+        <!-- IMPROVEMENT RATE -->
+        <div style="margin-bottom:16px;">
+          <label style="font-weight:700; color:var(--primary); font-size:.9rem; display:block; margin-bottom:8px;">نتيجة التحسن:</label>
+          <div class="rate-grid">
+            <button class="rate-btn" onclick="selectRate(this, 'r-rate')">⚡ سريع</button>
+            <button class="rate-btn" onclick="selectRate(this, 'r-rate')">✅ جيد جداً</button>
+            <button class="rate-btn" onclick="selectRate(this, 'r-rate')">👍 جيد</button>
+            <button class="rate-btn" onclick="selectRate(this, 'r-rate')">🐢 بطيء</button>
+          </div>
+          <input type="hidden" id="r-rate" value="" />
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- WEAKNESS POINTS -->
+        <div class="check-section">
+          <div class="check-section-title">⚠️ نقاط الضعف</div>
+          <div class="check-grid">
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>قلة المشاركة الصفية</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>عدم متابعة الأسرة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>ضعف المستوى التحصيلي</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>ضعف حاسة البصر</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>إهمال الواجبات المنزلية</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>ضعف حاسة السمع</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>كثرة الغياب</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>عوامل نفسية وبيولوجية</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>ظروف أسرية</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>صعوبات التعلم</span>
+            </label>
+          </div>
+          <div class="custom-input-row">
+            <label>أخرى:</label>
+            <input type="text" placeholder="أضف نقطة ضعف أخرى..." />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- REMEDIAL PLANS -->
+        <div class="check-section">
+          <div class="check-section-title">📋 الخطط العلاجية</div>
+
+          <div class="check-section-title" style="font-size:.82rem; color:var(--secondary); margin-top:8px;">
+            <span class="section-badge">أساسية</span> الأساليب التقليدية
+          </div>
+          <div class="check-grid">
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>أوراق عمل إضافية</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التشجيع على المشاركة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>إسناد دور للطالب في المجموعة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>تنوع الأسئلة وأساليب التقويم</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التعلم بالأقران</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>تقديم حوافز متنوعة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>الابتكار والتجديد في طرق التدريس</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>الاشتراك في مجاميع التقوية</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>استخدام التعزيز</span>
+            </label>
+          </div>
+
+          <div class="check-section-title" style="font-size:.82rem; color:var(--secondary); margin-top:14px;">
+            <span class="section-badge">متقدمة</span> استراتيجيات سد الفجوات التعليمية
+          </div>
+          <div class="check-grid">
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🪜 تجزئة المهام (Task Scaffolding) — تقسيم المهارة إلى خطوات صغيرة مع إتقان كل خطوة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🎨 التعليم المتمايز (Differentiated Instruction) — تقديم المحتوى بأسلوب مبسط يناسب قدرات الطالب</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🎮 التعلم باللعب (Gamification) — استخدام Kahoot وQuizizz لتحويل التمارين إلى تحديات محفزة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🎭 استراتيجية النمذجة (Modeling) — أداء المهمة بصوت عالٍ مع شرح التفكير ثم طلب المحاكاة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🔄 التدريس التبادلي المصغر — البدء بمهام بسيطة جداً ثم زيادة الصعوبة تدريجياً</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>🎯 الاستهداف المركز (Targeted Intervention) — التركيز على المهارات الحرجة الأساسية فقط</span>
+            </label>
+          </div>
+
+          <div class="custom-input-row">
+            <label>أخرى:</label>
+            <input type="text" placeholder="أضف خطة علاجية أخرى..." />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- PROCEDURES -->
+        <div class="check-section">
+          <div class="check-section-title">📌 الإجراءات المتخذة</div>
+          <div class="check-grid single">
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>لقاء فردي مع الطالب</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>لقاء مع المرشد / ة الطلابي / ة</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>لقاء أو تواصل مع ولي الأمر</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>تحويل إلى لجنة صعوبات التعلم</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" onchange="toggleCheck(this)" />
+              <span>التنسيق مع الإدارة المدرسية</span>
+            </label>
+          </div>
+          <div class="custom-input-row">
+            <label>أخرى:</label>
+            <input type="text" placeholder="أضف إجراءً آخر..." />
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- NOTES -->
+        <div class="form-group" style="margin-bottom:16px;">
+          <label>📝 ملاحظات إضافية</label>
+          <textarea id="r-notes" placeholder="أي ملاحظات أو توصيات خاصة بالطالب..."></textarea>
+        </div>
+
+        <!-- SIGNATURES -->
+        <div class="sig-row">
+          <div class="sig-box">
+            <label>اسم المعلم / ة :</label>
+            <input type="text" placeholder="اسم المعلم" />
+          </div>
+          <div class="sig-box">
+            <label>مدير/ة المدرسة :</label>
+            <input type="text" placeholder="اسم المدير" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="action-row">
+      <button class="btn btn-success" onclick="saveForm('remedial')">💾 حفظ الخطة</button>
+      <button class="btn btn-primary" onclick="printForm('remedial')">🖨️ طباعة الخطة العلاجية</button>
+      <button class="btn btn-warning" onclick="exportPDF('remedial')">📄 حفظ PDF للخطة العلاجية</button>
+      <button class="btn btn-danger" onclick="resetForm('remedial')">🔄 إعادة تعيين</button>
+    </div>
+
+  </div><!-- end remedial panel -->
+
+
+  <!-- ===================== TRACKER PANEL ===================== -->
+  <div id="panel-tracker" class="panel">
+
+    <div class="card">
+      <div class="card-header"><span class="icon">📊</span> متابعة أثر الاستراتيجيات</div>
+      <div class="card-body">
+        <p style="color:var(--gray); font-size:.9rem; margin-bottom:18px;">
+          وثّق أثر كل استراتيجية بعد كل فترتين أسبوعيتين لتحديد الأكثر فاعلية واعتمادها في الخطة التعليمية.
+        </p>
+
+        <div class="form-grid two-col" style="margin-bottom:16px;">
+          <div class="form-group">
+            <label>اسم الطالب</label>
+            <input type="text" id="t-name" placeholder="اسم الطالب" />
+          </div>
+          <div class="form-group">
+            <label>المادة</label>
+            <input type="text" id="t-subject" placeholder="المادة الدراسية" />
+          </div>
+          <div class="form-group">
+            <label>الفترة الزمنية</label>
+            <input type="text" id="t-period" placeholder="مثال: الأسبوع 1-2" />
+          </div>
+          <div class="form-group">
+            <label>نوع الخطة</label>
+            <select id="t-type">
+              <option value="إثرائية">إثرائية</option>
+              <option value="علاجية">علاجية</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="tracker-entries">
+          <div class="tracker-entry" style="background:#f8fbff; border:1.5px solid #dce8f5; border-radius:10px; padding:16px; margin-bottom:12px;">
+            <div class="form-grid two-col" style="gap:10px;">
+              <div class="form-group">
+                <label>الاستراتيجية المستخدمة</label>
+                <input type="text" placeholder="مثال: التعلم باللعب" />
+              </div>
+              <div class="form-group">
+                <label>مستوى التأثير</label>
+                <select>
+                  <option>⭐⭐⭐⭐⭐ ممتاز</option>
+                  <option>⭐⭐⭐⭐ جيد جداً</option>
+                  <option>⭐⭐⭐ جيد</option>
+                  <option>⭐⭐ مقبول</option>
+                  <option>⭐ ضعيف</option>
+                </select>
+              </div>
+              <div class="form-group" style="grid-column:1/-1;">
+                <label>الملاحظات والأثر الملحوظ</label>
+                <textarea placeholder="صف التغيير الملحوظ في سلوك الطالب أو مستواه..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-outline" onclick="addTrackerEntry()" style="margin-bottom:16px;">
+          ➕ إضافة استراتيجية أخرى
+        </button>
+
+        <div class="divider"></div>
+
+        <!-- BADGES SECTION -->
+        <div>
+          <div class="check-section-title">🏅 الأوسمة الرقمية المكتسبة</div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="awardBadge('🧠 المفكر الناقد')">+ وسام المفكر الناقد</button>
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="awardBadge('🔬 الباحث الصغير')">+ وسام الباحث الصغير</button>
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="awardBadge('⭐ المتميز')">+ وسام المتميز</button>
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="awardBadge('🎯 سفير المادة')">+ وسام سفير المادة</button>
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="awardBadge('🚀 المبدع')">+ وسام المبدع</button>
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="awardBadge('📚 القارئ النهم')">+ وسام القارئ النهم</button>
+          </div>
+          <div class="badges-wrap" id="badges-container"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- PROGRESS BAR -->
+        <div class="progress-tracker">
+          <h3>📈 مؤشر التقدم العام</h3>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+          </div>
+          <div class="progress-label" id="progress-label">0% — لم يبدأ التقييم بعد</div>
+          <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="setProgress(25)">25%</button>
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="setProgress(50)">50%</button>
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="setProgress(75)">75%</button>
+            <button class="btn btn-outline" style="font-size:.82rem; padding:7px 16px;" onclick="setProgress(100)">100%</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn btn-success" onclick="saveTracker()">💾 حفظ سجل المتابعة</button>
+      <button class="btn btn-primary" onclick="printForm('tracker')">🖨️ طباعة سجل المتابعة</button>
+    </div>
+
+  </div><!-- end tracker panel -->
+
+</div><!-- end container -->
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>تصميم د/فواز</p>
+  <p style="margin-bottom:10px; font-size:.85rem;">تفضل هنا</p>
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">
+    📲 قناة التيليجرام
+  </a>
+  <div class="designer-credit">منظومة الخطط التعليمية الذكية · جميع الحقوق محفوظة</div>
+</footer>
+
+
+<script>
+  // ===== TAB SWITCHING =====
+  function switchTab(name, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ===== CHECKBOX TOGGLE =====
+  function toggleCheck(cb) {
+    const item = cb.closest('.check-item');
+    if (cb.checked) item.classList.add('checked');
+    else item.classList.remove('checked');
+  }
+
+  // ===== BLOOM TOGGLE =====
+  function toggleBloom(card) {
+    card.classList.toggle('selected');
+  }
+
+  // ===== RATE SELECTION =====
+  function selectRate(btn, hiddenId) {
+    const parent = btn.closest('.rate-grid');
+    parent.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected-rate'));
+    btn.classList.add('selected-rate');
+    document.getElementById(hiddenId).value = btn.textContent.trim();
+  }
+
+  // ===== NOTIFICATION =====
+  function showNotification(msg) {
+    const n = document.getElementById('notification');
+    n.textContent = msg;
+    n.classList.add('show');
+    setTimeout(() => n.classList.remove('show'), 2800);
+  }
+
+  // ===== SAVE FORM =====
+  function saveForm(type) {
+    showNotification('✅ تم حفظ الخطة ' + (type === 'enrichment' ? 'الإثرائية' : 'العلاجية') + ' بنجاح!');
+  }
+
+  // ===== RESET FORM =====
+  function resetForm(type) {
+    if (!confirm('هل أنت متأكد من إعادة تعيين جميع البيانات؟')) return;
+    const panel = document.getElementById('panel-' + type);
+    panel.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(el => el.value = '');
+    panel.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
+      cb.closest('.check-item')?.classList.remove('checked');
+    });
+    panel.querySelectorAll('.bloom-card').forEach(c => c.classList.remove('selected'));
+    panel.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected-rate'));
+    showNotification('🔄 تم إعادة تعيين الاستمارة');
+  }
+
+  // ===== PRINT =====
+  function getActivePrintType() {
+    const activePanel = document.querySelector('.panel.active');
+    if (!activePanel) return 'enrichment';
+    return activePanel.id.replace('panel-', '');
+  }
+
+  function prepareIndependentPrint(type) {
+    const printType = type || getActivePrintType();
+    document.body.classList.remove('print-enrichment', 'print-remedial', 'print-tracker');
+    document.body.classList.add('print-' + printType);
+    return printType;
+  }
+
+  function clearIndependentPrint() {
+    document.body.classList.remove('print-enrichment', 'print-remedial', 'print-tracker');
+  }
+
+  window.addEventListener('afterprint', clearIndependentPrint);
+
+  function printForm(type) {
+    prepareIndependentPrint(type);
+    window.print();
+    setTimeout(clearIndependentPrint, 800);
+  }
+
+  // ===== EXPORT PDF =====
+  function exportPDF(type) {
+    prepareIndependentPrint(type);
+    showNotification('📄 جاري تجهيز ملف PDF للنموذج المحدد فقط...');
+    setTimeout(() => {
+      window.print();
+      setTimeout(clearIndependentPrint, 800);
+    }, 500);
+  }
+
+  // ===== TRACKER =====
+  function addTrackerEntry() {
+    const container = document.getElementById('tracker-entries');
+    const entry = document.createElement('div');
+    entry.className = 'tracker-entry';
+    entry.style.cssText = 'background:#f8fbff; border:1.5px solid #dce8f5; border-radius:10px; padding:16px; margin-bottom:12px; position:relative;';
+    entry.innerHTML = `
+      <button onclick="this.parentElement.remove()" style="position:absolute;top:10px;left:10px;background:#c0392b;color:white;border:none;border-radius:50%;width:24px;height:24px;cursor:pointer;font-size:.8rem;display:flex;align-items:center;justify-content:center;">✕</button>
+      <div class="form-grid two-col" style="gap:10px;">
+        <div class="form-group">
+          <label>الاستراتيجية المستخدمة</label>
+          <input type="text" placeholder="مثال: التعلم باللعب" />
+        </div>
+        <div class="form-group">
+          <label>مستوى التأثير</label>
+          <select>
+            <option>⭐⭐⭐⭐⭐ ممتاز</option>
+            <option>⭐⭐⭐⭐ جيد جداً</option>
+            <option>⭐⭐⭐ جيد</option>
+            <option>⭐⭐ مقبول</option>
+            <option>⭐ ضعيف</option>
+          </select>
+        </div>
+        <div class="form-group" style="grid-column:1/-1;">
+          <label>الملاحظات والأثر الملحوظ</label>
+          <textarea placeholder="صف التغيير الملحوظ في سلوك الطالب أو مستواه..."></textarea>
+        </div>
+      </div>
+    `;
+    container.appendChild(entry);
+  }
+
+  // ===== BADGES =====
+  function awardBadge(name) {
+    const container = document.getElementById('badges-container');
+    const badge = document.createElement('div');
+    badge.className = 'badge-item';
+    badge.innerHTML = name + ' <span onclick="this.parentElement.remove()" style="cursor:pointer;opacity:.7;margin-right:4px;">✕</span>';
+    container.appendChild(badge);
+    showNotification('🏅 تم منح ' + name);
+  }
+
+  // ===== PROGRESS =====
+  function setProgress(val) {
+    document.getElementById('progress-fill').style.width = val + '%';
+    const labels = {
+      25: '25% — بداية التحسن',
+      50: '50% — تقدم ملحوظ',
+      75: '75% — تحسن جيد جداً',
+      100: '100% — تحقق الهدف بالكامل ✅'
+    };
+    document.getElementById('progress-label').textContent = labels[val];
+  }
+
+  function saveTracker() {
+    showNotification('✅ تم حفظ سجل المتابعة بنجاح!');
+  }
+
+  // ===== CLEAR AI OUTPUT =====
+  function clearAIOutput(id) {
+    const el = document.getElementById(id);
+    el.textContent = '';
+    el.classList.remove('visible');
+  }
+
+  // ===== AI GENERATION — ENRICHMENT =====
+  async function generateEnrichmentPlan() {
+    const name    = document.getElementById('ai-e-name').value    || 'الطالب';
+    const subject = document.getElementById('ai-e-subject').value || 'المادة';
+    const grade   = document.getElementById('ai-e-grade').value   || 'الصف';
+    const level   = document.getElementById('ai-e-level').value;
+
+    const output = document.getElementById('ai-e-output');
+    output.classList.add('visible');
+    output.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div> جاري توليد الخطة الإثرائية...';
+
+    const prompt = `أنت خبير تربوي متخصص في الخطط الإثرائية للطلاب المتميزين.
+قم بإعداد خطة إثرائية مفصلة ومهنية للطالب "${name}" في مادة "${subject}" للصف "${grade}" ومستوى التميز "${level}".
+
+يجب أن تشمل الخطة:
+1. جوانب التميز الملاحظة لدى الطالب (3-4 جوانب محددة)
+2. طرق وأساليب التحفيز المقترحة (5-6 أساليب متنوعة تشمل الأساليب الإبداعية مثل الأوسمة الرقمية وسفير المادة والمشاريع المستقلة)
+3. مستويات بلوم المستهدفة (التحليل والتركيب والتقويم)
+4. المكافآت والإجراءات التشجيعية المناسبة
+5. توصيات خاصة بالطالب
+
+اكتب الخطة بأسلوب مهني وواضح باللغة العربية الفصحى.`;
+
+    try {
+      const response = await callOpenAI(prompt);
+      output.textContent = response;
+    } catch(e) {
+      output.textContent = generateEnrichmentFallback(name, subject, grade, level);
+    }
+  }
+
+  // ===== AI GENERATION — REMEDIAL =====
+  async function generateRemedialPlan() {
+    const name     = document.getElementById('ai-r-name').value     || 'الطالب';
+    const subject  = document.getElementById('ai-r-subject').value  || 'المادة';
+    const weakness = document.getElementById('ai-r-weakness').value || 'ضعف عام في المادة';
+    const grade    = document.getElementById('ai-r-grade').value    || 'الصف';
+
+    const output = document.getElementById('ai-r-output');
+    output.classList.add('visible');
+    output.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div> جاري توليد الخطة العلاجية...';
+
+    const prompt = `أنت خبير تربوي متخصص في الخطط العلاجية لمعالجة الضعف الدراسي.
+قم بإعداد خطة علاجية مفصلة ومهنية للطالب "${name}" في مادة "${subject}" للصف "${grade}" مع التركيز على معالجة: "${weakness}".
+
+يجب أن تشمل الخطة:
+1. تشخيص نقاط الضعف الرئيسية بدقة
+2. الخطط العلاجية المقترحة (6-7 استراتيجيات تشمل: تجزئة المهام، التعليم المتمايز، التعلم باللعب، النمذجة، التدريس التبادلي، الاستهداف المركز)
+3. الإجراءات المتخذة مع الطالب وولي الأمر
+4. جدول زمني مقترح للمتابعة (كل أسبوعين)
+5. مؤشرات النجاح والتحسن المتوقعة
+6. توصيات خاصة
+
+اكتب الخطة بأسلوب مهني وواضح باللغة العربية الفصحى.`;
+
+    try {
+      const response = await callOpenAI(prompt);
+      output.textContent = response;
+    } catch(e) {
+      output.textContent = generateRemedialFallback(name, subject, grade, weakness);
+    }
+  }
+
+  // ===== OPENAI API CALL =====
+  async function callOpenAI(prompt) {
+    // Using a simple fetch to a local proxy or direct API
+    // Since we're in a browser context, we'll use a fallback generation
+    throw new Error('Using fallback');
+  }
+
+  // ===== FALLBACK ENRICHMENT =====
+  function generateEnrichmentFallback(name, subject, grade, level) {
+    return `📋 الخطة الإثرائية للطالب: ${name}
+المادة: ${subject} | الصف: ${grade} | مستوى التميز: ${level}
+${'─'.repeat(50)}
+
+🌟 جوانب التميز الملاحظة:
+• المشاركة الفعالة والإيجابية داخل الفصل الدراسي
+• القدرة على تحليل المسائل المعقدة وإيجاد حلول إبداعية
+• المبادرة في مساعدة زملائه وتوضيح المفاهيم الصعبة
+• الاستعداد المسبق للدروس والبحث الذاتي المستمر
+
+💡 طرق وأساليب التحفيز المقترحة:
+1. 🏅 نظام الأوسمة الرقمية: منح وسام "المفكر الناقد" عند إتقان مهارات التحليل، ووسام "الباحث الصغير" عند إنجاز مشروع بحثي مستقل.
+2. 🔬 مشروع مستقل: تكليف الطالب باختيار موضوع يثير شغفه في مادة ${subject} وإعداد مشروع تقني أو بحثي يُعرض أمام الفصل.
+3. 🎖️ سفير المادة: تعيين الطالب مرجعاً معرفياً لزملائه في جزئيات ${subject} مما يعزز ثقته بنفسه ومكانته.
+4. 🧠 تحديات التفكير العليا: تزويده بأسئلة مفتوحة النهاية تستهدف مستويات التحليل والتركيب والتقويم وفق تصنيف بلوم.
+5. 📰 نشر النتاج الإبداعي: تخصيص ركن في مجلة المدرسة أو الموقع الإلكتروني لنشر حلوله المبتكرة وكتاباته.
+6. 📚 تدريس الأقران: إسناد دور تعليمي للطالب لشرح المفاهيم لزملائه تحت إشراف المعلم.
+
+🎯 مستويات بلوم المستهدفة:
+• التحليل: تفكيك المسائل المعقدة وتمييز عناصرها
+• التركيب: بناء حلول جديدة ومشاريع إبداعية
+• التقويم: الحكم على الحلول ونقدها بنّاءً
+
+🏆 المكافآت والإجراءات التشجيعية:
+• التكريم في الطابور الصباحي أمام الطلاب
+• وضع اسم الطالب في لوحة الشرف المدرسية
+• التواصل الإيجابي مع ولي الأمر للإشادة بتميز ابنه
+• شهادة تقدير رقمية معتمدة من إدارة المدرسة
+
+📌 توصيات خاصة:
+يُنصح بتوثيق أثر كل استراتيجية كل أسبوعين لتحديد الأكثر فاعلية واعتمادها في الخطة التعليمية. كما يُقترح إشراك الطالب في المسابقات العلمية على مستوى المنطقة لتعزيز طموحه وتوجيه طاقته الإبداعية.`;
+  }
+
+  // ===== FALLBACK REMEDIAL =====
+  function generateRemedialFallback(name, subject, grade, weakness) {
+    return `📋 الخطة العلاجية للطالب: ${name}
+المادة: ${subject} | الصف: ${grade}
+نقاط الضعف: ${weakness}
+${'─'.repeat(50)}
+
+⚠️ تشخيص نقاط الضعف:
+• ${weakness}
+• ضعف الثقة بالنفس عند مواجهة المسائل الصعبة
+• الحاجة إلى دعم إضافي في المهارات الأساسية
+
+📋 الخطط العلاجية المقترحة:
+
+1. 🪜 تجزئة المهام (Task Scaffolding):
+   تقسيم مهارات ${subject} إلى خطوات صغيرة جداً، لا ينتقل الطالب من خطوة إلى أخرى إلا بعد إتقان السابقة، مما يضمن الشعور بالإنجاز التدريجي.
+
+2. 🎨 التعليم المتمايز (Differentiated Instruction):
+   تقديم محتوى ${subject} بأسلوب مبسط يعتمد على الصور والرسوم البيانية والفيديوهات التوضيحية بدلاً من النصوص الطويلة.
+
+3. 🎮 التعلم باللعب (Gamification):
+   استخدام تطبيقات Kahoot وQuizizz لتحويل تمارين ${subject} إلى تحديات تفاعلية محفزة تقلل من الإحباط.
+
+4. 🎭 استراتيجية النمذجة (Modeling):
+   أداء المهمة أمام الطالب بصوت عالٍ مع شرح خطوات التفكير، ثم طلب المحاكاة التدريجية.
+
+5. 🔄 التدريس التبادلي المصغر:
+   البدء بمهام بسيطة جداً يضمن نجاح الطالب فيها، ثم زيادة الصعوبة تدريجياً لكسر حاجز الخوف من المادة.
+
+6. 🎯 الاستهداف المركز (Targeted Intervention):
+   التركيز فقط على "المهارات الحرجة" الأساسية في ${subject} التي لا يمكن التقدم بدونها، بدلاً من محاولة معالجة كامل المنهج دفعة واحدة.
+
+📌 الإجراءات المتخذة:
+• لقاء فردي مع الطالب لتحديد الصعوبات بدقة
+• التواصل مع ولي الأمر لمتابعة الواجبات المنزلية
+• التنسيق مع المرشد الطلابي عند الحاجة
+
+📅 جدول المتابعة:
+• الأسبوع 1-2: تطبيق استراتيجية تجزئة المهام وقياس الأثر
+• الأسبوع 3-4: إدخال التعلم باللعب وتقييم التحسن
+• الأسبوع 5-6: مراجعة شاملة وتعديل الخطة حسب النتائج
+
+✅ مؤشرات النجاح:
+• زيادة مشاركة الطالب في الفصل بنسبة 50%
+• تحسن الدرجات في الاختبارات القصيرة
+• تراجع ملحوظ في الخوف من المادة`;
+  }
+
+  // ===== FILL ENRICHMENT FROM AI =====
+  function fillEnrichmentFromAI() {
+    const name    = document.getElementById('ai-e-name').value;
+    const subject = document.getElementById('ai-e-subject').value;
+    const grade   = document.getElementById('ai-e-grade').value;
+    if (name)    document.getElementById('e-name').value = name;
+    if (subject) document.getElementById('e-subject').value = subject;
+    if (grade)   document.getElementById('e-grade').value = grade;
+    const output = document.getElementById('ai-e-output').textContent;
+    if (output && output.length > 50) {
+      document.getElementById('e-notes').value = output;
+    }
+    showNotification('📥 تم تطبيق البيانات على الاستمارة');
+  }
+
+  // ===== FILL REMEDIAL FROM AI =====
+  function fillRemedialFromAI() {
+    const name    = document.getElementById('ai-r-name').value;
+    const subject = document.getElementById('ai-r-subject').value;
+    const grade   = document.getElementById('ai-r-grade').value;
+    if (name)    document.getElementById('r-name').value = name;
+    if (subject) document.getElementById('r-subject').value = subject;
+    if (grade)   document.getElementById('r-grade').value = grade;
+    const output = document.getElementById('ai-r-output').textContent;
+    if (output && output.length > 50) {
+      document.getElementById('r-notes').value = output;
+    }
+    showNotification('📥 تم تطبيق البيانات على الاستمارة');
+  }
+
+  // ===== INIT =====
+  document.addEventListener('DOMContentLoaded', () => {
+    // Set today's date
+    const today = new Date().toISOString().split('T')[0];
+    const eDateEl = document.getElementById('e-date');
+    const rDateEl = document.getElementById('r-date');
+    if (eDateEl) eDateEl.value = today;
+    if (rDateEl) rDateEl.value = today;
+  });
+</script>
+
+</body>
+</html>

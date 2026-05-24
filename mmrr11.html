@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>منصة اختبارات العلوم</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   منصة اختبارات العلوم — أسلوب دفتر مختبر
+   ============================================ */
+:root{
+  --paper: #f4ecd8;
+  --paper-2: #ebe0c4;
+  --paper-dark: #d9c9a3;
+  --ink: #1a1a2e;
+  --ink-soft: #2d2d44;
+  --accent: #c8553d;
+  --accent-2: #f28f3b;
+  --teal: #2e8b8b;
+  --gold: #b8860b;
+  --green: #4a7c3a;
+  --red: #b33030;
+  --line: rgba(26,26,46,0.18);
+  --line-soft: rgba(26,26,46,0.08);
+}
+
+*{box-sizing:border-box; margin:0; padding:0}
+html,body{height:100%}
+body{
+  font-family: 'Tajawal', system-ui, sans-serif;
+  color: var(--ink);
+  min-height: 100vh;
+  position: relative;
+  line-height: 1.7;
+  background: var(--paper);
+  overflow-x: hidden;
+}
+
+/* خلفية الورق */
+.paper-bg{
+  position: fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(184,134,11,0.10), transparent 30%),
+    radial-gradient(circle at 88% 82%, rgba(200,85,61,0.08), transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(46,139,139,0.06), transparent 50%),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 100%);
+}
+.paper-bg::before{
+  content:'';
+  position:absolute; inset:0;
+  background-image: repeating-linear-gradient(
+    0deg, transparent 0, transparent 39px,
+    rgba(26,26,46,0.04) 39px, rgba(26,26,46,0.04) 40px);
+  opacity:0.6;
+}
+.paper-bg::after{
+  content:'';
+  position:absolute; inset:0;
+  background-image: radial-gradient(rgba(26,26,46,0.04) 1px, transparent 1px);
+  background-size: 4px 4px;
+  opacity:0.5;
+}
+
+/* رموز علمية متحركة */
+.science-doodles{
+  position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+}
+.doodle{
+  position:absolute;
+  opacity:0.07;
+  color: var(--ink);
+  animation: drift 25s linear infinite;
+}
+.doodle svg{ display:block }
+.doodle:nth-child(1){ top:8%; left:5%; animation-delay:0s }
+.doodle:nth-child(2){ top:30%; right:7%; animation-delay:-8s }
+.doodle:nth-child(3){ top:60%; left:10%; animation-delay:-15s }
+.doodle:nth-child(4){ top:80%; right:12%; animation-delay:-20s }
+.doodle:nth-child(5){ top:15%; right:30%; animation-delay:-5s }
+.doodle:nth-child(6){ top:55%; right:40%; animation-delay:-12s }
+@keyframes drift{
+  0%{ transform: translate(0,0) rotate(0deg) }
+  25%{ transform: translate(20px,-15px) rotate(90deg) }
+  50%{ transform: translate(-10px,-30px) rotate(180deg) }
+  75%{ transform: translate(-25px,10px) rotate(270deg) }
+  100%{ transform: translate(0,0) rotate(360deg) }
+}
+
+.wrap{
+  position: relative; z-index: 1;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 22px 60px;
+}
+
+/* الشاشات (للتنقل بين الصفحات) */
+.screen{ display: none }
+.screen.active{ display: block; animation: screenIn 0.5s ease }
+@keyframes screenIn{
+  from{ opacity: 0; transform: translateY(20px) }
+  to{ opacity: 1; transform: translateY(0) }
+}
+
+/* === الصفحة الرئيسية === */
+.hero{
+  text-align: center;
+  margin-bottom: 50px;
+  padding: 50px 20px 30px;
+  position: relative;
+}
+.hero-emblem{
+  width: 90px; height: 90px;
+  margin: 0 auto 22px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  border: 3px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--accent);
+  position: relative;
+}
+.hero-emblem svg{ width: 50px; height: 50px }
+.hero-emblem::before{
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 2px dashed var(--ink);
+  border-radius: 50%;
+  opacity: 0.3;
+  animation: rotateBorder 30s linear infinite;
+}
+@keyframes rotateBorder{ to{ transform: rotate(360deg) } }
+.hero h1{
+  font-family: 'Reem Kufi', sans-serif;
+  font-size: clamp(34px, 6vw, 56px);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 12px;
+  color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.hero .tagline{
+  display: inline-block;
+  background: var(--accent);
+  color: var(--paper);
+  padding: 6px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  transform: rotate(-1deg);
+}
+.hero p{
+  font-size: 17px;
+  color: var(--ink-soft);
+  max-width: 600px;
+  margin: 0 auto;
+  font-weight: 500;
+}
+.hero .underline-deco{
+  width: 80px; height: 3px;
+  background: var(--accent);
+  margin: 18px auto 0;
+  position: relative;
+}
+.hero .underline-deco::before, .hero .underline-deco::after{
+  content: ''; position: absolute; top: -3px;
+  width: 9px; height: 9px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.hero .underline-deco::before{ left: -12px }
+.hero .underline-deco::after{ right: -12px }
+
+/* بطاقات الاختبارات */
+.quizzes-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+  gap: 28px;
+  margin-bottom: 40px;
+}
+.quiz-card{
+  position: relative;
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  border-radius: 6px;
+  padding: 32px 28px 26px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
+  color: var(--ink);
+  display: block;
+  box-shadow: 8px 8px 0 var(--ink);
+  font-family: inherit;
+  text-align: right;
+  width: 100%;
+}
+.quiz-card:hover{
+  transform: translate(-3px,-3px);
+  box-shadow: 12px 12px 0 var(--ink);
+}
+.quiz-card.card-1{ box-shadow: 8px 8px 0 var(--accent) }
+.quiz-card.card-1:hover{ box-shadow: 12px 12px 0 var(--accent) }
+.quiz-card.card-2{ box-shadow: 8px 8px 0 var(--teal) }
+.quiz-card.card-2:hover{ box-shadow: 12px 12px 0 var(--teal) }
+.quiz-card-tag{
+  position: absolute;
+  top: -14px;
+  right: 24px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  border-radius: 3px;
+  border: 2px solid var(--ink);
+}
+.quiz-card.card-1 .quiz-card-tag{ background: var(--accent) }
+.quiz-card.card-2 .quiz-card-tag{ background: var(--teal) }
+.quiz-icon-wrap{
+  margin-bottom: 22px;
+  display: flex; align-items: center; gap: 16px;
+}
+.quiz-icon{
+  width: 78px; height: 78px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2.5px solid var(--ink);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+.quiz-card.card-1 .quiz-icon{ background: var(--accent); color: var(--paper) }
+.quiz-card.card-2 .quiz-icon{ background: var(--teal); color: var(--paper) }
+.quiz-card:hover .quiz-icon{ transform: rotate(-6deg) scale(1.05) }
+.quiz-icon svg{ width: 44px; height: 44px }
+.quiz-card h2{
+  font-family: 'Reem Kufi', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.quiz-card .subtitle{
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.quiz-stats{
+  display: flex; gap: 14px;
+  margin-bottom: 22px;
+  padding: 12px 0;
+  border-top: 1.5px dashed var(--line);
+  border-bottom: 1.5px dashed var(--line);
+  flex-wrap: wrap;
+}
+.stat{
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.stat .stat-icon{
+  width: 22px; height: 22px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+}
+.start-btn{
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 24px;
+  border-radius: 4px;
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  border: 2px solid var(--ink);
+  transition: all 0.25s;
+}
+.quiz-card:hover .start-btn{ background: var(--accent); border-color: var(--accent) }
+.quiz-card.card-2:hover .start-btn{ background: var(--teal); border-color: var(--teal) }
+.start-btn .arrow{ transition: transform 0.25s }
+.quiz-card:hover .start-btn .arrow{ transform: translateX(-4px) }
+
+/* قسم المميزات */
+.info-section{
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 28px;
+  margin-bottom: 30px;
+  position: relative;
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.info-section::before{
+  content: '✨ ميزات المنصة ✨';
+  position: absolute;
+  top: -14px;
+  right: 24px;
+  background: var(--gold);
+  color: var(--ink);
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 3px;
+  border: 2px solid var(--ink);
+}
+.features-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-top: 8px;
+}
+.feature{
+  display: flex; gap: 12px;
+  padding: 14px;
+  background: var(--paper-2);
+  border-radius: 4px;
+  border: 1.5px solid var(--line);
+}
+.feature-icon{
+  width: 40px; height: 40px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 2px solid var(--ink);
+}
+.feature-text{
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  font-weight: 500;
+}
+.feature-text strong{
+  display: block;
+  color: var(--ink);
+  margin-bottom: 2px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* === شريط علوي للاختبارات === */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:16px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+.back-btn{
+  display:inline-flex; align-items:center; gap:10px;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 11px 22px;
+  border-radius: 4px;
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.25s;
+  border: 2px solid var(--ink);
+  box-shadow: 4px 4px 0 var(--accent);
+  cursor: pointer;
+}
+.back-btn:hover{
+  transform: translate(-2px,-2px);
+  box-shadow: 6px 6px 0 var(--accent);
+}
+.back-btn:active{
+  transform: translate(2px,2px);
+  box-shadow: 2px 2px 0 var(--accent);
+}
+.score-pill{
+  display:inline-flex; align-items:center; gap:14px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  padding: 8px 18px;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 4px 4px 0 var(--gold);
+}
+.score-pill .stars-count{ color: var(--accent); font-size: 18px }
+.score-pill .sep{ color: var(--line); font-weight: 300 }
+.score-pill .trophy{ font-size: 18px }
+
+/* رأس الاختبار */
+.quiz-header{
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 28px 32px;
+  margin-bottom: 32px;
+  position: relative;
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.quiz-header::before{
+  content:'';
+  position: absolute;
+  top: 20px; bottom: 20px;
+  right: 14px;
+  width: 8px;
+  background-image: radial-gradient(circle, var(--ink) 3px, transparent 4px);
+  background-size: 8px 28px;
+  background-repeat: repeat-y;
+  opacity: 0.4;
+}
+.quiz-header .corner-tag{
+  position: absolute;
+  top: -14px;
+  left: 24px;
+  background: var(--accent);
+  color: var(--paper);
+  padding: 4px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  transform: rotate(-2deg);
+}
+.quiz-header h1{
+  font-family: 'Reem Kufi', sans-serif;
+  font-size: clamp(24px, 4vw, 34px);
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--ink);
+  padding-left: 24px;
+}
+.quiz-header .meta{
+  font-size: 14px;
+  color: var(--ink-soft);
+  padding-left: 24px;
+  font-weight: 500;
+}
+.quiz-header .meta .divider{ margin: 0 8px; opacity: 0.5 }
+
+/* اللوحة الخضراء للاختبار الثاني */
+#screen-quiz2 .quiz-header .corner-tag{ background: var(--teal) }
+#screen-quiz2 .question-card{ box-shadow: 6px 6px 0 var(--teal) }
+#screen-quiz2 .q-corner{ background: var(--teal) }
+#screen-quiz2 .progress-fill{
+  background: repeating-linear-gradient(
+    -45deg, var(--teal), var(--teal) 8px,
+    #3aa5a5 8px, #3aa5a5 16px);
+}
+#screen-quiz2 .settings-footer{ box-shadow: 6px 6px 0 var(--teal) }
+#screen-quiz2 .settings-footer::before{ background: var(--teal) }
+
+/* شريط التقدم */
+.progress-wrap{
+  margin-top: 18px;
+  padding-left: 24px;
+}
+.progress-track{
+  height: 14px;
+  background: var(--paper-dark);
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill{
+  height: 100%;
+  background: repeating-linear-gradient(
+    -45deg, var(--accent), var(--accent) 8px,
+    var(--accent-2) 8px, var(--accent-2) 16px);
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: stripes 1.5s linear infinite;
+}
+@keyframes stripes{
+  0%{ background-position: 0 0 }
+  100%{ background-position: 32px 0 }
+}
+.progress-text{
+  display:flex; justify-content:space-between;
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+/* بطاقة السؤال */
+.question-card{
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  padding: 28px;
+  margin-bottom: 22px;
+  position: relative;
+  box-shadow: 6px 6px 0 rgba(26,26,46,0.85);
+  transition: transform 0.3s ease;
+}
+.question-card:hover{ transform: translate(-1px,-2px) }
+.question-card.locked{ pointer-events: none }
+.question-card.locked:hover{ transform: none }
+.q-corner{
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 50px; height: 50px;
+  background: var(--ink);
+  color: var(--paper);
+  display:flex; align-items:center; justify-content:center;
+  font-family: 'Reem Kufi', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  border-bottom-right-radius: 12px;
+}
+.q-header{
+  display: flex;
+  gap: 20px;
+  margin-bottom: 22px;
+  padding-right: 70px;
+  min-height: 50px;
+  align-items: flex-start;
+}
+.q-text{
+  font-size: 17px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.75;
+  flex: 1;
+  padding-top: 6px;
+}
+.q-figure{
+  margin: 0 0 22px;
+  background: var(--paper-2);
+  padding: 22px;
+  border-radius: 4px;
+  border: 1.5px dashed var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.q-figure .figure-svg{ flex-shrink: 0; color: var(--ink) }
+.q-figure .figure-caption{
+  font-size: 14px;
+  color: var(--ink-soft);
+  font-style: italic;
+  text-align: center;
+  flex: 1;
+  min-width: 200px;
+  font-weight: 500;
+}
+
+/* الخيارات */
+.options{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+.option{
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--ink);
+  text-align: right;
+  position: relative;
+  box-shadow: 3px 3px 0 var(--ink);
+}
+.option:hover:not(.disabled){
+  background: var(--paper-2);
+  transform: translate(-2px,-2px);
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.option:active:not(.disabled){
+  transform: translate(1px,1px);
+  box-shadow: 2px 2px 0 var(--ink);
+}
+.option .letter{
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--paper);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Reem Kufi', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+.option:hover:not(.disabled) .letter{
+  background: var(--accent);
+  transform: rotate(-8deg) scale(1.1);
+}
+.option.correct{
+  background: #d4e7c5;
+  border-color: var(--green);
+  box-shadow: 3px 3px 0 var(--green);
+  animation: correctBounce 0.5s ease;
+}
+.option.correct .letter{ background: var(--green) }
+.option.correct::after{
+  content: '✓';
+  position: absolute;
+  left: 14px;
+  font-size: 22px;
+  color: var(--green);
+  font-weight: 700;
+}
+.option.wrong{
+  background: #f0d0d0;
+  border-color: var(--red);
+  box-shadow: 3px 3px 0 var(--red);
+  animation: wrongShake 0.4s ease;
+}
+.option.wrong .letter{ background: var(--red) }
+.option.wrong::after{
+  content: '✗';
+  position: absolute;
+  left: 14px;
+  font-size: 22px;
+  color: var(--red);
+  font-weight: 700;
+}
+.option.disabled{ cursor: not-allowed }
+.option.reveal{ opacity: 0.65 }
+@keyframes correctBounce{
+  0%, 100%{ transform: translate(0,0) }
+  50%{ transform: translate(-2px,-4px) scale(1.02) }
+}
+@keyframes wrongShake{
+  0%,100%{ transform: translate(0,0) }
+  25%{ transform: translate(-6px,0) }
+  75%{ transform: translate(6px,0) }
+}
+
+/* لوحة النتيجة */
+.result-modal{
+  position: fixed; inset: 0;
+  background: rgba(26,26,46,0.75);
+  z-index: 100;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+.result-modal.show{ display: flex; animation: fadeIn 0.4s ease }
+@keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+.result-card{
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 8px;
+  padding: 44px 32px 32px;
+  text-align: center;
+  max-width: 480px;
+  width: 100%;
+  position: relative;
+  box-shadow: 10px 10px 0 var(--accent);
+  animation: zoomIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes zoomIn{
+  from{ transform: scale(0.85) rotate(-2deg); opacity: 0 }
+  to{ transform: scale(1) rotate(0); opacity: 1 }
+}
+.result-card::before{
+  content: 'النتيجة النهائية';
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--paper);
+  padding: 5px 22px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border-radius: 3px;
+}
+.result-trophy{
+  font-size: 76px;
+  margin-bottom: 16px;
+  display: inline-block;
+  animation: trophyDance 2s ease infinite;
+  line-height: 1;
+}
+@keyframes trophyDance{
+  0%, 100%{ transform: rotate(0) translateY(0) }
+  25%{ transform: rotate(-8deg) translateY(-6px) }
+  75%{ transform: rotate(8deg) translateY(-6px) }
+}
+.result-title{
+  font-family: 'Reem Kufi', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--accent);
+}
+.result-subtitle{
+  color: var(--ink-soft);
+  margin-bottom: 24px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.result-score{
+  font-family: 'Reem Kufi', sans-serif;
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1;
+}
+.result-score .small{
+  font-size: 26px;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.result-percent{
+  font-size: 16px;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+  font-weight: 600;
+}
+.result-stars{
+  display: flex; justify-content: center; gap: 6px;
+  margin-bottom: 26px;
+  flex-wrap: wrap;
+  max-height: 100px;
+  overflow: hidden;
+}
+.result-stars span{
+  font-size: 22px;
+  animation: starPop 0.5s ease backwards;
+}
+@keyframes starPop{
+  from{ transform: scale(0) rotate(-180deg); opacity: 0 }
+  to{ transform: scale(1) rotate(0); opacity: 1 }
+}
+.result-actions{
+  display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;
+}
+
+.btn{
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 26px;
+  border-radius: 4px;
+  font-family: 'Tajawal', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  border: 2px solid var(--ink);
+  cursor: pointer;
+  transition: all 0.25s;
+  text-decoration: none;
+  color: inherit;
+}
+.btn-primary{
+  background: var(--accent);
+  color: var(--paper);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.btn-primary:hover{
+  transform: translate(-2px,-2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.btn-secondary{
+  background: var(--paper);
+  color: var(--ink);
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.btn-secondary:hover{
+  transform: translate(-2px,-2px);
+  background: var(--paper-2);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+/* التنبيهات */
+.toast{
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-150%);
+  background: var(--paper);
+  border: 2.5px solid var(--ink);
+  padding: 16px 26px;
+  border-radius: 6px;
+  font-family: 'Reem Kufi', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  z-index: 200;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: 6px 6px 0 var(--ink);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 90vw;
+}
+.toast.show{ transform: translateX(-50%) translateY(0) }
+.toast.success{
+  background: var(--green);
+  color: var(--paper);
+}
+.toast.error{
+  background: var(--red);
+  color: var(--paper);
+}
+.toast-icon{
+  font-size: 26px;
+  animation: toastIcon 0.5s ease;
+  line-height: 1;
+}
+.toast-sub{
+  font-size: 13px;
+  opacity: 0.92;
+  font-weight: 500;
+  margin-top: 2px;
+  font-family: 'Tajawal', sans-serif;
+}
+@keyframes toastIcon{
+  0%{ transform: scale(0) rotate(-180deg) }
+  100%{ transform: scale(1) rotate(0) }
+}
+
+.confetti{
+  position: fixed;
+  width: 10px; height: 10px;
+  pointer-events: none;
+  z-index: 150;
+  animation: confettiFall 1.8s ease-out forwards;
+}
+@keyframes confettiFall{
+  0%{ transform: translateY(0) rotate(0); opacity: 1 }
+  100%{ transform: translateY(100vh) rotate(720deg); opacity: 0 }
+}
+
+/* ذيل الإعدادات */
+.settings-footer{
+  margin-top: 40px;
+  padding: 26px 22px;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 6px;
+  text-align: center;
+  position: relative;
+  border: 2px solid var(--ink);
+  box-shadow: 6px 6px 0 var(--accent);
+}
+.settings-footer::before{
+  content: '⚙ قائمة الإعدادات ⚙';
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: var(--paper);
+  padding: 4px 18px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  border-radius: 3px;
+  border: 2px solid var(--ink);
+}
+.designer-credit{
+  font-family: 'Reem Kufi', sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--paper);
+  margin: 6px 0 14px;
+  letter-spacing: 0.5px;
+}
+.designer-credit .star-deco{
+  color: var(--accent-2);
+  margin: 0 6px;
+}
+.more-link{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--accent-2);
+  padding: 11px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: all 0.25s;
+  border: 2px solid var(--paper);
+  font-family: 'Tajawal', sans-serif;
+}
+.more-link:hover{
+  background: var(--paper);
+  transform: translateY(-2px);
+}
+
+/* موبايل */
+@media (max-width: 700px){
+  .wrap{ padding: 22px 14px 50px }
+  .question-card{ padding: 22px 18px }
+  .options{ grid-template-columns: 1fr }
+  .quiz-header{ padding: 22px 24px }
+  .quiz-header h1{ padding-left: 14px; font-size: 22px }
+  .quiz-header .meta{ padding-left: 14px; font-size: 13px }
+  .quiz-header::before{ display: none }
+  .progress-wrap{ padding-left: 14px }
+  .q-header{ padding-right: 60px; gap: 14px }
+  .q-corner{ width: 44px; height: 44px; font-size: 16px }
+  .toast{ font-size: 16px; padding: 14px 20px }
+  .result-card{ padding: 36px 22px 28px }
+  .result-score{ font-size: 46px }
+  .result-trophy{ font-size: 64px }
+  .hero{ padding: 30px 16px 20px }
+  .quiz-card{ padding: 26px 22px 22px }
+  .quiz-icon{ width: 64px; height: 64px }
+  .quiz-icon svg{ width: 36px; height: 36px }
+}
+</style>
+</head>
+<body>
+<div class="paper-bg"></div>
+
+<!-- رموز علمية متحركة في الخلفية -->
+<div class="science-doodles">
+  <div class="doodle">
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="30" cy="30" r="4"/>
+      <ellipse cx="30" cy="30" rx="26" ry="10"/>
+      <ellipse cx="30" cy="30" rx="26" ry="10" transform="rotate(60 30 30)"/>
+      <ellipse cx="30" cy="30" rx="26" ry="10" transform="rotate(120 30 30)"/>
+    </svg>
+  </div>
+  <div class="doodle">
+    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M20 10 L30 10 L30 30 L40 50 L20 50 L30 30 Z"/>
+      <line x1="22" y1="35" x2="28" y2="35"/>
+    </svg>
+  </div>
+  <div class="doodle">
+    <svg width="65" height="65" viewBox="0 0 65 65" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M10 35 L25 35 L30 20 L35 50 L40 35 L55 35"/>
+    </svg>
+  </div>
+  <div class="doodle">
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="30" cy="30" r="14"/>
+      <line x1="30" y1="8" x2="30" y2="16"/>
+      <line x1="30" y1="44" x2="30" y2="52"/>
+      <line x1="8" y1="30" x2="16" y2="30"/>
+      <line x1="44" y1="30" x2="52" y2="30"/>
+    </svg>
+  </div>
+  <div class="doodle">
+    <svg width="70" height="70" viewBox="0 0 70 70" fill="none" stroke="currentColor" stroke-width="1.5">
+      <rect x="22" y="14" width="26" height="12" rx="2"/>
+      <rect x="22" y="44" width="26" height="12" rx="2"/>
+      <line x1="35" y1="26" x2="35" y2="44"/>
+    </svg>
+  </div>
+  <div class="doodle">
+    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" stroke="currentColor" stroke-width="1.5">
+      <path d="M30 8 L32 22 L46 24 L36 32 L40 46 L30 38 L20 46 L24 32 L14 24 L28 22 Z"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ============ شاشة الصفحة الرئيسية ============ -->
+<div class="screen active" id="screen-home">
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-emblem">
+        <svg viewBox="0 0 50 50" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="25" cy="25" r="3" fill="currentColor"/>
+          <ellipse cx="25" cy="25" rx="20" ry="8"/>
+          <ellipse cx="25" cy="25" rx="20" ry="8" transform="rotate(60 25 25)"/>
+          <ellipse cx="25" cy="25" rx="20" ry="8" transform="rotate(120 25 25)"/>
+        </svg>
+      </div>
+      <div class="tagline">منصة تفاعلية</div>
+      <h1>اختبارات العلوم</h1>
+      <p>للصف الثالث المتوسط — الفصل الدراسي الثالث<br/>اختبر معلوماتك واحصل على النجوم والكؤوس</p>
+      <div class="underline-deco"></div>
+    </section>
+
+    <div class="quizzes-grid">
+      <button class="quiz-card card-1" onclick="openQuiz(1)">
+        <span class="quiz-card-tag">اختبار رقم ١</span>
+        <div class="quiz-icon-wrap">
+          <div class="quiz-icon">
+            <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M22 6 L22 30"/>
+              <path d="M14 14 L22 6 L30 14"/>
+              <circle cx="22" cy="36" r="3"/>
+              <path d="M10 38 L34 38"/>
+            </svg>
+          </div>
+          <div>
+            <h2>الحركة والقوى</h2>
+            <div class="subtitle">السرعة · التسارع · القوانين</div>
+          </div>
+        </div>
+        <div class="quiz-stats">
+          <div class="stat"><span class="stat-icon">٢٠</span><span>سؤال متنوع</span></div>
+          <div class="stat"><span class="stat-icon">⏱</span><span>ساعة ونصف</span></div>
+        </div>
+        <span class="start-btn">
+          <span>ابدأ الاختبار</span>
+          <span class="arrow">←</span>
+        </span>
+      </button>
+
+      <button class="quiz-card card-2" onclick="openQuiz(2)">
+        <span class="quiz-card-tag">اختبار رقم ٢</span>
+        <div class="quiz-icon-wrap">
+          <div class="quiz-icon">
+            <svg viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M14 6 L14 18 L8 28 L36 28 L30 18 L30 6"/>
+              <line x1="14" y1="6" x2="30" y2="6"/>
+              <circle cx="18" cy="22" r="1.5" fill="currentColor"/>
+              <circle cx="24" cy="24" r="1.5" fill="currentColor"/>
+              <circle cx="22" cy="20" r="1.5" fill="currentColor"/>
+              <path d="M16 32 L18 36 M22 32 L24 36 M28 32 L30 36"/>
+            </svg>
+          </div>
+          <div>
+            <h2>الكهرباء والمغناطيس</h2>
+            <div class="subtitle">التيار · المقاومة · الجهد</div>
+          </div>
+        </div>
+        <div class="quiz-stats">
+          <div class="stat"><span class="stat-icon">٢٠</span><span>سؤال متنوع</span></div>
+          <div class="stat"><span class="stat-icon">⏱</span><span>ساعة ونصف</span></div>
+        </div>
+        <span class="start-btn">
+          <span>ابدأ الاختبار</span>
+          <span class="arrow">←</span>
+        </span>
+      </button>
+    </div>
+
+    <section class="info-section">
+      <div class="features-grid">
+        <div class="feature">
+          <div class="feature-icon">⭐</div>
+          <div class="feature-text">
+            <strong>النجوم والكؤوس</strong>
+            نجمة لكل إجابة صحيحة وكأس عند النجاح
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔀</div>
+          <div class="feature-text">
+            <strong>ترتيب عشوائي</strong>
+            الإجابات تتغير في كل مرة لمنع الحفظ
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">💬</div>
+          <div class="feature-text">
+            <strong>تنبيهات فورية</strong>
+            "يا سلام" للصحيح و"حظ أوفر" للخطأ
+          </div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📊</div>
+          <div class="feature-text">
+            <strong>نتيجة مفصلة</strong>
+            عرض نتيجتك ومستواك في نهاية الاختبار
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="settings-footer">
+      <div class="designer-credit">
+        <span class="star-deco">✦</span>
+        تصميم د/ فواز
+        <span class="star-deco">✦</span>
+      </div>
+      <a class="more-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">
+        <span>تفضل للمزيد هنا</span>
+        <span>📡</span>
+      </a>
+    </section>
+  </div>
+</div>
+
+<!-- ============ شاشة الاختبار الأول ============ -->
+<div class="screen" id="screen-quiz1">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">
+        <span>→</span>
+        <span>الرئيسية</span>
+      </button>
+      <div class="score-pill">
+        <span>⭐ <span class="stars-count" id="score-count-1">0</span></span>
+        <span class="sep">|</span>
+        <span class="trophy" id="trophies-count-1">🎯</span>
+      </div>
+    </div>
+
+    <div class="quiz-header">
+      <span class="corner-tag">الاختبار الأول</span>
+      <h1>الحركة والقوى</h1>
+      <div class="meta">
+        <span>الصف الثالث المتوسط</span>
+        <span class="divider">·</span>
+        <span>الفصل الدراسي الثالث</span>
+        <span class="divider">·</span>
+        <span>٢٠ سؤال</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill-1"></div></div>
+        <div class="progress-text" id="progress-text-1">
+          <span>التقدم: <span class="current">0</span> / 20</span>
+          <span>اختر الإجابة الصحيحة لكل سؤال</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz-root-1"></div>
+
+    <section class="settings-footer">
+      <div class="designer-credit">
+        <span class="star-deco">✦</span>
+        تصميم د/ فواز
+        <span class="star-deco">✦</span>
+      </div>
+      <a class="more-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">
+        <span>تفضل للمزيد هنا</span>
+        <span>📡</span>
+      </a>
+    </section>
+  </div>
+</div>
+
+<!-- ============ شاشة الاختبار الثاني ============ -->
+<div class="screen" id="screen-quiz2">
+  <div class="wrap">
+    <div class="topbar">
+      <button class="back-btn" onclick="goHome()">
+        <span>→</span>
+        <span>الرئيسية</span>
+      </button>
+      <div class="score-pill">
+        <span>⭐ <span class="stars-count" id="score-count-2">0</span></span>
+        <span class="sep">|</span>
+        <span class="trophy" id="trophies-count-2">🎯</span>
+      </div>
+    </div>
+
+    <div class="quiz-header">
+      <span class="corner-tag">الاختبار الثاني</span>
+      <h1>الكهرباء والمغناطيس</h1>
+      <div class="meta">
+        <span>الصف الثالث المتوسط</span>
+        <span class="divider">·</span>
+        <span>الفصل الدراسي الثالث</span>
+        <span class="divider">·</span>
+        <span>٢٠ سؤال</span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-track"><div class="progress-fill" id="progress-fill-2"></div></div>
+        <div class="progress-text" id="progress-text-2">
+          <span>التقدم: <span class="current">0</span> / 20</span>
+          <span>اختر الإجابة الصحيحة لكل سؤال</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="quiz-root-2"></div>
+
+    <section class="settings-footer">
+      <div class="designer-credit">
+        <span class="star-deco">✦</span>
+        تصميم د/ فواز
+        <span class="star-deco">✦</span>
+      </div>
+      <a class="more-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">
+        <span>تفضل للمزيد هنا</span>
+        <span>📡</span>
+      </a>
+    </section>
+  </div>
+</div>
+
+<!-- لوحة النتيجة المشتركة -->
+<div class="result-modal" id="result-modal">
+  <div class="result-card">
+    <div class="result-trophy" id="result-trophy">🏆</div>
+    <div class="result-title" id="result-title">ممتاز!</div>
+    <div class="result-subtitle" id="result-message">أنهيت الاختبار بنجاح</div>
+    <div class="result-score">
+      <span id="result-score-num">0</span>
+      <span class="small"> / <span id="result-score-total">20</span></span>
+    </div>
+    <div class="result-percent" id="result-percent">0%</div>
+    <div class="result-stars" id="result-stars"></div>
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="restartCurrentQuiz()">
+        <span>🔄</span>
+        <span>إعادة الاختبار</span>
+      </button>
+      <button class="btn btn-secondary" onclick="closeResultAndGoHome()">
+        <span>🏠</span>
+        <span>الرئيسية</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================
+   منطق الاختبار
+   ============================================ */
+
+// بيانات الاختبارات
+const quiz1Data = [
+  {
+    question: "علام يدل المقدار ١٨ سم/ث شرقاً؟",
+    options: ["سرعة", "سرعة متجهة", "تسارع", "كتلة"],
+    correct: 1
+  },
+  {
+    question: "لاعب جمباز أثناء الأداء يقوم بدفع جهاز المتوازي بقوة إلى أسفل، فيؤثر الجهاز في اللاعب بقوة، ما مقدار تلك القوة؟",
+    options: [
+      "مساوية في المقدار إلى أسفل",
+      "مساوية في المقدار ومساوية إلى أعلى",
+      "أكبر مقداراً ومساوية في الاتجاه",
+      "أقل مقداراً ومعاكسة في الاتجاه"
+    ],
+    correct: 1
+  },
+  {
+    question: "أي الأجسام التالية لا يتسارع؟",
+    options: [
+      "طائرة في حالة الإقلاع",
+      "سيارة تنطلق في بداية سباق",
+      "دراجة تخفض سرعتها للوقوف",
+      "طائرة تطير بسرعة ثابتة"
+    ],
+    correct: 3
+  },
+  {
+    question: "تحركت سارة مسافة ٢م شمالاً، ثم مسافة ٢م شرقاً، ثم مسافة ٢م جنوباً، ثم ٢م غرباً. ما المسافة الكلية التي قطعتها وما إزاحتها؟",
+    options: [
+      "المسافة = ٤م ، الإزاحة = صفر م",
+      "المسافة = ٤م ، الإزاحة = ٨م غرباً",
+      "المسافة = ٨م ، الإزاحة = ٤م غرباً",
+      "المسافة = ٨م ، الإزاحة = صفر م"
+    ],
+    correct: 3,
+    figure: {
+      svg: `<svg width="90" height="90" viewBox="0 0 90 90" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="20" y="20" width="50" height="50"/>
+        <circle cx="22" cy="22" r="3" fill="currentColor"/>
+      </svg>`,
+      caption: "مسار مربع ٢م × ٢م يعود إلى نقطة البداية"
+    }
+  },
+  {
+    question: "قام طالبان بدفع صندوق من اليسار إلى اليمين، في حين دفع طالب واحد من اليمين إلى اليسار، فبأي اتجاه يتحرك الصندوق؟",
+    options: ["إلى أعلى", "إلى أسفل", "إلى اليسار", "إلى اليمين"],
+    correct: 3,
+    figure: {
+      svg: `<svg width="120" height="60" viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="50" y="20" width="24" height="24" fill="currentColor" fill-opacity="0.15"/>
+        <path d="M14 32 L42 32"/>
+        <path d="M14 22 L42 22"/>
+        <path d="M106 32 L82 32"/>
+      </svg>`,
+      caption: "قوتان من اليسار وقوة واحدة من اليمين"
+    }
+  },
+  {
+    question: "ما زخم دراجة نارية كتلتها ٢٥ كجم، تتحرك بسرعة ٣ م/ث غرباً؟",
+    options: [
+      "٤٧ كجم.م/ث غرباً",
+      "٧٠ كجم.م/ث غرباً",
+      "٢٨ كجم.م/ث غرباً",
+      "٧٥ كجم.م/ث غرباً"
+    ],
+    correct: 3
+  },
+  {
+    question: "أي مما يأتي يبطئ انزلاق كتاب على سطح طاولة؟",
+    options: ["الجاذبية", "الاحتكاك السكوني", "الاحتكاك الانزلاقي", "القصور الذاتي"],
+    correct: 2
+  },
+  {
+    question: "إذا كنت في مركبة فضائية تتحرك من الأرض في اتجاه القمر فإنه:",
+    options: [
+      "تزيد قوة جذب الأرض ويزيد وزنك",
+      "تقل قوة جذب الأرض ويقل وزنك",
+      "تقل قوة جذب الأرض ويزيد وزنك",
+      "وزنك لا يتأثر بالبعد عن قوة جذب الأرض"
+    ],
+    correct: 1
+  },
+  {
+    question: "أثناء رحلة بالحافلة، أي مراحل سير الحافلة التالية لا يحدث فيها قصور ذاتي؟",
+    options: [
+      "توقفت الحافلة فجأة لتفادي الاصطدام",
+      "انطلقت الحافلة بشكل مفاجئ بعد توقفها",
+      "تحركت الحافلة لمدة ١٠ دقائق بسرعة ١٠٠ كلم/ساعة",
+      "انحرفت الحافلة ناحية اليمين عند منعطف"
+    ],
+    correct: 2
+  },
+  {
+    question: "ضربت كرة بلياردو البيضاء كرة أخرى ساكنة فتباطأت، ما سبب تباطؤ الكرة البيضاء؟",
+    options: [
+      "أن زخماً انتقل من الكرة البيضاء",
+      "أن زخم الكرة البيضاء سالب",
+      "أن زخم الكرة البيضاء موجب",
+      "أن الزخم انتقل إلى الكرة البيضاء"
+    ],
+    correct: 0
+  },
+  {
+    question: "ما سرعة سباح يقطع مسافة ١٠٠ م، في زمن قدره ٥٦ ث؟",
+    options: ["٥٦٠٠ م/ث", "٠.٥٦ م/ث", "١.٨ م/ث", "١٨٠ ث/م"],
+    correct: 2
+  },
+  {
+    question: "تتحرك كرة كبيرة (١) باتجاه كرة صغيرة ساكنة (٢) مصنوعة من نفس النوع حتى اصطدمت بها، صف حركة الكرتين بعد التصادم.",
+    options: [
+      "ستتوقف كلا الكرتين عن الحركة",
+      "تتحرك الكرتان بسرعة متساوية",
+      "تتحرك الكرة (١) بسرعة أكبر من سرعة الكرة (٢)",
+      "تتحرك الكرة (٢) بسرعة أكبر من سرعة الكرة (١)"
+    ],
+    correct: 2,
+    figure: {
+      svg: `<svg width="120" height="60" viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="30" cy="40" r="14" fill="currentColor" fill-opacity="0.2"/>
+        <text x="30" y="44" text-anchor="middle" font-size="12" stroke="none" fill="currentColor" font-weight="bold">١</text>
+        <circle cx="86" cy="42" r="8" fill="currentColor" fill-opacity="0.1"/>
+        <text x="86" y="46" text-anchor="middle" font-size="10" stroke="none" fill="currentColor" font-weight="bold">٢</text>
+        <path d="M48 40 L66 40"/>
+      </svg>`,
+      caption: "كرة (١) متحركة تتجه نحو كرة (٢) ساكنة"
+    }
+  },
+  {
+    question: "أثرت قوة مقدارها F على كرتين (أ) و(ب)، ولوحظ أن تسارع الكرة (أ) يساوي ضعف تسارع الكرة (ب)، فأي مما يلي صحيح؟",
+    options: [
+      "كتلة الكرة (أ) ضعف كتلة الكرة (ب)",
+      "كتلة الكرة (ب) ضعف كتلة الكرة (أ)",
+      "كتلة الكرة (أ) تساوي كتلة الكرة (ب)",
+      "لا يتأثر التسارع بكتلة الجسم"
+    ],
+    correct: 1
+  },
+  {
+    question: "ما سبب صعوبة نزول صبي يجري على عشب من التل مقارنة بصبي آخر يتزلج على الثلج؟",
+    options: ["الاحتكاك", "الانزلاق", "الإزاحة", "المسافة"],
+    correct: 0,
+    figure: {
+      svg: `<svg width="120" height="80" viewBox="0 0 120 80" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M10 70 L50 20 L70 20 L110 70 Z" fill="currentColor" fill-opacity="0.08"/>
+        <circle cx="30" cy="55" r="4"/>
+        <circle cx="85" cy="55" r="4"/>
+      </svg>`,
+      caption: "صبيان ينزلان من تل بسطحين مختلفين"
+    }
+  },
+  {
+    question: "ما الذي سيحدث إذا شدّ صبيان حبلاً بنفس القدر من القوة من جهتين متعاكستين؟",
+    options: [
+      "لن يتحركا على الإطلاق",
+      "سوف يسقط كلاهما",
+      "الصبي الأول سيفوز",
+      "الصبي الثاني سيفوز"
+    ],
+    correct: 0,
+    figure: {
+      svg: `<svg width="130" height="50" viewBox="0 0 130 50" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="20" cy="25" r="6"/>
+        <circle cx="110" cy="25" r="6"/>
+        <line x1="26" y1="25" x2="104" y2="25"/>
+        <path d="M14 25 L4 25"/>
+        <path d="M116 25 L126 25"/>
+      </svg>`,
+      caption: "صبيان يشدان حبلاً بقوتين متساويتين متعاكستين"
+    }
+  },
+  {
+    question: "ما الذي سيحدث عندما تؤثر قوى غير متزنة على جسم ساكن (قوة ٤٥٠ نيوتن من اليمين وقوة ٣٤٠ نيوتن من اليسار)؟",
+    options: [
+      "يتحرك الجسم في اتجاه القوة المحصلة",
+      "يتحرك الجسم عكس اتجاه القوة المحصلة",
+      "يتحرك الجسم في اتجاه غير متوقع",
+      "يبقى الجسم ساكناً ثابتاً في مكانه"
+    ],
+    correct: 0,
+    figure: {
+      svg: `<svg width="140" height="60" viewBox="0 0 140 60" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="55" y="20" width="30" height="24" fill="currentColor" fill-opacity="0.15"/>
+        <path d="M130 32 L92 32"/>
+        <path d="M10 32 L48 32"/>
+        <text x="118" y="18" text-anchor="middle" font-size="9" stroke="none" fill="currentColor">٤٥٠ ن</text>
+        <text x="22" y="18" text-anchor="middle" font-size="9" stroke="none" fill="currentColor">٣٤٠ ن</text>
+      </svg>`,
+      caption: "صندوق تؤثر فيه قوتان غير متزنتين"
+    }
+  },
+  {
+    question: "أثرت قوة محصلة مقدارها ٤٥٠٠ نيوتن في سيارة كتلتها ١٥٠٠ كجم، ما تسارع السيارة؟",
+    options: ["٢ م/ث²", "٣ م/ث²", "٦٠٠٠ م/ث²", "٠.٣ م/ث²"],
+    correct: 1
+  },
+  {
+    question: "أي مما يلي يكافئ وحدة النيوتن؟",
+    options: ["م/ث", "كجم.م/ث", "كجم.م/ث²", "كجم/م"],
+    correct: 2
+  },
+  {
+    question: "تبدو الأجسام في مدارها حول الأرض في حالة انعدام الوزن، لأنها:",
+    options: [
+      "في حالة سقوط حر مستمر حول الأرض",
+      "بعيدة جداً عن مجال جاذبية الأرض",
+      "تتحرك بسرعة كبيرة جداً",
+      "كتلتها صفر في الفضاء"
+    ],
+    correct: 0
+  },
+  {
+    question: "السرعة اللحظية لجسم لا تساوي دائماً السرعة المتوسطة له، هذه العبارة:",
+    options: ["صائبة دائماً", "صائبة فقط عند الحركة بسرعة ثابتة", "خاطئة", "صائبة فقط عند السكون"],
+    correct: 0
+  }
+];
+
+const quiz2Data = [
+  {
+    question: "يحدث التفريغ الكهربائي نتيجة انتقال الشحنات الكهربائية عبر:",
+    options: ["سلك موصل", "مصباح كهربائي", "الهواء أو الفراغ", "قطبي البطارية"],
+    correct: 2
+  },
+  {
+    question: "أي مما يلي يولد تياراً متردداً؟",
+    options: [
+      "المغناطيس الكهربائي",
+      "الموصلات الفائقة",
+      "المولدات الكهربائية",
+      "المحركات الكهربائية"
+    ],
+    correct: 2
+  },
+  {
+    question: "كيف يتغير التيار الكهربائي في دائرة كهربائية، إذا تضاعف الجهد مرتين، ولم تتغير المقاومة؟",
+    options: ["لا يتغير", "يتضاعف ٣ مرات", "يتضاعف مرتين", "يُختزل إلى النصف"],
+    correct: 2
+  },
+  {
+    question: "إحدى العبارات الآتية تُشكّل مادة يصعب انتقال الشحنات الكهربائية خلالها:",
+    options: ["الموصلات", "السلك النحاسي", "الدائرة الكهربائية", "العازل"],
+    correct: 3
+  },
+  {
+    question: "تولّد البطارية التيار الكهربائي من:",
+    options: [
+      "الطاقة الميكانيكية",
+      "الكهرباء الساكنة",
+      "الطاقة الكيميائية",
+      "القوة النووية"
+    ],
+    correct: 2
+  },
+  {
+    question: "ما الذي ينتج عن لف سلك يحمل تياراً كهربائياً حول قلب حديدي؟",
+    options: [
+      "المولد الكهربائي",
+      "المغناطيس الكهربائي",
+      "المحرك الكهربائي",
+      "مسرع الجسيمات"
+    ],
+    correct: 1
+  },
+  {
+    question: "القوة المتبادلة بين إلكترونين هي:",
+    options: ["احتكاك", "تجاذب", "تنافر", "متعادلة"],
+    correct: 2
+  },
+  {
+    question: "في محول رافع للجهد، أي مما يأتي يصف الجهد الكهربائي الناتج مقارنة بالجهد الكهربائي الداخل؟",
+    options: ["أكبر", "أصغر", "نفس الجهد", "صفر"],
+    correct: 0,
+    figure: {
+      svg: `<svg width="100" height="80" viewBox="0 0 100 80" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="40" y="15" width="20" height="50" fill="currentColor" fill-opacity="0.08"/>
+        <path d="M22 25 L35 25 M22 35 L35 35 M22 45 L35 45 M22 55 L35 55"/>
+        <path d="M65 22 L78 22 M65 30 L78 30 M65 38 L78 38 M65 46 L78 46 M65 54 L78 54 M65 62 L78 62"/>
+      </svg>`,
+      caption: "محول رافع للجهد — لفات الناتج أكثر من الداخل"
+    }
+  },
+  {
+    question: "أي العبارات الآتية صحيحة بالنسبة للمناطق المغناطيسية لمادة ممغنطة؟",
+    options: [
+      "أقطابها في اتجاه واحد",
+      "أقطابها في اتجاهات عشوائية",
+      "أقطابها في اتجاهات يلغي بعضها بعضاً",
+      "لا يمكن أن يتغير توجيه أقطابها"
+    ],
+    correct: 0
+  },
+  {
+    question: "ماذا يسمى الجهاز الذي يحتوي على حلقة موصلة بين قطبي مغناطيس متصلة بمصدر تيار كهربائي؟",
+    options: [
+      "محرك كهربائي",
+      "مولد كهربائي",
+      "مغناطيس كهربائي",
+      "محول كهربائي"
+    ],
+    correct: 0,
+    figure: {
+      svg: `<svg width="120" height="70" viewBox="0 0 120 70" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="14" y="20" width="14" height="30" fill="currentColor" fill-opacity="0.15"/>
+        <text x="21" y="40" text-anchor="middle" font-size="10" stroke="none" fill="currentColor" font-weight="bold">N</text>
+        <rect x="92" y="20" width="14" height="30" fill="currentColor" fill-opacity="0.15"/>
+        <text x="99" y="40" text-anchor="middle" font-size="10" stroke="none" fill="currentColor" font-weight="bold">S</text>
+        <rect x="40" y="25" width="40" height="20" fill="none"/>
+      </svg>`,
+      caption: "حلقة موصلة بين قطبي مغناطيس متصلة بتيار"
+    }
+  },
+  {
+    question: "عندما يستخدم بخار الماء المندفع بقوة لتحريك موصل كهربائي على شكل حلقة موضوعة بين قطبي مغناطيس، فإننا بذلك نصنع:",
+    options: [
+      "جرساً كهربائياً",
+      "محركاً كهربائياً",
+      "مولداً كهربائياً",
+      "محولاً كهربائياً"
+    ],
+    correct: 2
+  },
+  {
+    question: "إذا أردنا نقل قطعة معدنية ثقيلة فإننا نصنع مغناطيساً كهربائياً يتصف بأي من الآتي؟",
+    options: [
+      "عدد لفاته كبيرة ويمر فيه تيار كهربائي صغير",
+      "عدد لفاته كبيرة ويمر فيه تيار كهربائي كبير",
+      "عدد لفاته قليلة ويمر فيه تيار كهربائي كبير",
+      "عدد لفاته قليلة ويمر فيه تيار كهربائي قليل"
+    ],
+    correct: 1
+  },
+  {
+    question: "ما قوة ردّ الفعل عندما يطلق المدفع قذيفة للأمام؟",
+    options: [
+      "تتحرك القذيفة إلى الخلف",
+      "تتحرك القذيفة إلى الأمام",
+      "يتحرك المدفع إلى الخلف",
+      "يتحرك المدفع للأمام"
+    ],
+    correct: 2,
+    figure: {
+      svg: `<svg width="140" height="60" viewBox="0 0 140 60" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="30" y="22" width="50" height="20" fill="currentColor" fill-opacity="0.15"/>
+        <circle cx="38" cy="48" r="5"/>
+        <circle cx="72" cy="48" r="5"/>
+        <circle cx="100" cy="32" r="6" fill="currentColor" fill-opacity="0.3"/>
+        <path d="M88 32 L96 32"/>
+        <path d="M22 32 L14 32"/>
+      </svg>`,
+      caption: "مدفع يطلق قذيفة للأمام ويرتد للخلف"
+    }
+  },
+  {
+    question: "ما مقاومة مصباح كهربائي يمر فيه تيار كهربائي مقداره ٢ أمبير إذا وصل بمقبس يزوده بجهد كهربائي مقداره ١١٠ فولت؟",
+    options: ["٠.٠١٨ أوم", "٥٥ أوم", "١١٠ أوم", "٢٢٠ أوم"],
+    correct: 1
+  },
+  {
+    question: "عند توصيل مقاومة على التوالي في مصباح كهربائي لدائرة كهربائية، فإن فرق الجهد على المصباح:",
+    options: [
+      "لن يتغير",
+      "لا يمكن تحديده",
+      "سيقل فرق الجهد",
+      "سيزيد فرق الجهد"
+    ],
+    correct: 2
+  },
+  {
+    question: "بماذا تسمى الجسيمات التي تتدفق في سلك دائرة كهربائية؟",
+    options: ["النيوترونات", "البروتونات", "الذرات", "الإلكترونات"],
+    correct: 3
+  },
+  {
+    question: "أي العبارات الآتية تنطبق على دائرة كهربائية بها مصباحان موصلان على التوازي؟",
+    options: [
+      "تسري الكهرباء على طول مسار واحد",
+      "تسري الكهرباء عبر أكثر من مسار",
+      "تتوصل المصابيح على امتداد مسار واحد",
+      "ينقطع مسار الكهرباء عند عطل أحد المصابيح"
+    ],
+    correct: 1
+  },
+  {
+    question: "أي الخيارات الآتية تفسر ما سيحدث لقطبي مغناطيس متماثلين (شمالي مع شمالي)؟",
+    options: [
+      "تتنافر الأقطاب المغناطيسية",
+      "تتجاذب الأقطاب المغناطيسية",
+      "لا تتنافر أو تتجاذب الأقطاب",
+      "تنحني خطوط المجال المغناطيسي لتتجاذب"
+    ],
+    correct: 0,
+    figure: {
+      svg: `<svg width="120" height="60" viewBox="0 0 120 60" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="15" y="20" width="36" height="20" fill="currentColor" fill-opacity="0.15"/>
+        <text x="44" y="34" text-anchor="middle" font-size="11" stroke="none" fill="currentColor" font-weight="bold">N</text>
+        <rect x="69" y="20" width="36" height="20" fill="currentColor" fill-opacity="0.15"/>
+        <text x="76" y="34" text-anchor="middle" font-size="11" stroke="none" fill="currentColor" font-weight="bold">N</text>
+      </svg>`,
+      caption: "قطبان شماليان متقابلان لمغناطيسين"
+    }
+  },
+  {
+    question: "تستخدم أسلاك النحاس في التمديدات الكهربائية لأنها:",
+    options: [
+      "ترتفع حرارتها بسرعة كبيرة",
+      "عازلة ولا توصل الشحنات الكهربائية",
+      "لا تسخن كثيراً عند مرور الكهرباء",
+      "لا تصدأ إذا تعرضت للرطوبة"
+    ],
+    correct: 2
+  },
+  {
+    question: "إذا كانت تكلفة استهلاك ١٠٠٠ واط من الكهرباء لمدة ساعة واحدة تساوي ٠.٥ ريال، فكم تكلفة تشغيل جهاز التلفاز (٢٥٠ واط) لمدة ٨ ساعات؟",
+    options: ["١٠٠٠ ريال", "٥٠٠ ريال", "ريال واحد", "ريالان"],
+    correct: 2
+  }
+];
+
+// حالة الاختبار الحالي
+const quizState = {
+  1: { stars: 0, answered: 0, data: quiz1Data, rootId: 'quiz-root-1', built: false },
+  2: { stars: 0, answered: 0, data: quiz2Data, rootId: 'quiz-root-2', built: false }
+};
+let currentQuiz = 0;
+
+// خلط مصفوفة
+function shuffle(arr){
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// التنقل بين الشاشات
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goHome(){
+  closeResult();
+  currentQuiz = 0;
+  showScreen('screen-home');
+}
+
+function openQuiz(num){
+  currentQuiz = num;
+  // إعادة بناء كل مرة لخلط جديد
+  buildQuiz(num);
+  showScreen('screen-quiz' + num);
+}
+
+function restartCurrentQuiz(){
+  closeResult();
+  if (currentQuiz === 1 || currentQuiz === 2){
+    buildQuiz(currentQuiz);
+  }
+}
+
+function closeResultAndGoHome(){
+  closeResult();
+  goHome();
+}
+
+function closeResult(){
+  document.getElementById('result-modal').classList.remove('show');
+}
+
+// بناء واجهة الأسئلة
+function buildQuiz(num){
+  const state = quizState[num];
+  const root = document.getElementById(state.rootId);
+  const progressFill = document.getElementById('progress-fill-' + num);
+  const progressText = document.getElementById('progress-text-' + num);
+  const scoreEl = document.getElementById('score-count-' + num);
+  const trophiesEl = document.getElementById('trophies-count-' + num);
+
+  // إعادة تعيين
+  state.stars = 0;
+  state.answered = 0;
+  root.innerHTML = '';
+  progressFill.style.width = '0%';
+  progressText.querySelector('.current').textContent = '0';
+  scoreEl.textContent = '0';
+  trophiesEl.textContent = '🎯';
+
+  const totalQuestions = state.data.length;
+
+  state.data.forEach((q, idx) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+
+    // خلط الإجابات عشوائياً
+    const shuffled = shuffle(
+      q.options.map((opt, i) => ({ text: opt, isCorrect: i === q.correct }))
+    );
+
+    let figureHTML = '';
+    if (q.figure){
+      figureHTML = `<div class="q-figure">
+        <div class="figure-svg">${q.figure.svg || ''}</div>
+        <div class="figure-caption">${q.figure.caption || ''}</div>
+      </div>`;
+    }
+
+    const letters = ['أ', 'ب', 'ج', 'د'];
+    const optionsHTML = shuffled.map((opt, i) => `
+      <button class="option" data-correct="${opt.isCorrect}">
+        <span class="letter">${letters[i]}</span>
+        <span class="opt-text">${opt.text}</span>
+      </button>
+    `).join('');
+
+    card.innerHTML = `
+      <div class="q-corner">${idx + 1}</div>
+      <div class="q-header">
+        <div class="q-text">${q.question}</div>
+      </div>
+      ${figureHTML}
+      <div class="options">${optionsHTML}</div>
+    `;
+
+    root.appendChild(card);
+
+    const optionEls = card.querySelectorAll('.option');
+    optionEls.forEach(optEl => {
+      optEl.addEventListener('click', () => {
+        if (card.classList.contains('locked')) return;
+        card.classList.add('locked');
+
+        const isCorrect = optEl.dataset.correct === 'true';
+
+        optionEls.forEach(o => {
+          o.classList.add('disabled');
+          if (o.dataset.correct === 'true' && !isCorrect){
+            o.classList.add('correct', 'reveal');
+          }
+        });
+        optEl.classList.remove('reveal');
+        optEl.classList.add(isCorrect ? 'correct' : 'wrong');
+
+        if (isCorrect){
+          state.stars++;
+          showToast('success', 'يا سلام! 🌟', 'إجابة صحيحة');
+          confettiBurst();
+        } else {
+          showToast('error', 'حظ أوفر 💪', 'حاول في السؤال القادم');
+        }
+
+        state.answered++;
+        updateProgress(num);
+
+        if (state.answered === totalQuestions){
+          setTimeout(() => showResult(num), 1300);
+        } else {
+          const next = root.children[idx + 1];
+          if (next){
+            setTimeout(() => {
+              next.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 850);
+          }
+        }
+      });
+    });
+  });
+
+  state.built = true;
+}
+
+function updateProgress(num){
+  const state = quizState[num];
+  const totalQuestions = state.data.length;
+  const pct = (state.answered / totalQuestions) * 100;
+  document.getElementById('progress-fill-' + num).style.width = pct + '%';
+  document.querySelector('#progress-text-' + num + ' .current').textContent = state.answered;
+  document.getElementById('score-count-' + num).textContent = state.stars;
+  const trophiesEl = document.getElementById('trophies-count-' + num);
+  if (state.stars >= 15) trophiesEl.textContent = '🏆';
+  else if (state.stars >= 10) trophiesEl.textContent = '🥇';
+  else if (state.stars >= 5) trophiesEl.textContent = '🥈';
+  else trophiesEl.textContent = '🎯';
+}
+
+function showResult(num){
+  const state = quizState[num];
+  const totalQuestions = state.data.length;
+  const stars = state.stars;
+  const modal = document.getElementById('result-modal');
+  const pct = Math.round((stars / totalQuestions) * 100);
+
+  let title = '', trophy = '', message = '';
+  if (pct === 100){
+    trophy = '🏆';
+    title = 'ممتاز جداً!';
+    message = 'حصلت على الكأس الذهبي! يا سلام ✨';
+  } else if (pct >= 80){
+    trophy = '🥇';
+    title = 'أداء رائع!';
+    message = 'استحقيت الكأس الذهبي، استمر على هذا التفوق';
+  } else if (pct >= 60){
+    trophy = '🥈';
+    title = 'جيد جداً!';
+    message = 'الكأس الفضي من نصيبك، بإمكانك تحقيق الأفضل';
+  } else if (pct >= 40){
+    trophy = '🥉';
+    title = 'جيد';
+    message = 'الكأس البرونزي لك، حاول مرة أخرى لتتقدم';
+  } else {
+    trophy = '⭐';
+    title = 'حظ أوفر';
+    message = 'لا تستسلم، أعد الاختبار وستتحسن إن شاء الله';
+  }
+
+  document.getElementById('result-trophy').textContent = trophy;
+  document.getElementById('result-title').textContent = title;
+  document.getElementById('result-message').textContent = message;
+  document.getElementById('result-score-num').textContent = stars;
+  document.getElementById('result-score-total').textContent = totalQuestions;
+  document.getElementById('result-percent').textContent = pct + '%';
+
+  const starsBox = document.getElementById('result-stars');
+  starsBox.innerHTML = '';
+  const maxShow = Math.min(stars, 20);
+  for (let i = 0; i < maxShow; i++){
+    const s = document.createElement('span');
+    s.textContent = '⭐';
+    s.style.animationDelay = (i * 0.06) + 's';
+    starsBox.appendChild(s);
+  }
+
+  modal.classList.add('show');
+
+  if (pct >= 60){
+    for (let i = 0; i < 30; i++){
+      setTimeout(confettiBurst, i * 80);
+    }
+  }
+}
+
+// التنبيهات
+let toastTimer;
+function showToast(type, title, subtitle){
+  let toast = document.getElementById('toast');
+  if (!toast){
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.className = 'toast';
+    toast.innerHTML = `
+      <span class="toast-icon"></span>
+      <div>
+        <div class="toast-title"></div>
+        <div class="toast-sub"></div>
+      </div>`;
+    document.body.appendChild(toast);
+  }
+  toast.className = 'toast ' + type;
+  toast.querySelector('.toast-icon').textContent = type === 'success' ? '🎉' : '😅';
+  toast.querySelector('.toast-title').textContent = title;
+  toast.querySelector('.toast-sub').textContent = subtitle;
+  requestAnimationFrame(() => toast.classList.add('show'));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// كونفيتي
+function confettiBurst(){
+  const colors = ['#c8553d', '#f28f3b', '#2e8b8b', '#b8860b', '#4a7c3a'];
+  const count = 14;
+  for (let i = 0; i < count; i++){
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    c.style.left = (40 + Math.random() * 20) + '%';
+    c.style.top = '20%';
+    c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+    c.style.width = (6 + Math.random() * 8) + 'px';
+    c.style.height = (6 + Math.random() * 10) + 'px';
+    c.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
+    c.style.animationDelay = (Math.random() * 0.3) + 's';
+    c.style.transform = `translateX(${(Math.random() - 0.5) * 220}px)`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2400);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Quiz Platform – 3rd Intermediate</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0a1628;
+  --blue: #1a3a6b;
+  --sky: #1e90ff;
+  --gold: #f0b429;
+  --gold2: #ffd166;
+  --green: #06d6a0;
+  --red: #ef4444;
+  --white: #ffffff;
+  --light: #f0f4ff;
+  --card-bg: #ffffff;
+  --shadow: 0 8px 32px rgba(10,22,40,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--navy);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── ANIMATED BG ── */
+.bg-anim {
+  position: fixed; inset:0; z-index:0;
+  background: linear-gradient(135deg, #0a1628 0%, #0d2461 50%, #0a1628 100%);
+  overflow: hidden;
+}
+.bg-anim::before {
+  content:'';
+  position:absolute; inset:-50%;
+  background: radial-gradient(ellipse at 20% 50%, rgba(30,144,255,.15) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 20%, rgba(240,180,41,.12) 0%, transparent 50%);
+  animation: drift 12s ease-in-out infinite alternate;
+}
+@keyframes drift { from{transform:translate(0,0) rotate(0deg)} to{transform:translate(3%,2%) rotate(1deg)} }
+
+/* floating letters */
+.floaters { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+.fl {
+  position:absolute;
+  color:rgba(30,144,255,.08);
+  font-size:4rem;
+  font-weight:900;
+  font-family:'Playfair Display',serif;
+  animation: floatUp linear infinite;
+  user-select:none;
+}
+@keyframes floatUp {
+  0%   { transform: translateY(110vh) rotate(0deg); opacity:0; }
+  10%  { opacity:1; }
+  90%  { opacity:1; }
+  100% { transform: translateY(-15vh) rotate(20deg); opacity:0; }
+}
+
+/* ── WRAP ── */
+.wrap { position:relative; z-index:1; max-width:1100px; margin:0 auto; padding:20px 16px 40px; }
+
+/* ── HEADER ── */
+.header {
+  text-align:center; padding:40px 20px 30px;
+  animation: slideDown .8s ease;
+}
+@keyframes slideDown { from{opacity:0;transform:translateY(-40px)} to{opacity:1;transform:translateY(0)} }
+
+.header-top {
+  display:inline-flex; align-items:center; gap:12px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12);
+  padding:8px 24px; border-radius:40px;
+  margin-bottom:16px;
+  backdrop-filter:blur(6px);
+}
+.header-top span { color:rgba(255,255,255,.7); font-size:.82rem; letter-spacing:.5px; }
+.flag { font-size:1.2rem; }
+
+.header h1 {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(2rem,6vw,3.4rem);
+  color:var(--white);
+  text-shadow:0 0 40px rgba(30,144,255,.5);
+  margin-bottom:6px;
+}
+.header h1 span { color:var(--gold); }
+.header h2 { font-size:clamp(.85rem,2.5vw,1.1rem); color:rgba(255,255,255,.55); font-weight:400; }
+
+.header-line {
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  margin:18px auto 0; max-width:300px;
+}
+.header-line::before, .header-line::after {
+  content:''; flex:1; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(30,144,255,.5), transparent);
+}
+.header-line-icon { color:var(--gold); font-size:1.2rem; }
+
+/* ── SCOREBOARD ── */
+.scoreboard {
+  display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+  margin:24px 0 30px;
+  animation: fadeUp .7s ease .2s both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.scard {
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:18px; padding:14px 24px;
+  text-align:center; min-width:110px;
+  backdrop-filter:blur(8px);
+  transition:transform .25s;
+}
+.scard:hover { transform:translateY(-3px); }
+.scard .si { font-size:1.6rem; margin-bottom:4px; }
+.scard .sv { font-size:2rem; font-weight:900; color:var(--gold); }
+.scard .sl { font-size:.7rem; color:rgba(255,255,255,.5); margin-top:2px; }
+
+/* ── EXAM GRID ── */
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:18px; margin-bottom:36px;
+  animation: fadeUp .7s ease .4s both;
+}
+
+.ecard {
+  border-radius:22px; overflow:hidden;
+  cursor:pointer;
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s;
+  box-shadow:var(--shadow);
+  position:relative;
+}
+.ecard:hover { transform:translateY(-10px) scale(1.03); box-shadow:0 20px 50px rgba(0,0,0,.4); }
+.ecard.done .ecard-body::after {
+  content:'✅ Done!';
+  position:absolute; top:10px; right:10px;
+  background:var(--green); color:white;
+  font-size:.7rem; font-weight:700;
+  padding:3px 10px; border-radius:20px;
+}
+
+.ecard-banner {
+  height:110px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:3rem; position:relative; overflow:hidden;
+}
+.ecard-banner::after {
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,.3));
+}
+.b1 { background:linear-gradient(135deg,#1a3a6b,#1e90ff); }
+.b2 { background:linear-gradient(135deg,#1a4a2e,#06d6a0); }
+.b3 { background:linear-gradient(135deg,#4a1a1a,#ef4444); }
+.b4 { background:linear-gradient(135deg,#3a2a00,#f0b429); }
+.b5 { background:linear-gradient(135deg,#2a0a4a,#8b5cf6); }
+
+.ecard-body {
+  background:white; padding:16px 18px 18px;
+  position:relative;
+}
+.ecard-label {
+  font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+  color:var(--sky); margin-bottom:4px;
+}
+.ecard-body h3 { font-size:.98rem; font-weight:800; color:#1a1a2e; margin-bottom:5px; }
+.ecard-body p { font-size:.72rem; color:#666; line-height:1.5; }
+.ecard-num {
+  position:absolute; top:-34px; right:14px; z-index:2;
+  width:36px; height:36px; border-radius:50%;
+  background:white; box-shadow:0 2px 10px rgba(0,0,0,.2);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.7rem; font-weight:900; color:#1a3a6b;
+}
+
+/* ── MODAL ── */
+.overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,.75); z-index:200;
+  align-items:center; justify-content:center;
+  padding:12px; backdrop-filter:blur(6px);
+}
+.overlay.open { display:flex; }
+
+.modal {
+  background:white; border-radius:24px;
+  width:100%; max-width:720px; max-height:90vh;
+  overflow-y:auto; padding:0;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);
+  animation:popIn .4s cubic-bezier(.34,1.56,.64,1);
+  position:relative;
+}
+@keyframes popIn { from{opacity:0;transform:scale(.7)} to{opacity:1;transform:scale(1)} }
+
+.modal::-webkit-scrollbar { width:5px; }
+.modal::-webkit-scrollbar-thumb { background:#e0e0e0; border-radius:3px; }
+
+.m-top {
+  height:130px; display:flex; align-items:center; justify-content:center;
+  flex-direction:column; gap:6px; position:relative; border-radius:24px 24px 0 0;
+}
+.m-top-icon { font-size:2.8rem; }
+.m-top-title { color:white; font-size:1.2rem; font-weight:800; text-shadow:0 2px 6px rgba(0,0,0,.3); }
+.m-top-sub { color:rgba(255,255,255,.75); font-size:.78rem; }
+.m-close {
+  position:absolute; top:12px; left:14px;
+  background:rgba(0,0,0,.2); border:none; color:white;
+  width:34px; height:34px; border-radius:50%;
+  font-size:1.1rem; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:background .2s;
+}
+.m-close:hover { background:rgba(220,50,50,.6); }
+
+/* progress */
+.m-prog { padding:14px 22px 0; }
+.prog-row { display:flex; justify-content:space-between; font-size:.72rem; color:#9e9e9e; margin-bottom:4px; }
+.prog-track { height:7px; background:#f0f0f0; border-radius:10px; overflow:hidden; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--sky),#42caff); border-radius:10px; transition:width .5s; }
+
+/* body */
+.m-body { padding:18px 22px 6px; }
+
+/* passage */
+.passage {
+  background:#f8faff; border:1px solid #e3eaff;
+  border-radius:14px; padding:14px 16px; margin-bottom:20px;
+  font-size:.88rem; color:#333; line-height:1.9;
+  max-height:160px; overflow-y:auto;
+  border-right:4px solid var(--sky);
+}
+.passage::-webkit-scrollbar { width:4px; }
+.passage::-webkit-scrollbar-thumb { background:#ccd9ff; border-radius:2px; }
+
+/* question */
+.qblock { display:none; }
+.qblock.show { display:block; animation:fadeUp .35s ease; }
+
+.qtxt {
+  font-size:.95rem; color:#1a1a2e; font-weight:600;
+  background:#f8faff; border-radius:12px; padding:12px 16px;
+  border-left:4px solid var(--sky); margin-bottom:14px; line-height:1.7;
+}
+
+.opts { display:grid; gap:9px; }
+
+.opt {
+  background:white; border:1.5px solid #e8e8e8; border-radius:12px;
+  padding:11px 14px; font-family:'Poppins',sans-serif; font-size:.88rem;
+  color:#333; cursor:pointer; transition:all .22s; text-align:left;
+  display:flex; align-items:center; gap:10px;
+}
+.opt:hover:not(:disabled) { border-color:var(--sky); background:#f0f7ff; transform:translateX(4px); }
+.opt.correct { background:#e8fff5; border-color:var(--green); color:#065f46; }
+.opt.wrong   { background:#fff0f0; border-color:var(--red); color:#991b1b; }
+.opt:disabled { cursor:default; }
+
+.opt-badge {
+  width:28px; height:28px; border-radius:50%;
+  background:#f0f0f0; color:#666;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.75rem; font-weight:800; flex-shrink:0;
+  border:1.5px solid #e0e0e0;
+}
+.opt.correct .opt-badge { background:var(--green); color:white; border-color:var(--green); }
+.opt.wrong .opt-badge   { background:var(--red);   color:white; border-color:var(--red); }
+
+/* nav */
+.m-nav {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 22px 20px; border-top:1px solid #f0f0f0; gap:10px;
+}
+.bn {
+  padding:11px 26px; border-radius:12px; border:none;
+  font-family:'Poppins',sans-serif; font-size:.88rem; font-weight:700;
+  cursor:pointer; transition:all .22s;
+}
+.bn.primary { background:linear-gradient(135deg,var(--sky),#42caff); color:white; box-shadow:0 4px 14px rgba(30,144,255,.3); }
+.bn.primary:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(30,144,255,.45); }
+.bn.secondary { background:#f5f5f5; color:#666; }
+.bn.secondary:hover { background:#ebebeb; }
+.bn:disabled { opacity:.3; cursor:not-allowed; transform:none!important; }
+.qinfo { font-size:.75rem; color:#9e9e9e; }
+
+/* result */
+.result { display:none; text-align:center; padding:28px 22px 34px; animation:fadeUp .5s ease; }
+.result.show { display:block; }
+.r-trophy { font-size:5rem; animation:bounce 1.1s ease infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+.r-score { font-size:3.2rem; font-weight:900; color:#1a1a2e; margin:8px 0 4px; }
+.r-pct { font-size:.88rem; color:#9e9e9e; margin-bottom:10px; }
+.r-stars { font-size:2.2rem; letter-spacing:5px; margin-bottom:10px; }
+.r-msg { font-size:1.1rem; font-weight:700; color:var(--blue); margin-bottom:24px; }
+.btn-retry {
+  background:linear-gradient(135deg,var(--sky),#42caff);
+  color:white; border:none; padding:13px 40px;
+  border-radius:14px; font-family:'Poppins',sans-serif;
+  font-size:.95rem; font-weight:800; cursor:pointer;
+  box-shadow:0 6px 20px rgba(30,144,255,.4);
+  transition:all .25s;
+}
+.btn-retry:hover { transform:translateY(-3px); box-shadow:0 10px 28px rgba(30,144,255,.55); }
+
+/* ── TOAST ── */
+.toast {
+  display:none; position:fixed; top:24px; left:50%;
+  transform:translateX(-50%); z-index:9999;
+  padding:14px 36px; border-radius:50px;
+  font-family:'Poppins',sans-serif; font-size:1.2rem; font-weight:800;
+  white-space:nowrap; box-shadow:0 8px 32px rgba(0,0,0,.3);
+  animation:toastAnim .5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes toastAnim { from{opacity:0;top:0;transform:translateX(-50%) scale(.7)} to{opacity:1;top:24px;transform:translateX(-50%) scale(1)} }
+.toast.show { display:block; }
+.toast.ok  { background:linear-gradient(135deg,#059669,#34d399); color:white; }
+.toast.err { background:linear-gradient(135deg,#dc2626,#f87171); color:white; }
+
+/* ── FOOTER ── */
+.footer {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px; padding:18px 24px;
+  text-align:center; backdrop-filter:blur(6px);
+  animation:fadeUp .7s ease .6s both;
+}
+.footer .f-name { font-weight:800; color:var(--gold); font-size:.98rem; margin-bottom:4px; }
+.footer p { color:rgba(255,255,255,.45); font-size:.8rem; }
+.footer a { color:var(--sky); text-decoration:none; font-weight:600; }
+.footer a:hover { color:var(--gold); }
+
+@media(max-width:560px){
+  .grid { grid-template-columns:repeat(2,1fr); gap:12px; }
+  .ecard-banner { height:90px; font-size:2.4rem; }
+  .m-body,.m-nav { padding-left:14px; padding-right:14px; }
+  .m-top { height:105px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-anim"></div>
+<div class="floaters" id="floaters"></div>
+<div class="toast" id="toast"></div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <span class="flag">🇸🇦</span>
+      <span>Kingdom of Saudi Arabia • Ministry of Education</span>
+    </div>
+    <h1>English <span>Quiz</span> Platform</h1>
+    <h2>3rd Intermediate Grade — Final Exam Practice • 1447 AH</h2>
+    <div class="header-line"><div class="header-line-icon">⭐</div></div>
+  </div>
+
+  <!-- SCOREBOARD -->
+  <div class="scoreboard">
+    <div class="scard">
+      <div class="si">⭐</div>
+      <div class="sv" id="totStars">0</div>
+      <div class="sl">Stars Earned</div>
+    </div>
+    <div class="scard">
+      <div class="si">✅</div>
+      <div class="sv" id="totCorrect">0</div>
+      <div class="sl">Correct Answers</div>
+    </div>
+    <div class="scard">
+      <div class="si">🏆</div>
+      <div class="sv" id="totDone">0</div>
+      <div class="sl">Exams Completed</div>
+    </div>
+  </div>
+
+  <!-- GRID -->
+  <div class="grid">
+    <div class="ecard" id="c0" onclick="openExam(0)">
+      <div class="ecard-banner b1">📖<div class="ecard-num">01</div></div>
+      <div class="ecard-body">
+        <div class="ecard-label">Reading</div>
+        <h3>Reading Comprehension</h3>
+        <p>Juliette Brown's family & Daniel's busy week — answer questions from the passages</p>
+      </div>
+    </div>
+    <div class="ecard" id="c1" onclick="openExam(1)">
+      <div class="ecard-banner b2">📝<div class="ecard-num">02</div></div>
+      <div class="ecard-body">
+        <div class="ecard-label">Grammar</div>
+        <h3>Grammar</h3>
+        <p>Relative clauses, past continuous, present perfect, conditionals, modal verbs & more</p>
+      </div>
+    </div>
+    <div class="ecard" id="c2" onclick="openExam(2)">
+      <div class="ecard-banner b3">🔤<div class="ecard-num">03</div></div>
+      <div class="ecard-body">
+        <div class="ecard-label">Vocabulary</div>
+        <h3>Vocabulary</h3>
+        <p>Word meanings, definitions, categories — cars, cooking tools, people & culture</p>
+      </div>
+    </div>
+    <div class="ecard" id="c3" onclick="openExam(3)">
+      <div class="ecard-banner b4">✏️<div class="ecard-num">04</div></div>
+      <div class="ecard-body">
+        <div class="ecard-label">Spelling</div>
+        <h3>Orthography</h3>
+        <p>Choose the correct missing letters and identify correctly-spelled words</p>
+      </div>
+    </div>
+    <div class="ecard" id="c4" onclick="openExam(4)">
+      <div class="ecard-banner b5">🌍<div class="ecard-num">05</div></div>
+      <div class="ecard-body">
+        <div class="ecard-label">Comprehension</div>
+        <h3>Japan & Dubai Mall</h3>
+        <p>Read passages about Japan and Dubai Mall and answer comprehension questions</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="f-name">تصميم د/فواز</div>
+    <p>تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a></p>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- MODAL -->
+<div class="overlay" id="ov" onclick="closeOv(event)">
+  <div class="modal" id="modal">
+    <div class="m-top" id="mTop">
+      <button class="m-close" onclick="closeM()">✕</button>
+      <div class="m-top-icon" id="mIcon"></div>
+      <div class="m-top-title" id="mTitle"></div>
+      <div class="m-top-sub" id="mSub"></div>
+    </div>
+    <div class="m-prog">
+      <div class="prog-row"><span id="progTxt"></span><span id="qNum"></span></div>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0"></div></div>
+    </div>
+    <div class="m-body" id="mBody"></div>
+    <div class="m-nav" id="mNav">
+      <button class="bn secondary" id="bPrev" onclick="go(-1)">← Prev</button>
+      <span class="qinfo" id="qInfo"></span>
+      <button class="bn primary" id="bNext" onclick="go(1)">Next →</button>
+    </div>
+    <div class="result" id="resScr">
+      <div class="r-trophy" id="rIcon"></div>
+      <div class="r-score" id="rScore"></div>
+      <div class="r-pct" id="rPct"></div>
+      <div class="r-stars" id="rStars"></div>
+      <div class="r-msg" id="rMsg"></div>
+      <button class="btn-retry" onclick="retry()">🔄 Try Again</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* floating letters */
+(function(){
+  const c=document.getElementById('floaters');
+  const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  for(let i=0;i<18;i++){
+    const el=document.createElement('div');
+    el.className='fl';
+    el.textContent=letters[Math.floor(Math.random()*letters.length)];
+    const sz=2+Math.random()*3;
+    el.style.cssText=`font-size:${sz}rem;left:${Math.random()*100}%;animation-duration:${8+Math.random()*12}s;animation-delay:${Math.random()*10}s;`;
+    c.appendChild(el);
+  }
+})();
+
+/* ======================== DATA ======================== */
+const DATA = [
+
+/* 0 — Reading Comprehension */
+{
+  title:'Reading Comprehension',
+  sub:'Passages — Juliette Brown & Daniel',
+  icon:'📖', bg:'b1',
+  passage:`My name is Juliette Brown. I am ten years old. I live in London with my family. My mother's name is Lizzie. She is thirty-five years old. She is a teacher. My father's name is Tom. He is forty-two years old. He is a doctor in a big hospital. I have got a brother, Hans (8 years old) and a sister, Mary (6 years old). We have breakfast at half past seven. My favorite food is pizza! My mother likes spaghetti, Hans likes hot chocolate, my sister likes fish and chips, and my father's favorite food is salad. We have dinner at eight o'clock. We go to school on foot. At nine, we go to bed.`,
+  qs:[
+    { q:'Lizzie is __________ years old.',
+      opts:['35','53','42','24'], a:0 },
+    { q:"Juliette's father works at __________.",
+      opts:['school','store','hospital','bank'], a:2 },
+    { q:'How many siblings does Juliette have?',
+      opts:['1','2','3','4'], a:1 },
+    { q:'The children go to school __________.',
+      opts:['by car','by bus','by bike','on foot'], a:3 },
+    { q:"Juliette's family have dinner at __________.",
+      opts:['7:30','8:00','8:15','9:00'], a:1 },
+    { q:"Mary's favorite food is __________.",
+      opts:['pizza','spaghetti','fish and chips','salad'], a:2 },
+    { q:"Juliette's mother's profession is __________.",
+      opts:['doctor','teacher','nurse','engineer'], a:1 },
+    { q:'What time do they go to bed?',
+      opts:['Eight o\'clock','Half past eight','Nine o\'clock','Ten o\'clock'], a:2 },
+  ]
+},
+
+/* 1 — Grammar */
+{
+  title:'Grammar',
+  sub:'MCQ — Tenses, Modals, Conditionals & More',
+  icon:'📝', bg:'b2',
+  passage:null,
+  qs:[
+    { q:'A clown is a person __________ makes children laugh.',
+      opts:['who','which','when','where'], a:0 },
+    { q:'My brother was watching TV while he __________ dinner.',
+      opts:['eat','eats','ate','was eating'], a:3 },
+    { q:"I haven't washed the clothes __________.",
+      opts:['just','yet','since','for'], a:1 },
+    { q:"I can't stop __________ tea and coffee.",
+      opts:['drank','drinking','drinks','drink'], a:1 },
+    { q:'I wish I __________ in a big house in the city.',
+      opts:['live','lives','lived','living'], a:2 },
+    { q:'By the time we arrived at the station, the bus __________.',
+      opts:['leave','left','had left','leaving'], a:2 },
+    { q:'He eats pizza, __________?',
+      opts:["don't he","doesn't he","didn't he","isn't he"], a:1 },
+    { q:"You __________ honk your horn. It's a hospital area.",
+      opts:['must','mustn\'t','should','have to'], a:1 },
+    { q:'Mona is a good cook. She cooks __________.',
+      opts:['good','better','best','well'], a:3 },
+    { q:'An oven is a machine __________ is used for cooking food.',
+      opts:['who','which','when','where'], a:1 },
+  ]
+},
+
+/* 2 — Vocabulary */
+{
+  title:'Vocabulary',
+  sub:'Word Meanings & Usage',
+  icon:'🔤', bg:'b3',
+  passage:null,
+  qs:[
+    { q:'He was arrested for driving without __________.',
+      opts:['horn','license','windshield','gas tank'], a:1 },
+    { q:'We need a __________ to cut the grass.',
+      opts:['lawn mower','spoon','saw','knife'], a:0 },
+    { q:'People can __________ things to make life easy.',
+      opts:['swim','climb','play','invent'], a:3 },
+    { q:"'Missing home and family' means __________.",
+      opts:['newcomer','flexible','homesick','frustrating'], a:2 },
+    { q:'There were two security guards __________ outside the building.',
+      opts:['clean up','on duty','reliable','polite'], a:1 },
+    { q:'Would you __________ your radio a little? It is too loud.',
+      opts:['turn right','turn left','turn around','turn down'], a:3 },
+    { q:'A talkative person is someone who __________.',
+      opts:['makes you laugh','likes to be with others','speaks a lot',"isn't polite"], a:2 },
+    { q:'Beliefs about what\'s right or wrong are __________.',
+      opts:['tips','newcomers','values','stages'], a:2 },
+    { q:'That diamond is not real. It is __________.',
+      opts:['genuine','original','fake','priceless'], a:2 },
+    { q:'__________means giving extra money to waiters or taxi drivers.',
+      opts:['Loan','Tips','Discount','Salary'], a:1 },
+  ]
+},
+
+/* 3 — Orthography */
+{
+  title:'Orthography / Spelling',
+  sub:'Choose the Correct Missing Letter(s)',
+  icon:'✏️', bg:'b4',
+  passage:null,
+  qs:[
+    { q:'I caught him trying to s__eal my bike.',
+      opts:['b','d','p','t'], a:3 },
+    { q:'A p__rsuasive person gets others to do what he wants.',
+      opts:['a','e','i','u'], a:1 },
+    { q:'A neph__w is a son of one\'s brother or sister.',
+      opts:['e','i','o','u'], a:0 },
+    { q:'The twins often bor__ow each other\'s clothes.',
+      opts:['r','o','a','w'], a:0 },
+    { q:'Please help me to remo__e the table to the corner.',
+      opts:['f','v','r','t'], a:1 },
+    { q:'I always carry a por__able computer with me.',
+      opts:['b','d','p','t'], a:3 },
+    { q:'They live in a hu__e house.',
+      opts:['g','j','d','k'], a:0 },
+    { q:'The room was warm and c__zy.',
+      opts:['r','o','u','w'], a:1 },
+    { q:'The little village has very n__rrow streets.',
+      opts:['a','e','i','o'], a:0 },
+    { q:'She is sweeping with a b__oom.',
+      opts:['l','r','u','n'], a:1 },
+  ]
+},
+
+/* 4 — Japan & Dubai Mall */
+{
+  title:'Japan & Dubai Mall',
+  sub:'Reading Comprehension — Two Passages',
+  icon:'🌍', bg:'b5',
+  passage:`Japan is a group of islands in East Asia, surrounded by the Pacific Ocean. Tokyo is the capital. The Japanese cultivate pearls in warm water. They grow rice and vegetables. Japan is mainly an industrial country famous for radios, televisions, computers, cameras and cars. "Made in Japan" is a trustful label. Japanese people are polite and active. They have a rich traditional clothing called Kimono. Their favourite food is raw fish and rice. ║ Dubai Mall is in the UAE, part of the Burj Khalifa complex (tallest building on earth). Opened in 2008, it is the largest mall in the country with 1,200 shops and over 200 restaurants. It has an aquarium with 33,000 animals, an Olympic-sized ice rink, and a VR park. Kids can visit KidZania.`,
+  qs:[
+    { q:'Japan is surrounded by the __________ Ocean.',
+      opts:['Atlantic','Pacific','Indian','Arctic'], a:1 },
+    { q:'The Japanese cultivate __________ in the warm water.',
+      opts:['flowers','pearls','herbs','fruit'], a:1 },
+    { q:'They grow __________ and vegetables.',
+      opts:['rice','wheat','beans','nuts'], a:0 },
+    { q:'People in Japan are very __________ and active.',
+      opts:['rude','happy','sad','polite'], a:3 },
+    { q:'The Japanese favourite food is raw __________.',
+      opts:['chicken','fish','meat','eggs'], a:1 },
+    { q:'Dubai Mall was opened in __________.',
+      opts:['2002','2005','2008','2010'], a:2 },
+    { q:'Dubai Mall contains __________ shops.',
+      opts:['200','500','900','1200'], a:3 },
+    { q:'The mall has an aquarium with __________ animals.',
+      opts:['3,000','13,000','33,000','300,000'], a:2 },
+    { q:'The VR park in Dubai Mall is for __________ adventures.',
+      opts:['water','virtual reality','wildlife','sports'], a:1 },
+    { q:'The building that houses Dubai Mall is called __________.',
+      opts:['Burj Al Arab','Palm Tower','Burj Khalifa','Emirates Tower'], a:2 },
+  ]
+}
+
+];
+
+/* ======================== STATE ======================== */
+let exam=-1, curQ=0, ans=[], done=[0,0,0,0,0], corr=[0,0,0,0,0], stars=[0,0,0,0,0];
+
+function updScores(){
+  document.getElementById('totStars').textContent   = stars.reduce((a,b)=>a+b,0);
+  document.getElementById('totCorrect').textContent = corr.reduce((a,b)=>a+b,0);
+  document.getElementById('totDone').textContent    = done.filter(Boolean).length;
+}
+
+/* ======================== OPEN ======================== */
+function openExam(idx){
+  exam=idx; curQ=0;
+  ans=new Array(DATA[idx].qs.length).fill(null);
+  const d=DATA[idx];
+
+  const mt=document.getElementById('mTop');
+  mt.className='m-top '+d.bg;
+  document.getElementById('mIcon').textContent=d.icon;
+  document.getElementById('mTitle').textContent=d.title;
+  document.getElementById('mSub').textContent=d.sub;
+
+  buildBody(idx);
+  showQ(0);
+
+  document.getElementById('resScr').classList.remove('show');
+  document.getElementById('mBody').style.display='';
+  document.getElementById('mNav').style.display='';
+  document.querySelector('.m-prog').style.display='';
+
+  document.getElementById('ov').classList.add('open');
+}
+
+function buildBody(idx){
+  const d=DATA[idx];
+  const body=document.getElementById('mBody');
+  body.innerHTML='';
+
+  if(d.passage){
+    const pb=document.createElement('div');
+    pb.className='passage'; pb.textContent=d.passage;
+    body.appendChild(pb);
+  }
+
+  d.qs.forEach((q,qi)=>{
+    const blk=document.createElement('div');
+    blk.className='qblock'; blk.id=`qb${qi}`;
+    blk.innerHTML=`
+      <div class="qtxt">Q${qi+1}: ${q.q}</div>
+      <div class="opts">
+        ${q.opts.map((o,oi)=>`
+          <button class="opt" id="o${qi}_${oi}" onclick="pick(${qi},${oi})">
+            <span class="opt-badge">${['A','B','C','D'][oi]}</span>
+            <span>${o}</span>
+          </button>
+        `).join('')}
+      </div>`;
+    body.appendChild(blk);
+  });
+}
+
+function showQ(qi){
+  const d=DATA[exam], tot=d.qs.length;
+  d.qs.forEach((_,i)=>document.getElementById(`qb${i}`)?.classList.remove('show'));
+  document.getElementById(`qb${qi}`)?.classList.add('show');
+
+  const done2=ans.filter(a=>a!==null).length;
+  document.getElementById('progTxt').textContent=`${done2} / ${tot} answered`;
+  document.getElementById('progFill').style.width=`${done2/tot*100}%`;
+  document.getElementById('qNum').textContent=`Q${qi+1}/${tot}`;
+  document.getElementById('qInfo').textContent=`Question ${qi+1} of ${tot}`;
+  document.getElementById('bPrev').disabled=qi===0;
+  document.getElementById('bNext').textContent=qi===tot-1?'Finish ✓':'Next →';
+}
+
+function pick(qi,oi){
+  if(ans[qi]!==null) return;
+  ans[qi]=oi;
+  const correct=DATA[exam].qs[qi].a;
+
+  DATA[exam].qs[qi].opts.forEach((_,i)=>{
+    const b=document.getElementById(`o${qi}_${i}`);
+    b.disabled=true;
+    if(i===correct) b.classList.add('correct');
+    else if(i===oi && oi!==correct) b.classList.add('wrong');
+  });
+
+  toast(oi===correct?'يا سلام! 🌟 Correct!':'حظ أوفر! 💪 Try Again!', oi===correct?'ok':'err');
+
+  const tot=DATA[exam].qs.length, done2=ans.filter(a=>a!==null).length;
+  document.getElementById('progTxt').textContent=`${done2} / ${tot} answered`;
+  document.getElementById('progFill').style.width=`${done2/tot*100}%`;
+}
+
+function go(dir){
+  const tot=DATA[exam].qs.length;
+  if(dir===1 && curQ===tot-1){ showResult(); return; }
+  curQ=Math.max(0,Math.min(tot-1,curQ+dir));
+  showQ(curQ);
+}
+
+function showResult(){
+  const d=DATA[exam], tot=d.qs.length;
+  let c=0;
+  ans.forEach((a,i)=>{ if(a!==null && a===d.qs[i].a) c++; });
+  const pct=c/tot*100;
+  const s=pct>=90?5:pct>=75?4:pct>=60?3:pct>=40?2:1;
+
+  stars[exam]=s; corr[exam]=c; done[exam]=true;
+  updScores();
+
+  document.getElementById(`c${exam}`).classList.add('done');
+  document.getElementById('mBody').style.display='none';
+  document.getElementById('mNav').style.display='none';
+  document.querySelector('.m-prog').style.display='none';
+
+  const rs=document.getElementById('resScr');
+  rs.classList.add('show');
+  document.getElementById('rIcon').textContent=pct>=80?'🏆':pct>=60?'🥈':'🎯';
+  document.getElementById('rScore').textContent=`${c} / ${tot}`;
+  document.getElementById('rPct').textContent=`Score: ${Math.round(pct)}%`;
+  document.getElementById('rStars').textContent='⭐'.repeat(s)+'☆'.repeat(5-s);
+  document.getElementById('rMsg').textContent=
+    pct>=90?'🌟 Excellent! Outstanding performance!':
+    pct>=75?'👍 Very Good! Keep it up!':
+    pct>=60?'✊ Good! Review your mistakes.':
+    '💪 Keep studying! You can do better!';
+}
+
+function retry(){ const i=exam; closeM(); setTimeout(()=>openExam(i),300); }
+function closeM(){ document.getElementById('ov').classList.remove('open'); }
+function closeOv(e){ if(e.target===document.getElementById('ov')) closeM(); }
+
+function toast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+type;
+  clearTimeout(t._t);
+  t._t=setTimeout(()=>t.classList.remove('show'),2300);
+}
+
+updScores();
+</script>
+</body>
+</html>

@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة لغتي الجميلة - سادس ابتدائي</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange: #f57c00;
+  --orange-light: #ffb74d;
+  --orange-pale: #fff3e0;
+  --green: #2e7d32;
+  --green-light: #66bb6a;
+  --green-dark: #1b5e20;
+  --blue: #1565c0;
+  --blue-light: #42a5f5;
+  --purple: #6a1b9a;
+  --teal: #00695c;
+  --white: #ffffff;
+  --bg: #fafafa;
+  --text: #212121;
+  --shadow: 0 4px 20px rgba(0,0,0,0.12);
+  --shadow-hover: 0 12px 40px rgba(0,0,0,0.2);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: #f0f4f0;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ====== WAVY BG ====== */
+.page-bg {
+  position: fixed; inset: 0;
+  background: linear-gradient(160deg, #e8f5e9 0%, #f1f8e9 40%, #e0f2f1 100%);
+  z-index: 0;
+}
+.wave-top {
+  position: fixed; top: 0; left: 0; width: 100%; overflow: hidden; z-index: 0; line-height: 0;
+}
+.wave-top svg { display: block; width: 100%; height: 100px; }
+
+/* ====== CONTAINER ====== */
+.wrap {
+  position: relative; z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* ====== HEADER ====== */
+.header {
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 50%, #388e3c 100%);
+  border-radius: 24px;
+  padding: 32px 28px 28px;
+  text-align: center;
+  margin-bottom: 28px;
+  box-shadow: 0 8px 32px rgba(27,94,32,0.35);
+  position: relative;
+  overflow: hidden;
+  animation: fadeDown 0.7s ease;
+}
+@keyframes fadeDown { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
+
+.header::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 30px,
+    rgba(255,255,255,0.03) 30px,
+    rgba(255,255,255,0.03) 60px
+  );
+}
+
+.header-top {
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  margin-bottom: 10px;
+}
+.header-emoji { font-size: 2.8rem; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3)); }
+.header h1 {
+  font-family: 'Amiri', serif;
+  font-size: clamp(1.9rem, 5vw, 3rem);
+  color: var(--white);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  line-height: 1.2;
+}
+.header h2 {
+  font-size: clamp(0.85rem, 2.5vw, 1.1rem);
+  color: rgba(255,255,255,0.8);
+  font-weight: 400;
+  margin-top: 4px;
+}
+.grade-badge {
+  display: inline-block;
+  background: var(--orange);
+  color: white;
+  font-size: 0.82rem;
+  font-weight: 800;
+  padding: 5px 20px;
+  border-radius: 30px;
+  margin-top: 10px;
+  box-shadow: 0 3px 10px rgba(245,124,0,0.4);
+}
+
+/* ====== SCOREBAR ====== */
+.scorebar {
+  display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+  margin-bottom: 28px;
+  animation: fadeUp 0.7s ease 0.2s both;
+}
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.scard {
+  background: white;
+  border-radius: 16px;
+  padding: 14px 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  min-width: 100px;
+  border-top: 4px solid var(--orange);
+  flex: 1; max-width: 160px;
+}
+.scard:nth-child(2) { border-top-color: var(--green); }
+.scard:nth-child(3) { border-top-color: var(--blue); }
+.scard .s-icon { font-size: 1.5rem; margin-bottom: 4px; }
+.scard .s-num {
+  font-size: 2rem; font-weight: 900;
+  color: var(--text);
+}
+.scard .s-lbl { font-size: 0.72rem; color: #757575; margin-top: 2px; }
+
+/* ====== GRID ====== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+  margin-bottom: 36px;
+  animation: fadeUp 0.7s ease 0.4s both;
+}
+
+/* ====== EXAM CARD ====== */
+.ecard {
+  background: white;
+  border-radius: 20px;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1), box-shadow 0.3s;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  position: relative;
+}
+.ecard:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+}
+.ecard.done { opacity: 0.9; }
+.ecard.done .ecard-top::after {
+  content: '✅ مكتمل';
+  position: absolute; top: 10px; left: 10px;
+  background: white;
+  color: var(--green);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.ecard-top {
+  height: 110px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3.2rem;
+  position: relative;
+}
+.ecard-top-1 { background: linear-gradient(135deg, #1565c0, #42a5f5); }
+.ecard-top-2 { background: linear-gradient(135deg, #6a1b9a, #ab47bc); }
+.ecard-top-3 { background: linear-gradient(135deg, #e65100, #ff9800); }
+.ecard-top-4 { background: linear-gradient(135deg, #00695c, #26a69a); }
+
+.ecard-body { padding: 16px 18px 18px; }
+.ecard-body h3 {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+.ecard-body p { font-size: 0.78rem; color: #757575; line-height: 1.55; }
+
+.ecard-num {
+  position: absolute; top: 10px; right: 10px;
+  background: rgba(255,255,255,0.25);
+  color: white;
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  backdrop-filter: blur(4px);
+}
+
+/* ====== MODAL ====== */
+.overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  backdrop-filter: blur(4px);
+}
+.overlay.open { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: 24px;
+  width: 100%; max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 0;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.3);
+  animation: popIn 0.4s cubic-bezier(.34,1.56,.64,1);
+  position: relative;
+}
+@keyframes popIn { from{opacity:0;transform:scale(0.7)} to{opacity:1;transform:scale(1)} }
+
+.modal-head {
+  height: 130px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+  border-radius: 24px 24px 0 0;
+}
+.mh-1 { background: linear-gradient(135deg, #1565c0, #42a5f5); }
+.mh-2 { background: linear-gradient(135deg, #6a1b9a, #ab47bc); }
+.mh-3 { background: linear-gradient(135deg, #e65100, #ff9800); }
+.mh-4 { background: linear-gradient(135deg, #00695c, #26a69a); }
+
+.modal-head-icon { font-size: 2.8rem; }
+.modal-head-title {
+  color: white; font-size: 1.2rem; font-weight: 800;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+}
+.modal-head-sub { color: rgba(255,255,255,0.8); font-size: 0.8rem; }
+
+.modal-close {
+  position: absolute; top: 12px; left: 12px;
+  background: rgba(0,0,0,0.2);
+  border: none; color: white;
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.modal-close:hover { background: rgba(198,40,40,0.6); }
+
+/* progress */
+.m-prog-wrap {
+  padding: 14px 22px 0;
+}
+.prog-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.75rem; color: #9e9e9e;
+  margin-bottom: 5px;
+}
+.prog-track {
+  height: 7px; background: #e0e0e0; border-radius: 10px; overflow: hidden;
+}
+.prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange), var(--orange-light));
+  border-radius: 10px;
+  transition: width 0.5s ease;
+}
+
+/* body */
+.m-body { padding: 18px 22px 22px; }
+
+/* passage */
+.passage {
+  background: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-family: 'Amiri', serif;
+  font-size: 0.96rem;
+  color: #424242;
+  line-height: 2;
+  max-height: 160px;
+  overflow-y: auto;
+  border-right: 4px solid var(--orange);
+}
+
+/* question block */
+.qblock { display: none; }
+.qblock.show { display: block; animation: fadeUp 0.35s ease; }
+
+.qtxt {
+  font-family: 'Amiri', serif;
+  font-size: 1.07rem;
+  color: #1a1a1a;
+  background: #f5f5f5;
+  border-radius: 12px;
+  padding: 13px 16px;
+  border-right: 4px solid var(--orange);
+  margin-bottom: 16px;
+  line-height: 1.8;
+}
+
+.opts { display: grid; gap: 9px; }
+
+.opt {
+  background: white;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.93rem;
+  color: #424242;
+  cursor: pointer;
+  transition: all 0.22s;
+  text-align: right;
+  display: flex; align-items: center; gap: 10px;
+}
+.opt:hover:not(:disabled) {
+  border-color: var(--orange);
+  background: #fff8f0;
+  transform: translateX(-4px);
+}
+.opt.correct { background: #e8f5e9; border-color: var(--green); color: var(--green-dark); }
+.opt.wrong   { background: #ffebee; border-color: #ef5350; color: #c62828; }
+.opt:disabled { cursor: default; }
+
+.opt-dot {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #757575;
+  flex-shrink: 0;
+  border: 1.5px solid #e0e0e0;
+}
+.opt.correct .opt-dot { background: var(--green); color: white; border-color: var(--green); }
+.opt.wrong   .opt-dot { background: #ef5350; color: white; border-color: #ef5350; }
+
+/* nav */
+.m-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 22px 20px;
+  border-top: 1px solid #f0f0f0;
+  gap: 10px;
+}
+.btn-m {
+  padding: 11px 26px;
+  border-radius: 12px;
+  border: none;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-m.primary {
+  background: linear-gradient(135deg, var(--orange), var(--orange-light));
+  color: white;
+  box-shadow: 0 4px 14px rgba(245,124,0,0.35);
+}
+.btn-m.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(245,124,0,0.5); }
+.btn-m.secondary {
+  background: #f5f5f5; color: #616161;
+}
+.btn-m.secondary:hover { background: #eeeeee; }
+.btn-m:disabled { opacity: 0.35; cursor: not-allowed; transform: none!important; }
+
+.q-info { font-size: 0.78rem; color: #9e9e9e; }
+
+/* result */
+.result {
+  display: none;
+  text-align: center;
+  padding: 30px 22px 32px;
+  animation: fadeUp 0.5s ease;
+}
+.result.show { display: block; }
+
+.res-icon { font-size: 5rem; margin-bottom: 8px; animation: bounce 1.2s ease infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+.res-score { font-size: 3.2rem; font-weight: 900; color: var(--text); }
+.res-pct { font-size: 0.9rem; color: #9e9e9e; margin-bottom: 10px; }
+.res-stars { font-size: 2rem; letter-spacing: 4px; margin-bottom: 8px; }
+.res-msg {
+  font-family: 'Amiri', serif;
+  font-size: 1.2rem;
+  color: var(--green-dark);
+  margin-bottom: 24px;
+}
+.btn-retry {
+  background: linear-gradient(135deg, var(--orange), var(--orange-light));
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  border-radius: 14px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(245,124,0,0.4);
+  transition: all 0.25s;
+}
+.btn-retry:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(245,124,0,0.55); }
+
+/* ====== TOAST ====== */
+.toast {
+  display: none;
+  position: fixed;
+  top: 24px; left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 14px 36px;
+  border-radius: 50px;
+  font-family: 'Amiri', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  animation: toastAnim 0.5s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes toastAnim { from{opacity:0;top:0;transform:translateX(-50%) scale(0.7)} to{opacity:1;top:24px;transform:translateX(-50%) scale(1)} }
+.toast.show { display: block; }
+.toast.ok  { background: linear-gradient(135deg, #2e7d32, #66bb6a); color: white; }
+.toast.err { background: linear-gradient(135deg, #c62828, #ef5350); color: white; }
+
+/* ====== FOOTER ====== */
+.footer {
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  padding: 18px 24px;
+  box-shadow: var(--shadow);
+  animation: fadeUp 0.7s ease 0.6s both;
+}
+.footer .f-design { font-weight: 900; color: var(--green-dark); font-size: 0.98rem; margin-bottom: 4px; }
+.footer p { color: #757575; font-size: 0.82rem; }
+.footer a { color: var(--orange); text-decoration: none; font-weight: 700; border-bottom: 1px dashed var(--orange-light); }
+.footer a:hover { color: var(--green); }
+
+/* scrollbar */
+.modal::-webkit-scrollbar { width: 5px; }
+.modal::-webkit-scrollbar-thumb { background: #e0e0e0; border-radius: 3px; }
+.passage::-webkit-scrollbar { width: 4px; }
+.passage::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
+
+@media (max-width: 560px) {
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .m-body, .m-nav { padding-left: 14px; padding-right: 14px; }
+  .modal-head { height: 105px; }
+  .scorebar { gap: 10px; }
+  .scard { padding: 10px 14px; }
+}
+</style>
+</head>
+<body>
+<div class="page-bg"></div>
+<div class="toast" id="toast"></div>
+
+<div class="wrap">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-top">
+      <span class="header-emoji">📚</span>
+      <div>
+        <h1>لغتي الجميلة</h1>
+        <h2>منصة الاختبارات التفاعلية • Full Mark</h2>
+      </div>
+      <span class="header-emoji">✨</span>
+    </div>
+    <div class="grade-badge">🎓 الصف السادس الابتدائي</div>
+  </div>
+
+  <!-- Scorebar -->
+  <div class="scorebar">
+    <div class="scard">
+      <div class="s-icon">⭐</div>
+      <div class="s-num" id="totStars">0</div>
+      <div class="s-lbl">مجموع النجوم</div>
+    </div>
+    <div class="scard">
+      <div class="s-icon">✅</div>
+      <div class="s-num" id="totCorrect">0</div>
+      <div class="s-lbl">إجابات صحيحة</div>
+    </div>
+    <div class="scard">
+      <div class="s-icon">🏆</div>
+      <div class="s-num" id="totDone">0</div>
+      <div class="s-lbl">اختبارات مكتملة</div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid">
+    <div class="ecard" id="c0" onclick="open0(0)">
+      <div class="ecard-top ecard-top-1">📖<span class="ecard-num">فهم قرائي</span></div>
+      <div class="ecard-body">
+        <h3>الفهم القرائي</h3>
+        <p>اقرأ النصوص وأجب على أسئلة الفهم والاستيعاب والمفردات</p>
+      </div>
+    </div>
+    <div class="ecard" id="c1" onclick="open0(1)">
+      <div class="ecard-top ecard-top-2">✏️<span class="ecard-num">إملائي</span></div>
+      <div class="ecard-body">
+        <h3>الظاهرة الإملائية</h3>
+        <p>تنوين الاسم المقصور والمنقوص والممدود وحروف الجر</p>
+      </div>
+    </div>
+    <div class="ecard" id="c2" onclick="open0(2)">
+      <div class="ecard-top ecard-top-3">🔤<span class="ecard-num">نحوي</span></div>
+      <div class="ecard-body">
+        <h3>الوظيفة النحوية</h3>
+        <p>رفع الفعل المضارع ونصبه وجزمه وأسماء الزمان والمكان</p>
+      </div>
+    </div>
+    <div class="ecard" id="c3" onclick="open0(3)">
+      <div class="ecard-top ecard-top-4">📝<span class="ecard-num">لغوي</span></div>
+      <div class="ecard-body">
+        <h3>الصنف اللغوي</h3>
+        <p>المصادر الصريحة والقياسية والسماعية وتصنيفاتها</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="f-design">تصميم د/فواز</div>
+    <p>تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a></p>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- ====== MODAL ====== -->
+<div class="overlay" id="ov" onclick="closeOv(event)">
+  <div class="modal" id="modal">
+    <div class="modal-head" id="mHead">
+      <button class="modal-close" onclick="closeM()">✕</button>
+      <div class="modal-head-icon" id="mIcon"></div>
+      <div class="modal-head-title" id="mTitle"></div>
+      <div class="modal-head-sub" id="mSub"></div>
+    </div>
+
+    <div class="m-prog-wrap">
+      <div class="prog-row"><span id="progTxt"></span><span id="qNum"></span></div>
+      <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0"></div></div>
+    </div>
+
+    <div class="m-body" id="mBody"></div>
+
+    <div class="m-nav" id="mNav">
+      <button class="btn-m secondary" id="bPrev" onclick="go(-1)">→ السابق</button>
+      <span class="q-info" id="qInfo"></span>
+      <button class="btn-m primary" id="bNext" onclick="go(1)">التالي ←</button>
+    </div>
+
+    <div class="result" id="resScr">
+      <div class="res-icon" id="rIcon"></div>
+      <div class="res-score" id="rScore"></div>
+      <div class="res-pct" id="rPct"></div>
+      <div class="res-stars" id="rStars"></div>
+      <div class="res-msg" id="rMsg"></div>
+      <button class="btn-retry" onclick="retry()">🔄 إعادة الاختبار</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================
+   DATA
+============================ */
+const DATA = [
+
+/* 0 — الفهم القرائي */
+{
+  title: 'الفهم القرائي',
+  sub: 'نص الرياضة • نص أمير البحار',
+  icon: '📖',
+  headCls: 'mh-1',
+  passage: `يُسْتَعْمَلُ لَفْظُ الرِّيَاضَةِ فِي التُّرَاثِ الإِسْلَامِيِّ فِي ثَلَاثَةِ أَنْوَاعٍ: رِيَاضَةُ الأَبْدَانِ، وَرِيَاضَةُ النُّفُوسِ، وَرِيَاضَةُ الأَذْهَانِ. فَأَمَّا رِيَاضَةُ الأَبْدَانِ فَإِنَّهَا جُزْءٌ حَيَوِيٌّ مِنْ حَيَاةِ الإِنْسَانِ، فَهِيَ لَيْسَتْ نَشَاطًا بَدَنِيًّا، بَلْ إِنَّهَا نَمَطُ حَيَاةٍ يُسْهِمُ فِي الصِّحَّةِ الْعَامَّةِ.`,
+  qs: [
+    {
+      q: 'ضِدُّ كَلِمَةِ (تَبَرَّأَ):',
+      opts: ['تَمْرَضُ','تَشْفَى','تَسَلَّمَ','تَتَعَافَى'],
+      a: 3
+    },
+    {
+      q: 'يُقْصَدُ بِعِبَارَةِ (بَلْ إِنَّهَا نَمَطُ حَيَاةٍ):',
+      opts: ['وَسِيلَةُ تَرْفِيهٍ','أُسْلُوبُ حَيَاةٍ','حَيَاةٌ خَاصَّةٌ','نِظَامٌ مُؤَقَّتٌ'],
+      a: 1
+    },
+    {
+      q: 'الْعُنْوَانُ الْمُنَاسِبُ لِمُحْتَوَى النَّصِّ:',
+      opts: ['تَزْوِيقُ النَّفْسِ','أَلْوَانُ الرِّيَاضَةِ','دُرُوبُ الْمَعْرِفَةِ','اللِّيَاقَةُ الْبَدَنِيَّةُ'],
+      a: 1
+    },
+    {
+      q: 'أَيٌّ مِنَ الْعِبَارَاتِ الآتِيَةِ تُمَثِّلُ رَأيًا وَلَيْسَ حَقِيقَةً؟',
+      opts: [
+        'الرِّيَاضَةُ تُنَشِّطُ الْقَلْبَ وَالْجِسْمَ',
+        'بَعْضُ الْعِلَلِ تَبَرَّأَ بِالرِّيَاضَةِ',
+        'لِلرِّيَاضَةِ الْبَدَنِيَّةِ أَنْوَاعٌ مُخْتَلِفَةٌ',
+        'رِيَاضَةُ الْبَدَنِ أَحَقُّ بِالْعِنَايَةِ'
+      ],
+      a: 3
+    },
+    {
+      q: 'فِيمَا يَأْتِي نَصَائِحُ لِلْمُحَافَظَةِ عَلَى صِحَّةِ الْجِسْمِ، عَدَا:',
+      opts: [
+        'الالْتِزَامُ بِمُمَارَسَةِ الرِّيَاضَةِ',
+        'تَنَاوُلُ وَجَبَاتٍ مُتَوَازِنَةٍ',
+        'تَرْكُ وَجْبَةِ الإِفْطَارِ',
+        'شُرْبُ الْمَاءِ بِكَمِّيَّةٍ كَافِيَةٍ'
+      ],
+      a: 2
+    },
+    {
+      q: 'وَأَنَّهُ الاشْتِغَالُ بِالْعُلُومِ... الضَّمِيرُ فِي (أَنَّهُ) يَعُودُ إِلَى:',
+      opts: ['الإِنْسَانِ السَّوِيِّ','الْمِيزَانِ الذِّهْنِيِّ','الْجِسْمِ الْقَوِيِّ','الْعُقُولِ الذَّكِيَّةِ'],
+      a: 1
+    },
+    {
+      q: 'مَا سَبَبُ تَعَلُّقِ ابْنِ مَاجِدٍ بِالْبَحْرِ مُنْذُ نُعُومَةِ أَظْفَارِهِ؟',
+      opts: [
+        'لِكَسْبِ الْمَالِ مِنَ الصَّيْدِ',
+        'لِأَنَّ أَبَاهُ وَجَدَّهُ كَانَا مَلَّاحَيْنِ',
+        'بِسَبَبِ حُبِّهِ لِلسَّفَرِ',
+        'بِسَبَبِ ضِيقِ الْعَيْشِ فِي بَرِّهِ'
+      ],
+      a: 1
+    },
+    {
+      q: 'بَعْضُ الأَشْخَاصِ يَتَعَصَّبُ بِشِدَّةٍ لِرِيَاضَةٍ، هَذَا التَّصَرُّفُ يُعَدُّ:',
+      opts: [
+        'حُبًّا وَانْتِمَاءً',
+        'حُرِّيَّةً شَخْصِيَّةً',
+        'تَهَوُّرًا وَمُبَالَغَةً',
+        'رُقِيًّا وَحَضَارَةً'
+      ],
+      a: 2
+    }
+  ]
+},
+
+/* 1 — الظاهرة الإملائية */
+{
+  title: 'الظاهرة الإملائية',
+  sub: 'تنوين الأسماء وحروف الجر',
+  icon: '✏️',
+  headCls: 'mh-2',
+  passage: null,
+  qs: [
+    {
+      q: 'الاسْمُ الْمَقْصُورُ هُوَ الاسْمُ الَّذِي يَنْتَهِي بِـ:',
+      opts: ['يَاءٍ مَكْسُورٍ مَا قَبْلَهَا','وَاوٍ مَضْمُومٍ مَا قَبْلَهَا','أَلِفٍ لَيِّنَةٍ فَتْحَتُهَا','هَمْزَةٍ مُتَطَرِّفَةٍ'],
+      a: 2
+    },
+    {
+      q: 'تَنْوِينُ الاسْمِ الْمَقْصُورِ يَلْزَمُ شَكْلًا وَاحِدًا هُوَ:',
+      opts: ['ضَمَّتَانِ','كَسْرَتَانِ','فَتْحَتَانِ قَبْلَ الأَلِفِ','تَنْوِينُ الرَّفْعِ فَقَطْ'],
+      a: 2
+    },
+    {
+      q: 'كَيْفَ يُنَوَّنُ الاسْمُ الْمَنْقُوصُ فِي حَالَةِ الرَّفْعِ وَالْجَرِّ؟',
+      opts: ['تَبْقَى الْيَاءُ وَتُضَافُ الضَّمَّةُ','تُحْذَفُ الْيَاءُ وَيُوضَعُ تَنْوِينٌ بِكَسْرَتَيْنِ','تُحْذَفُ الْيَاءُ وَيُوضَعُ تَنْوِينٌ بِضَمَّتَيْنِ','تَبْقَى الْيَاءُ دُونَ تَنْوِينٍ'],
+      a: 1
+    },
+    {
+      q: 'الاسْمُ الْمَمْدُودُ يُنَوَّنُ فِي حَالَةِ الرَّفْعِ بِـ:',
+      opts: ['ضَمَّتَيْنِ فَوْقَ الْهَمْزَةِ','كَسْرَتَيْنِ','فَتْحَتَيْنِ','ضَمَّتَيْنِ فَوْقَ الْهَمْزَةِ فِي الرَّفْعِ وَبِفَتْحَتَيْنِ فِي النَّصْبِ'],
+      a: 3
+    },
+    {
+      q: 'سَبَبُ كِتَابَةِ الأَلِفِ اللَّيِّنَةِ فِي كَلِمَةِ (مُسْتَشْفَى) عَلَى صُورَةِ الْيَاءِ:',
+      opts: [
+        'فَوْقَ الثُّلَاثِيِّ لَمْ تُسْبَقْ بِيَاءٍ',
+        'فَوْقَ الثُّلَاثِيِّ وَسُبِقَتْ بِيَاءٍ',
+        'ثُلَاثِيٌّ أَصْلُهَا وَاوٌ',
+        'ثُلَاثِيٌّ أَصْلُهَا يَاءٌ'
+      ],
+      a: 0
+    },
+    {
+      q: 'عِنْدَمَا تَتَّصِلُ حُرُوفُ الْجَرِّ (مِنْ وَعَنْ) بِـ(مَنْ) الاسْتِفْهَامِيَّةِ، تَصِيرُ:',
+      opts: ['مِنْ مَنْ وَعَنْ مَنْ','مِنَّ وَعَنَّ','مِمَّنْ وَعَمَّنْ','مِمَنْ وَعَمَنْ'],
+      a: 2
+    },
+    {
+      q: 'عِنْدَمَا يَتَّصِلُ حَرْفُ الْجَرِّ (مِنْ) بِـ(مَا) الاسْتِفْهَامِيَّةِ، يَصِيرُ:',
+      opts: ['مِنْ مَا','مِمَّا','مِمَا','مِنَّمَا'],
+      a: 1
+    },
+    {
+      q: 'تَأْخُذُ الْعُلُومَ ........... تَخَصَّصُوا فِي عُلُومِهِمْ — الْكَلِمَةُ الْمُنَاسِبَةُ هِيَ:',
+      opts: ['مِنْ مَنْ','مِمَّنْ','مِمَّا','مِمَّمَنْ'],
+      a: 1
+    }
+  ]
+},
+
+/* 2 — الوظيفة النحوية */
+{
+  title: 'الوظيفة النحوية',
+  sub: 'رفع الفعل المضارع • النصب والجزم',
+  icon: '🔤',
+  headCls: 'mh-3',
+  passage: null,
+  qs: [
+    {
+      q: 'يَجِبُ عَلَى الإِنْسَانِ أَنْ يَكُونَ مُتَعَاوِنًا. الْفِعْلُ (يَكُونَ) فِعْلٌ مُضَارِعٌ:',
+      opts: ['مَرْفُوعٌ','مَنْصُوبٌ','مَجْزُومٌ','مَجْرُورٌ'],
+      a: 1
+    },
+    {
+      q: 'تَعَلَّمُوا الإِمْلَاءَ كَيْ تُجِيدُوا الْكِتَابَةَ. الْفِعْلُ (تُجِيدُوا) فِعْلٌ مُضَارِعٌ:',
+      opts: ['مَرْفُوعٌ','مَنْصُوبٌ','مَجْزُومٌ','مَجْرُورٌ'],
+      a: 1
+    },
+    {
+      q: 'مَطْلَعُ الشَّمْسِ السَّاعَةَ السَّادِسَةَ. كَلِمَةُ (مَطْلَع):',
+      opts: ['اسْمُ مَكَانٍ','اسْمُ زَمَانٍ','ظَرْفُ مَكَانٍ','ظَرْفُ زَمَانٍ'],
+      a: 1
+    },
+    {
+      q: 'مِنْ حُرُوفِ نَصْبِ الْفِعْلِ الْمُضَارِعِ:',
+      opts: ['لَا','فِي','لَنْ','عَنْ'],
+      a: 2
+    },
+    {
+      q: 'يَجِبُ عَلَى الْمُسْلِمِينَ أَنْ يَتَعَاوَنُوا عَلَى الْخَيْرِ. الْفِعْلُ (يَتَعَاوَنُوا) فِعْلٌ مَنْصُوبٌ وَعَلَامَةُ نَصْبِهِ:',
+      opts: ['الْفَتْحَةُ الظَّاهِرَةُ','الْفَتْحَةُ الْمُقَدَّرَةُ','ثُبُوتُ النُّونِ','حَذْفُ النُّونِ'],
+      a: 3
+    },
+    {
+      q: 'أَوْصَى اللَّهُ فِي كِتَابِهِ الْعَزِيزِ إِلَى الْوَالِدَيْنِ. مَا تَحْتَهُ خَطٌّ مَصْدَرٌ:',
+      opts: ['رُبَاعِيٌّ','خُمَاسِيٌّ','قِيَاسِيٌّ','الأُولَى وَالثَّانِيَةُ'],
+      a: 2
+    },
+    {
+      q: 'الدَّوْلَةُ لَمْ تُقَصِّرْ أَبَدًا فِي رِعَايَةِ الْمُسِنِّينَ. الْفِعْلُ (تُقَصِّرْ):',
+      opts: ['مَرْفُوعٌ','مَنْصُوبٌ','مَجْزُومٌ وَعَلَامَتُهُ السُّكُونُ','مَجْزُومٌ وَعَلَامَتُهُ حَذْفُ حَرْفِ الْعِلَّةِ'],
+      a: 2
+    },
+    {
+      q: 'ابْتَسِمْ كَيْ تَزِيدَ مَحَبَّتَكَ عِنْدَ النَّاسِ. أَدَاةُ نَصْبِ الْفِعْلِ الْمُضَارِعِ فِي هَذِهِ الْجُمْلَةِ هِيَ:',
+      opts: ['كَيْ','ابْتَسِمْ','تَزِيدَ','مَحَبَّتَكَ'],
+      a: 0
+    }
+  ]
+},
+
+/* 3 — الصنف اللغوي */
+{
+  title: 'الصنف اللغوي',
+  sub: 'المصادر الصريحة والقياسية',
+  icon: '📝',
+  headCls: 'mh-4',
+  passage: null,
+  qs: [
+    {
+      q: 'الرُّجُوعُ عَنِ السُّكُوتِ أَحْسَنُ مِنَ الرُّجُوعِ عَنِ الْكَلَامِ. الْمَصْدَرُ السَّمَاعِيُّ فِي الْجُمْلَةِ:',
+      opts: ['الرُّجُوعُ','السُّكُوتُ','الْكَلَامُ','كُلُّ مَا سَبَقَ'],
+      a: 3
+    },
+    {
+      q: 'الإِعْطَاءُ بَعْدَ الْمَنْعِ خَيْرٌ مِنَ الْمَنْعِ بَعْدَ الإِعْطَاءِ. الْمَصْدَرُ السَّمَاعِيُّ فِي الْجُمْلَةِ:',
+      opts: ['الإِعْطَاءُ','الْمَنْعُ','خَيْرٌ','الأُولَى وَالثَّانِيَةُ'],
+      a: 3
+    },
+    {
+      q: 'الإِعْطَاءُ بَعْدَ الْمَنْعِ خَيْرٌ مِنَ الْمَنْعِ بَعْدَ الإِعْطَاءِ. الْمَصْدَرُ الْقِيَاسِيُّ فِي الْجُمْلَةِ:',
+      opts: ['الْمَنْعُ','الإِعْطَاءُ','خَيْرٌ','كُلُّ مَا سَبَقَ'],
+      a: 1
+    },
+    {
+      q: '(مُرَاقَبَةٌ) مَصْدَرٌ:',
+      opts: ['ثُلَاثِيٌّ','رُبَاعِيٌّ','خُمَاسِيٌّ','سُدَاسِيٌّ'],
+      a: 1
+    },
+    {
+      q: '(اسْتِمْرَازٌ) مَصْدَرٌ:',
+      opts: ['ثُلَاثِيٌّ','رُبَاعِيٌّ','خُمَاسِيٌّ','سُدَاسِيٌّ'],
+      a: 3
+    },
+    {
+      q: 'الْمَصْدَرُ مِنَ الْفِعْلِ (زَادَ) هُوَ:',
+      opts: ['زِيَادَةٌ','اسْتِزَادَةٌ','أَزْيَادٌ','كُلُّ مَا سَبَقَ'],
+      a: 0
+    },
+    {
+      q: 'الْوَالِدَانِ لَمْ يَدَّخِرَا وُسْعًا فِي تَأْدِيَةِ وَاجِبِهِمَا. مَا تَحْتَهُ خَطٌّ مَصْدَرٌ:',
+      opts: ['ثُلَاثِيٌّ','رُبَاعِيٌّ','ثُلَاثِيٌّ وَثُلَاثِيٌّ','خُمَاسِيٌّ'],
+      a: 3
+    },
+    {
+      q: 'جَاهَدَ الْوَالِدَانِ جِهَادًا مَرِيرًا لإِسْعَادِنَا وَالْمُحَافَظَةِ عَلَيْنَا. الْمَصْدَرُ الرُّبَاعِيُّ فِي الْجُمْلَةِ:',
+      opts: ['جِهَادًا','إِسْعَادِنَا','الْمُحَافَظَةِ','الأُولَى وَالثَّانِيَةُ'],
+      a: 1
+    }
+  ]
+}
+
+];
+
+/* ============================
+   STATE
+============================ */
+let exam=-1, curQ=0, ans=[], doneMap=[0,0,0,0], corrMap=[0,0,0,0], starMap=[0,0,0,0];
+
+function updScores(){
+  document.getElementById('totStars').textContent   = starMap.reduce((a,b)=>a+b,0);
+  document.getElementById('totCorrect').textContent = corrMap.reduce((a,b)=>a+b,0);
+  document.getElementById('totDone').textContent    = doneMap.filter(Boolean).length;
+}
+
+/* ============================
+   OPEN
+============================ */
+function open0(idx){
+  exam=idx; curQ=0;
+  ans = new Array(DATA[idx].qs.length).fill(null);
+  const d = DATA[idx];
+
+  // head
+  const mh = document.getElementById('mHead');
+  mh.className = 'modal-head '+d.headCls;
+  document.getElementById('mIcon').textContent  = d.icon;
+  document.getElementById('mTitle').textContent = d.title;
+  document.getElementById('mSub').textContent   = d.sub;
+
+  // build body
+  buildBody(idx);
+  showQ(0);
+
+  document.getElementById('resScr').classList.remove('show');
+  document.getElementById('mBody').style.display='';
+  document.getElementById('mNav').style.display='';
+  document.getElementById('m-prog-wrap-ref')?.remove();
+  document.querySelector('.m-prog-wrap').style.display='';
+
+  document.getElementById('ov').classList.add('open');
+}
+
+function buildBody(idx){
+  const d = DATA[idx];
+  const body = document.getElementById('mBody');
+  body.innerHTML='';
+
+  if(d.passage){
+    const pb = document.createElement('div');
+    pb.className='passage'; pb.innerHTML = d.passage;
+    body.appendChild(pb);
+  }
+
+  const lets=['أ','ب','ج','د'];
+  d.qs.forEach((q,qi)=>{
+    const blk = document.createElement('div');
+    blk.className='qblock'; blk.id=`qb${qi}`;
+    blk.innerHTML = `
+      <div class="qtxt">السؤال ${qi+1}: ${q.q}</div>
+      <div class="opts">
+        ${q.opts.map((o,oi)=>`
+          <button class="opt" id="o${qi}_${oi}" onclick="pick(${qi},${oi})">
+            <span class="opt-dot">${lets[oi]}</span>
+            <span>${o}</span>
+          </button>
+        `).join('')}
+      </div>`;
+    body.appendChild(blk);
+  });
+}
+
+function showQ(qi){
+  const d = DATA[exam];
+  d.qs.forEach((_,i)=> document.getElementById(`qb${i}`)?.classList.remove('show'));
+  document.getElementById(`qb${qi}`)?.classList.add('show');
+
+  const tot = d.qs.length;
+  const done = ans.filter(a=>a!==null).length;
+  document.getElementById('progTxt').textContent = `${done} / ${tot} تمت الإجابة`;
+  document.getElementById('progFill').style.width = `${done/tot*100}%`;
+  document.getElementById('qNum').textContent = `${qi+1} / ${tot}`;
+  document.getElementById('qInfo').textContent = `${qi+1} من ${tot}`;
+
+  document.getElementById('bPrev').disabled = qi===0;
+  document.getElementById('bNext').textContent = qi===tot-1 ? 'إنهاء ✓' : 'التالي ←';
+}
+
+function pick(qi,oi){
+  if(ans[qi]!==null) return;
+  ans[qi]=oi;
+  const correct = DATA[exam].qs[qi].a;
+
+  DATA[exam].qs[qi].opts.forEach((_,i)=>{
+    const b = document.getElementById(`o${qi}_${i}`);
+    b.disabled=true;
+    if(i===correct) b.classList.add('correct');
+    else if(i===oi && oi!==correct) b.classList.add('wrong');
+  });
+
+  toast(oi===correct ? 'يا سلام! 🌟 أحسنت' : 'حظ أوفر! 💪 حاول مجدداً', oi===correct?'ok':'err');
+
+  const tot=DATA[exam].qs.length, done=ans.filter(a=>a!==null).length;
+  document.getElementById('progTxt').textContent=`${done} / ${tot} تمت الإجابة`;
+  document.getElementById('progFill').style.width=`${done/tot*100}%`;
+}
+
+function go(dir){
+  const tot=DATA[exam].qs.length;
+  if(dir===1 && curQ===tot-1){ showResult(); return; }
+  curQ = Math.max(0, Math.min(tot-1, curQ+dir));
+  showQ(curQ);
+}
+
+function showResult(){
+  const d=DATA[exam], tot=d.qs.length;
+  let corr=0;
+  ans.forEach((a,i)=>{ if(a!==null && a===d.qs[i].a) corr++; });
+
+  const pct = corr/tot*100;
+  let stars = pct>=90?5:pct>=75?4:pct>=60?3:pct>=40?2:1;
+
+  starMap[exam]=stars; corrMap[exam]=corr; doneMap[exam]=true;
+  updScores();
+
+  const card=document.getElementById(`c${exam}`);
+  card.classList.add('done');
+
+  document.getElementById('mBody').style.display='none';
+  document.getElementById('mNav').style.display='none';
+  document.querySelector('.m-prog-wrap').style.display='none';
+
+  const rs = document.getElementById('resScr');
+  rs.classList.add('show');
+
+  document.getElementById('rIcon').textContent   = pct>=80?'🏆':pct>=60?'🥈':'🎯';
+  document.getElementById('rScore').textContent  = `${corr} / ${tot}`;
+  document.getElementById('rPct').textContent    = `نسبة النجاح: ${Math.round(pct)}%`;
+  document.getElementById('rStars').textContent  = '⭐'.repeat(stars)+'☆'.repeat(5-stars);
+  document.getElementById('rMsg').textContent    =
+    pct>=90?'🌟 رائع! أداء متميز يا بطل':
+    pct>=75?'👍 جيد جداً! أنت في الطريق الصحيح':
+    pct>=60?'✊ جيد! راجع أخطاءك وستتحسن':
+    '💪 لا تيأس! المراجعة مفتاح النجاح';
+}
+
+function retry(){
+  const idx=exam;
+  closeM();
+  setTimeout(()=>open0(idx),300);
+}
+
+function toast(msg,type){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className='toast show '+type;
+  clearTimeout(t._timer);
+  t._timer=setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function closeM(){ document.getElementById('ov').classList.remove('open'); }
+function closeOv(e){ if(e.target===document.getElementById('ov')) closeM(); }
+
+updScores();
+</script>
+</body>
+</html>

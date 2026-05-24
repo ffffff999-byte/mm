@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>منصة اختبارات لغتي التفاعلية</title>
+<style>
+:root {
+  --bg1:#062b1f; --bg2:#0a6b45; --gold:#f4c95d; --green:#18a058;
+  --mint:#eaf8ef; --ink:#102018; --card:#ffffff; --red:#e44d4d; --blue:#1c7ed6;
+  --shadow:0 18px 45px rgba(0,0,0,.18);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:"Tahoma","Arial",sans-serif;
+  background:radial-gradient(circle at 10% 10%, rgba(244,201,93,.25), transparent 28%),
+  radial-gradient(circle at 90% 20%, rgba(255,255,255,.16), transparent 20%),
+  linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:var(--ink);min-height:100vh;
+}
+.hero{color:#fff;padding:28px 18px 18px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;inset:auto -80px -120px auto;width:300px;height:300px;background:rgba(244,201,93,.17);border-radius:50%}
+.wrap{max-width:1180px;margin:0 auto;position:relative;z-index:1}
+.brand{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-badge{width:66px;height:66px;border-radius:22px;background:linear-gradient(135deg,#fff,#e8f8ee);display:grid;place-items:center;font-size:34px;color:var(--green);box-shadow:var(--shadow)}
+h1{margin:0;font-size:clamp(24px,4vw,42px);line-height:1.25}
+.sub{margin:10px 0 0;color:#e9fff1;font-size:16px;max-width:760px;line-height:1.8}
+.top-actions{display:flex;gap:10px;flex-wrap:wrap}
+button,.btn{border:0;cursor:pointer;border-radius:16px;padding:12px 18px;font-weight:700;background:var(--gold);color:#3a2b00;box-shadow:0 10px 20px rgba(0,0,0,.14);transition:.2s transform,.2s box-shadow,.2s background;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+button:hover,.btn:hover{transform:translateY(-2px);box-shadow:0 14px 26px rgba(0,0,0,.18)}
+.btn.secondary{background:#fff;color:#10422d}
+.panel{margin-top:20px;background:rgba(255,255,255,.94);border:1px solid rgba(255,255,255,.35);border-radius:28px;padding:18px;box-shadow:var(--shadow)}
+.settings{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;align-items:end}
+.field label{display:block;font-weight:800;margin-bottom:6px;color:#154832}
+.field input,.field select{width:100%;border:1px solid #cfe7d9;border-radius:14px;padding:12px 14px;font-size:15px;outline:none;background:#fbfffd}
+.credit{margin-top:14px;padding:12px 14px;border-radius:16px;background:linear-gradient(90deg,#eaf8ef,#fff7dc);border:1px dashed #d9b64e;font-weight:800;color:#174932}
+.credit a{color:#0969a8;text-decoration:none}
+.grid{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:18px}
+.sidebar{background:#fff;border-radius:24px;padding:16px;box-shadow:var(--shadow);align-self:start;position:sticky;top:14px}
+.side-title{font-weight:900;margin-bottom:10px;color:#0d5a39}
+.exam-list{display:grid;gap:10px}
+.exam-card{width:100%;text-align:right;background:#f3fbf6;color:#174932;border:1px solid #d7ecdf;box-shadow:none;justify-content:flex-start;border-radius:18px}
+.exam-card.active{background:linear-gradient(135deg,#0c7b4c,#15aa63);color:#fff}
+.content{background:#fff;border-radius:28px;padding:18px;box-shadow:var(--shadow);min-height:560px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.stat{background:linear-gradient(135deg,#f6fff9,#fff);border:1px solid #dcefe4;border-radius:18px;padding:12px;text-align:center}
+.stat b{display:block;font-size:24px;color:#0e6d43}
+.question-box{border:1px solid #e0efe6;border-radius:24px;padding:18px;background:#fbfffd}
+.q-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tag{background:#eaf8ef;color:#0d6b42;border-radius:999px;padding:8px 12px;font-weight:800;font-size:13px}
+.q-title{font-size:22px;font-weight:900;line-height:1.8;margin:16px 0;color:#102018}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.choice{background:#fff;border:2px solid #dfeee5;color:#123b2a;box-shadow:none;justify-content:flex-start;text-align:right;min-height:58px;font-size:16px}
+.choice.correct{background:#e9fff0;border-color:#18a058;color:#086236}
+.choice.wrong{background:#fff0f0;border-color:#e44d4d;color:#9d2020}
+.choice:disabled{cursor:default;opacity:1}
+.nav{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:16px;flex-wrap:wrap}
+.progress{height:12px;background:#e6f1ea;border-radius:999px;overflow:hidden;flex:1;min-width:180px}
+.bar{height:100%;width:0;background:linear-gradient(90deg,#13a05f,#f4c95d);transition:.3s}
+.toast{position:fixed;top:22px;left:50%;transform:translateX(-50%) translateY(-120px);z-index:99;min-width:min(460px,90vw);text-align:center;padding:18px 22px;border-radius:22px;font-size:24px;font-weight:900;color:#fff;box-shadow:var(--shadow);transition:.35s ease;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.good{background:linear-gradient(135deg,#08914f,#25c96f)}
+.toast.bad{background:linear-gradient(135deg,#c93d3d,#ff7676)}
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:90}
+.confetti span{position:absolute;top:-20px;font-size:24px;animation:fall 1.25s linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg);opacity:.1}}
+.result{display:none;text-align:center;padding:28px;border-radius:24px;background:linear-gradient(135deg,#f0fff5,#fff8df);border:1px solid #e8d38c}
+.result h2{font-size:34px;margin:6px 0;color:#0b6e43}
+.cup{font-size:72px;filter:drop-shadow(0 10px 12px rgba(0,0,0,.18))}
+.print-note{font-size:13px;color:#456;margin-top:8px;line-height:1.7}
+.backtop{position:fixed;bottom:18px;left:18px;z-index:50;border-radius:50%;width:54px;height:54px;padding:0;display:grid;place-items:center;background:#fff;color:#0b6e43;border:2px solid #dfeee5}
+@media(max-width:900px){.settings{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.sidebar{position:static}.stats{grid-template-columns:1fr 1fr}.choices{grid-template-columns:1fr}}
+@media print{body{background:#fff}.hero,.sidebar,.nav,.backtop,.top-actions,.settings{display:none!important}.grid{display:block}.content{box-shadow:none;border:0}.panel{box-shadow:none;border:0}}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="confetti" id="confetti"></div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">
+        <div class="logo-badge">📚</div>
+        <div>
+          <h1>منصة اختبارات لغتي التفاعلية</h1>
+          
+        </div>
+      </div>
+      <div class="top-actions">
+        <button onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+        <button class="btn secondary" onclick="resetAll()">🔄 إعادة كاملة</button>
+      </div>
+    </div>
+
+    <section class="panel" id="settings">
+      <div class="settings">
+        <div class="field"><label>اسم الطالب/ـة</label><input id="studentName" placeholder="اكتب الاسم هنا"></div>
+        <div class="field"><label>اسم المدرسة</label><input id="schoolName" placeholder="اكتب اسم المدرسة"></div>
+        <div class="field"><label>نمط المكافأة</label><select id="rewardMode"><option value="mix">نجمة وكأس</option><option value="star">نجمة ⭐</option><option value="cup">كأس 🏆</option></select></div>
+        <div class="field"><label>الصوت</label><select id="soundMode"><option value="on">تشغيل</option><option value="off">إيقاف</option></select></div>
+      </div>
+      <div class="credit">تصميم د/فواز &nbsp;|&nbsp; <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد هنا https://t.me/TAqhjT3MFVE1Yzk0</a></div>
+    </section>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="grid">
+    <aside class="sidebar">
+      <div class="side-title">📂 الملفات والاختبارات</div>
+      <div id="examList" class="exam-list"></div>
+      <p class="print-note">كل أيقونة تمثل اختبارًا مستقلًا. الإجابات تُخلط تلقائيًا عند تحميل الصفحة وعند إعادة الاختبار.</p>
+    </aside>
+    <section class="content">
+      <div class="stats">
+        <div class="stat"><span>الاختبار</span><b id="examName">—</b></div>
+        <div class="stat"><span>السؤال</span><b id="counter">0/0</b></div>
+        <div class="stat"><span>الصحيح</span><b id="score">0</b></div>
+        <div class="stat"><span>المكافآت</span><b id="rewards">0</b></div>
+      </div>
+      <div id="quizArea">
+        <div class="question-box">
+          <div class="q-head"><span class="tag" id="skillTag">المهارة</span><span class="tag" id="studentTag">أهلاً بالبطل الذكي</span></div>
+          <div class="q-title" id="questionText"></div>
+          <div class="choices" id="choices"></div>
+          <div class="nav">
+            <button onclick="prevQuestion()">السابق</button>
+            <div class="progress"><div class="bar" id="bar"></div></div>
+            <button onclick="nextQuestion()" id="nextBtn">التالي</button>
+          </div>
+        </div>
+      </div>
+      <div class="result" id="resultBox">
+        <div class="cup" id="finalIcon">🏆</div>
+        <h2 id="resultTitle">أحسنت!</h2>
+        <p id="resultText"></p>
+        <button onclick="restartExam()">إعادة الاختبار</button>
+      </div>
+    </section>
+  </section>
+</main>
+
+<button class="backtop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const allQuestions = [{"exam": "مراجعة المكتسبات السابقة", "icon": "📘", "title": "أنواع الكلمة", "q": "تنقسم الكلمة في اللغة العربية إلى:", "choices": ["اسم وفعل وحرف", "مبتدأ وخبر فقط", "فاعل ومفعول فقط", "حرف واسم فقط"], "answer": "اسم وفعل وحرف", "skill": "أنواع الكلمة"}, {"exam": "مراجعة المكتسبات السابقة", "icon": "📘", "title": "علامات الاسم", "q": "أيّ علامة من العلامات الآتية تدل على الاسم؟", "choices": ["دخول (الـ)", "اتصاله بتاء الفاعل", "دخوله بعد لم", "قبوله الجزم"], "answer": "دخول (الـ)", "skill": "علامات الاسم"}, {"exam": "مراجعة المكتسبات السابقة", "icon": "📘", "title": "دلالات الاسم", "q": "كلمة «مدرسة» تدل على:", "choices": ["مكان", "زمان", "طائر", "حرف"], "answer": "مكان", "skill": "دلالات الاسم"}, {"exam": "مراجعة المكتسبات السابقة", "icon": "📘", "title": "الحرف", "q": "الحرف هو ما:", "choices": ["لا يظهر معناه منفردًا ويتضح مع غيره", "يدل على حدث وزمن", "يدل على إنسان أو مكان", "يقبل التنوين دائمًا"], "answer": "لا يظهر معناه منفردًا ويتضح مع غيره", "skill": "الحرف"}, {"exam": "القواعد الإملائية", "icon": "✍️", "title": "المقاطع الصوتية", "q": "التحليل الصوتي الصحيح لكلمة «كَتَبَ» هو:", "choices": ["كَـ / تَـ / بَ", "كَا / تَبْ", "كَتْ / بَ", "كـ / تَبَا"], "answer": "كَـ / تَـ / بَ", "skill": "المقاطع الصوتية"}, {"exam": "القواعد الإملائية", "icon": "✍️", "title": "المقاطع الصوتية", "q": "عند تحليل الحرف المشدد صوتيًا فإنه يُفك إلى:", "choices": ["حرفين: الأول ساكن والثاني متحرك", "حرف واحد فقط", "مدّ طويل فقط", "تنوين فقط"], "answer": "حرفين: الأول ساكن والثاني متحرك", "skill": "الشدة"}, {"exam": "القسم", "icon": "🕌", "title": "القسم", "q": "القَسَم هو:", "choices": ["وعد مؤكد يقوله الإنسان ليظهر صدقه", "سؤال عن شيء مجهول", "نفي حدوث الفعل", "طلب فعل من المخاطب"], "answer": "وعد مؤكد يقوله الإنسان ليظهر صدقه", "skill": "القسم"}, {"exam": "القسم", "icon": "🕌", "title": "القسم بلفظ الجلالة", "q": "متى نستخدم «والله»؟", "choices": ["عندما نؤكد أننا نقول الحقيقة", "في المزاح واللعب دائمًا", "دون سبب", "لإخفاء الحقيقة"], "answer": "عندما نؤكد أننا نقول الحقيقة", "skill": "القسم"}, {"exam": "اختبار الفترة الأولى", "icon": "🏆", "title": "الفهم القرائي", "q": "في النص: «الأخلاق تاج زينة الإنسان»؛ مرادف كلمة «تاج» هو:", "choices": ["زينة", "نور", "عطاء", "عمل"], "answer": "زينة", "skill": "مفردات"}, {"exam": "اختبار الفترة الأولى", "icon": "🏆", "title": "الأفعال", "q": "كلمة «يحترم» تُصنّف من حيث النوع على أنها:", "choices": ["فعل مضارع", "فعل ماضٍ", "فعل أمر", "اسم مفرد"], "answer": "فعل مضارع", "skill": "تصنيف الكلمة"}, {"exam": "اختبار الفترة الأولى", "icon": "🏆", "title": "الفهم القرائي", "q": "بحسب النص، أساس ترابط المجتمع هو:", "choices": ["الأخلاق الحميدة", "اللعب", "الغضب", "إضاعة الوقت"], "answer": "الأخلاق الحميدة", "skill": "فهم مقروء"}, {"exam": "اختبار الفترة الأولى", "icon": "🏆", "title": "المضاد", "q": "مضاد كلمة «متماسك» هو:", "choices": ["متفرق", "قوي", "قصير", "جميل"], "answer": "متفرق", "skill": "أضداد"}, {"exam": "الاختبار المركزي", "icon": "⭐", "title": "اسم التفضيل", "q": "الكلمة التي تدل على التفضيل في جملة «المدينة أكبر من القرية» هي:", "choices": ["أكبر", "المدينة", "من", "القرية"], "answer": "أكبر", "skill": "اسم التفضيل"}, {"exam": "الاختبار المركزي", "icon": "⭐", "title": "المعرفة والنكرة", "q": "عند إضافة (الـ) إلى كلمة «ساحة» تصبح:", "choices": ["الساحة", "ساحتي", "ساحات", "ساحةٌ"], "answer": "الساحة", "skill": "المعرفة"}, {"exam": "الاختبار المركزي", "icon": "⭐", "title": "التحويل", "q": "الفعل الماضي «رتّب» عند تحويله إلى مضارع يصبح:", "choices": ["يرتّب", "رتّبْ", "ترتيب", "مرتّب"], "answer": "يرتّب", "skill": "الأفعال"}, {"exam": "الاختبار المركزي", "icon": "⭐", "title": "الإملاء", "q": "كلمة «المنصّات» تحتوي على:", "choices": ["حرف مضعف", "تنوين كسر", "تاء مفتوحة فقط", "همزة قطع في آخرها"], "answer": "حرف مضعف", "skill": "الحرف المضعف"}];
+
+let exams = [];
+let currentExam = "";
+let quiz = [];
+let index = 0;
+let score = 0;
+let rewards = 0;
+let answered = {};
+
+function groupExams(){
+  const map = new Map();
+  allQuestions.forEach(q => {
+    if(!map.has(q.exam)) map.set(q.exam, []);
+    map.get(q.exam).push(q);
+  });
+  exams = Array.from(map.entries()).map(([name, qs]) => ({name, icon:qs[0].icon, qs}));
+}
+function shuffle(arr){
+  const a = [...arr];
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+function renderExamList(){
+  const box = document.getElementById("examList");
+  box.innerHTML = "";
+  exams.forEach(ex => {
+    const btn = document.createElement("button");
+    btn.className = "exam-card" + (ex.name===currentExam ? " active" : "");
+    btn.innerHTML = `<span style="font-size:24px">${ex.icon}</span> <span>${ex.name}<br><small>${ex.qs.length} أسئلة</small></span>`;
+    btn.onclick = () => startExam(ex.name);
+    box.appendChild(btn);
+  });
+}
+function startExam(name){
+  currentExam = name;
+  const ex = exams.find(e=>e.name===name);
+  quiz = shuffle(ex.qs).map(q => ({...q, choices: shuffle(q.choices)}));
+  index = 0; score = 0; rewards = 0; answered = {};
+  document.getElementById("resultBox").style.display = "none";
+  document.getElementById("quizArea").style.display = "block";
+  renderExamList();
+  renderQuestion();
+}
+function renderQuestion(){
+  const q = quiz[index];
+  document.getElementById("examName").textContent = currentExam.replace("اختبار ","");
+  document.getElementById("counter").textContent = `${index+1}/${quiz.length}`;
+  document.getElementById("score").textContent = score;
+  document.getElementById("rewards").textContent = rewards;
+  document.getElementById("skillTag").textContent = "المهارة: " + q.skill;
+  const name = document.getElementById("studentName").value.trim();
+  document.getElementById("studentTag").textContent = name ? "يا " + name + " شد حيلك 🌟" : "أهلاً بالبطل الذكي 🌟";
+  document.getElementById("questionText").textContent = q.q;
+  document.getElementById("bar").style.width = `${((index+1)/quiz.length)*100}%`;
+  const choices = document.getElementById("choices");
+  choices.innerHTML = "";
+  q.choices.forEach(ch => {
+    const b = document.createElement("button");
+    b.className = "choice";
+    b.textContent = ch;
+    b.onclick = () => chooseAnswer(ch, b);
+    if(answered[index]){
+      b.disabled = true;
+      if(ch === q.answer) b.classList.add("correct");
+      if(ch === answered[index].choice && !answered[index].correct) b.classList.add("wrong");
+    }
+    choices.appendChild(b);
+  });
+}
+function chooseAnswer(choice, btn){
+  if(answered[index]) return;
+  const q = quiz[index];
+  const correct = choice === q.answer;
+  answered[index] = {choice, correct};
+  if(correct){
+    score++; rewards++;
+    showToast("ياسلام " + rewardIcon() + " إجابة صحيحة", true);
+    celebrate(); beep(true);
+  } else {
+    showToast("حظ أوفر 💡 الإجابة الصحيحة: " + q.answer, false);
+    beep(false);
+  }
+  document.querySelectorAll(".choice").forEach(b=>{
+    b.disabled = true;
+    if(b.textContent === q.answer) b.classList.add("correct");
+    if(b.textContent === choice && !correct) b.classList.add("wrong");
+  });
+  document.getElementById("score").textContent = score;
+  document.getElementById("rewards").textContent = rewards;
+}
+function rewardIcon(){
+  const mode = document.getElementById("rewardMode").value;
+  if(mode==="star") return "⭐";
+  if(mode==="cup") return "🏆";
+  return Math.random()>.5 ? "⭐" : "🏆";
+}
+function showToast(msg, good){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = "toast show " + (good ? "good" : "bad");
+  setTimeout(()=> t.className = "toast " + (good ? "good" : "bad"), 1700);
+}
+function celebrate(){
+  const c = document.getElementById("confetti");
+  const icons = ["⭐","🏆","✨","🎉","🌟"];
+  for(let i=0;i<28;i++){
+    const s = document.createElement("span");
+    s.textContent = icons[Math.floor(Math.random()*icons.length)];
+    s.style.left = Math.random()*100 + "vw";
+    s.style.animationDelay = (Math.random()*.25)+"s";
+    s.style.fontSize = (18+Math.random()*22)+"px";
+    c.appendChild(s);
+    setTimeout(()=>s.remove(),1500);
+  }
+}
+function beep(good){
+  if(document.getElementById("soundMode").value==="off") return;
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.frequency.value = good ? 740 : 220;
+    gain.gain.setValueAtTime(.0001, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(.18, ctx.currentTime+.02);
+    gain.gain.exponentialRampToValueAtTime(.0001, ctx.currentTime+.22);
+    osc.start(); osc.stop(ctx.currentTime+.25);
+  } catch(e){}
+}
+function nextQuestion(){ if(index < quiz.length-1){ index++; renderQuestion(); } else finishExam(); }
+function prevQuestion(){ if(index>0){ index--; renderQuestion(); } }
+function finishExam(){
+  document.getElementById("quizArea").style.display = "none";
+  const box = document.getElementById("resultBox");
+  box.style.display = "block";
+  const pct = Math.round((score/quiz.length)*100);
+  document.getElementById("finalIcon").textContent = pct>=80 ? "🏆" : pct>=50 ? "⭐" : "💪";
+  document.getElementById("resultTitle").textContent = pct>=80 ? "بطل لغتي!" : pct>=50 ? "تقدم جميل" : "نحتاج تدريب أكثر";
+  const name = document.getElementById("studentName").value.trim() || "الطالب/ـة";
+  const school = document.getElementById("schoolName").value.trim();
+  document.getElementById("resultText").innerHTML = `${name} حصل على <b>${score}</b> من <b>${quiz.length}</b> في اختبار <b>${currentExam}</b> بنسبة <b>${pct}%</b>. ${school ? "<br>المدرسة: <b>"+school+"</b>" : ""}`;
+}
+function restartExam(){ startExam(currentExam); }
+function resetAll(){
+  localStorage.removeItem("quiz-platform-settings");
+  document.getElementById("studentName").value="";
+  document.getElementById("schoolName").value="";
+  startExam(exams[0].name);
+}
+function saveSettings(){
+  const data = {
+    studentName:document.getElementById("studentName").value,
+    schoolName:document.getElementById("schoolName").value,
+    rewardMode:document.getElementById("rewardMode").value,
+    soundMode:document.getElementById("soundMode").value
+  };
+  localStorage.setItem("quiz-platform-settings", JSON.stringify(data));
+}
+function loadSettings(){
+  try {
+    const data = JSON.parse(localStorage.getItem("quiz-platform-settings")||"{}");
+    Object.keys(data).forEach(k=>{ if(document.getElementById(k)) document.getElementById(k).value=data[k]; });
+  } catch(e){}
+}
+window.addEventListener("DOMContentLoaded", () => {
+  groupExams();
+  loadSettings();
+  ["studentName","schoolName","rewardMode","soundMode"].forEach(id=>{
+    const el = document.getElementById(id);
+    el.addEventListener("input",()=>{saveSettings(); if(quiz.length) renderQuestion();});
+    el.addEventListener("change",saveSettings);
+  });
+  startExam(exams[0].name);
+});
+</script>
+</body>
+</html>

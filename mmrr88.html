@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة لغتي الخالدة - ثالث متوسط</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #D4AF37;
+    --gold-light: #F0D060;
+    --green-dark: #1a5c2a;
+    --green-mid: #2e7d32;
+    --green-light: #4CAF50;
+    --cream: #fdf6e3;
+    --white: #ffffff;
+    --red: #c62828;
+    --shadow: 0 8px 32px rgba(0,0,0,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #0d2b14 0%, #1a5c2a 40%, #0d2b14 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ========== STARS BACKGROUND ========== */
+  .stars {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    background: var(--gold-light);
+    border-radius: 50%;
+    animation: twinkle 3s infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0.2; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.4); }
+  }
+
+  /* ========== MAIN CONTAINER ========== */
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  /* ========== HEADER ========== */
+  .header {
+    text-align: center;
+    padding: 40px 20px 30px;
+    animation: slideDown 0.8s ease;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-40px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light), var(--gold));
+    color: var(--green-dark);
+    font-size: 13px;
+    font-weight: 900;
+    padding: 6px 24px;
+    border-radius: 30px;
+    margin-bottom: 16px;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 14px rgba(212,175,55,0.5);
+  }
+
+  .header h1 {
+    font-family: 'Amiri', serif;
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    color: var(--gold-light);
+    text-shadow: 0 0 30px rgba(212,175,55,0.6), 2px 2px 6px rgba(0,0,0,0.5);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .header h2 {
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    color: rgba(255,255,255,0.85);
+    font-weight: 400;
+    margin-bottom: 6px;
+  }
+
+  .header-divider {
+    width: 120px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 16px auto;
+    border-radius: 2px;
+  }
+
+  /* ========== SCORE BOARD ========== */
+  .scoreboard {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 20px 0 30px;
+    animation: fadeIn 1s ease 0.3s both;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .score-card {
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(212,175,55,0.3);
+    border-radius: 16px;
+    padding: 14px 28px;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    min-width: 110px;
+  }
+  .score-card .sc-icon { font-size: 1.6rem; margin-bottom: 4px; }
+  .score-card .sc-val {
+    font-size: 1.9rem;
+    font-weight: 900;
+    color: var(--gold-light);
+  }
+  .score-card .sc-label {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* ========== EXAM ICONS GRID ========== */
+  .exams-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 22px;
+    margin-bottom: 40px;
+    animation: fadeIn 1s ease 0.5s both;
+  }
+
+  .exam-card {
+    background: linear-gradient(160deg, rgba(255,255,255,0.10), rgba(255,255,255,0.04));
+    border: 2px solid rgba(212,175,55,0.25);
+    border-radius: 22px;
+    padding: 28px 20px 22px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+  }
+  .exam-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(212,175,55,0.12) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .exam-card:hover::before { opacity: 1; }
+  .exam-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    border-color: var(--gold);
+    box-shadow: 0 16px 40px rgba(212,175,55,0.25);
+  }
+  .exam-card.completed {
+    border-color: var(--green-light);
+    background: linear-gradient(160deg, rgba(76,175,80,0.15), rgba(76,175,80,0.05));
+  }
+
+  .exam-icon {
+    width: 72px; height: 72px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.1rem;
+    position: relative;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  }
+  .exam-icon-1 { background: linear-gradient(135deg, #1565c0, #42a5f5); }
+  .exam-icon-2 { background: linear-gradient(135deg, #6a1b9a, #ce93d8); }
+  .exam-icon-3 { background: linear-gradient(135deg, #e65100, #ffcc02); }
+  .exam-icon-4 { background: linear-gradient(135deg, #00695c, #4db6ac); }
+
+  .exam-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+  }
+  .exam-card p {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.5;
+  }
+
+  .exam-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--gold);
+    color: var(--green-dark);
+    font-size: 0.68rem;
+    font-weight: 900;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .exam-done-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: var(--green-light);
+    color: white;
+    font-size: 1rem;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* ========== MODAL ========== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 100;
+    backdrop-filter: blur(5px);
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: linear-gradient(160deg, #1a3d24, #0f2217);
+    border: 2px solid rgba(212,175,55,0.4);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 720px;
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 30px;
+    position: relative;
+    animation: modalIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.7) translateY(40px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 16px; left: 16px;
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: rgba(255,255,255,0.7);
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { background: rgba(198,40,40,0.5); color: white; }
+
+  .modal-header {
+    text-align: center;
+    margin-bottom: 26px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(212,175,55,0.2);
+  }
+  .modal-icon {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.9rem;
+  }
+  .modal-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--gold-light);
+    margin-bottom: 4px;
+  }
+  .modal-subtitle {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* ========== PROGRESS ========== */
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    height: 8px;
+    margin: 0 0 22px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+  }
+  .progress-text {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.5);
+    text-align: left;
+    margin-bottom: 4px;
+  }
+
+  /* ========== QUESTION CARD ========== */
+  .question-block {
+    display: none;
+  }
+  .question-block.active { display: block; animation: fadeIn 0.4s ease; }
+
+  .question-text {
+    font-family: 'Amiri', serif;
+    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    color: var(--white);
+    background: rgba(255,255,255,0.05);
+    border-right: 4px solid var(--gold);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    line-height: 1.8;
+  }
+
+  .options-grid {
+    display: grid;
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px solid rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 13px 16px;
+    color: rgba(255,255,255,0.88);
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    text-align: right;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .option-btn:hover:not(:disabled) {
+    background: rgba(212,175,55,0.15);
+    border-color: var(--gold);
+    transform: translateX(-4px);
+  }
+  .option-btn.correct {
+    background: rgba(76,175,80,0.25);
+    border-color: #4CAF50;
+    color: #a5d6a7;
+  }
+  .option-btn.wrong {
+    background: rgba(198,40,40,0.2);
+    border-color: #ef5350;
+    color: #ef9a9a;
+  }
+  .option-btn:disabled { cursor: default; }
+
+  .option-letter {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(212,175,55,0.2);
+    color: var(--gold-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .option-btn.correct .option-letter { background: rgba(76,175,80,0.4); color: #a5d6a7; }
+  .option-btn.wrong   .option-letter { background: rgba(198,40,40,0.4); color: #ef9a9a; }
+
+  /* ========== FEEDBACK TOAST ========== */
+  .toast {
+    display: none;
+    position: fixed;
+    top: 30px; left: 50%; transform: translateX(-50%);
+    z-index: 999;
+    padding: 16px 36px;
+    border-radius: 50px;
+    font-size: 1.5rem;
+    font-weight: 900;
+    font-family: 'Amiri', serif;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+    animation: toastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    text-align: center;
+    min-width: 220px;
+  }
+  .toast.show { display: block; }
+  .toast.success {
+    background: linear-gradient(135deg, #2e7d32, #4CAF50);
+    color: white;
+    border: 2px solid #81c784;
+  }
+  .toast.fail {
+    background: linear-gradient(135deg, #b71c1c, #ef5350);
+    color: white;
+    border: 2px solid #ef9a9a;
+  }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-30px) scale(0.8); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  }
+
+  /* ========== NAV BUTTONS ========== */
+  .modal-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+    gap: 12px;
+  }
+  .btn-nav {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--green-dark);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 28px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 14px rgba(212,175,55,0.35);
+  }
+  .btn-nav:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(212,175,55,0.5); }
+  .btn-nav:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+  .btn-nav.secondary {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.75);
+    box-shadow: none;
+  }
+  .btn-nav.secondary:hover { background: rgba(255,255,255,0.14); }
+
+  .q-counter {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ========== RESULT SCREEN ========== */
+  .result-screen {
+    display: none;
+    text-align: center;
+    padding: 10px 0 20px;
+    animation: fadeIn 0.6s ease;
+  }
+  .result-screen.show { display: block; }
+
+  .result-trophy {
+    font-size: 5rem;
+    margin-bottom: 10px;
+    animation: bounce 1s ease infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  .result-score {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--gold-light);
+    margin: 6px 0;
+    text-shadow: 0 0 20px rgba(212,175,55,0.5);
+  }
+  .result-label {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 20px;
+  }
+
+  .stars-row {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 10px 0 20px;
+    font-size: 2rem;
+  }
+
+  .result-msg {
+    font-family: 'Amiri', serif;
+    font-size: 1.3rem;
+    color: var(--gold-light);
+    margin-bottom: 24px;
+  }
+
+  .btn-retry {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--green-dark);
+    border: none;
+    border-radius: 14px;
+    padding: 14px 40px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(212,175,55,0.4);
+    transition: all 0.25s;
+  }
+  .btn-retry:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(212,175,55,0.55); }
+
+  /* ========== FOOTER ========== */
+  .footer {
+    text-align: center;
+    padding: 30px 20px;
+    border-top: 1px solid rgba(212,175,55,0.15);
+    margin-top: 20px;
+    animation: fadeIn 1s ease 0.8s both;
+  }
+  .footer p {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.85rem;
+    margin-bottom: 6px;
+  }
+  .footer a {
+    color: var(--gold-light);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+    border-bottom: 1px dashed rgba(212,175,55,0.4);
+  }
+  .footer a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+  .footer-designer {
+    font-size: 0.92rem;
+    color: var(--gold-light);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  /* ========== SCROLLBAR ========== */
+  .modal::-webkit-scrollbar { width: 5px; }
+  .modal::-webkit-scrollbar-track { background: transparent; }
+  .modal::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.3); border-radius: 3px; }
+
+  /* ========== READING PASSAGE ========== */
+  .passage-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,175,55,0.15);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 22px;
+    font-family: 'Amiri', serif;
+    font-size: 0.97rem;
+    color: rgba(255,255,255,0.8);
+    line-height: 2;
+    max-height: 180px;
+    overflow-y: auto;
+  }
+  .passage-box::-webkit-scrollbar { width: 4px; }
+  .passage-box::-webkit-scrollbar-thumb { background: rgba(212,175,55,0.2); border-radius: 2px; }
+
+  @media (max-width: 600px) {
+    .modal { padding: 20px 16px; }
+    .exams-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .exam-card { padding: 20px 14px 16px; }
+    .scoreboard { gap: 12px; }
+    .score-card { padding: 10px 18px; min-width: 90px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Main -->
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-badge">📚 Full Mark • الاختبارات المركزية</div>
+    <h1>لغتي الخالدة</h1>
+    <h2>منصة التدريب التفاعلية • الصف الثالث المتوسط</h2>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- Scoreboard -->
+  <div class="scoreboard">
+    <div class="score-card">
+      <div class="sc-icon">⭐</div>
+      <div class="sc-val" id="totalStars">0</div>
+      <div class="sc-label">مجموع النجوم</div>
+    </div>
+    <div class="score-card">
+      <div class="sc-icon">🏆</div>
+      <div class="sc-val" id="totalCorrect">0</div>
+      <div class="sc-label">إجابات صحيحة</div>
+    </div>
+    <div class="score-card">
+      <div class="sc-icon">✅</div>
+      <div class="sc-val" id="completedExams">0</div>
+      <div class="sc-label">اختبارات مكتملة</div>
+    </div>
+  </div>
+
+  <!-- Exams Grid -->
+  <div class="exams-grid">
+
+    <div class="exam-card" id="card-0" onclick="openExam(0)">
+      <div class="exam-badge">نص قرائي</div>
+      <div class="exam-icon exam-icon-1">📖</div>
+      <h3>الفهم القرائي</h3>
+      <p>اقرأ النص وأجب على الأسئلة المتعلقة بالفهم والاستيعاب</p>
+    </div>
+
+    <div class="exam-card" id="card-1" onclick="openExam(1)">
+      <div class="exam-badge">إملائي</div>
+      <div class="exam-icon exam-icon-2">✏️</div>
+      <h3>الرسم الإملائي</h3>
+      <p>اختبار قواعد الكتابة وتمييز الكلمات المفصولة والموصولة</p>
+    </div>
+
+    <div class="exam-card" id="card-2" onclick="openExam(2)">
+      <div class="exam-badge">نحوي</div>
+      <div class="exam-icon exam-icon-3">🔤</div>
+      <h3>الوظيفة النحوية</h3>
+      <p>أسئلة في الاستثناء واسمَي الزمان والمكان والإعراب</p>
+    </div>
+
+    <div class="exam-card" id="card-3" onclick="openExam(3)">
+      <div class="exam-badge">لغوي</div>
+      <div class="exam-icon exam-icon-4">📝</div>
+      <h3>الصنف اللغوي</h3>
+      <p>اسم الآلة والمصادر والمشتقات اللغوية المتنوعة</p>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-designer">تصميم د/فواز</div>
+    <p>تفضل للمزيد هنا &nbsp;<a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a></p>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ==================== MODAL ==================== -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOnOverlay(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div class="modal-header">
+      <div class="modal-icon" id="modalIcon"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-subtitle" id="modalSubtitle"></div>
+    </div>
+
+    <div class="progress-text" id="progressText"></div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+    </div>
+
+    <div id="questionsContainer"></div>
+
+    <div class="modal-nav" id="modalNav">
+      <button class="btn-nav secondary" id="btnPrev" onclick="prevQ()">→ السابق</button>
+      <span class="q-counter" id="qCounter"></span>
+      <button class="btn-nav" id="btnNext" onclick="nextQ()">التالي ←</button>
+    </div>
+
+    <!-- Result screen inside modal -->
+    <div class="result-screen" id="resultScreen">
+      <div class="result-trophy" id="resTrophy"></div>
+      <div class="result-score" id="resScore"></div>
+      <div class="result-label" id="resLabel"></div>
+      <div class="stars-row" id="resStars"></div>
+      <div class="result-msg" id="resMsg"></div>
+      <button class="btn-retry" onclick="retryExam()">🔄 إعادة الاختبار</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ========== STARS BACKGROUND ==========
+(function(){
+  const c = document.getElementById('stars');
+  for(let i=0;i<55;i++){
+    const s = document.createElement('div');
+    s.classList.add('star');
+    const sz = Math.random()*3+1;
+    s.style.cssText = `
+      width:${sz}px; height:${sz}px;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      animation-delay:${Math.random()*4}s;
+      animation-duration:${2+Math.random()*4}s;
+    `;
+    c.appendChild(s);
+  }
+})();
+
+// ========== EXAM DATA ==========
+const exams = [
+
+  // ===== EXAM 0: الفهم القرائي =====
+  {
+    title: 'الفهم القرائي',
+    subtitle: 'النص الأول: الذكاء الاصطناعي',
+    icon: '📖',
+    iconClass: 'exam-icon-1',
+    passage: `عَلَى مَرِّ الْعُصُورِ كَانَ الذَّكَاءُ الاصْطِنَاعِيُّ حَاضِرًا فَقَطْ فِي الْخَيَالِ الْعِلْمِيِّ، فَتَارَةً يُسَلِّطُ الضَّوْءَ عَلَى الْفَوَائِدِ الْمُحْتَمَلَةِ لِلذَّكَاءِ الاصْطِنَاعِيِّ وَجَوَانِبِهِ الإِنْسَانِيَّةِ الْمُشْرِقَةِ، وَتَارَةً يُسَلِّطُ الضَّوْءَ عَلَى الْجَوَانِبِ السَّلْبِيَّةِ الْمُتَوَقَّعَةِ مِنْهُ، وَيَتِمُّ تَصْوِيرُهُ عَلَى أَنَّهُ الْعَدُوُّ الشَّرِيرُ لِلْبَشَرِيَّةِ. فِي عَامِ 2018 أَصْبَحَ الذَّكَاءُ الاصْطِنَاعِيُّ حَقِيقَةً لَا خَيَالَ، وَكَانَ هَذَا الْعَامُ بِمَثَابَةِ النَّقْلَةِ الْكُبْرَى لِلذَّكَاءِ الاصْطِنَاعِيِّ فَقَدْ نَمَتْ هَذِهِ التِّكْنُولُوجِيَا بِشَكْلٍ كَبِيرٍ عَلَى أَرْضِ الْوَاقِعِ.`,
+    questions: [
+      {
+        q: 'اِنْحَصَرَتْ بِدَايَاتُ ظُهُورِ الذَّكَاءِ الاصْطِنَاعِيِّ فِي:',
+        options: ['الْعَالَمِ الافْتِرَاضِيِّ', 'التَّنَقُّلِ بَيْنَ الْمُدُنِ', 'الْخَيَالِ الْعِلْمِيِّ', 'الازْدِحَامِ الْمُرُورِيِّ'],
+        answer: 2
+      },
+      {
+        q: 'وَرَدَتْ كَلِمَةُ (الشِّرِّيرِ) فِي النَّصِّ بِمَعْنَى:',
+        options: ['الْمُثَابِرِ', 'الْمُكَابِرِ', 'الشَّدِيدِ', 'اللَّيِّنِ'],
+        answer: 2
+      },
+      {
+        q: 'مِنْ مُمَيِّزَاتِ الذَّكَاءِ الاصْطِنَاعِيِّ الْوَارِدَةِ فِي النَّصِّ:',
+        options: ['بِنَاءِ الْمُدُنِ الافْتِرَاضِيَّةِ', 'نَشْرِ الثَّقَافَةِ الْمُجْتَمَعِيَّةِ', 'تَقْوِيَةِ الْعَلَاقَاتِ الإِنْسَانِيَّةِ', 'اسْتِخْدَامُ الْمُسَاعِدِ الافْتِرَاضِيِّ فِي أَدَاءِ الْمَهَامِّ الْمُتَلِفَةِ'],
+        answer: 3
+      },
+      {
+        q: 'يُسْهِمُ اسْتِخْدَامُنَا الاصْطِنَاعِيَّ فِي أَدَاءِ الْمَهَامِّ الآتِيَةِ، مَا عَدَا:',
+        options: ['زِيَادَةِ الْقُوَى الْعَامِلَةِ', 'اتِّخَاذِ الْقَرَارَاتِ', 'التَّخْطِيطِ وَالتَّطْوِيرِ', 'التَّعْلِيمِ وَالتَّعَلُّمِ'],
+        answer: 0
+      },
+      {
+        q: 'تَتَرَاوَحُ أَعْمَارُ الشَّبَابِ السُّعُودِيِّ الْمُدَخِّنِينَ مَا بَيْنَ:',
+        options: ['١٧ - ٤٠ عَامًا', '١٥ - ٣٠ عَامًا', '٢٠ - ٤٥ عَامًا', '١٨ - ٣٥ عَامًا'],
+        answer: 0
+      },
+      {
+        q: 'اسْتَنْتِجِ السَّبَبَ الرَّئِيسَ وَرَاءَ اهْتِمَامِ الْعَرَبِ بِتَحْقِيقِ مَبَادِئِ الْعُلُومِ:',
+        options: ['كَثْرَةُ مَا تُرْجِمَ مِنْ كُتُبِ الْيُونَانِ', 'عَدَمُ تَفَقُّدِ بَعْضِ مُشَاهَدَاتٍ وَأَفْكَارِ الأَوَائِلِ مَعَ الْوَاقِعِ', 'مَيْلُ الْعَرَبِ لِلاتِّجَاهِ التَّجْرِيبِيِّ', 'الْحَاجَةُ لِنَشْرِ الْعِلْمِ وَالْعِنَايَةِ بِهِ'],
+        answer: 2
+      },
+      {
+        q: 'مِنْ مُمَيِّزَاتِ الذَّكَاءِ الاصْطِنَاعِيِّ الْوَارِدَةِ الاسْتِنْتَاجُ مِمَّا يَلِي الدَّلَالَاتِ لِلتَّعْبِيرِ «شَأوًا بَعِيدًا»:',
+        options: ['شَأْنًا عَظِيمًا', 'مَنْهَجًا مُتَّبَعًا', 'أَمْرًا صَعْبَ الْمَنَالِ', 'بُعْدًا غَمِيقًا'],
+        answer: 0
+      },
+      {
+        q: 'اسْتَنْتِجِ الصَّوَابَ الَّذِي وَرَاءَ بُلُوغِ مَرْتَبَةَ التَّجْرِيبِ فِي تَنَاوُلِهِمْ لِعِلْمِ الطَّبِيعَةِ:',
+        options: ['اعْتِمَادُهَا عَلَى الْعُلُومِ النَّقْلِيَّةِ أَوِ الشَّرْعِيَّةِ', 'إِعَادَتُهُمْ تَرْجَمَةَ مَا جَاءَ فِي عِلْمِ الطَّبِيعَةِ غَيْرَ مَرَّةٍ', 'طَبِيعَةُ الْعَرَبِ غَيْرُ الْمَيَّالَةِ لِلأَبْحَاثِ النَّظَرِيَّةِ الْمُجَرَّدَةِ', 'كَثْرَةُ الْخَطَأِ الْحَاصِلِ فِي تَرْجَمَاتِ كُتُبِ الْيُونَانِ'],
+        answer: 1
+      }
+    ]
+  },
+
+  // ===== EXAM 1: الرسم الإملائي =====
+  {
+    title: 'الرسم الإملائي',
+    subtitle: 'الكلمات المفصولة والموصولة',
+    icon: '✏️',
+    iconClass: 'exam-icon-2',
+    passage: null,
+    questions: [
+      {
+        q: 'الأَصْلُ فِي الإِمْلَاءِ الْعَرَبِيِّ هُوَ الْفَصْلُ؛ أَيْ أَنَّ كُلَّ كَلِمَةٍ:',
+        options: ['تُكْتَبُ مُتَّصِلَةً بِمَا قَبْلَهَا', 'تُكْتَبُ مُتَّصِلَةً بِمَا بَعْدَهَا', 'تُكْتَبُ مُسْتَقِلَّةً بِمَسَافَةٍ عَمَّا قَبْلَهَا وَمَا بَعْدَهَا', 'تُكْتَبُ حَسَبَ النُّطْقِ فَقَطْ'],
+        answer: 2
+      },
+      {
+        q: 'إِذَا جَاءَتْ (أَنْ) الْمُخَفَّفَةُ الَّتِي لَا تَنْصِبُ الْفِعْلَ الْمُضَارِعَ وَبَعْدَهَا كَلِمَةُ (لَا)، يَجِبُ:',
+        options: ['وَصْلُهَا بِمَا بَعْدَهَا', 'فَصْلُهَا عَمَّا بَعْدَهَا', 'حَذْفُهَا مِنَ الْجُمْلَةِ', 'اسْتِبْدَالُهَا بِـ(أَنَّ)'],
+        answer: 1
+      },
+      {
+        q: '(إِنْ) الشَّرْطِيَّةُ + (لَمْ) تُكْتَبُ:',
+        options: ['مُتَّصِلَةً (إِلَّمْ)', 'مُنْفَصِلَةً (إِنْ لَمْ)', 'مُدْغَمَةً (إِلَّمَّ)', 'لَا قَاعِدَةَ مُحَدَّدَةَ'],
+        answer: 1
+      },
+      {
+        q: '(مَنْ) الاسْتِفْهَامِيَّةُ أَوِ الْمَوْصُولَةُ تُفْصَلُ (مَنْ) عَمَّا بَعْدَهَا إِذَا لَمْ يَسْبِقْهَا:',
+        options: ['اسْمٌ مَعْرِفَةٌ', 'حَرْفُ جَرٍّ يُوجِبُ الْوَصْلَ', 'ضَمِيرٌ مُتَّصِلٌ', 'فِعْلٌ مَاضٍ'],
+        answer: 1
+      },
+      {
+        q: 'مِثَالٌ صَحِيحٌ عَلَى (أَنْ) الْمُخَفَّفَةِ الْمَفْصُولَةِ:',
+        options: ['ذَهَبْتُ لِأَنْ أَدْرُسَ', 'أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ', 'أُرِيدُ أَنْ أَنْجَحَ', 'عَلِمْتُ أَنَّهُ مُجِدٌّ'],
+        answer: 1
+      },
+      {
+        q: 'فِي الْجُمْلَةِ: «إِنْ لَمْ تَذَاكَرْ لَمْ تَنْجَحْ» — الْكَلِمَةُ الَّتِي تَحْتَهَا خَطٌّ (لَمْ) بَعْدَ (إِنْ):',
+        options: ['مُنْفَصِلَةٌ وَهَذَا صَوَابٌ', 'مُتَّصِلَةٌ وَهَذَا خَطَأٌ', 'يَجُوزُ الأَمْرَانِ', 'لَا حُكْمَ لَهَا'],
+        answer: 0
+      },
+      {
+        q: 'قَاعِدَةُ كِتَابَةِ (مَا) بَعْدَ (إِلَّا) هِيَ أَنَّهُمَا:',
+        options: ['تُكْتَبَانِ مُنْفَصِلَتَيْنِ دَائِمًا', 'تُكْتَبَانِ مُتَّصِلَتَيْنِ (إِلَّامَا)', 'تُوصَلَانِ لِأَنَّ أَصْلَهَا (إِنْ + لَا)', 'تُحْذَفُ إِحْدَاهُمَا'],
+        answer: 2
+      },
+      {
+        q: 'كِتَابَةُ (مَنْ + مَا) مَعًا فِي عِبَارَةِ «مِمَّا يُؤَكِّدُ» تَعَنِي:',
+        options: ['أَصْلُهَا (مِنْ + مَا) اندَغَمَتِ النُّونُ فِي الْمِيمِ', 'هِيَ كَلِمَةٌ وَاحِدَةٌ مُسْتَقِلَّةٌ', 'خَطَأٌ إِمْلَائِيٌّ', 'كِتَابَةٌ اخْتِيَارِيَّةٌ'],
+        answer: 0
+      }
+    ]
+  },
+
+  // ===== EXAM 2: الوظيفة النحوية =====
+  {
+    title: 'الوظيفة النحوية',
+    subtitle: 'الاستثناء • اسما الزمان والمكان',
+    icon: '🔤',
+    iconClass: 'exam-icon-3',
+    passage: null,
+    questions: [
+      {
+        q: 'نَجَحَ الطُّلَّابُ إِلَّا ........',
+        options: ['طَالِبًا', 'طَالِبَيْنِ', 'كُلَّ مَا سَبَقَ', 'الأُولَى وَالثَّانِيَةُ'],
+        answer: 3
+      },
+      {
+        q: 'نَجَحَ الطُّلَّابُ إِلَّا ........',
+        options: ['طَالِبًا', 'طَالِبَيْنِ', 'ذَا الإِهْمَالِ', 'كُلَّ مَا سَبَقَ'],
+        answer: 3
+      },
+      {
+        q: 'مَا ذَاكَرْتُ الدُّرُوسَ إِلَّا ........',
+        options: ['دَرْسًا', 'مُضَافٌ إِلَيْهِ', 'مُسْتَثْنًى مَنْصُوبٌ', 'كُلُّ مَا سَبَقَ'],
+        answer: 2
+      },
+      {
+        q: 'ذَاكَرْتُ دُرُوسِي سِوَى دَرْسَيْنِ. مَا تَحْتَهُ خَطٌّ (دَرْسَيْنِ):',
+        options: ['مُضَافٌ إِلَيْهِ', 'بَدَلٌ', 'مُسْتَثْنًى مَنْصُوبٌ', 'كُلُّ مَا سَبَقَ'],
+        answer: 0
+      },
+      {
+        q: 'أُحِبُّ الْمَوَادَّ مَا عَدَا الْفَلْسَفَةَ. مَا تَحْتَهُ خَطٌّ:',
+        options: ['مَنْصُوبٌ', 'مَجْرُورٌ', 'مَرْفُوعٌ', 'الأُولَى وَالثَّانِيَةُ'],
+        answer: 3
+      },
+      {
+        q: 'لَيْسَ حُسْنُ الْخُلُقِ إِلَّا تَبَسُّمَ وَنَقَاءَ قَلْبٍ. مَا بَعْدَ (إِلَّا):',
+        options: ['وَاجِبُ النَّصْبِ', 'جَائِزُ النَّصْبِ', 'مَجْرُورٌ', 'مَرْفُوعٌ'],
+        answer: 0
+      },
+      {
+        q: 'اسْمُ الزَّمَانِ هُوَ:',
+        options: ['اسْمٌ مُشْتَقٌّ يَدُلُّ عَلَى وَقْتِ وُقُوعِ الْفِعْلِ', 'اسْمٌ مُشْتَقٌّ يَدُلُّ عَلَى مَكَانِ وُقُوعِ الْفِعْلِ', 'اسْمٌ يَدُلُّ عَلَى صَانِعِ الْفِعْلِ', 'اسْمٌ جَامِدٌ'],
+        answer: 0
+      },
+      {
+        q: 'الْفِعْلُ (جَلَسَ / يَجْلِسُ) يُصَاغُ مِنْهُ اسْمُ الزَّمَانِ وَالْمَكَانِ عَلَى وَزْنِ:',
+        options: ['مَفْعَلٍ', 'مَفْعِلٍ (بِكَسْرِ الْعَيْنِ)', 'فَاعِلٍ', 'مَفْعُولٍ'],
+        answer: 1
+      }
+    ]
+  },
+
+  // ===== EXAM 3: الصنف اللغوي =====
+  {
+    title: 'الصنف اللغوي',
+    subtitle: 'اسم الآلة • المصادر والمشتقات',
+    icon: '📝',
+    iconClass: 'exam-icon-4',
+    passage: null,
+    questions: [
+      {
+        q: 'اسْمُ الآلَةِ هُوَ اسْمٌ مُشْتَقٌّ يَدُلُّ عَلَى:',
+        options: ['الشَّخْصِ الَّذِي يَقُومُ بِالْفِعْلِ', 'الأَدَاةِ الَّتِي يَتِمُّ بِهَا الْفِعْلُ', 'زَمَنِ وُقُوعِ الْفِعْلِ', 'مَكَانِ وُقُوعِ الْفِعْلِ'],
+        answer: 1
+      },
+      {
+        q: 'اسْمُ الآلَةِ الْجَامِدُ (السَّمَاعِيُّ) هُوَ:',
+        options: ['مَا لَهُ وَزْنٌ مُحَدَّدٌ وَأُخِذَ مِنْ فِعْلٍ', 'مَا لَيْسَ لَهُ وَزْنٌ مُحَدَّدٌ وَلَا فِعْلٌ، بَلْ سُمِعَ عَنِ الْعَرَبِ', 'مَا جَاءَ عَلَى وَزْنِ مِفْعَلٍ', 'مَا اشْتُقَّ مِنَ الْفِعْلِ الرُّبَاعِيِّ'],
+        answer: 1
+      },
+      {
+        q: 'مِنَ الأَوْزَانِ الْقَدِيمَةِ لاسْمِ الآلَةِ الْمُشْتَقِّ:',
+        options: ['فَعَّالَة (كَغَسَّالَة)', 'مِفْعَال (كَمِفْتَاح)', 'فَاعُولَة (كَحَاسُوبَة)', 'فِعَالَة (كَخِزَانَة)'],
+        answer: 1
+      },
+      {
+        q: 'الْفِعْلُ (حَرَثَ) يُصَاغُ مِنْهُ اسْمُ الآلَةِ:',
+        options: ['مِحْرَثٌ', 'مُحَارِثٌ', 'حَرَّاثَةٌ', 'أ و ج'],
+        answer: 3
+      },
+      {
+        q: 'الْمَصْدَرُ الصَّرِيحُ هُوَ الَّذِي تَجِدُ أَنَّ مَعْنَاهُ:',
+        options: ['نَزَلَ', 'مُضَافٌ إِلَيْهِ', 'نَكِرَةٌ', 'جَمْعٌ مُذَكَّرٌ سَالِمٌ'],
+        answer: 0
+      },
+      {
+        q: 'مَصَادِرُ الأَفْعَالِ الثُّلَاثِيَّةِ:',
+        options: ['قِيَاسِيَّةٌ كُلُّهَا', 'سَمَاعِيَّةٌ كُلُّهَا', 'قِيَاسِيَّةٌ وَسَمَاعِيَّةٌ', 'لَا ضَابِطَ لَهَا'],
+        answer: 1
+      },
+      {
+        q: 'مَصْدَرُ الْفِعْلِ الرُّبَاعِيِّ (أَفْعَلَ) يَأْتِي عَلَى وَزْنِ:',
+        options: ['فِعَالَة', 'إِفْعَال', 'تَفْعِيل', 'مُفَاعَلَة'],
+        answer: 1
+      },
+      {
+        q: 'الْفِعْلُ (اسْتَخْدَمَ) مَصْدَرُهُ:',
+        options: ['خَدَمٌ', 'اسْتِخْدَامٌ', 'تَخْدِيمٌ', 'خِدْمَةٌ'],
+        answer: 1
+      }
+    ]
+  }
+
+];
+
+// ========== STATE ==========
+let currentExam = null;
+let currentQ = 0;
+let answered = [];
+let examStars = [0,0,0,0];
+let examCorrect = [0,0,0,0];
+let examDone = [false,false,false,false];
+
+function updateGlobalScore(){
+  const ts = examStars.reduce((a,b)=>a+b,0);
+  const tc = examCorrect.reduce((a,b)=>a+b,0);
+  const done = examDone.filter(Boolean).length;
+  document.getElementById('totalStars').textContent = ts;
+  document.getElementById('totalCorrect').textContent = tc;
+  document.getElementById('completedExams').textContent = done;
+}
+
+// ========== OPEN EXAM ==========
+function openExam(idx){
+  currentExam = idx;
+  currentQ = 0;
+  answered = new Array(exams[idx].questions.length).fill(null);
+
+  const ex = exams[idx];
+  document.getElementById('modalIcon').className = 'modal-icon ' + ex.iconClass;
+  document.getElementById('modalIcon').textContent = ex.icon;
+  document.getElementById('modalTitle').textContent = ex.title;
+  document.getElementById('modalSubtitle').textContent = ex.subtitle;
+
+  buildQuestions();
+  showQ(0);
+
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('questionsContainer').style.display = '';
+  document.getElementById('modalNav').style.display = '';
+
+  document.getElementById('modalOverlay').classList.add('active');
+}
+
+function buildQuestions(){
+  const ex = exams[currentExam];
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+
+  if(ex.passage){
+    const pb = document.createElement('div');
+    pb.className = 'passage-box';
+    pb.id = 'passageBox';
+    pb.innerHTML = ex.passage;
+    container.appendChild(pb);
+  }
+
+  ex.questions.forEach((qData, qi) => {
+    const block = document.createElement('div');
+    block.className = 'question-block';
+    block.id = `qblock-${qi}`;
+
+    const letters = ['أ','ب','ج','د'];
+    const opts = qData.options.map((opt, oi) => `
+      <button class="option-btn" id="opt-${qi}-${oi}" onclick="selectAnswer(${qi},${oi})">
+        <span class="option-letter">${letters[oi]}</span>
+        <span>${opt}</span>
+      </button>
+    `).join('');
+
+    block.innerHTML = `
+      <div class="question-text">السؤال ${qi+1}: ${qData.q}</div>
+      <div class="options-grid">${opts}</div>
+    `;
+    container.appendChild(block);
+  });
+}
+
+function showQ(qi){
+  const ex = exams[currentExam];
+  // hide all blocks
+  ex.questions.forEach((_,i) => {
+    document.getElementById(`qblock-${i}`).classList.remove('active');
+  });
+  document.getElementById(`qblock-${qi}`).classList.add('active');
+
+  const total = ex.questions.length;
+  const done = answered.filter(a=>a!==null).length;
+  document.getElementById('progressText').textContent = `${done} / ${total} سؤال تمت الإجابة عليه`;
+  document.getElementById('progressFill').style.width = `${(done/total)*100}%`;
+  document.getElementById('qCounter').textContent = `${qi+1} / ${total}`;
+
+  document.getElementById('btnPrev').disabled = (qi===0);
+  document.getElementById('btnNext').textContent = (qi === total-1) ? 'إنهاء الاختبار ✓' : 'التالي ←';
+}
+
+function selectAnswer(qi, oi){
+  if(answered[qi] !== null) return;
+  answered[qi] = oi;
+  const ex = exams[currentExam];
+  const correctOi = ex.questions[qi].answer;
+
+  // Style buttons
+  ex.questions[qi].options.forEach((_,i)=>{
+    const btn = document.getElementById(`opt-${qi}-${i}`);
+    btn.disabled = true;
+    if(i === correctOi) btn.classList.add('correct');
+    else if(i === oi && oi !== correctOi) btn.classList.add('wrong');
+  });
+
+  // Toast
+  if(oi === correctOi){
+    showToast('يا سلام! 🌟 إجابة صحيحة', 'success');
+  } else {
+    showToast('حظ أوفر! 💪 حاول مرة أخرى', 'fail');
+  }
+
+  // update progress
+  const total = ex.questions.length;
+  const done = answered.filter(a=>a!==null).length;
+  document.getElementById('progressText').textContent = `${done} / ${total} سؤال تمت الإجابة عليه`;
+  document.getElementById('progressFill').style.width = `${(done/total)*100}%`;
+}
+
+function showToast(msg, type){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(()=>{ t.classList.remove('show'); }, 2200);
+}
+
+function nextQ(){
+  const ex = exams[currentExam];
+  if(currentQ < ex.questions.length - 1){
+    currentQ++;
+    showQ(currentQ);
+  } else {
+    showResult();
+  }
+}
+
+function prevQ(){
+  if(currentQ > 0){
+    currentQ--;
+    showQ(currentQ);
+  }
+}
+
+function showResult(){
+  const ex = exams[currentExam];
+  const total = ex.questions.length;
+  let correct = 0;
+  answered.forEach((a, qi)=>{
+    if(a !== null && a === ex.questions[qi].answer) correct++;
+  });
+
+  const pct = (correct/total)*100;
+  let stars = 0;
+  if(pct >= 90) stars = 5;
+  else if(pct >= 75) stars = 4;
+  else if(pct >= 60) stars = 3;
+  else if(pct >= 40) stars = 2;
+  else stars = 1;
+
+  examStars[currentExam] = stars;
+  examCorrect[currentExam] = correct;
+  examDone[currentExam] = true;
+  updateGlobalScore();
+
+  // mark card
+  const card = document.getElementById(`card-${currentExam}`);
+  card.classList.add('completed');
+  card.querySelector('.exam-badge').innerHTML = `✅`;
+
+  // show result
+  document.getElementById('questionsContainer').style.display = 'none';
+  document.getElementById('modalNav').style.display = 'none';
+  document.getElementById('progressText').textContent = '';
+  document.getElementById('progressFill').style.width = '100%';
+
+  const rs = document.getElementById('resultScreen');
+  rs.classList.add('show');
+
+  const trophy = pct >= 80 ? '🏆' : pct >= 60 ? '🥈' : '🎯';
+  document.getElementById('resTrophy').textContent = trophy;
+  document.getElementById('resScore').textContent = `${correct} / ${total}`;
+  document.getElementById('resLabel').textContent = `نسبة الإجابات الصحيحة: ${Math.round(pct)}%`;
+  document.getElementById('resStars').textContent = '⭐'.repeat(stars) + '☆'.repeat(5-stars);
+
+  let msg = '';
+  if(pct >= 90) msg = '🌟 ممتاز! أداء رائع يا بطل';
+  else if(pct >= 75) msg = '👍 جيد جداً! استمر في التحسن';
+  else if(pct >= 60) msg = '✊ جيد! راجع الأخطاء وأعد المحاولة';
+  else msg = '💪 لا تيأس! المراجعة طريق النجاح';
+  document.getElementById('resMsg').textContent = msg;
+}
+
+function retryExam(){
+  const idx = currentExam;
+  document.getElementById('modalOverlay').classList.remove('active');
+  setTimeout(()=> openExam(idx), 300);
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('active');
+}
+function closeOnOverlay(e){
+  if(e.target === document.getElementById('modalOverlay')) closeModal();
+}
+
+updateGlobalScore();
+</script>
+</body>
+</html>

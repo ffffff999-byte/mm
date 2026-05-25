@@ -19,7 +19,7 @@
 </aside>
 <main class="main">
 <section class="hero print-page">
-  <div><h2 contenteditable="true" class="editable" data-bind="title">لوحة تحليل تقرير التقويم المدرسي الخارجي</h2><p>منصة عربية RTL لتحويل تقرير التقويم إلى قرارات تحسين، مسؤوليات، شواهد، ومؤشرات قياس قابلة للطباعة والحفظ.</p><div class="toolbar no-print"><button class="btn" onclick="saveData()">حفظ محلي</button><button class="btn alt" onclick="loadData();toast('تم استعادة آخر حفظ')">استعادة المحفوظ</button><button class="btn danger" onclick="clearData()">🧹 تفريغ التقرير الحالي</button><label class="btn green" style="display:inline-flex;align-items:center;gap:6px"><input type="file" accept="application/json,.json,application/pdf,.pdf,text/plain,.txt" onchange="importSmartFile(event)" style="display:none">📎 تطبيق معلومات الملف المرفق</label><button class="btn gold" onclick="printCurrent()">طباعة التبويب</button></div></div>
+  <div><h2 contenteditable="true" class="editable" data-bind="title">لوحة تحليل تقرير التقويم المدرسي الخارجي</h2><p>منصة عربية RTL لتحويل تقرير التقويم إلى قرارات تحسين، مسؤوليات، شواهد، ومؤشرات قياس قابلة للطباعة والحفظ.</p><div class="toolbar no-print"><button class="btn" onclick="saveData()">حفظ محلي</button><button class="btn alt" onclick="loadData();toast('تم استعادة آخر حفظ')">استعادة المحفوظ</button><button class="btn danger" onclick="clearData()">🧹 تفريغ التقرير الحالي</button><label class="btn alt" style="display:inline-flex;align-items:center;gap:6px"><input type="file" accept="application/json,.json,application/pdf,.pdf,text/plain,.txt" onchange="importSmartFile(event)" style="display:none">📥 استيراد ملف التقرير</label><button class="btn green" onclick="applyImportedReport()">📎 تطبيق معلومات الملف المرفق</button><button class="btn gold" onclick="printCurrent()">طباعة التبويب</button></div></div>
   <div class="heroStats"><div class="stat"><span>الأداء العام</span><b id="overallStat">71%</b><span id="overallLevel" class="badge b-start">الانطلاق</span></div><div class="stat"><span>أضعف مجال</span><b id="weakDomain">-</b><span class="mini">أولوية تحسين</span></div><div class="stat"><span>أقوى مجال</span><b id="strongDomain">-</b><span class="mini">استدامة وتجويد</span></div><div class="stat"><span>فجوة التميز</span><b id="gapStat">19%</b><span class="mini">حتى 90%</span></div></div>
 </section>
 <div id="tabs"></div>
@@ -34,7 +34,7 @@ const defaults={title:'لوحة تحليل تقرير التقويم المدر�
 ['1-1-1-3','يحقق المتعلمون نتائج متقدمة في مجال القراءة وفقًا للاختبارات الوطنية',75.52,'نواتج التعلم','التحصيل التعليمي','تحليل بيانات الاختبارات الوطنية ورفع نسبة المتعلمين في المستويات المتقدمة في القراءة.'],['2-1-1-3','يحقق المتعلمون نتائج متقدمة في مجال الرياضيات وفقًا للاختبارات الوطنية',66.20,'نواتج التعلم','التحصيل التعليمي','تحليل فجوة الرياضيات وبناء برامج علاجية وإثرائية لرفع نتائج المتعلمين.'],['3-1-1-3','يحقق المتعلمون نتائج متقدمة في مجال العلوم وفقًا للاختبارات الوطنية',74.08,'نواتج التعلم','التحصيل التعليمي','تحليل فجوة العلوم واتخاذ قرارات تعليمية مناسبة للبرامج العلاجية والإثرائية.'],['1-1-2-3','يظهر المتعلمون الاعتزاز بالقيم والهوية الوطنية',91.50,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','استدامة تعزيز القيم والهوية واللغة العربية والاعتزاز بمنجزات الوطن.'],['2-1-2-3','يظهر المتعلمون اتجاهات إيجابية نحو ذواتهم',91.75,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','استدامة تعزيز الاتجاهات الإيجابية والرفاه والرضا عن الحياة.'],['3-1-2-3','يظهر المتعلمون التزامًا بالممارسات الصحية السليمة',90.00,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','استدامة التوعية بالممارسات الصحية السليمة ومتابعة الالتزام بها.'],['4-1-2-3','يشارك المتعلمون في الأنشطة المجتمعية والأعمال التطوعية',76.25,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','تصميم برامج نوعية تحفز المشاركة التطوعية وتوظيف التعلم في حلول مبتكرة.'],['5-1-2-3','يلتزم المتعلمون بقواعد السلوك والانضباط المدرسي',77.50,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','تطوير برامج وأدلة ومنشورات تكتسب الانضباط الذاتي والسلوك المسؤول.'],['6-1-2-3','يظهر المتعلمون القدرة على البحث والتعلم الذاتي',83.00,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','تنمية البحث والتعلم الذاتي ومهارات إدارة الوقت وتوظيف التقنية.'],['7-1-2-3','يظهر المتعلمون اعتزازًا بثقافتهم واحترامًا للتنوع الثقافي في المجتمع',93.75,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','استدامة الفخر باللغة العربية والثقافة واحترام التنوع الثقافي.'],
 ['1-1-1-4','تنظيم مبنى المدرسة ملائم لعدد المتعلمين والمرحلة العمرية',47.75,'البيئة المدرسية','المبنى المدرسي','العمل مع الجهات ذات العلاقة لتطوير المبنى وتنظيم الأثاث بما يحقق الرفاه ويلائم المرحلة.'],['2-1-1-4','تتوافر فصول ومعامل ملائمة للعملية التعليمية تلبي احتياجات المتعلمين بمن فيهم ذوو الإعاقة',65.50,'البيئة المدرسية','المبنى المدرسي','تنظيم الفصول والمعامل وتجهيزها وفق المواصفات وتوفير الوسائل والمواد اللازمة.'],['3-1-1-4','تلبي المرافق والخدمات المساندة احتياجات المتعلمين بمن فيهم ذوو الإعاقة',43.75,'البيئة المدرسية','المبنى المدرسي','توفير مرافق وخدمات مساندة ملائمة وتحقيق الرفاه والمحافظة على استدامتها.'],['1-1-2-4','تتوافر في فصول المدرسة ومعاملها وجميع مرافقها متطلبات الأمن والسلامة',60.50,'البيئة المدرسية','الأمن والسلامة','متابعة تجهيزات الأمن والسلامة وتعزيز ثقافة السلامة ومتابعة سلامة المتعلمين.'],['2-1-2-4','تعمل المدرسة على صيانة جميع مرافق المبنى وتجهيزاته بانتظام',65.25,'البيئة المدرسية','الأمن والسلامة','متابعة صيانة المرافق والتجهيزات بانتظام لضمان كفاءة المبنى وفاعليته.'],['3-1-2-4','تعمل المدرسة على نظافة المبنى المدرسي وجميع مرافقه بانتظام',79.00,'البيئة المدرسية','الأمن والسلامة','متابعة النظافة وتوفير أدواتها وحفظها في أماكن ملائمة.']
 ].map(x=>({code:x[0],text:x[1],score:x[2],domain:x[3],standard:x[4],suggestion:x[5],owner:'فريق الجودة',status:'لم يبدأ',progress:0,start:'',end:'',notes:'',evidence:''})),evidence:['خطط تشغيلية وتطويرية','محاضر اجتماعات فريق الجودة','نماذج تحليل نتائج نافس','خطط علاجية وإثرائية','زيارات صفية وتغذية راجعة','عينات من أعمال الطلاب','صور قبل وبعد للمرافق','خطابات رسمية للجهات ذات العلاقة','اتفاقيات شراكة مجتمعية','تقارير قياس أثر']};
-let data=JSON.parse(JSON.stringify(defaults));let currentTab='home';
+let data=JSON.parse(JSON.stringify(defaults));let pendingImportedReport=null;let currentTab='home';
 const tabDefs=[['home','الرئيسية'],['school','معلومات المدرسة'],['dash','لوحة القيادة'],['domains','المجالات والمعايير'],['indicators','المؤشرات التفصيلية'],['strengths','نقاط القوة'],['weakness','نقاط الضعف'],['plan','خطة التحسين'],['evidence','الشواهد'],['exec','التقرير التنفيذي'],['print','الطباعة والتصدير'],['settings','الإعدادات']];
 function blankReportData(){return {__empty:true,title:'منصة جديدة - جاهزة لاستيراد تقرير',school:{name:'',edu:'',office:'',stage:'',gender:'',type:'',ministryNo:'',students:'',teachers:'',agents:'',admins:'',guidance:'',labs:'',date:'',year:''},overall:{score:0,level:'',desc:''},domains:['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'].map(n=>({name:n,score:0,standards:[]})),indicators:[],evidence:[]}}
 function level(score){return LEVELS.find(l=>score>=l.min&&score<l.max)||LEVELS[0]}function priority(s){return s<50?'أولوية عاجلة':s<65?'أولوية عالية':s<75?'أولوية متوسطة':'استدامة وتجويد'}function classify(s){return s>=90?'قوة قابلة للاستدامة':s<50?'ضعف حرج':'يحتاج تحسين'}function gap(s){return Math.max(0,(90-s)).toFixed(2)}function badge(s){let l=level(+s);return `<span class="badge ${l.cls}">${l.name}</span>`}function pct(v){return Number(v).toFixed(Number(v)%1?2:0)+'%'}
@@ -106,7 +106,7 @@ function planRow(i){let p=makePlan(i);return `<tr><td>${i.domain}</td><td>${i.st
 function renderEvidence(){document.getElementById('tab-evidence').innerHTML=`<div class="card"><h3>إدارة الشواهد</h3><div class="filters no-print"><input id="evInput" placeholder="أضف شاهدًا جديدًا"><button class="btn" onclick="addEvidence()">إضافة شاهد</button></div><div class="evidenceList">${data.evidence.map((e,idx)=>`<div class="evidenceItem"><input type="checkbox"><span contenteditable onblur="data.evidence[${idx}]=this.textContent;saveData(false)">${e}</span><button class="btn danger no-print" onclick="data.evidence.splice(${idx},1);saveData(false);renderEvidence()">حذف</button></div>`).join('')}</div></div><div class="card" style="margin-top:14px"><h3>شواهد مقترحة حسب المؤشرات الحرجة</h3>${data.indicators.filter(i=>i.score<50).map(i=>`<p><b>${i.code}</b> ${makePlan(i).evidence}</p>`).join('')}</div>`}
 function renderExec(){document.getElementById('tab-exec').innerHTML=`<div class="card"><h3>التقرير التنفيذي التلقائي</h3><div class="toolbar no-print"><button class="btn" onclick="genExec()">توليد التقرير التنفيذي</button><button class="btn alt" onclick="copyExec()">نسخ النص</button><button class="btn gold" onclick="printCurrent()">طباعة التقرير</button></div><textarea id="execText" style="width:100%;min-height:360px;border:1px solid var(--line);border-radius:18px;padding:16px;font-size:16px;line-height:1.9">${executiveText()}</textarea></div>`}
 function renderPrint(){document.getElementById('tab-print').innerHTML=`<div class="card"><h3>الطباعة والتصدير</h3><div class="printSelector"><div class="printCard"><h4>تقرير ملخص A4</h4><p>يطبع الملخص ولوحة الأداء الحالية.</p><button class="btn" onclick="showTab('home');setTimeout(printCurrent,80)">طباعة الملخص</button></div><div class="printCard"><h4>الخطة التفصيلية</h4><p>يطبع جدول خطة التحسين متعدد الصفحات دون قص الجداول.</p><button class="btn" onclick="showTab('plan');setTimeout(printCurrent,80)">طباعة الخطة</button></div><div class="printCard"><h4>التقرير التنفيذي</h4><p>يطبع النص التنفيذي القابل للتعديل.</p><button class="btn" onclick="showTab('exec');setTimeout(printCurrent,80)">طباعة التنفيذي</button></div></div></div>`}
-function renderSettings(){document.getElementById('tab-settings').innerHTML=`<div class="card"><h3>الإعدادات</h3><div class="settingsGrid"><button class="btn" onclick="saveData()">حفظ محلي</button><button class="btn alt" onclick="exportJSON()">تصدير JSON</button><label class="btn alt" style="text-align:center"><input type="file" accept="application/json,.json,application/pdf,.pdf,text/plain,.txt" onchange="importSmartFile(event)" style="display:none">استيراد تقرير جديد PDF / TXT / JSON</label><button class="btn gold" onclick="saveHTML()">حفظ كملف HTML</button><button class="btn danger" onclick="clearData()">🧹 تفريغ التقرير الحالي</button><label class="btn green" style="text-align:center"><input type="file" accept="application/json,.json,application/pdf,.pdf,text/plain,.txt" onchange="importSmartFile(event)" style="display:none">📎 تطبيق معلومات الملف المرفق</label></div><p class="mini">الحفظ يتم محليًا في المتصفح، ولا تُرسل البيانات لأي جهة خارجية. عند استيراد تقرير جديد يتم تفريغ التقرير السابق تلقائيًا لمنع اختلاط البيانات.</p></div>`}
+function renderSettings(){document.getElementById('tab-settings').innerHTML=`<div class="card"><h3>الإعدادات</h3><div class="settingsGrid"><button class="btn" onclick="saveData()">حفظ محلي</button><button class="btn alt" onclick="exportJSON()">تصدير JSON</button><label class="btn alt" style="text-align:center"><input type="file" accept="application/json,.json,application/pdf,.pdf,text/plain,.txt" onchange="importSmartFile(event)" style="display:none">📥 استيراد تقرير جديد PDF / TXT / JSON</label><button class="btn green" onclick="applyImportedReport()">📎 تطبيق معلومات الملف المرفق</button><button class="btn gold" onclick="saveHTML()">حفظ كملف HTML</button><button class="btn danger" onclick="clearData()">🧹 تفريغ التقرير الحالي</button></div><p class="mini">الحفظ يتم محليًا في المتصفح، ولا تُرسل البيانات لأي جهة خارجية. بعد قراءة الملف اضغط زر تطبيق معلومات الملف المرفق؛ وعند التطبيق يتم تفريغ التقرير السابق لمنع اختلاط البيانات.</p></div>`}
 function bar(name,score){return `<div class="barRow"><b>${name}</b><div class="barTrack"><div class="barFill" style="width:${Math.min(100,score)}%;background:${level(score).color}"></div></div><span>${pct(score)}</span></div>`}function listMini(arr){return arr.map(i=>`<p><b>${pct(i.score)}</b> ${badge(i.score)} ${i.code} - ${i.text}</p>`).join('')}function iByCode(c){return data.indicators.find(i=>i.code==c)}
 function domainAdvice(d){return d.score<65?'تدخل قيادي مباشر وربط الإجراءات بالشواهد ونواتج التعلم.':d.score<75?'تحسين مركز وفق مؤشرات منخفضة ومتابعة شهرية.':d.score<90?'تجويد الممارسات ورفعها إلى التميز.':'استدامة ونقل خبرة.'}
 function weakAnalysis(i){let p=makePlan(i);return `<div class="aiBox"><b>سبب محتمل:</b> ${p.reason}\n<b>الأثر على نواتج التعلم:</b> ${p.impact}\n<b>تدخل عاجل خلال 30 يومًا:</b> ${p.quick}\n<b>تدخل متوسط خلال 90 يومًا:</b> ${p.mid}\n<b>مؤشر قياس:</b> ${p.measure}\n<b>الشواهد:</b> ${p.evidence}\n<b>مسؤول التنفيذ:</b> ${i.owner}\n<b>النسبة المستهدفة:</b> ${p.target}%</div>`}
@@ -180,21 +180,14 @@ async function importSmartFile(e){
   let f=e.target.files[0];
   if(!f)return;
   try{
-    toast('جاري قراءة الملف...');
+    toast('جاري قراءة الملف وتجهيز بياناته...');
     let ext=(f.name.split('.').pop()||'').toLowerCase();
     if(ext==='json'||f.type.includes('json')){
       let txt=await fileToText(f);
       let imported=JSON.parse(txt);
-      localStorage.removeItem('schoolEvalPlatform');
-      localStorage.removeItem('schoolEvalPlatform_backup');
-      localStorage.removeItem('lastImportedPdfText');
-      data=imported;
-      delete data.__empty;
-      ensureDataIntegrity();
-      saveData(false);
-      renderAll();
-      showTab('dash');
-      toast('تم استيراد JSON كتقرير جديد دون خلط مع البيانات السابقة');
+      pendingImportedReport={type:'json',name:f.name,data:imported,summary:buildImportSummaryFromData(imported)};
+      showImportedPreview();
+      toast('تمت قراءة الملف. اضغط: تطبيق معلومات الملف المرفق لنشره في المنصة');
       return;
     }
     let txt='';
@@ -214,16 +207,10 @@ async function importSmartFile(e){
       alert('تمت قراءة الملف، لكن لم أجد بنية تقرير التقويم المدرسي بوضوح. تأكد أن الملف هو تقرير التقويم المدرسي ويحتوي على بطاقة المجالات والمؤشرات.');
       return;
     }
-    // تفريغ إجباري بعد نجاح القراءة وقبل الدمج، حتى لا تختلط تقارير المدارس السابقة واللاحقة.
-    resetBeforeNewImport();
-    delete data.__empty;
-    data=JSON.parse(JSON.stringify(defaults));
-    mergeParsedReport(parsed);
-    ensureDataIntegrity();
-    saveData(false);
-    renderAll();
-    showTab('dash');
-    toast('تم تفريغ السابق واستيراد التقرير الجديد بنجاح');
+    pendingImportedReport={type:'parsed',name:f.name,parsed:parsed,text:txt.slice(0,6000),summary:buildImportSummaryFromParsed(parsed)};
+    try{safeSetLocal('lastImportedPdfText',txt.slice(0,12000));}catch(_e){}
+    showImportedPreview();
+    toast('تم استيراد الملف وقراءة بياناته. اضغط: تطبيق معلومات الملف المرفق لنشره في المنصة');
   }catch(err){
     console.error(err);
     if(String(err.message||err).toLowerCase().includes('quota')){
@@ -236,6 +223,64 @@ async function importSmartFile(e){
     }
   }finally{
     e.target.value='';
+  }
+}
+function buildImportSummaryFromParsed(parsed){
+  parsed=parsed||{};
+  let school=parsed.school||{};
+  return {
+    schoolName:school.name||'غير محدد',
+    year:school.year||'غير محدد',
+    overall:parsed.overall?.score??'—',
+    domains:(parsed.domains||[]).length,
+    standards:(parsed.standards||[]).length,
+    indicators:(parsed.indicators||[]).length
+  };
+}
+function buildImportSummaryFromData(d){
+  d=d||{};
+  return {
+    schoolName:d.school?.name||'غير محدد',
+    year:d.school?.year||d.meta?.year||'غير محدد',
+    overall:d.overall?.score??'—',
+    domains:(d.domains||[]).length,
+    standards:(d.standards||[]).length,
+    indicators:(d.indicators||[]).length
+  };
+}
+function showImportedPreview(){
+  if(!pendingImportedReport)return;
+  let s=pendingImportedReport.summary||{};
+  let msg=`تمت قراءة الملف: ${pendingImportedReport.name||''}\nالمدرسة: ${s.schoolName||'غير محدد'}\nالأداء العام: ${s.overall||'—'}%\nالمجالات: ${s.domains||0} | المعايير: ${s.standards||0} | المؤشرات: ${s.indicators||0}\n\nالآن اضغط زر: تطبيق معلومات الملف المرفق`;
+  console.info(msg,pendingImportedReport);
+}
+function applyImportedReport(){
+  if(!pendingImportedReport){
+    alert('لا توجد بيانات مستوردة جاهزة للتطبيق. أولاً اضغط: استيراد ملف التقرير، وبعد نجاح القراءة اضغط هذا الزر لنشر البيانات في المنصة.');
+    return;
+  }
+  try{
+    if(!confirm('سيتم تطبيق معلومات الملف المقروء على المنصة وتفريغ التقرير الحالي حتى لا تختلط البيانات. هل تريد المتابعة؟'))return;
+    resetBeforeNewImport();
+    delete data.__empty;
+    if(pendingImportedReport.type==='json'){
+      data=pendingImportedReport.data;
+      delete data.__empty;
+      ensureDataIntegrity();
+    }else{
+      data=JSON.parse(JSON.stringify(defaults));
+      mergeParsedReport(pendingImportedReport.parsed);
+      ensureDataIntegrity();
+    }
+    saveData(false);
+    renderAll();
+    showTab('dash');
+    let summary=pendingImportedReport.summary||{};
+    pendingImportedReport=null;
+    toast('تم تطبيق ونشر معلومات الملف في المنصة بنجاح');
+  }catch(err){
+    console.error(err);
+    alert('تعذر تطبيق معلومات الملف: '+(err.message||err));
   }
 }
 function fileToText(file){return new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result||'');r.onerror=()=>rej(r.error);r.readAsText(file,'utf-8')})}

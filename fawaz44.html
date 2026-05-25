@@ -322,6 +322,66 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         <div class="card" style="padding:18px"><div class="chart-title">✅ أعلى 5 مؤشرات</div><div id="topStr"></div></div>
         <div class="card" style="padding:18px"><div class="chart-title">⚠️ أدنى 5 مؤشرات (تحتاج تحسيناً)</div><div id="topWk"></div></div>
       </div>
+      <!-- مستويات الأداء -->
+      <h2 style="font-size:15px;font-weight:700;color:#1e293b;margin:24px 0 14px;font-family:'Tajawal'">📈 مستويات الأداء</h2>
+      <div style="display:grid;gap:12px">
+        <div style="display:flex;align-items:stretch;border-radius:12px;overflow:hidden;border:2px solid #16a34a;background:#f0fdf4">
+          <div style="width:70px;background:#16a34a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:12px 8px;flex-shrink:0">
+            <span style="font-size:22px">⭐</span>
+            <span style="color:#fff;font-weight:900;font-size:14px;font-family:'Tajawal'">التميز</span>
+          </div>
+          <div style="flex:1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div>
+              <p style="font-size:13px;color:#374151;font-family:'Cairo';line-height:1.8">مستوى أداء مرتفع (متوسط الأداء من 90 % فأعلى)، <strong>ويتطلب استدامة التميز والابتكار</strong>.</p>
+            </div>
+            <div style="text-align:center;flex-shrink:0">
+              <span style="font-size:22px;font-weight:900;color:#16a34a;font-family:'Tajawal'">90%+</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:stretch;border-radius:12px;overflow:hidden;border:2px solid #1d4ed8;background:#eff6ff">
+          <div style="width:70px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:12px 8px;flex-shrink:0">
+            <span style="font-size:22px">📈</span>
+            <span style="color:#fff;font-weight:900;font-size:14px;font-family:'Tajawal'">التقدم</span>
+          </div>
+          <div style="flex:1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div>
+              <p style="font-size:13px;color:#374151;font-family:'Cairo';line-height:1.8">مستوى أداء جيد (متوسط الأداء من 75 % إلى أقل من 90 %)، <strong>ويتطلب استمرار المتابعة للتحسين والتطوير</strong>.</p>
+            </div>
+            <div style="text-align:center;flex-shrink:0">
+              <span style="font-size:22px;font-weight:900;color:#1d4ed8;font-family:'Tajawal'">75-89%</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:stretch;border-radius:12px;overflow:hidden;border:2px solid #d97706;background:#fffbeb">
+          <div style="width:70px;background:#d97706;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:12px 8px;flex-shrink:0">
+            <span style="font-size:22px">🚀</span>
+            <span style="color:#fff;font-weight:900;font-size:14px;font-family:'Tajawal'">الانطلاق</span>
+          </div>
+          <div style="flex:1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div>
+              <p style="font-size:13px;color:#374151;font-family:'Cairo';line-height:1.8">مستوى أداء مقبول (متوسط الأداء من 50 % إلى أقل من 75 %)، <strong>ويتطلب تحسينات كبيرة في بعض المجالات</strong>.</p>
+            </div>
+            <div style="text-align:center;flex-shrink:0">
+              <span style="font-size:22px;font-weight:900;color:#d97706;font-family:'Tajawal'">50-74%</span>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:stretch;border-radius:12px;overflow:hidden;border:2px solid #dc2626;background:#fef2f2">
+          <div style="width:70px;background:#dc2626;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:12px 8px;flex-shrink:0">
+            <span style="font-size:22px">📝</span>
+            <span style="color:#fff;font-weight:900;font-size:14px;font-family:'Tajawal'">التهيئة</span>
+          </div>
+          <div style="flex:1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
+            <div>
+              <p style="font-size:13px;color:#374151;font-family:'Cairo';line-height:1.8">مستوى أداء منخفض (متوسط الأداء أقل من 50 %)، <strong>ويتطلب إحداث تدخلات جوهرية للتحسين والتطوير في معظم المجالات</strong>.</p>
+            </div>
+            <div style="text-align:center;flex-shrink:0">
+              <span style="font-size:22px;font-weight:900;color:#dc2626;font-family:'Tajawal'"><50%</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- المجالات -->
@@ -614,6 +674,12 @@ function fmt(n) { return parseFloat(n).toFixed(2); }
 window.onload = function() {
   // إعادة تصنيف جميع المؤشرات بالمعايير الصحيحة
   APP.indicators.forEach(i => { i.cls = classify(i.pct); });
+  // ربط خطط التحسين بمؤشرات الضعف والحرجة
+  APP.indicators.forEach(i => {
+    if (i.cls === 'weakness' || i.cls === 'critical') {
+      i.plan = getImprovementPlan(i.domain, i.desc);
+    }
+  });
   renderAll();
 };
 
@@ -740,6 +806,39 @@ function renderDashboard() {
     </div>`).join('');
 }
 
+function getImprovementPlan(domain, desc) {
+  const plans = {
+    'الإدارة المدرسية': [
+      { init: 'تطوير الخطة الاستراتيجية', acts: ['مراجعة الخطة الحالية وتحديد الفجوات', 'وضع أهداف قابلة للقياس', 'توزيع المهام والمسؤوليات', 'متابعة التنفيذ دورياً'], recs: ['سجلات التخطيط', 'محاضر الاجتماعات'] },
+      { init: 'تعزيز القيادة التعليمية', acts: ['تدريب القيادة على أحدث الأساليب', 'بناء فرق عمل فعّالة', 'تفعيل التغذية الراجعة', 'تطوير آليات اتخاذ القرار'], recs: ['سجلات التدريب', 'تقارير المتابعة'] },
+      { init: 'تطوير الشراكة المجتمعية', acts: ['تفعيل مجلس أولياء الأمور', 'إشراك المجتمع في الأنشطة', 'بناء شراكات مع الجهات المحلية', 'تنظيم فعاليات مجتمعية'], recs: ['محاضر مجلس الآباء', 'سجل الشراكات'] }
+    ],
+    'التعليم والتعلم': [
+      { init: 'تطوير استراتيجيات التدريس', acts: ['تدريب المعلمين على التعلم النشط', 'توظيف التقنية في التعليم', 'تنويع أساليب التقييم', 'تطوير بيئات التعلم'], recs: ['خطط الدروس', 'تقارير المشرف'] },
+      { init: 'تنمية مهارات التفكير العليا', acts: ['تضمين مهارات التفكير في الدروس', 'تصميم أنشطة إبداعية وابتكارية', 'تطبيق نموذج بلوم في التخطيط', 'تقييم مهارات التفكير النقدي'], recs: ['نماذج الدروس', 'أوراق العمل'] },
+      { init: 'تحسين منظومة التقويم', acts: ['تنويع أدوات التقويم', 'تطبيق التقويم التكويني', 'توظيف نتائج التقويم في التحسين', 'تدريب المعلمين على التقويم الفعّال'], recs: ['أدوات التقويم', 'نتائج الطلاب'] }
+    ],
+    'نواتج التعلم': [
+      { init: 'رفع مستوى التحصيل الدراسي', acts: ['تحليل نتائج الاختبارات وتشخيص الضعف', 'تصميم برامج علاجية مستهدفة', 'تفعيل التعلم الإضافي والدعم', 'متابعة تقدم الطلاب بشكل منتظم'], recs: ['نتائج الاختبارات', 'تقارير المتابعة'] },
+      { init: 'تعزيز التطور الشخصي والاجتماعي', acts: ['تفعيل برامج الإرشاد الطلابي', 'تنمية مهارات القيادة لدى الطلاب', 'تعزيز قيم المواطنة والانتماء', 'دعم الأنشطة اللاصفية'], recs: ['سجلات الإرشاد', 'تقارير الأنشطة'] }
+    ],
+    'البيئة المدرسية': [
+      { init: 'تطوير البيئة التعليمية', acts: ['صيانة وتحديث المرافق المدرسية', 'توفير بيئة تعلم محفزة وجاذبة', 'تجهيز الفصول بالوسائل التعليمية', 'تحسين المساحات الخضراء والترفيهية'], recs: ['سجلات الصيانة', 'تقارير البيئة'] },
+      { init: 'تعزيز الأمن والسلامة', acts: ['تطبيق اشتراطات السلامة المدرسية', 'تدريب الطلاب والمعلمين على الإخلاء', 'تفعيل لجنة الأمن والسلامة', 'مراجعة إجراءات الطوارئ'], recs: ['سجلات السلامة', 'خطط الطوارئ'] }
+    ]
+  };
+  const domPlans = plans[domain] || plans['التعليم والتعلم'];
+  if (!desc) return domPlans[0];
+  for (const plan of domPlans) {
+    if ((desc.includes('تفكير') || desc.includes('إبداع') || desc.includes('ابتكار')) && plan.init.includes('تفكير')) return plan;
+    if ((desc.includes('تقويم') || desc.includes('تقييم')) && plan.init.includes('تقويم')) return plan;
+    if ((desc.includes('تحصيل') || desc.includes('نتائج')) && plan.init.includes('تحصيل')) return plan;
+    if ((desc.includes('قيادة') || desc.includes('تخطيط')) && plan.init.includes('قيادة')) return plan;
+    if ((desc.includes('أمن') || desc.includes('سلامة')) && plan.init.includes('أمن')) return plan;
+    if ((desc.includes('بيئة') || desc.includes('مبنى')) && plan.init.includes('بيئة')) return plan;
+  }
+  return domPlans[0];
+}
 function getLevelFromPct(p) {
   if (p >= 90) return 'التميز';
   if (p >= 75) return 'التقدم';
@@ -1244,7 +1343,8 @@ async function processImport() {
       let pageLines = [];
       for (const key of sortedKeys) {
         const lineItems = lineMap.get(key);
-        // النص العربي RTL: نحتفظ بالترتيب الأصلي للعناصر كما جاءت من PDF
+        // النص العربي RTL: نحتفظ بالترتيب الأصلي للعناصر كما جاءت من PDF.js
+        // لا نعيد ترتيب العناصر لأن PDF.js يعطيها بالترتيب الصحيح للنص العربي
         const lineText = lineItems.map(it => it.str).join('').trim();
         if (lineText) pageLines.push(lineText);
       }
@@ -1379,9 +1479,7 @@ function parsePDFText(text) {
   }
 
   // ===== تقسيم النص إلى أسطر =====
-  const lines = text.split(/[
-
-]+/);
+  const lines = text.split(/[\n\r]+/);
 
   // ===== استخراج معلومات المدرسة =====
   // البحث في أول 200 سطر
@@ -1425,32 +1523,59 @@ function parsePDFText(text) {
   }
 
   // ===== استخراج النسبة الإجمالية والمستوى =====
-  // البحث عن النسبة الإجمالية في منطقة "الأداء العام للمدرسة"
-  for (let i = 0; i < lines.length; i++) {
+  // الاستراتيجية: نبحث عن كلمة المستوى (الانطلاق/التقدم/...) ثم نأخذ آخر نسبة منفردة قبلها مباشرة
+  // لأن النسبة الإجمالية تسبق كلمة المستوى مباشرة في التقرير
+  let overallFound = false;
+  // الخطوة 1: البحث عن كلمة المستوى في أول 300 سطر، ثم البحث عن نسبة في الأسطر السابقة (1-8 أسطر)
+  for (let i = 0; i < Math.min(300, lines.length); i++) {
     const cl = cleanStr(lines[i]);
-    if (/الأداء العام|الأداء الكلي|النسبة الكلية|التقدير العام/.test(cl)) {
-      for (let j = i; j < Math.min(i+10, lines.length); j++) {
-        const pct = extractPct(cleanStr(lines[j]));
+    if (/(الانطلاق|التهيئة|التقدم|التميز)/.test(cl) && cl.length < 60) {
+      // البحث عن نسبة منفردة في الأسطر السابقة (1-8 أسطر)
+      for (let j = i-1; j >= Math.max(0, i-8); j--) {
+        const cj = cleanStr(lines[j]);
+        const pct = extractPct(cj);
+        // النسبة الإجمالية تكون في سطر يحتوي نسبة واحدة فقط (لا نسبتين في سطر واحد)
         if (pct && pct >= 30 && pct <= 100) {
-          result.school_info.overall_percentage = pct;
-          break;
-        }
-      }
-    }
-    // البحث عن المستوى والنسبة معاً في نفس المنطقة
-    if (/الانطلاق|التهيئة|التقدم|التميز/.test(cl) && cl.length < 40) {
-      if (!result.school_info.overall_level) {
-        result.school_info.overall_level = cl.match(/الانطلاق|التهيئة|التقدم|التميز/)[0];
-      }
-      // البحث عن النسبة في الأسطر المجاورة
-      if (!result.school_info.overall_percentage) {
-        for (let j = Math.max(0,i-5); j < Math.min(i+5, lines.length); j++) {
-          const pct = extractPct(cleanStr(lines[j]));
-          if (pct && pct >= 30 && pct <= 100) {
+          // تحقق أن السطر لا يحتوي نسبتين (ليس سطر نسب مجالات)
+          const allPcts = cj.match(/\d+(?:\.\d+)?%/g) || [];
+          if (allPcts.length === 1) {
             result.school_info.overall_percentage = pct;
+            // المستوى يُؤخذ من نفس السطر الذي أدى لإيجاد النسبة (سطر كلمة المستوى)
+            if (!result.school_info.overall_level) {
+              const lm = cl.match(/الانطلاق|التهيئة|التقدم|التميز/);
+              if (lm) result.school_info.overall_level = lm[0];
+            }
+            overallFound = true;
             break;
           }
         }
+      }
+      if (overallFound) break;
+    }
+  }
+  // الخطوة 2: إذا لم نجد، نبحث بعد "الأداء العام للمدرسة" عن آخر نسبة منفردة قبل كلمة المستوى
+  if (!overallFound) {
+    for (let i = 0; i < Math.min(300, lines.length); i++) {
+      const cl = cleanStr(lines[i]);
+      if (/الأداء العام للمدرسة|الأداء العام|الأداء الكلي|النسبة الكلية|التقدير العام/.test(cl)) {
+        // جمع كل النسب المنفردة في النافذة التالية (20 سطر)
+        const candidates = [];
+        for (let j = i+1; j < Math.min(i+25, lines.length); j++) {
+          const cj = cleanStr(lines[j]);
+          const pct = extractPct(cj);
+          if (pct && pct >= 30 && pct <= 100) {
+            const allPcts = cj.match(/\d+(?:\.\d+)?%/g) || [];
+            if (allPcts.length === 1) candidates.push(pct);
+          }
+          if (/^الانطلاق|التهيئة|التقدم|التميز/.test(cj)) break;
+          if (/^\d+-\d+-\d+-\d+/.test(cj)) break;
+        }
+        // آخر نسبة منفردة هي النسبة الإجمالية
+        if (candidates.length > 0) {
+          result.school_info.overall_percentage = candidates[candidates.length - 1];
+          overallFound = true;
+        }
+        break;
       }
     }
   }

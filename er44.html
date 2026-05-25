@@ -597,7 +597,7 @@ function parseEvaluationReport(txt){
   let res={school:{},overall:null,domains:[],indicators:[],summaryStrengthCodes:[],summaryImprovementCodes:[]};
   let compact=txt.replace(/\s+/g,' ');
   // استخراج قوائم الملخص: المؤشرات المتميزة والمؤشرات التي تحتاج إلى تحسين من صفحة ملخص النتائج.
-  const codePattern=/\d{1,2}-\d-\d-\d/g;
+  const codePattern=/\b\d{1,2}-\d-\d-\d\b/g;
   let summaryBlock=windowAround(compact,'ملخص نتائج المدرسة',0,4500) || compact;
   let strengthPart='';
   let improvePart='';
@@ -718,6 +718,153 @@ function mergeParsedReport(parsed){
 function saveHTML(){downloadFile('منصة_تحليل_التقويم_المدرسي.html',document.documentElement.outerHTML,'text/html;charset=utf-8')}function downloadFile(name,content,type){let blob=new Blob([content],{type});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}function printCurrent(){window.print()}function generateBriefPlan(){showTab('exec');document.getElementById('execText').value=executiveText()+`\n\nخطة مختصرة حسب المجالات:\n`+data.domains.map(d=>`- ${d.name}: النسبة ${pct(d.score)}، الفجوة ${gap(d.score)}%، الإجراء: ${domainAdvice(d)}`).join('\n');toast('تم توليد خطة مختصرة في التقرير التنفيذي')}
 function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
 document.getElementById('logoInput').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{localStorage.setItem('schoolLogo',r.result);document.getElementById('logoPreview').innerHTML=`<img src="${r.result}" alt="شعار المدرسة">`;toast('تم رفع الشعار وسيظهر في الطباعة')};r.readAsDataURL(f)});
+
+
+/* ============================================================
+   إصلاح صارم لقراءة نسب PDF من التخطيط البصري الحقيقي
+   لا يغيّر التصميم ولا خطة cy7؛ يتدخل فقط في استخراج النسب.
+   ============================================================ */
+function __pdfNormText(t){return normalizeNumberText(String(t||'')).replace(/[‐‑‒–—−]/g,'-').replace(/\s+/g,' ').trim();}
+function __codeRegex(code){return new RegExp('(?:^|\\D)'+String(code).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?:\\D|$)');}
+function __isIndicatorCodeText(t){return /\b\d{1,2}-\d-\d-\d\b/.test(__pdfNormText(t));}
+function __percentMatchesInText(t){return extractPercentMatches(__pdfNormText(t)).filter(p=>Number.isFinite(+p.value)&&p.value>=0&&p.value<=100);}
+function __selectReportPercentFromText(t){
+  t=__pdfNormText(t);
+  const ms=__percentMatchesInText(t);
+  if(!ms.length)return null;
+  const levels=/(التميز|التقدم|الانطلاق|التهيئة|ممتاز|جيد|مقبول|ضعيف)/;
+  let scored=ms.map(p=>{
+    const before=t.slice(Math.max(0,p.index-70),p.index);
+    const after=t.slice(p.index,Math.min(t.length,p.index+90));
+    let q=1;
+    if(levels.test(after)||levels.test(before))q+=4;
+    if(p.value>=30&&p.value<=100)q+=1;
+    return {...p,q};
+  }).sort((a,b)=>b.q-a.q || a.index-b.index);
+  return +scored[0].value;
+}
+function __rowTextWithSameY(page,line){
+  const y=+line.y;
+  let items=[];
+  (page.lines||[]).forEach(ln=>{ if(Math.abs((+ln.y)-y)<=4.2) items=items.concat(ln.items||[]); });
+  items.sort((a,b)=>a.x-b.x);
+  return items.map(i=>i.str).join(' ');
+}
+function __layoutLines(){return (window.__lastPdfLayout||[]).flatMap(pg=>(pg.lines||[]).map((ln,idx)=>({pg,ln,idx,lines:pg.lines||[]})));}
+function __findIndicatorRows(code){
+  const c=String(code||'').replace(/[‐‑‒–—−]/g,'-');
+  const rows=[];
+  __layoutLines().forEach(o=>{
+    const t=__pdfNormText(o.ln.text);
+    if(t.includes(c) || __codeRegex(c).test(t)) rows.push(o);
+  });
+  return rows;
+}
+function findScoreInPdfLayoutByCode(code){
+  const rows=__findIndicatorRows(code);
+  if(!rows.length)return null;
+  const candidates=[];
+  rows.forEach(o=>{
+    const sameRow=__rowTextWithSameY(o.pg,o.ln);
+    let val=__selectReportPercentFromText(sameRow);
+    if(Number.isFinite(+val)) candidates.push({score:+val,quality:10,page:o.pg.page,idx:o.idx,source:'same-row'});
+
+    // بعض ملفات PDF تفصل النسبة في السطر التالي رغم أنها بصريًا ضمن نفس الصف.
+    let block=[sameRow];
+    for(let j=o.idx+1;j<Math.min(o.lines.length,o.idx+4);j++){
+      const tx=__pdfNormText(o.lines[j].text);
+      if(__isIndicatorCodeText(tx))break;
+      block.push(tx);
+    }
+    val=__selectReportPercentFromText(block.join(' '));
+    if(Number.isFinite(+val)) candidates.push({score:+val,quality:7,page:o.pg.page,idx:o.idx,source:'near-lines'});
+  });
+  if(!candidates.length)return null;
+  candidates.sort((a,b)=>b.quality-a.quality || a.page-b.page || a.idx-b.idx);
+  return candidates[0].score;
+}
+function __headingPosition(names){
+  const needles=names.map(normalizeArabicTextForSearch);
+  let best=null;
+  __layoutLines().forEach(o=>{
+    const t=normalizeArabicTextForSearch(o.ln.text||'');
+    if(needles.some(n=>t.includes(n))){
+      if(!best || o.pg.page<best.pg.page || (o.pg.page===best.pg.page && o.idx<best.idx)) best=o;
+    }
+  });
+  return best;
+}
+function __markerScore(marker, headingNames, maxRows=45){
+  const needle=normalizeArabicTextForSearch(marker);
+  const start=__headingPosition(headingNames||[]);
+  const candidates=[];
+  __layoutLines().forEach(o=>{
+    if(start){
+      if(o.pg.page<start.pg.page)return;
+      if(o.pg.page===start.pg.page && o.idx<start.idx)return;
+      if(o.pg.page===start.pg.page && o.idx>start.idx+maxRows)return;
+    }
+    const raw=__pdfNormText(o.ln.text||'');
+    if(__isIndicatorCodeText(raw))return;
+    const nt=normalizeArabicTextForSearch(raw);
+    if(!nt.includes(needle))return;
+    let row=__rowTextWithSameY(o.pg,o.ln);
+    let v=__selectReportPercentFromText(row);
+    if(!Number.isFinite(+v)){
+      const parts=[row];
+      for(let j=o.idx+1;j<Math.min(o.lines.length,o.idx+3);j++){
+        const tx=__pdfNormText(o.lines[j].text);
+        if(__isIndicatorCodeText(tx))break;
+        parts.push(tx);
+      }
+      v=__selectReportPercentFromText(parts.join(' '));
+    }
+    if(Number.isFinite(+v)) candidates.push({score:+v,page:o.pg.page,idx:o.idx});
+  });
+  if(!candidates.length)return null;
+  candidates.sort((a,b)=>a.page-b.page || a.idx-b.idx);
+  return candidates[0].score;
+}
+function closestPercentAfterMarkerInLayout(marker){
+  return __markerScore(marker,['أداء المدرسة وفق المجالات','أداء المدرسة وفق المعايير','بطاقة التقويم المدرسي'],70);
+}
+function __overallFromLayout(){
+  return __markerScore('الأداء العام للمدرسة',['الأداء العام للمدرسة','ملخص نتائج المدرسة','بطاقة التقويم المدرسي'],25);
+}
+function enhanceParsedByPdfLayout(res){
+  const layout=window.__lastPdfLayout||[];
+  if(!layout.length||!res)return res;
+  const catalog=getReportCatalog();
+  const txt=window.__lastPdfText||'';
+  const byCode=Object.fromEntries((res.indicators||[]).map(i=>[i.code,i]));
+  const rebuilt=[];
+  catalog.forEach(c=>{
+    const sc=findScoreInPdfLayoutByCode(c.code);
+    if(Number.isFinite(+sc)){
+      rebuilt.push({...(byCode[c.code]||{}),code:c.code,text:(byCode[c.code]?.text)||c.text,score:+sc,domain:c.domain,standard:c.standard,suggestion:(byCode[c.code]?.suggestion)||suggestionForIndicator(txt,c.code),owner:(byCode[c.code]?.owner)||'فريق الجودة',status:(byCode[c.code]?.status)||'لم يبدأ',progress:+(byCode[c.code]?.progress||0),start:byCode[c.code]?.start||'',end:byCode[c.code]?.end||'',notes:byCode[c.code]?.notes||'',evidence:byCode[c.code]?.evidence||''});
+    }
+  });
+  // لا نستخدم أي قيم افتراضية: ما لم يُقرأ من التخطيط يترك كما هو فقط إن كان مقروءًا سابقًا من النص.
+  res.indicators=rebuilt.length>=4?rebuilt:(res.indicators||[]);
+
+  const dnames=['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'];
+  const standardsByDomain=[['التخطيط','قيادة العملية التعليمية','المجتمع المدرسي','التطوير المؤسسي'],['بناء خبرات التعلم','تقويم التعلم'],['التحصيل التعليمي','التطور الشخصي والصحي والاجتماعي'],['المبنى المدرسي','الأمن والسلامة']];
+  const currentByName=Object.fromEntries((res.domains||[]).map(d=>[d.name,d]));
+  res.domains=dnames.map((name,di)=>{
+    let ds=__markerScore(name,['أداء المدرسة وفق المجالات','بطاقة التقويم المدرسي'],35);
+    let prev=currentByName[name]||{};
+    let standards=standardsByDomain[di].map(st=>{
+      let ss=__markerScore(st,['أداء المدرسة وفق المعايير','بطاقة التقويم المدرسي'],65);
+      let old=(prev.standards||[]).find(x=>x[0]===st);
+      return [st, Number.isFinite(+ss)?+ss:(Number.isFinite(+(old&&old[1]))?+old[1]:undefined)];
+    }).filter(x=>Number.isFinite(+x[1]));
+    return {name,score:Number.isFinite(+ds)?+ds:(Number.isFinite(+prev.score)?+prev.score:0),standards};
+  });
+  const ov=__overallFromLayout();
+  if(Number.isFinite(+ov))res.overall={...(res.overall||{}),score:+ov,level:normLevel(+ov)};
+  return res;
+}
+
 init();
 </script>
 </body>

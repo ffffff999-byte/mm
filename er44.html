@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>منصة تحليل تقرير التقويم المدرسي وخطة التحسين</title>
+<style>
+:root{--purple:#4b3f91;--purple2:#6d62bd;--gold:#c8a44d;--green:#16845b;--red:#c0392b;--orange:#d9822b;--blue:#2374ab;--ink:#1f2937;--muted:#6b7280;--bg:#f5f6fb;--card:#fff;--line:#e5e7eb;--shadow:0 14px 38px rgba(31,41,55,.10);--radius:22px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:linear-gradient(135deg,#f7f7fb 0%,#eef0fb 48%,#fff 100%);color:var(--ink);font-family:"Tajawal","Segoe UI",Arial,sans-serif;line-height:1.7}button,input,select,textarea{font-family:inherit}button{cursor:pointer}.app{display:grid;grid-template-columns:310px minmax(0,1fr);min-height:100vh}.side{position:sticky;top:0;height:100vh;background:linear-gradient(180deg,#352a79 0%,#4b3f91 65%,#30296f 100%);color:#fff;padding:22px;overflow:auto}.brand{display:flex;gap:12px;align-items:center;margin-bottom:18px}.logoBox{width:62px;height:62px;border:2px dashed rgba(255,255,255,.45);border-radius:18px;display:grid;place-items:center;overflow:hidden;background:rgba(255,255,255,.12)}.logoBox img{width:100%;height:100%;object-fit:contain}.brand h1{font-size:18px;margin:0;line-height:1.35}.brand small{opacity:.82}.nav{display:grid;gap:8px;margin-top:18px}.nav button{border:0;color:#fff;text-align:right;background:rgba(255,255,255,.08);padding:12px 14px;border-radius:14px;display:flex;justify-content:space-between;align-items:center}.nav button.active,.nav button:hover{background:#fff;color:var(--purple);box-shadow:0 10px 24px rgba(0,0,0,.16)}.designer{margin-top:22px;border-top:1px solid rgba(255,255,255,.18);padding-top:16px;font-size:13px;opacity:.92}.main{padding:24px;min-width:0}.hero{background:linear-gradient(135deg,#fff,#f7f5ff);border:1px solid #ebe8ff;border-radius:28px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:center;margin-bottom:20px}.hero h2{font-size:30px;margin:0 0 8px;color:var(--purple)}.hero p{margin:0;color:var(--muted)}.heroStats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.stat{background:#fff;border:1px solid var(--line);border-radius:20px;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,.045)}.stat b{display:block;font-size:25px;color:var(--purple)}.toolbar{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}.btn{border:0;border-radius:14px;padding:10px 14px;background:var(--purple);color:#fff;box-shadow:0 8px 18px rgba(75,63,145,.20)}.btn.alt{background:#fff;color:var(--purple);border:1px solid #ddd;box-shadow:none}.btn.danger{background:var(--red)}.btn.green{background:var(--green)}.btn.gold{background:var(--gold)}.tab{display:none}.tab.active{display:block}.grid{display:grid;gap:14px}.grid.cols4{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);break-inside:avoid;page-break-inside:avoid}.card h3{margin:0 0 12px;color:var(--purple);font-size:20px}.editable{outline:0;border-bottom:1px dashed transparent}.editable:focus{border-bottom-color:var(--purple);background:#faf8ff}.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 10px;font-weight:700;font-size:12px}.b-excellent{background:#eaf8ef;color:var(--green);border:1px solid #bde8cd}.b-progress{background:#eaf4ff;color:var(--blue);border:1px solid #b9daf6}.b-start{background:#fff4e6;color:var(--orange);border:1px solid #ffd19c}.b-prep{background:#ffecec;color:var(--red);border:1px solid #ffc0ba}.meter{height:12px;background:#eceff5;border-radius:999px;overflow:hidden}.meter>span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--purple2),var(--purple))}.bars{display:grid;gap:12px}.barRow{display:grid;grid-template-columns:170px 1fr 60px;gap:10px;align-items:center}.barTrack{height:24px;background:#edf0f6;border-radius:12px;overflow:hidden}.barFill{height:100%;border-radius:12px;background:linear-gradient(90deg,var(--purple2),var(--purple));display:flex;align-items:center;justify-content:flex-start;color:#fff;font-size:11px;padding-inline-start:8px}.donut{width:180px;height:180px;border-radius:50%;margin:auto;background:conic-gradient(var(--purple) 0 71%,#e6e7ef 71%);display:grid;place-items:center;box-shadow:inset 0 0 0 18px #fff}.donut div{width:118px;height:118px;border-radius:50%;background:#fff;display:grid;place-items:center;text-align:center;font-weight:800;color:var(--purple);font-size:28px}.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.filters input,.filters select,.field{border:1px solid #d9dce5;border-radius:14px;padding:10px 12px;background:#fff;min-height:42px}.filters input{min-width:260px}.tableWrap{overflow:auto;border-radius:18px;border:1px solid var(--line);background:#fff}table{width:100%;border-collapse:collapse;min-width:980px}th,td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top;text-align:right}th{background:#f1effb;color:var(--purple);position:sticky;top:0;z-index:1}tr:hover td{background:#fafaff}.progressInput{width:70px}.heat{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.heatItem{border-radius:18px;padding:16px;color:#fff;min-height:105px;display:flex;flex-direction:column;justify-content:space-between;background:var(--purple)}.weak{border-right:6px solid var(--red)}.strength{border-right:6px solid var(--green)}.printOnly{display:none}.svgIcon{width:20px;height:20px;vertical-align:middle}.mini{font-size:12px;color:var(--muted)}.evidenceList{display:grid;gap:10px}.evidenceItem{display:flex;gap:8px;align-items:center;background:#fafafa;border:1px solid var(--line);border-radius:14px;padding:10px}.settingsGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.modal{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:50}.modal.show{display:flex}.modalBox{background:#fff;border-radius:24px;padding:22px;max-width:900px;width:100%;max-height:85vh;overflow:auto}.toast{position:fixed;bottom:20px;left:20px;background:#111827;color:#fff;padding:12px 16px;border-radius:14px;display:none;z-index:60}.toast.show{display:block}.printSelector{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.printCard{border:1px solid var(--line);border-radius:18px;padding:16px;background:#fff}.aiBox{background:#fbfbff;border:1px dashed #bdb7ea;border-radius:18px;padding:15px;white-space:pre-wrap}.nowrap{white-space:nowrap}.low{color:var(--red);font-weight:800}.mid{color:var(--orange);font-weight:800}.high{color:var(--green);font-weight:800}@media(max-width:1100px){.app{grid-template-columns:1fr}.side{position:relative;height:auto}.nav{grid-template-columns:repeat(2,1fr)}.hero{grid-template-columns:1fr}.grid.cols4,.grid.cols3,.grid.cols2,.settingsGrid,.printSelector{grid-template-columns:1fr}.barRow{grid-template-columns:1fr}.heat{grid-template-columns:1fr}}@page{size:A4 portrait;margin:10mm}@media print{body{width:210mm;min-height:297mm;background:white!important;overflow:visible;color:#111}.app{display:block}.side,.no-print,.toolbar,.filters,.modal,.toast{display:none!important}.main{padding:0}.tab{display:block!important}.tab:not(.print-target){display:none!important}.hero,.card{box-shadow:none!important;border-color:#d9d9d9;border-radius:12px}.printOnly{display:block}.print-page{page-break-inside:avoid;break-inside:avoid}table,tr,td,th{page-break-inside:avoid;break-inside:avoid}.hero{grid-template-columns:1fr}.grid.cols4{grid-template-columns:repeat(4,1fr)}.grid.cols3{grid-template-columns:repeat(3,1fr)}.grid.cols2{grid-template-columns:repeat(2,1fr)}.tableWrap{overflow:visible}table{min-width:0;font-size:10px}th,td{padding:5px}.card{padding:10px;margin-bottom:8px}.hero h2{font-size:22px}.donut{width:120px;height:120px}.donut div{width:80px;height:80px;font-size:20px}.designer{display:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side no-print">
+  <div class="brand"><div class="logoBox" id="logoPreview">شعار</div><div><h1>منصة تحليل التقويم المدرسي</h1><small>تفريغ التقرير + خطة تحسين + شواهد</small></div></div>
+  <label class="btn alt" style="display:block;text-align:center;margin-bottom:10px"><input id="logoInput" type="file" accept="image/*" style="display:none"> رفع شعار المدرسة</label>
+  <div class="nav" id="nav"></div>
+  <div class="designer">تصميم د/فواز<br><a style="color:#fff" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد هنا</a></div>
+</aside>
+<main class="main">
+<section class="hero print-page">
+  <div><h2 contenteditable="true" class="editable" data-bind="title">لوحة تحليل تقرير التقويم المدرسي الخارجي</h2><p>منصة عربية RTL لتحويل تقرير التقويم إلى قرارات تحسين، مسؤوليات، شواهد، ومؤشرات قياس قابلة للطباعة والحفظ.</p><div class="toolbar no-print"><button class="btn" onclick="saveData()">حفظ محلي</button><button class="btn alt" onclick="loadData();toast('تم استعادة آخر حفظ')">استعادة المحفوظ</button><button class="btn danger" onclick="clearData()">🧹 تفريغ التقرير الحالي</button><button class="btn green" onclick="restoreDefaults()">استعادة البيانات الافتراضية</button><button class="btn gold" onclick="printCurrent()">طباعة التبويب</button></div></div>
+  <div class="heroStats"><div class="stat"><span>الأداء العام</span><b id="overallStat">71%</b><span id="overallLevel" class="badge b-start">الانطلاق</span></div><div class="stat"><span>أضعف مجال</span><b id="weakDomain">-</b><span class="mini">أولوية تحسين</span></div><div class="stat"><span>أقوى مجال</span><b id="strongDomain">-</b><span class="mini">استدامة وتجويد</span></div><div class="stat"><span>فجوة التميز</span><b id="gapStat">19%</b><span class="mini">حتى 90%</span></div></div>
+</section>
+<div id="tabs"></div>
+</main>
+</div>
+<div class="modal no-print" id="modal"><div class="modalBox"><button class="btn danger" onclick="closeModal()" style="float:left">إغلاق</button><div id="modalContent"></div></div></div><div class="toast" id="toast"></div>
+<script>
+const LEVELS=[{name:'التهيئة',min:0,max:50,cls:'b-prep',color:'#c0392b'},{name:'الانطلاق',min:50,max:75,cls:'b-start',color:'#d9822b'},{name:'التقدم',min:75,max:90,cls:'b-progress',color:'#2374ab'},{name:'التميز',min:90,max:101,cls:'b-excellent',color:'#16845b'}];
+const defaults={title:'لوحة تحليل تقرير التقويم المدرسي الخارجي',school:{name:'متوسطة سعد بن الربيع الأنصاري',edu:'الإدارة العامة للتعليم بمنطقة المدينة المنورة',office:'',stage:'متوسط',gender:'بنين',type:'حكومي',ministryNo:'40341S-',students:354,teachers:30,agents:2,admins:8,guidance:1,labs:0,date:'2024/05/24',year:'2025م'},overall:{score:71,level:'الانطلاق',desc:'أداء مقبول يحتاج إلى تحسين في بعض المجالات'},domains:[{name:'الإدارة المدرسية',score:78.75,standards:[['التخطيط',74.25],['قيادة العملية التعليمية',80.75],['المجتمع المدرسي',77.50],['التطوير المؤسسي',79.75]]},{name:'التعليم والتعلم',score:65.50,standards:[['بناء خبرات التعلم',63.50],['تقويم التعلم',66.25]]},{name:'نواتج التعلم',score:74.75,standards:[['التحصيل التعليمي',71.75],['التطور الشخصي والصحي والاجتماعي',86.50]]},{name:'البيئة المدرسية',score:60.50,standards:[['المبنى المدرسي',52.50],['الأمن والسلامة',68.50]]}],indicators:[
+['1-1-1-1','تضع المدرسة خطة تشغيلية مكتملة العناصر وفق أهداف تطويرية محددة',74.50,'الإدارة المدرسية','التخطيط','تطوير خطة تشغيلية مرنة تتضمن أهدافًا تطويرية وبرامج وأنشطة ومبادرات ومؤشرات أداء ومسؤوليات مزمنة.'],['2-1-1-1','تتابع المدرسة تنفيذ خطتها وتطورها بما يضمن تحقيق أهدافها',74.00,'الإدارة المدرسية','التخطيط','متابعة تنفيذ الخطة وتقويمها بانتظام وفق مؤشرات أداء واضحة وتطويرها بما يضمن تحقيق الأهداف.'],['1-1-2-1','تعزز المدرسة القيم الإسلامية والهوية الوطنية',84.50,'الإدارة المدرسية','قيادة العملية التعليمية','تعزيز القيم والهوية والانتماء عبر أنشطة وبرامج متنوعة ومبتكرة.'],['2-1-2-1','تلتزم المدرسة بقيم مهنة التعليم وأخلاقياتها',89.75,'الإدارة المدرسية','قيادة العملية التعليمية','تعزيز الالتزام بأخلاقيات مهنة التعليم وقواعد السلوك الوظيفي.'],['3-1-2-1','توفر المدرسة مناخًا آمنًا للتعلم والنمو نفسيًّا واجتماعيًّا',79.50,'الإدارة المدرسية','قيادة العملية التعليمية','توفير مناخ آمن يدعم الحوار والتعاون ويعالج التنمر ببرامج وقائية.'],['4-1-2-1','تنشر المدرسة قواعد السلوك والمواظبة وتتابع تطبيقها',85.00,'الإدارة المدرسية','قيادة العملية التعليمية','نشر قواعد السلوك والمواظبة ومتابعة تطبيقها بانتظام وبأساليب متنوعة.'],['5-1-2-1','توفر المدرسة برامج وأنشطة تربوية داعمة للسلوك الإيجابي',74.25,'الإدارة المدرسية','قيادة العملية التعليمية','توفير برامج علاجية ووقائية مرتبطة بتشخيص المشكلات السلوكية وتقويم أثرها.'],['6-1-2-1','توفر المدرسة برامج وأنشطة إثرائية غير صفية لتطوير مواهب المتعلمين وتهيئهم للمستقبل',68.75,'الإدارة المدرسية','قيادة العملية التعليمية','تطبيق أساليب كشف المواهب وتوفير أنشطة إثرائية ومتابعتها وتحفيز المشاركات.'],['1-1-3-1','تعزز المدرسة بناء العلاقات الإيجابية والتعاون في المجتمع المدرسي',92.50,'الإدارة المدرسية','المجتمع المدرسي','استدامة التعاون والعمل بروح الفريق ودعم العلاقات الإنسانية الإيجابية.'],['2-1-3-1','تعزز المدرسة مشاركة الأسرة في تعلم أبنائهم والتحضير لمستقبلهم',76.25,'الإدارة المدرسية','المجتمع المدرسي','توفير فرص تواصل فعالة مع الأسرة لدعم تعلم الأبناء وتقويم الخدمات.'],['3-1-3-1','تعزز المدرسة الشراكة المجتمعية لدعم التعلم والتأثير الإيجابي في المجتمع المحلي',49.75,'الإدارة المدرسية','المجتمع المدرسي','بناء شراكات نوعية مع المجتمع المحلي والمؤسسات الوطنية لدعم التعلم وخدمة ذوي الإعاقة والموهوبين.'],['1-1-4-1','تشجع المدرسة منسوبيها للحصول على الرخصة المهنية',73.25,'الإدارة المدرسية','التطوير المؤسسي','تنفيذ برامج توعوية وتحفيزية ومتابعة التقدم المهني وفق الرتب المهنية.'],['2-1-4-1','تدعم المدرسة التطوير المهني لمنسوبيها وفقًا لنتائج تقويم الأداء الوظيفي واحتياجاتهم',85.50,'الإدارة المدرسية','التطوير المؤسسي','بناء خطة تطوير مهني مرتبطة بتقويم الأداء وقياس أثرها وتشجيع مجتمعات التعلم.'],['3-1-4-1','تطبق المدرسة التقويم الذاتي المبني على المعايير المعتمدة من الهيئة',92.00,'الإدارة المدرسية','التطوير المؤسسي','استدامة التقويم الذاتي ونشر ثقافته ومشاركة نتائجه ونقل الخبرة.'],['4-1-4-1','تنفذ المدرسة خطة للتحسين بناء على نتائج التقويم المدرسي وتتابعها',72.50,'الإدارة المدرسية','التطوير المؤسسي','تطوير خطة تحسين في ضوء نتائج التقويم وتحديد الأولويات ومتابعة التنفيذ.'],
+['1-1-1-2','توفر المدرسة فرصًا متكافئة للتعلم تلبي احتياجات المتعلمين بمن فيهم ذوو الإعاقة والموهوبون',64.50,'التعليم والتعلم','بناء خبرات التعلم','توفير فرص تعلم متكافئة تستجيب لاحتياجات جميع المتعلمين وتوفير الوصول الشامل.'],['2-1-1-2','تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية',71.50,'التعليم والتعلم','بناء خبرات التعلم','توفير أنشطة ومصادر متنوعة تدعم المعارف والمهارات والقيم وفق الخطة الدراسية.'],['3-1-1-2','تنوع المدرسة في إستراتيجيات التدريس لتلبية احتياجات المتعلمين ودعم تعلمهم',59.75,'التعليم والتعلم','بناء خبرات التعلم','بناء خبرات تعلم ثرية وتشجيع البحث والتجريب وتطبيق إستراتيجيات متنوعة تراعي الفروق الفردية.'],['4-1-1-2','تفعل المدرسة التعلم الإلكتروني لتلبية احتياجات المتعلمين ودعم تعلمهم',66.50,'التعليم والتعلم','بناء خبرات التعلم','تصميم أنشطة تدمج التعلم الصفي والإلكتروني وتوفير التجهيزات التقنية اللازمة.'],['5-1-1-2','توفر المدرسة أنشطة تعلم تطبيقية ترتبط بحياة المتعلمين',75.50,'التعليم والتعلم','بناء خبرات التعلم','ربط خبرات المتعلمين بواقع حياتهم وتقديم أنشطة تطبيقية وبحثية.'],['6-1-1-2','تنمي المدرسة المهارات القرائية والعددية الأساسية لدى المتعلمين',65.50,'التعليم والتعلم','بناء خبرات التعلم','تعزيز القراءة والكتابة والمهارات العددية عبر خطة مركزة طويلة المدى.'],['7-1-1-2','تنمي المدرسة مهارات التفكير العليا لدى المتعلمين',46.75,'التعليم والتعلم','بناء خبرات التعلم','توفير أنشطة تعلم تستهدف التحليل والاستنتاج والتقويم والإبداع وحل المشكلات وتقويم أثرها.'],['8-1-1-2','تنمي المدرسة المهارات العاطفية والاجتماعية لدى المتعلمين',78.50,'التعليم والتعلم','بناء خبرات التعلم','تعزيز مهارات التعبير وضبط الانفعالات والثقة والتعاون والحوار.'],['9-1-1-2','تنمي المدرسة المهارات الرقمية لدى المتعلمين',72.25,'التعليم والتعلم','بناء خبرات التعلم','تعزيز استخدام التقنية والتعامل مع البيانات والوصول إلى مصادر المعرفة الموثوقة.'],['10-1-1-2','تعزز المدرسة دافعية المتعلمين للتعلم والاستمتاع به',61.50,'التعليم والتعلم','بناء خبرات التعلم','توفير بيئة تعلم مثيرة للفضول وتطبيق أساليب تحفيز تراعي ميول المتعلمين.'],['1-1-2-2','تقوّم المدرسة أداء المتعلمين باستخدام أساليب وأدوات تقويم متنوعة وفاعلة',52.50,'التعليم والتعلم','تقويم التعلم','تطبيق تقويم تشخيصي وتكويني وختامي متنوع يدعم التعلم ويميز مستويات الأداء.'],['2-1-2-2','تحلل المدرسة نتائج التقويم وتوظفها في تحسين نواتج التعلم بانتظام',74.25,'التعليم والتعلم','تقويم التعلم','تحليل النتائج وتفسيرها واتخاذ قرارات علاجية وإثرائية لتحسين نواتج التعلم.'],['3-1-2-2','تقدم المدرسة التغذية الراجعة للمتعلمين بانتظام',67.25,'التعليم والتعلم','تقويم التعلم','تقديم تغذية راجعة فورية وبناءة توضح مستوى التقدم وتشجع التميز.'],
+['1-1-1-3','يحقق المتعلمون نتائج متقدمة في مجال القراءة وفقًا للاختبارات الوطنية',75.52,'نواتج التعلم','التحصيل التعليمي','تحليل بيانات الاختبارات الوطنية ورفع نسبة المتعلمين في المستويات المتقدمة في القراءة.'],['2-1-1-3','يحقق المتعلمون نتائج متقدمة في مجال الرياضيات وفقًا للاختبارات الوطنية',66.20,'نواتج التعلم','التحصيل التعليمي','تحليل فجوة الرياضيات وبناء برامج علاجية وإثرائية لرفع نتائج المتعلمين.'],['3-1-1-3','يحقق المتعلمون نتائج متقدمة في مجال العلوم وفقًا للاختبارات الوطنية',74.08,'نواتج التعلم','التحصيل التعليمي','تحليل فجوة العلوم واتخاذ قرارات تعليمية مناسبة للبرامج العلاجية والإثرائية.'],['1-1-2-3','يظهر المتعلمون الاعتزاز بالقيم والهوية الوطنية',91.50,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','استدامة تعزيز القيم والهوية واللغة العربية والاعتزاز بمنجزات الوطن.'],['2-1-2-3','يظهر المتعلمون اتجاهات إيجابية نحو ذواتهم',91.75,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','استدامة تعزيز الاتجاهات الإيجابية والرفاه والرضا عن الحياة.'],['3-1-2-3','يظهر المتعلمون التزامًا بالممارسات الصحية السليمة',90.00,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','استدامة التوعية بالممارسات الصحية السليمة ومتابعة الالتزام بها.'],['4-1-2-3','يشارك المتعلمون في الأنشطة المجتمعية والأعمال التطوعية',76.25,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','تصميم برامج نوعية تحفز المشاركة التطوعية وتوظيف التعلم في حلول مبتكرة.'],['5-1-2-3','يلتزم المتعلمون بقواعد السلوك والانضباط المدرسي',77.50,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','تطوير برامج وأدلة ومنشورات تكتسب الانضباط الذاتي والسلوك المسؤول.'],['6-1-2-3','يظهر المتعلمون القدرة على البحث والتعلم الذاتي',83.00,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','تنمية البحث والتعلم الذاتي ومهارات إدارة الوقت وتوظيف التقنية.'],['7-1-2-3','يظهر المتعلمون اعتزازًا بثقافتهم واحترامًا للتنوع الثقافي في المجتمع',93.75,'نواتج التعلم','التطور الشخصي والصحي والاجتماعي','استدامة الفخر باللغة العربية والثقافة واحترام التنوع الثقافي.'],
+['1-1-1-4','تنظيم مبنى المدرسة ملائم لعدد المتعلمين والمرحلة العمرية',47.75,'البيئة المدرسية','المبنى المدرسي','العمل مع الجهات ذات العلاقة لتطوير المبنى وتنظيم الأثاث بما يحقق الرفاه ويلائم المرحلة.'],['2-1-1-4','تتوافر فصول ومعامل ملائمة للعملية التعليمية تلبي احتياجات المتعلمين بمن فيهم ذوو الإعاقة',65.50,'البيئة المدرسية','المبنى المدرسي','تنظيم الفصول والمعامل وتجهيزها وفق المواصفات وتوفير الوسائل والمواد اللازمة.'],['3-1-1-4','تلبي المرافق والخدمات المساندة احتياجات المتعلمين بمن فيهم ذوو الإعاقة',43.75,'البيئة المدرسية','المبنى المدرسي','توفير مرافق وخدمات مساندة ملائمة وتحقيق الرفاه والمحافظة على استدامتها.'],['1-1-2-4','تتوافر في فصول المدرسة ومعاملها وجميع مرافقها متطلبات الأمن والسلامة',60.50,'البيئة المدرسية','الأمن والسلامة','متابعة تجهيزات الأمن والسلامة وتعزيز ثقافة السلامة ومتابعة سلامة المتعلمين.'],['2-1-2-4','تعمل المدرسة على صيانة جميع مرافق المبنى وتجهيزاته بانتظام',65.25,'البيئة المدرسية','الأمن والسلامة','متابعة صيانة المرافق والتجهيزات بانتظام لضمان كفاءة المبنى وفاعليته.'],['3-1-2-4','تعمل المدرسة على نظافة المبنى المدرسي وجميع مرافقه بانتظام',79.00,'البيئة المدرسية','الأمن والسلامة','متابعة النظافة وتوفير أدواتها وحفظها في أماكن ملائمة.']
+].map(x=>({code:x[0],text:x[1],score:x[2],domain:x[3],standard:x[4],suggestion:x[5],owner:'فريق الجودة',status:'لم يبدأ',progress:0,start:'',end:'',notes:'',evidence:''})),evidence:['خطط تشغيلية وتطويرية','محاضر اجتماعات فريق الجودة','نماذج تحليل نتائج نافس','خطط علاجية وإثرائية','زيارات صفية وتغذية راجعة','عينات من أعمال الطلاب','صور قبل وبعد للمرافق','خطابات رسمية للجهات ذات العلاقة','اتفاقيات شراكة مجتمعية','تقارير قياس أثر']};
+let data=JSON.parse(JSON.stringify(defaults));let currentTab='home';
+const tabDefs=[['home','الرئيسية'],['school','معلومات المدرسة'],['dash','لوحة القيادة'],['domains','المجالات والمعايير'],['indicators','المؤشرات التفصيلية'],['strengths','نقاط القوة'],['weakness','نقاط الضعف'],['plan','خطة التحسين'],['evidence','الشواهد'],['exec','التقرير التنفيذي'],['print','الطباعة والتصدير'],['settings','الإعدادات']];
+function blankReportData(){return {__empty:true,title:'منصة جديدة - جاهزة لاستيراد تقرير',school:{name:'',edu:'',office:'',stage:'',gender:'',type:'',ministryNo:'',students:'',teachers:'',agents:'',admins:'',guidance:'',labs:'',date:'',year:''},overall:{score:0,level:'',desc:''},domains:['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'].map(n=>({name:n,score:0,standards:[]})),indicators:[],evidence:[]}}
+function level(score){return LEVELS.find(l=>score>=l.min&&score<l.max)||LEVELS[0]}function priority(s){return s<50?'أولوية عاجلة':s<65?'أولوية عالية':s<75?'أولوية متوسطة':'استدامة وتجويد'}function classify(s){return s>=90?'قوة قابلة للاستدامة':s<50?'ضعف حرج':'يحتاج تحسين'}function gap(s){return Math.max(0,(90-s)).toFixed(2)}function badge(s){let l=level(+s);return `<span class="badge ${l.cls}">${l.name}</span>`}function pct(v){return Number(v).toFixed(Number(v)%1?2:0)+'%'}
+function ensureDataIntegrity(){
+  if(!data || typeof data!=='object') data=JSON.parse(JSON.stringify(defaults));
+  const isEmptyMode=!!data.__empty;
+  data.school=data.school&&typeof data.school==='object'?data.school:{};
+  data.overall=data.overall&&typeof data.overall==='object'?data.overall:(isEmptyMode?{score:0,level:'',desc:''}:{...defaults.overall});
+  data.overall.score=Number.isFinite(+data.overall.score)?+data.overall.score:0;
+  data.overall.level=data.overall.level||normLevel(data.overall.score);
+  data.overall.desc=data.overall.desc||'';
+  if(isEmptyMode){
+    const names=['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'];
+    data.domains=Array.isArray(data.domains)&&data.domains.length?data.domains:names.map(n=>({name:n,score:0,standards:[]}));
+    data.indicators=Array.isArray(data.indicators)?data.indicators:[];
+    data.evidence=Array.isArray(data.evidence)?data.evidence:[];
+    data.title=data.title||'منصة جديدة - جاهزة لاستيراد تقرير';
+    return data;
+  }
+  if(!Array.isArray(data.domains) || !data.domains.length){
+    data.domains=JSON.parse(JSON.stringify(defaults.domains));
+  }
+  const defaultDomains=JSON.parse(JSON.stringify(defaults.domains));
+  data.domains=data.domains.map((d,i)=>({
+    name:(d&&d.name)||defaultDomains[i]?.name||('مجال '+(i+1)),
+    score:Number.isFinite(+(d&&d.score))?+(d&&d.score):+(defaultDomains[i]?.score||0),
+    standards:Array.isArray(d&&d.standards)&&d.standards.length?d.standards:defaultDomains[i]?.standards||[]
+  })).filter(d=>d.name);
+  if(data.domains.length<4){
+    const existing=new Set(data.domains.map(d=>d.name));
+    defaultDomains.forEach(d=>{if(!existing.has(d.name))data.domains.push(d)});
+  }
+  data.domains=data.domains.slice(0,4);
+  data.domains.forEach(d=>{d.score=Number.isFinite(+d.score)?+d.score:0; d.standards=(d.standards||[]).map(s=>Array.isArray(s)?[s[0]||'معيار',Number.isFinite(+s[1])?+s[1]:0]:['معيار',0])});
+  data.indicators=Array.isArray(data.indicators)?data.indicators:[];
+  if(!data.indicators.length)data.indicators=JSON.parse(JSON.stringify(defaults.indicators));
+  data.indicators=data.indicators.map(i=>({
+    code:(i&&i.code)||('مؤشر-'+Math.random().toString(36).slice(2,7)),
+    text:(i&&i.text)||'مؤشر غير مسمى',
+    score:Number.isFinite(+(i&&i.score))?+(i&&i.score):0,
+    domain:(i&&i.domain)||'غير مصنف',
+    standard:(i&&i.standard)||'غير محدد',
+    suggestion:(i&&i.suggestion)||'مقترح التحسين حسب نص التقرير.',
+    owner:(i&&i.owner)||'فريق الجودة',
+    status:(i&&i.status)||'لم يبدأ',
+    progress:Number.isFinite(+(i&&i.progress))?+(i&&i.progress):0,
+    start:(i&&i.start)||'',end:(i&&i.end)||'',notes:(i&&i.notes)||'',evidence:(i&&i.evidence)||''
+  }));
+  data.evidence=Array.isArray(data.evidence)?data.evidence:JSON.parse(JSON.stringify(defaults.evidence));
+  data.title=data.title||'منصة تحليل تقرير التقويم المدرسي الخارجي';
+  return data;
+}
+function safeDomains(){ensureDataIntegrity();return data.domains.filter(d=>d&&d.name)}
+
+function init(){document.getElementById('nav').innerHTML=tabDefs.map(t=>`<button onclick="showTab('${t[0]}')" id="nav-${t[0]}">${t[1]} <span>›</span></button>`).join('');document.getElementById('tabs').innerHTML=tabDefs.map(t=>`<section class="tab" id="tab-${t[0]}"></section>`).join('');loadData(false);renderAll();showTab('home')}
+function renderAll(){ensureDataIntegrity();renderHome();renderSchool();renderDash();renderDomains();renderIndicators();renderStrengths();renderWeakness();renderPlan();renderEvidence();renderExec();renderPrint();renderSettings();updateHero()}
+function updateHero(){ensureDataIntegrity();document.getElementById('overallStat').textContent=pct(data.overall.score);document.getElementById('overallLevel').textContent=data.overall.level||normLevel(data.overall.score);document.getElementById('overallLevel').className='badge '+level(data.overall.score).cls;let d=safeDomains().sort((a,b)=>a.score-b.score);let weak=d[0]||{name:'غير محدد',score:0},strong=d[d.length-1]||weak;document.getElementById('weakDomain').textContent=weak.name+' '+pct(weak.score);document.getElementById('strongDomain').textContent=strong.name+' '+pct(strong.score);document.getElementById('gapStat').textContent=gap(data.overall.score)+'%';document.querySelector('[data-bind="title"]').textContent=data.title}
+function showTab(id){currentTab=id;document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active','print-target'));document.querySelectorAll('.nav button').forEach(e=>e.classList.remove('active'));document.getElementById('tab-'+id).classList.add('active','print-target');document.getElementById('nav-'+id)?.classList.add('active');window.scrollTo(0,0)}
+function renderHome(){let t=document.getElementById('tab-home');t.innerHTML=`<div class="grid cols3"><div class="card"><h3>ملخص الأداء</h3><div class="donut"><div>${pct(data.overall.score)}<br><small>${data.overall.level}</small></div></div><p>${data.overall.desc}</p></div><div class="card"><h3>أولويات مباشرة</h3>${data.indicators.filter(i=>i.score<50).sort((a,b)=>a.score-b.score).slice(0,5).map(i=>`<p><b class="low">${pct(i.score)}</b> ${i.code} - ${i.text}</p>`).join('')}</div><div class="card"><h3>تحليل سريع</h3><div class="aiBox">${executiveText()}</div></div></div><div class="card" style="margin-top:14px"><h3>المجالات الأربعة</h3><div class="bars">${data.domains.map(d=>bar(d.name,d.score)).join('')}</div></div>`}
+function renderSchool(){let s=data.school;let fields=[['name','اسم المدرسة'],['edu','إدارة التعليم'],['office','مكتب التعليم'],['stage','المرحلة الدراسية'],['gender','جنس المدرسة'],['type','نوع المدرسة'],['ministryNo','الرقم الوزاري'],['students','عدد الطلاب'],['teachers','عدد شاغلي الوظائف التعليمية'],['agents','عدد الوكلاء'],['admins','عدد شاغلي الوظائف الإدارية'],['guidance','عدد الموجهين الطلابيين'],['labs','عدد محضري المختبرات'],['date','تاريخ تطبيق التقويم'],['year','عام التقرير']];document.getElementById('tab-school').innerHTML=`<div class="card"><h3>معلومات المدرسة</h3><div class="grid cols3">${fields.map(f=>`<label>${f[1]}<input class="field" value="${s[f[0]]??''}" onchange="data.school['${f[0]}']=this.value;saveData(false);renderAll()"></label>`).join('')}</div></div>`}
+function renderDash(){let counts=LEVELS.map(l=>[l.name,data.indicators.filter(i=>level(i.score).name==l.name).length,l.cls]);let top=[...data.indicators].sort((a,b)=>b.score-a.score).slice(0,10), low=[...data.indicators].sort((a,b)=>a.score-b.score).slice(0,10);document.getElementById('tab-dash').innerHTML=`<div class="grid cols4"><div class="card"><h3>الأداء العام</h3><div class="donut"><div>${pct(data.overall.score)}</div></div>${badge(data.overall.score)}</div>${counts.map(c=>`<div class="card"><h3>${c[0]}</h3><b style="font-size:42px">${c[1]}</b><br><span class="badge ${c[2]}">مؤشر</span></div>`).join('')}</div><div class="grid cols2" style="margin-top:14px"><div class="card"><h3>مخطط المجالات</h3><div class="bars">${data.domains.map(d=>bar(d.name,d.score)).join('')}</div></div><div class="card"><h3>خريطة حرارية للمجالات</h3><div class="heat">${data.domains.map(d=>`<div class="heatItem" style="background:${level(d.score).color}"><b>${d.name}</b><span>${pct(d.score)}</span><small>فجوة ${gap(d.score)}%</small></div>`).join('')}</div></div></div><div class="grid cols2" style="margin-top:14px"><div class="card"><h3>أدنى 10 مؤشرات</h3>${listMini(low)}</div><div class="card"><h3>أعلى 10 مؤشرات</h3>${listMini(top)}</div></div><div class="card" style="margin-top:14px"><h3>مخطط أفقي للمعايير</h3><div class="bars">${data.domains.flatMap(d=>d.standards.map(s=>bar(s[0],s[1]))).join('')}</div></div>`}
+function renderDomains(){document.getElementById('tab-domains').innerHTML=`<div class="grid cols4">${data.domains.sort((a,b)=>b.score-a.score).map((d,idx)=>`<div class="card"><h3>${idx+1}. ${d.name}</h3><b style="font-size:34px;color:var(--purple)">${pct(d.score)}</b><p>${badge(d.score)} <span class="badge b-start">فجوة ${gap(d.score)}%</span></p><p>${domainAdvice(d)}</p><h4>المعايير</h4>${d.standards.map(s=>`${bar(s[0],s[1])}<p class="mini">${priority(s[1])}</p>`).join('')}</div>`).join('')}</div>`}
+function renderIndicators(){let domains=['الكل',...new Set(data.indicators.map(i=>i.domain))], levels=['الكل','التهيئة','الانطلاق','التقدم','التميز'], pr=['الكل','أولوية عاجلة','أولوية عالية','أولوية متوسطة','استدامة وتجويد'];document.getElementById('tab-indicators').innerHTML=`<div class="card"><h3>المؤشرات التفصيلية</h3><div class="filters no-print"><input id="q" placeholder="بحث مباشر برمز أو نص المؤشر" oninput="fillIndicators()"><select id="fd" onchange="fillIndicators()">${domains.map(x=>`<option>${x}</option>`).join('')}</select><select id="fl" onchange="fillIndicators()">${levels.map(x=>`<option>${x}</option>`).join('')}</select><select id="fp" onchange="fillIndicators()">${pr.map(x=>`<option>${x}</option>`).join('')}</select><button class="btn" onclick="addIndicator()">إضافة مؤشر جديد</button></div><div class="tableWrap"><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>المجال</th><th>المعيار</th><th>النسبة</th><th>المستوى</th><th>الأولوية</th><th>الفجوة</th><th class="no-print">إجراءات</th></tr></thead><tbody id="indBody"></tbody></table></div></div>`;fillIndicators()}
+function fillIndicators(){let q=(document.getElementById('q')?.value||'').trim(),fd=document.getElementById('fd')?.value||'الكل',fl=document.getElementById('fl')?.value||'الكل',fp=document.getElementById('fp')?.value||'الكل';let arr=data.indicators.filter(i=>(!q||(i.code+i.text).includes(q))&&(fd=='الكل'||i.domain==fd)&&(fl=='الكل'||level(i.score).name==fl)&&(fp=='الكل'||priority(i.score)==fp)).sort((a,b)=>a.score-b.score);document.getElementById('indBody').innerHTML=arr.map((i,idx)=>`<tr><td contenteditable onblur="iByCode('${i.code}').code=this.textContent">${i.code}</td><td contenteditable onblur="iByCode('${i.code}').text=this.textContent">${i.text}</td><td>${i.domain}</td><td>${i.standard}</td><td><input class="field progressInput" type="number" value="${i.score}" onchange="iByCode('${i.code}').score=+this.value;saveData(false);renderAll()"></td><td>${badge(i.score)}</td><td>${priority(i.score)}</td><td>${gap(i.score)}%</td><td class="no-print"><button class="btn alt" onclick="openPlan('${i.code}')">خطة</button><button class="btn danger" onclick="delIndicator('${i.code}')">حذف</button></td></tr>`).join('')}
+function renderStrengths(){let arr=data.indicators.filter(i=>i.score>=90).sort((a,b)=>b.score-a.score);document.getElementById('tab-strengths').innerHTML=`<div class="grid cols3">${arr.map(i=>`<div class="card strength"><h3>${i.code}</h3><b class="high">${pct(i.score)}</b> ${badge(i.score)}<p>${i.text}</p><span class="badge b-excellent">قوة قابلة للاستدامة</span><p class="mini">إجراء استدامة: ${i.suggestion}</p></div>`).join('')}</div>`}
+function renderWeakness(){let arr=data.indicators.filter(i=>i.score<50).sort((a,b)=>a.score-b.score);document.getElementById('tab-weakness').innerHTML=`<div class="grid cols2">${arr.map(i=>`<div class="card weak"><h3>${i.code}</h3><b class="low">${pct(i.score)}</b> ${badge(i.score)}<p>${i.text}</p>${weakAnalysis(i)}<button class="btn no-print" onclick="openPlan('${i.code}')">توليد خطة لهذا المؤشر</button></div>`).join('')}</div>`}
+function renderPlan(){let rows=[...data.indicators].filter(i=>i.score<75).sort((a,b)=>a.score-b.score);document.getElementById('tab-plan').innerHTML=`<div class="card"><h3>مولد خطة التحسين الذكي</h3><div class="filters no-print"><select id="planSelect">${data.indicators.map(i=>`<option value="${i.code}">${i.code} - ${i.text}</option>`).join('')}</select><button class="btn" onclick="openPlan(document.getElementById('planSelect').value)">توليد خطة مؤشر</button><button class="btn gold" onclick="generateBriefPlan()">توليد خطة مختصرة للمجالات الأربعة</button></div><div class="tableWrap"><table><thead><tr><th>المجال</th><th>المعيار</th><th>المؤشر</th><th>الحالية</th><th>الفجوة</th><th>الهدف</th><th>المستهدفة</th><th>الإجراء</th><th>المبادرة</th><th>المسؤول</th><th>الشركاء</th><th>المدة</th><th>الشواهد</th><th>الأثر</th><th>الحالة</th><th>الإنجاز</th></tr></thead><tbody>${rows.map(i=>planRow(i)).join('')}</tbody></table></div></div>`}
+function planRow(i){let p=makePlan(i);return `<tr><td>${i.domain}</td><td>${i.standard}</td><td>${i.code}<br>${i.text}</td><td>${pct(i.score)}<br>${badge(i.score)}</td><td>${gap(i.score)}%</td><td contenteditable>${p.goal}</td><td contenteditable>${p.target}%</td><td contenteditable>${p.action}</td><td contenteditable>${p.program}</td><td contenteditable>${i.owner}</td><td contenteditable>${p.partners}</td><td contenteditable>${p.duration}</td><td contenteditable>${p.evidence}</td><td contenteditable>${p.impact}</td><td><select onchange="iByCode('${i.code}').status=this.value;saveData(false)"><option ${i.status=='لم يبدأ'?'selected':''}>لم يبدأ</option><option ${i.status=='قيد التنفيذ'?'selected':''}>قيد التنفيذ</option><option ${i.status=='منجز'?'selected':''}>منجز</option></select></td><td><input type="number" class="field progressInput" value="${i.progress}" onchange="iByCode('${i.code}').progress=+this.value;saveData(false)">%</td></tr>`}
+function renderEvidence(){document.getElementById('tab-evidence').innerHTML=`<div class="card"><h3>إدارة الشواهد</h3><div class="filters no-print"><input id="evInput" placeholder="أضف شاهدًا جديدًا"><button class="btn" onclick="addEvidence()">إضافة شاهد</button></div><div class="evidenceList">${data.evidence.map((e,idx)=>`<div class="evidenceItem"><input type="checkbox"><span contenteditable onblur="data.evidence[${idx}]=this.textContent;saveData(false)">${e}</span><button class="btn danger no-print" onclick="data.evidence.splice(${idx},1);saveData(false);renderEvidence()">حذف</button></div>`).join('')}</div></div><div class="card" style="margin-top:14px"><h3>شواهد مقترحة حسب المؤشرات الحرجة</h3>${data.indicators.filter(i=>i.score<50).map(i=>`<p><b>${i.code}</b> ${makePlan(i).evidence}</p>`).join('')}</div>`}
+function renderExec(){document.getElementById('tab-exec').innerHTML=`<div class="card"><h3>التقرير التنفيذي التلقائي</h3><div class="toolbar no-print"><button class="btn" onclick="genExec()">توليد التقرير التنفيذي</button><button class="btn alt" onclick="copyExec()">نسخ النص</button><button class="btn gold" onclick="printCurrent()">طباعة التقرير</button></div><textarea id="execText" style="width:100%;min-height:360px;border:1px solid var(--line);border-radius:18px;padding:16px;font-size:16px;line-height:1.9">${executiveText()}</textarea></div>`}
+function renderPrint(){document.getElementById('tab-print').innerHTML=`<div class="card"><h3>الطباعة والتصدير</h3><div class="printSelector"><div class="printCard"><h4>تقرير ملخص A4</h4><p>يطبع الملخص ولوحة الأداء الحالية.</p><button class="btn" onclick="showTab('home');setTimeout(printCurrent,80)">طباعة الملخص</button></div><div class="printCard"><h4>الخطة التفصيلية</h4><p>يطبع جدول خطة التحسين متعدد الصفحات دون قص الجداول.</p><button class="btn" onclick="showTab('plan');setTimeout(printCurrent,80)">طباعة الخطة</button></div><div class="printCard"><h4>التقرير التنفيذي</h4><p>يطبع النص التنفيذي القابل للتعديل.</p><button class="btn" onclick="showTab('exec');setTimeout(printCurrent,80)">طباعة التنفيذي</button></div></div></div>`}
+function renderSettings(){document.getElementById('tab-settings').innerHTML=`<div class="card"><h3>الإعدادات</h3><div class="settingsGrid"><button class="btn" onclick="saveData()">حفظ محلي</button><button class="btn alt" onclick="exportJSON()">تصدير JSON</button><label class="btn alt" style="text-align:center"><input type="file" accept="application/json,.json,application/pdf,.pdf,text/plain,.txt" onchange="importSmartFile(event)" style="display:none">استيراد تقرير جديد PDF / TXT / JSON</label><button class="btn gold" onclick="saveHTML()">حفظ كملف HTML</button><button class="btn danger" onclick="clearData()">🧹 تفريغ التقرير الحالي</button><button class="btn green" onclick="restoreDefaults()">استعادة البيانات الافتراضية</button></div><p class="mini">الحفظ يتم محليًا في المتصفح، ولا تُرسل البيانات لأي جهة خارجية. عند استيراد تقرير جديد يتم تفريغ التقرير السابق تلقائيًا لمنع اختلاط البيانات.</p></div>`}
+function bar(name,score){return `<div class="barRow"><b>${name}</b><div class="barTrack"><div class="barFill" style="width:${Math.min(100,score)}%;background:${level(score).color}"></div></div><span>${pct(score)}</span></div>`}function listMini(arr){return arr.map(i=>`<p><b>${pct(i.score)}</b> ${badge(i.score)} ${i.code} - ${i.text}</p>`).join('')}function iByCode(c){return data.indicators.find(i=>i.code==c)}
+function domainAdvice(d){return d.score<65?'تدخل قيادي مباشر وربط الإجراءات بالشواهد ونواتج التعلم.':d.score<75?'تحسين مركز وفق مؤشرات منخفضة ومتابعة شهرية.':d.score<90?'تجويد الممارسات ورفعها إلى التميز.':'استدامة ونقل خبرة.'}
+function weakAnalysis(i){let p=makePlan(i);return `<div class="aiBox"><b>سبب محتمل:</b> ${p.reason}\n<b>الأثر على نواتج التعلم:</b> ${p.impact}\n<b>تدخل عاجل خلال 30 يومًا:</b> ${p.quick}\n<b>تدخل متوسط خلال 90 يومًا:</b> ${p.mid}\n<b>مؤشر قياس:</b> ${p.measure}\n<b>الشواهد:</b> ${p.evidence}\n<b>مسؤول التنفيذ:</b> ${i.owner}\n<b>النسبة المستهدفة:</b> ${p.target}%</div>`}
+function makePlan(i){let text=i.text, target=i.score<50?75:i.score<65?78:i.score<75?82:92;let base={goal:`رفع مستوى المؤشر من ${pct(i.score)} إلى ${target}% خلال فصل دراسي.`,target,action:i.suggestion,program:'تحسين مركز',partners:'قائد المدرسة، فريق الجودة، المعلمون، أولياء الأمور',duration:'30 - 90 يومًا',evidence:'خطة تنفيذ، محاضر، صور، نماذج تطبيق، تقرير قياس أثر',impact:'تحسين جودة الممارسات المرتبطة مباشرة بنواتج التعلم ورفع كفاءة الأداء المدرسي.',reason:'ضعف في التنظيم أو المتابعة أو توثيق الممارسات وتحويلها إلى أثر قابل للقياس.',quick:'تشكيل فريق مصغر، حصر الفجوة، وضع إجراءات عاجلة وشواهد تنفيذ.',mid:'تنفيذ برنامج تحسين ومتابعة أسبوعية وقياس أثر بعد 90 يومًا.',measure:'ارتفاع نسبة المؤشر وتوفر الشواهد وتحسن نتائج المتعلمين.'};
+if(text.includes('التفكير العليا'))Object.assign(base,{program:'صفوف تفكر',action:'تدريب المعلمين على تصميم أسئلة ومهام أدائية تقيس التحليل والاستنتاج والتقويم والإبداع، وتنفيذ زيارات صفية داعمة.',evidence:'خطط دروس، نماذج أسئلة، مهام أدائية، عينات من أعمال الطلاب، تحليل نتائج، زيارات صفية',measure:'ارتفاع نسبة الدروس والمهام التي تتضمن مهارات التفكير العليا.',impact:'رفع عمق التعلم وتحسين أداء الطلاب في المهام المركبة والاختبارات الوطنية.'});
+if(text.includes('المرافق والخدمات'))Object.assign(base,{target:70,program:'بيئة ممكنة',action:'حصر الاحتياج الفعلي للمرافق والخدمات ورفع طلبات معالجة للجهات المختصة وتنفيذ تحسينات داخلية عاجلة.',evidence:'محاضر حصر، صور قبل وبعد، خطابات رسمية، خطة صيانة، سجل متابعة',measure:'نسبة معالجة الاحتياج وتوفر الخدمات المساندة الأساسية.',impact:'تحسين وصول المتعلمين للخدمات وتقليل عوائق المشاركة والتعلم.'});
+if(text.includes('الشراكة المجتمعية'))Object.assign(base,{target:75,program:'شراكات تصنع أثرًا',action:'بناء خطة شراكات نوعية مرتبطة بالتعلم ودعم الموهوبين وذوي الإعاقة وتنفيذ مبادرات مجتمعية قابلة للقياس.',evidence:'اتفاقيات شراكة، تقارير تنفيذ، صور، قياس أثر، نماذج حضور',measure:'عدد الشراكات النوعية المنفذة ونسبة أثرها على التعلم.',impact:'توسيع مصادر الدعم وتحسين فرص التعلم والتأثير الإيجابي في المجتمع.'});
+if(text.includes('مبنى المدرسة'))Object.assign(base,{program:'مدرستي أكثر ملاءمة',action:'إعادة تنظيم الأثاث والمساحات وفق خصائص المرحلة ورفع الاحتياجات الإنشائية للجهات المختصة.',evidence:'خطة تنظيم، صور قبل وبعد، خطاب احتياج، سجل متابعة صيانة',impact:'تحسين الرفاه المدرسي وتيسير الحركة والتعلم الآمن.'});
+return base}
+function executiveText(){ensureDataIntegrity();let ds=safeDomains();let weak=[...ds].sort((a,b)=>a.score-b.score)[0]||{name:'غير محدد',score:0};let lows=data.indicators.filter(i=>i.score<50).sort((a,b)=>a.score-b.score).map(i=>i.text).slice(0,4).join('، ')||'لا توجد مؤشرات حرجة أقل من 50%';let teach=ds.find(d=>d.name==='التعليم والتعلم')?.name||'التعليم والتعلم';return `أظهرت نتائج التقويم المدرسي أن الأداء العام للمدرسة بلغ ${pct(data.overall.score)} بمستوى ${data.overall.level||normLevel(data.overall.score)}، مما يشير إلى حاجة المدرسة إلى تحسينات مركزة في عدد من المجالات، خاصة مجال ${weak.name} ومجال ${teach}. وقد برزت جوانب قوة في المؤشرات الأعلى أداءً مثل الاعتزاز بالثقافة، وبناء العلاقات الإيجابية، والتقويم الذاتي، والاتجاهات الإيجابية نحو الذات. وفي المقابل ظهرت جوانب تحتاج إلى تدخل عاجل في: ${lows}. وبناءً على ذلك، توصي المنصة ببناء خطة تحسين تبدأ بالمؤشرات الأقل من 50%، ثم المؤشرات الواقعة بين 50% و65%، مع ربط جميع الإجراءات بالشواهد ونواتج التعلم، وتكليف مسؤول واضح، وقياس أثر دوري لا يترك الخطة تتحول إلى ملف جميل ينام في الدرج.`}
+function genExec(){document.getElementById('execText').value=executiveText();toast('تم توليد التقرير التنفيذي')}function copyExec(){navigator.clipboard.writeText(document.getElementById('execText').value);toast('تم نسخ التقرير')}function openPlan(code){let i=iByCode(code),p=makePlan(i);document.getElementById('modalContent').innerHTML=`<h2>${i.code} - ${i.text}</h2>${weakAnalysis(i)}<h3>خطة تحسين إجرائية</h3><table><tr><th>البند</th><th>التفصيل</th></tr>${Object.entries({'المجال':i.domain,'المعيار':i.standard,'النسبة الحالية':pct(i.score),'المستوى':level(i.score).name,'الفجوة عن 90%':gap(i.score)+'%','الهدف التحسيني':p.goal,'الإجراء التحسيني':p.action,'البرنامج أو المبادرة':p.program,'الشركاء':p.partners,'مدة التنفيذ':p.duration,'الشواهد المطلوبة':p.evidence,'الأثر المتوقع':p.impact}).map(x=>`<tr><td>${x[0]}</td><td contenteditable>${x[1]}</td></tr>`).join('')}</table>`;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}function addIndicator(){let code='مؤشر-جديد-'+(data.indicators.length+1);data.indicators.push({code,text:'مؤشر جديد قابل للتعديل',score:50,domain:'التعليم والتعلم',standard:'بناء خبرات التعلم',suggestion:'أدخل مقترح التحسين هنا',owner:'فريق الجودة',status:'لم يبدأ',progress:0,start:'',end:'',notes:'',evidence:''});saveData(false);renderAll();showTab('indicators')}function delIndicator(c){if(confirm('حذف المؤشر؟')){data.indicators=data.indicators.filter(i=>i.code!=c);saveData(false);renderAll()}}function addEvidence(){let v=document.getElementById('evInput').value.trim();if(v){data.evidence.push(v);saveData(false);renderEvidence();toast('تمت إضافة الشاهد')}}
+function compactForStorage(obj){
+  let clone=JSON.parse(JSON.stringify(obj));
+  const cut=(v,n)=>typeof v==='string'?v.replace(/\s+/g,' ').trim().slice(0,n):v;
+  if(clone.indicators){clone.indicators=clone.indicators.map(i=>({
+    ...i,
+    text:cut(i.text,180),
+    suggestion:cut(i.suggestion,520),
+    evidence:cut(i.evidence,600),
+    notes:cut(i.notes,500)
+  }))}
+  if(clone.evidence){clone.evidence=clone.evidence.map(e=>({...e,note:cut(e.note,300)})).slice(0,250)}
+  return clone;
+}
+function safeSetLocal(key,value){
+  try{localStorage.setItem(key,value);return true}
+  catch(err){
+    if(err && (err.name==='QuotaExceededError'||String(err.message||err).includes('quota'))){
+      localStorage.removeItem(key);
+      return false;
+    }
+    throw err;
+  }
+}
+function saveData(show=true){
+  let titleEl=document.querySelector('[data-bind="title"]');
+  if(titleEl)data.title=titleEl.textContent;
+  let payload=JSON.stringify(compactForStorage(data));
+  if(!safeSetLocal('schoolEvalPlatform',payload)){
+    localStorage.removeItem('schoolEvalPlatform_backup');
+    localStorage.removeItem('lastImportedPdfText');
+    payload=JSON.stringify(compactForStorage(data));
+    if(!safeSetLocal('schoolEvalPlatform',payload)){
+      alert('تعذر الحفظ المحلي لأن مساحة المتصفح ممتلئة. تم تحديث البيانات في الواجهة، ويمكنك تصدير JSON أو حذف شعار/بيانات قديمة ثم الحفظ.');
+      return;
+    }
+  }
+  if(show)toast('تم الحفظ محليًا')
+}
+function loadData(show=true){let raw=localStorage.getItem('schoolEvalPlatform');if(raw){try{data=JSON.parse(raw);ensureDataIntegrity();if(show)toast('تم تحميل البيانات المحفوظة')}catch(e){data=JSON.parse(JSON.stringify(defaults));ensureDataIntegrity()}}else{ensureDataIntegrity()}let logo=localStorage.getItem('schoolLogo');if(logo)document.getElementById('logoPreview').innerHTML=`<img src="${logo}" alt="شعار المدرسة">`}
+function clearData(){
+  if(!confirm('سيتم تفريغ بيانات التقرير الحالي بالكامل حتى لا تختلط مع تقرير آخر. هل تريد المتابعة؟')) return;
+  localStorage.removeItem('schoolEvalPlatform');
+  localStorage.removeItem('schoolEvalPlatform_backup');
+  localStorage.removeItem('lastImportedPdfText');
+  data=blankReportData();
+  try{safeSetLocal('schoolEvalPlatform',JSON.stringify(data));}catch(e){}
+  renderAll();
+  showTab('settings');
+  toast('تم تفريغ التقرير الحالي، ويمكنك الآن استيراد تقرير جديد بأمان');
+}
+function resetBeforeNewImport(){
+  localStorage.removeItem('schoolEvalPlatform');
+  localStorage.removeItem('schoolEvalPlatform_backup');
+  localStorage.removeItem('lastImportedPdfText');
+  data=blankReportData();
+}
+function restoreDefaults(){data=JSON.parse(JSON.stringify(defaults));delete data.__empty;saveData(false);renderAll();toast('تمت استعادة البيانات الافتراضية')}function exportJSON(){downloadFile('بيانات_منصة_التقويم.json',JSON.stringify(data,null,2),'application/json')}function importJSON(e){let f=e.target.files[0];if(!f)return;importSmartFile(e)}
+async function importSmartFile(e){
+  let f=e.target.files[0];
+  if(!f)return;
+  try{
+    toast('جاري قراءة الملف...');
+    let ext=(f.name.split('.').pop()||'').toLowerCase();
+    if(ext==='json'||f.type.includes('json')){
+      let txt=await fileToText(f);
+      let imported=JSON.parse(txt);
+      localStorage.removeItem('schoolEvalPlatform');
+      localStorage.removeItem('schoolEvalPlatform_backup');
+      localStorage.removeItem('lastImportedPdfText');
+      data=imported;
+      delete data.__empty;
+      ensureDataIntegrity();
+      saveData(false);
+      renderAll();
+      showTab('dash');
+      toast('تم استيراد JSON كتقرير جديد دون خلط مع البيانات السابقة');
+      return;
+    }
+    let txt='';
+    if(ext==='pdf'||f.type==='application/pdf'){
+      toast('جاري قراءة PDF بطريقة محسّنة...');
+      txt=await extractPdfText(f);
+    }else{
+      txt=await fileToText(f);
+    }
+    if(!txt||txt.replace(/\s/g,'').length<80){
+      alert('تعذر استخراج نص كافٍ من PDF. جرّب فتح الملف من متصفح حديث متصل بالإنترنت، أو صدّر التقرير كنص TXT ثم استورده.');
+      return;
+    }
+    let parsed=parseEvaluationReport(txt);
+    if(!parsed.indicators.length&&parsed.domains.length<4){
+      console.warn('النص المقروء من الملف:',txt.slice(0,3000));
+      alert('تمت قراءة الملف، لكن لم أجد بنية تقرير التقويم المدرسي بوضوح. تأكد أن الملف هو تقرير التقويم المدرسي ويحتوي على بطاقة المجالات والمؤشرات.');
+      return;
+    }
+    // تفريغ إجباري بعد نجاح القراءة وقبل الدمج، حتى لا تختلط تقارير المدارس السابقة واللاحقة.
+    resetBeforeNewImport();
+    delete data.__empty;
+    data=JSON.parse(JSON.stringify(defaults));
+    mergeParsedReport(parsed);
+    ensureDataIntegrity();
+    saveData(false);
+    renderAll();
+    showTab('dash');
+    toast('تم تفريغ السابق واستيراد التقرير الجديد بنجاح');
+  }catch(err){
+    console.error(err);
+    if(String(err.message||err).toLowerCase().includes('quota')){
+      localStorage.removeItem('schoolEvalPlatform');
+      localStorage.removeItem('schoolEvalPlatform_backup');
+      localStorage.removeItem('lastImportedPdfText');
+      alert('فشل الحفظ بسبب امتلاء مساحة التخزين المحلي. تم مسح البيانات القديمة؛ أعد الاستيراد الآن.');
+    }else{
+      alert('فشل الاستيراد: '+(err.message||err));
+    }
+  }finally{
+    e.target.value='';
+  }
+}
+function fileToText(file){return new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result||'');r.onerror=()=>rej(r.error);r.readAsText(file,'utf-8')})}
+function bytesToLatin1(u8){let out='',chunk=0x8000;for(let i=0;i<u8.length;i+=chunk)out+=String.fromCharCode.apply(null,u8.subarray(i,i+chunk));return out}
+async function inflateBytes(u8){if('DecompressionStream' in window){let ds=new DecompressionStream('deflate');let stream=new Blob([u8]).stream().pipeThrough(ds);return new Uint8Array(await new Response(stream).arrayBuffer())}throw new Error('المتصفح لا يدعم فك ضغط PDF داخليًا')}
+function decodePdfString(s){s=s.replace(/\\([nrtbf()\\])/g,(m,c)=>({n:'\n',r:'\r',t:'\t',b:'\b',f:'\f','(':'(',')':')','\\':'\\'}[c]||c));return s}
+function decodeHexPdf(hex){hex=hex.replace(/[^0-9A-Fa-f]/g,'');if(hex.length%2)hex+='0';let bytes=[];for(let i=0;i<hex.length;i+=2)bytes.push(parseInt(hex.slice(i,i+2),16));if(bytes[0]===0xFE&&bytes[1]===0xFF){let out='';for(let i=2;i<bytes.length;i+=2)out+=String.fromCharCode((bytes[i]<<8)+(bytes[i+1]||0));return out}return new TextDecoder('utf-8').decode(new Uint8Array(bytes))}
+function extractTextOps(streamText){let out=[];streamText.replace(/\((?:\\.|[^\\)])*\)\s*Tj/g,(m)=>{out.push(decodePdfString(m.slice(1,m.lastIndexOf(')'))));return m});streamText.replace(/<([0-9A-Fa-f\s]+)>\s*Tj/g,(m,h)=>{out.push(decodeHexPdf(h));return m});streamText.replace(/\[(.*?)\]\s*TJ/gs,(m,arr)=>{arr.replace(/\((?:\\.|[^\\)])*\)|<([0-9A-Fa-f\s]+)>/g,(x,h)=>{out.push(h?decodeHexPdf(h):decodePdfString(x.slice(1,-1)));return x});return m});return out.join(' ')}
+async function extractPdfTextLegacy(file){let ab=await file.arrayBuffer(),u8=new Uint8Array(ab),raw=bytesToLatin1(u8),texts=[];raw.replace(/<<(.*?)>>\s*stream\r?\n([\s\S]*?)\r?\nendstream/g,async()=>{});let re=/<<(.*?)>>\s*stream\r?\n([\s\S]*?)\r?\nendstream/g,m,tasks=[];while((m=re.exec(raw))){let dict=m[1],body=m[2],bu=new Uint8Array(body.length);for(let i=0;i<body.length;i++)bu[i]=body.charCodeAt(i)&255;if(/FlateDecode/.test(dict)){tasks.push(inflateBytes(bu).then(x=>extractTextOps(new TextDecoder('utf-8').decode(x))).catch(()=>''))}else{tasks.push(Promise.resolve(extractTextOps(body)))} }texts=await Promise.all(tasks);let joined=texts.join('\n');if(joined.replace(/\s/g,'').length<80){joined+='\n'+extractTextOps(raw)}return cleanupText(joined)}
+function loadScriptOnce(id,src){return new Promise((resolve,reject)=>{if(document.getElementById(id))return resolve();let s=document.createElement('script');s.id=id;s.src=src;s.async=true;s.onload=()=>resolve();s.onerror=()=>reject(new Error('تعذّر تحميل قارئ PDF من الإنترنت'));document.head.appendChild(s)})}
+function configurePdfJs(){if(window.pdfjsLib&&window.pdfjsLib.GlobalWorkerOptions){window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'}}
+async function ensurePdfJsLoaded(){if(window.pdfjsLib){configurePdfJs();return true}await loadScriptOnce('pdfjs-lib-robust','https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');configurePdfJs();return !!window.pdfjsLib}
+function normalizePdfItemText(str){return String(str||'').replace(/[٪﹪]/g,'%').replace(/٫/g,'.').replace(/ /g,' ').trim()}
+async function extractPdfTextByPdfJs(file){await ensurePdfJsLoaded();let buffer=await file.arrayBuffer();let pdf=await window.pdfjsLib.getDocument({data:buffer,disableWorker:/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),useSystemFonts:true,isEvalSupported:false}).promise;let pages=[];for(let pageNo=1;pageNo<=pdf.numPages;pageNo++){let page=await pdf.getPage(pageNo);let tc=await page.getTextContent({normalizeWhitespace:true,disableCombineTextItems:false});let items=(tc.items||[]).map(it=>({str:normalizePdfItemText(it.str),x:it.transform?.[4]||0,y:it.transform?.[5]||0})).filter(it=>it.str);items.sort((a,b)=>Math.abs(b.y-a.y)>2?b.y-a.y:a.x-b.x);let lines=[],curY=null,line=[];for(let it of items){if(curY===null||Math.abs(it.y-curY)<=2.5){line.push(it);curY=curY===null?it.y:(curY+it.y)/2}else{lines.push(line);line=[it];curY=it.y}}if(line.length)lines.push(line);let text=lines.map(arr=>arr.map(i=>i.str).join(' ')).join('\n');pages.push('\n--- صفحة '+pageNo+' ---\n'+text)}return cleanupText(pages.join('\n'))}
+async function extractPdfText(file){let txt='';try{txt=await extractPdfTextByPdfJs(file)}catch(err){console.warn('PDF.js extraction failed, fallback to legacy parser:',err);txt=''}if(!txt||txt.replace(/\s/g,'').length<80){try{txt=(txt||'')+'\n'+await extractPdfTextLegacy(file)}catch(err2){console.warn('legacy extraction failed:',err2)}}return cleanupText(txt)}
+function cleanupText(t){return (t||'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,' ').replace(/\s+/g,' ').replace(/%\s*(\d)/g,' $1').replace(/(\d+(?:\.\d+)?)\s*%/g,'$1%').trim()}
+function parsePct(v){v=String(v||'').replace('%','').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim();let n=parseFloat(v);return isFinite(n)?n:null}
+function normLevel(score){return score>=90?'التميز':score>=75?'التقدم':score>=50?'الانطلاق':'التهيئة'}
+function extractPercents(txt){return [...txt.matchAll(/(\d{1,3}(?:\.\d{1,2})?)\s*%/g)].map(x=>parseFloat(x[1])).filter(n=>n>=0&&n<=100)}
+function windowAround(txt,marker,before=250,after=500){let i=txt.indexOf(marker);if(i<0)return '';return txt.slice(Math.max(0,i-before),Math.min(txt.length,i+after))}
+function parseEvaluationReport(txt){
+  txt=cleanupText(txt);
+  let res={school:{},overall:null,domains:[],indicators:[]};
+  let name=(txt.match(/(?:اسم المدرسة\s+)?((?:ابتدائية|متوسطة|ثانوية)\s+[^،\n]{3,90}?(?=\s+(?:الإدارة|إدارة|بنين|بنات|الرقم|20\d{2}|تقرير|الادارة)))/)||[])[1]||'';
+  if(!name){let m=txt.match(/(?:^|\s)((?:ابتدائية|متوسطة|ثانوية)\s+[\u0600-\u06FF\s]{3,70}?)(?:\s+الإدارة العامة|\s+إدارة التعليم|\s+بنين|\s+بنات)/); if(m)name=m[1]}
+  if(name)res.school.name=name.replace(/\s+/g,' ').trim();
+  let edu=(txt.match(/الإدارة\s+العامة\s+للتعليم\s+بمنطقة\s+[^،\n]+/)||txt.match(/إدارة\s+التعليم\s+[^،\n]+/)||[])[0];
+  if(edu)res.school.edu=edu.trim();
+  let year=(txt.match(/للعام\s*(20\d{2})/)||txt.match(/(20\d{2})م/)||[])[1];
+  if(year)res.school.year=year+'م';
+  let date=(txt.match(/تاريخ تطبيق التقويم\s*(\d{4}\/\d{2}\/\d{2})/)||[])[1];
+  if(date)res.school.date=date;
+  let ministry=(txt.match(/(?:الرقم الوزاري|الوزاري)\s*([A-Za-z0-9\-]+)/)||[])[1];
+  if(ministry)res.school.ministryNo=ministry;
+  let students=(txt.match(/عدد الطلاب\s*(\d{1,5})/)||[])[1];
+  if(students)res.school.students=+students;
+  let teachers=(txt.match(/عدد شاغلي الوظائف التعليمية\s*(\d{1,4})/)||[])[1];
+  if(teachers)res.school.teachers=+teachers;
+  let infoNums=(txt.match(/عدد الطلاب\s+عدد شاغلي الوظائف التعليمية\s+عدد الوكلاء بالمدرسة\s+(\d{1,4})\s+(\d{1,4})\s+(\d{1,5})/)||[]);
+  if(infoNums.length){res.school.agents=+infoNums[1];res.school.teachers=+infoNums[2];res.school.students=+infoNums[3]}
+  let adminNums=(txt.match(/عدد محضري المختبرات\s+عدد الموجهين الطلابيين\s+عدد شاغلي الوظائف الإدارية\s+(\d{1,4})\s+(\d{1,4})\s+(\d{1,4})/)||[]);
+  if(adminNums.length){res.school.labs=+adminNums[1];res.school.guidance=+adminNums[2];res.school.admins=+adminNums[3]}
+  if(/\bبنين\b/.test(txt))res.school.gender='بنين';
+  if(/\bبنات\b/.test(txt))res.school.gender='بنات';
+  if(/متوسط/.test(txt))res.school.stage='متوسط';
+  else if(/ابتدائي/.test(txt))res.school.stage='ابتدائي';
+  else if(/ثانوي/.test(txt))res.school.stage='ثانوي';
+
+  let owin=windowAround(txt,'الأداء العام للمدرسة',350,180);
+  let ops=extractPercents(owin);
+  let os=ops.find(n=>n>=0&&n<=100);
+  if(!os){let all=extractPercents(txt);os=all.find(n=>n>=50&&n<=95)}
+  if(os)res.overall={score:os,level:normLevel(os),desc:txt.includes('أداء مقبول يحتاج إلى تحسين')?'أداء مقبول يحتاج إلى تحسين في بعض المجالات':''};
+
+  const dnames=['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'];
+  const standardsByDomain=[['التخطيط','قيادة العملية التعليمية','المجتمع المدرسي','التطوير المؤسسي'],['بناء خبرات التعلم','تقويم التعلم'],['التحصيل التعليمي','التطور الشخصي والصحي والاجتماعي'],['المبنى المدرسي','الأمن والسلامة']];
+  function nearestPctFor(marker,scope){
+    let w=windowAround(scope||txt,marker,180,220), ps=extractPercents(w);
+    return ps.length?ps[0]:null;
+  }
+  let cardMarkers=['أداء المدرسة وفق المجالات','بطاقة التقويم المدرسي','أداء المدرسة وفق المعايير'];
+  let card='';
+  for(let m of cardMarkers){card=windowAround(txt,m,700,1800); if(card&&extractPercents(card).length>=4)break;}
+  let allp=extractPercents(card);
+  let domainScores=[];
+  // غالبًا بطاقة التقرير تعرض نسب المجالات الأربع متتابعة قبل أسماء المجالات.
+  if(allp.length>=4){
+    let candidate=allp.slice(0,4);
+    if(candidate.every(n=>n>=30&&n<=100))domainScores=candidate;
+  }
+  if(domainScores.length<4){
+    domainScores=dnames.map(n=>nearestPctFor(n,card||txt)).filter(n=>n!==null);
+  }
+  if(domainScores.length>=4)res.domains=dnames.map((name,i)=>({name,score:domainScores[i],standards:[]}));
+
+  let standardScores=[];
+  let searchArea=card||txt;
+  let flatStandards=standardsByDomain.flat();
+  // حاول التقاط نسب المعايير من بطاقة التقويم. ترتيب PDF بصريًا غالبًا:
+  // مجالات 4، ثم التعليم والتعلم 2، ثم الإدارة 4، ثم البيئة 2، ثم نواتج التعلم 2.
+  if(allp.length>=14){
+    const cardStdByDomain=[allp.slice(6,10),allp.slice(4,6),allp.slice(12,14),allp.slice(10,12)];
+    if(cardStdByDomain.every(a=>a.length&&a.every(n=>n>=0&&n<=100))){
+      standardScores=cardStdByDomain.flat();
+    }else{
+      standardScores=allp.slice(4,14);
+    }
+  }
+  if(standardScores.length<10){
+    standardScores=flatStandards.map(n=>nearestPctFor(n,searchArea));
+  }
+  if(res.domains.length){
+    let idx=0;
+    res.domains.forEach((d,di)=>{
+      d.standards=standardsByDomain[di].map(n=>[n,standardScores[idx++]]).filter(x=>Number.isFinite(+x[1]));
+    });
+  }
+
+  let indRe=/(\d{1,2}-\d+-\d+-\d)\s+(.+?)(?=(?:\d{1,2}-\d+-\d+-\d\s+)|(?:آراء أصحاب المصلحة)|$)/gms,match;
+  while((match=indRe.exec(txt))){
+    let code=match[1],block=match[2].trim();
+    let pctMatch=block.match(/(\d{1,3}(?:\.\d{1,2})?)\s*%/);
+    if(!pctMatch)continue;
+    let score=parseFloat(pctMatch[1]);
+    if(!Number.isFinite(score)||score<0||score>100)continue;
+    let text=block.split('تشير النتائج')[0].replace(/\s+/g,' ').trim();
+    text=text.replace(/^(?:للمستقبل|الإعاقة|والموهوبون)\s*/,'').trim().slice(0,220);
+    let sug=(block.match(/يتوقع من المدرسة\s+(.+?)(?:\d{1,3}(?:\.\d{1,2})?\s*%|الانطلاق|التقدم|التميز|التهيئة)/s)||[])[1]||'';
+    sug=sug.replace(/\s+/g,' ').trim().slice(0,650);
+    let parts=code.split('-'),domainNo=parts[3],standardNo=parts[2];
+    let domainMap={'1':'الإدارة المدرسية','2':'التعليم والتعلم','3':'نواتج التعلم','4':'البيئة المدرسية'},domain=domainMap[domainNo]||'غير مصنف';
+    let standard=((standardsByDomain[(+domainNo)-1]||[])[(+standardNo)-1])||'غير محدد';
+    res.indicators.push({code,text,score,domain,standard,suggestion:sug||'مقترح التحسين حسب نص التقرير.',owner:'فريق الجودة',status:'لم يبدأ',progress:0,start:'',end:'',notes:'',evidence:''});
+  }
+  // إزالة التكرارات التي قد تنتج من ترتيب PDF.
+  const seen=new Set();
+  res.indicators=res.indicators.filter(i=>{if(seen.has(i.code))return false;seen.add(i.code);return true});
+  return res;
+}
+function mergeParsedReport(parsed){
+  ensureDataIntegrity();
+  parsed=parsed||{};
+  data.school={...data.school,...(parsed.school||{})};
+  if(parsed.overall && Number.isFinite(+parsed.overall.score))data.overall={...data.overall,...parsed.overall,score:+parsed.overall.score,level:parsed.overall.level||normLevel(+parsed.overall.score)};
+  if(Array.isArray(parsed.domains)&&parsed.domains.length>=4){
+    const oldByName=Object.fromEntries(data.domains.map(d=>[d.name,d]));
+    data.domains=parsed.domains.slice(0,4).map((d,i)=>({
+      name:d.name||defaults.domains[i].name,
+      score:Number.isFinite(+d.score)?+d.score:(oldByName[d.name]?.score||defaults.domains[i].score),
+      standards:Array.isArray(d.standards)&&d.standards.length?d.standards:(oldByName[d.name]?.standards||defaults.domains[i].standards)
+    }));
+  }
+  if(Array.isArray(parsed.indicators)&&parsed.indicators.length>=4){
+    let oldByCode=Object.fromEntries(data.indicators.map(i=>[i.code,i]));
+    data.indicators=parsed.indicators.map(i=>({...oldByCode[i.code],...i,owner:oldByCode[i.code]?.owner||i.owner||'فريق الجودة',status:oldByCode[i.code]?.status||i.status||'لم يبدأ',progress:oldByCode[i.code]?.progress||0}));
+  }
+  data.title='لوحة تحليل تقرير التقويم المدرسي الخارجي';
+  ensureDataIntegrity();
+}
+function saveHTML(){downloadFile('منصة_تحليل_التقويم_المدرسي.html',document.documentElement.outerHTML,'text/html;charset=utf-8')}function downloadFile(name,content,type){let blob=new Blob([content],{type});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}function printCurrent(){window.print()}function generateBriefPlan(){showTab('exec');document.getElementById('execText').value=executiveText()+`\n\nخطة مختصرة حسب المجالات:\n`+data.domains.map(d=>`- ${d.name}: النسبة ${pct(d.score)}، الفجوة ${gap(d.score)}%، الإجراء: ${domainAdvice(d)}`).join('\n');toast('تم توليد خطة مختصرة في التقرير التنفيذي')}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+document.getElementById('logoInput').addEventListener('change',e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{localStorage.setItem('schoolLogo',r.result);document.getElementById('logoPreview').innerHTML=`<img src="${r.result}" alt="شعار المدرسة">`;toast('تم رفع الشعار وسيظهر في الطباعة')};r.readAsDataURL(f)});
+init();
+</script>
+</body>
+</html>

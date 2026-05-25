@@ -424,7 +424,21 @@ function normalizePdfItemText(str){return String(str||'').replace(/[٪﹪]/g,'%'
 async function extractPdfTextByPdfJs(file){await ensurePdfJsLoaded();let buffer=await file.arrayBuffer();let pdf=await window.pdfjsLib.getDocument({data:buffer,disableWorker:/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),useSystemFonts:true,isEvalSupported:false}).promise;let pages=[];for(let pageNo=1;pageNo<=pdf.numPages;pageNo++){let page=await pdf.getPage(pageNo);let tc=await page.getTextContent({normalizeWhitespace:true,disableCombineTextItems:false});let items=(tc.items||[]).map(it=>({str:normalizePdfItemText(it.str),x:it.transform?.[4]||0,y:it.transform?.[5]||0})).filter(it=>it.str);items.sort((a,b)=>Math.abs(b.y-a.y)>2?b.y-a.y:a.x-b.x);let lines=[],curY=null,line=[];for(let it of items){if(curY===null||Math.abs(it.y-curY)<=2.5){line.push(it);curY=curY===null?it.y:(curY+it.y)/2}else{lines.push(line);line=[it];curY=it.y}}if(line.length)lines.push(line);let text=lines.map(arr=>arr.map(i=>i.str).join(' ')).join('\n');pages.push('\n--- صفحة '+pageNo+' ---\n'+text)}return cleanupText(pages.join('\n'))}
 async function extractPdfText(file){let txt='';try{txt=await extractPdfTextByPdfJs(file)}catch(err){console.warn('PDF.js extraction failed, fallback to legacy parser:',err);txt=''}if(!txt||txt.replace(/\s/g,'').length<80){try{txt=(txt||'')+'\n'+await extractPdfTextLegacy(file)}catch(err2){console.warn('legacy extraction failed:',err2)}}return cleanupText(txt)}
 function normalizeNumberText(v){return String(v||'').replace(/[٪﹪]/g,'%').replace(/٫/g,'.').replace(/,/g,'.').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))}
-function cleanupText(t){return normalizeNumberText(t).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,' ').replace(/\s+/g,' ').replace(/%\s*(\d{1,3}(?:\.\d{1,2})?)/g,'$1%').replace(/(\d{1,3}(?:\.\d{1,2})?)\s*%/g,'$1%').trim()}
+function cleanupText(t){
+  return normalizeNumberText(t)
+    .replace(/[ --]/g,' ')
+    .replace(/
+?/g,'
+')
+    .replace(/[ 	]+/g,' ')
+    .replace(/%\s*(\d{1,3}(?:\.\d{1,2})?)/g,'$1%')
+    .replace(/(\d{1,3}(?:\.\d{1,2})?)\s*%/g,'$1%')
+    .replace(/
+{3,}/g,'
+
+')
+    .trim()
+}
 function parsePct(v){let n=parseFloat(normalizeNumberText(v).replace(/[٪%]/g,'').trim());return isFinite(n)?n:null}
 function normLevel(score){return score>=90?'التميز':score>=75?'التقدم':score>=50?'الانطلاق':'التهيئة'}
 function extractPercentMatches(txt){
@@ -437,6 +451,29 @@ function extractPercentMatches(txt){
   return found.filter((p,i,a)=>a.findIndex(q=>Math.abs(q.index-p.index)<3&&q.value===p.value)===i);
 }
 function extractPercents(txt){return extractPercentMatches(txt).map(x=>x.value)}
+function scoreNearLabel(txt,label,range=220){
+  txt=cleanupText(txt||'');
+  const flat=txt.replace(/
++/g,' ');
+  label=String(label||'').trim();
+  if(!label)return null;
+  let best=null;
+  let start=0;
+  while(true){
+    const idx=flat.indexOf(label,start);
+    if(idx<0)break;
+    const from=Math.max(0,idx-range), to=Math.min(flat.length,idx+label.length+range);
+    const part=flat.slice(from,to);
+    const matches=extractPercentMatches(part).map(m=>({value:m.value,index:m.index+from})).filter(m=>m.value>=0&&m.value<=100);
+    for(const m of matches){
+      const dist=Math.min(Math.abs(m.index-idx),Math.abs((m.index+String(m.value).length)-idx));
+      const cand={value:m.value,dist,index:m.index};
+      if(!best || cand.dist<best.dist)best=cand;
+    }
+    start=idx+label.length;
+  }
+  return best?+best.value:null;
+}
 function windowAround(txt,marker,before=250,after=500){let i=txt.indexOf(marker);if(i<0)return '';return txt.slice(Math.max(0,i-before),Math.min(txt.length,i+after))}
 function getReportCatalog(){
   const standardsByDomain=[['التخطيط','قيادة العملية التعليمية','المجتمع المدرسي','التطوير المؤسسي'],['بناء خبرات التعلم','تقويم التعلم'],['التحصيل التعليمي','التطور الشخصي والصحي والاجتماعي'],['المبنى المدرسي','الأمن والسلامة']];
@@ -462,26 +499,50 @@ function firstGoodPercentAfter(block){
   return perc.find(n=>n>=30&&n<=100) ?? perc[0];
 }
 function scoreForIndicator(txt,code){
-  txt=cleanupText(txt);
-  const escaped=code.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  txt=cleanupText(txt||'');
+  const codeRe=/(?![\d-])\d{1,2}-\d-\d-\d(?![\d-])/;
+  const lines=txt.split(/
++/).map(x=>x.trim()).filter(Boolean);
+  const chunks=[];
+  for(let i=0;i<lines.length;i++){
+    if(!lines[i].includes(code))continue;
+    let chunk=lines[i];
+    for(let j=i+1;j<Math.min(lines.length,i+4);j++){
+      if(codeRe.test(lines[j]) && !lines[j].includes(code))break;
+      chunk+=' '+lines[j];
+    }
+    chunks.push(chunk);
+  }
+  const detailed=txt.indexOf('الأداء التفصيلي لنتائج المدرسة');
+  const escaped=code.replace(/[.*+?^${}()|[\]\]/g,'\$&');
   let re=new RegExp(escaped,'g'),m,positions=[];
   while((m=re.exec(txt)))positions.push(m.index);
-  if(!positions.length)return null;
-  let detailed=txt.indexOf('الأداء التفصيلي لنتائج المدرسة');
-  let afterDetailed=positions.filter(p=>detailed<0||p>detailed);
-  positions=afterDetailed.length?afterDetailed:positions;
-  for(let pos of positions){
-    const afterCode=txt.slice(pos+code.length);
-    const next=afterCode.search(/\d{1,2}-\d-\d-\d/);
-    let block=txt.slice(pos, next>20 ? pos+code.length+next : Math.min(txt.length,pos+2400));
-    let matches=extractPercentMatches(block).filter(p=>p.value>=0&&p.value<=100);
-    if(matches.length){
-      let levelMatch=matches.find(p=>/(التميز|التقدم|الانطلاق|التهيئة)/.test(block.slice(p.index, Math.min(block.length,p.index+60))));
-      return +(levelMatch||matches[matches.length-1]).value;
-    }
-    let near=txt.slice(Math.max(0,pos-180),Math.min(txt.length,pos+650));
-    matches=extractPercentMatches(near).filter(p=>p.value>=0&&p.value<=100);
-    if(matches.length)return +matches[matches.length-1].value;
+  positions=(positions.filter(p=>detailed<0||p>detailed).length?positions.filter(p=>detailed<0||p>detailed):positions);
+  for(const pos of positions){
+    const before=txt.lastIndexOf('
+',pos);
+    const after=txt.indexOf('
+',pos+code.length);
+    const line=txt.slice(before<0?0:before+1, after<0?Math.min(txt.length,pos+1200):after);
+    if(line && !chunks.includes(line))chunks.unshift(line);
+    const tail=txt.slice(pos+code.length);
+    const next=tail.search(/(?![\d-])\d{1,2}-\d-\d-\d(?![\d-])/);
+    const block=txt.slice(pos, next>20 ? pos+code.length+next : Math.min(txt.length,pos+1400));
+    chunks.push(block);
+  }
+  for(const rawChunk of chunks){
+    const chunk=rawChunk.replace(/\s+/g,' ');
+    const matches=extractPercentMatches(chunk).filter(p=>p.value>=0&&p.value<=100);
+    if(!matches.length)continue;
+    let levelMatch=matches.map(p=>{
+      const around=chunk.slice(Math.max(0,p.index-70),Math.min(chunk.length,p.index+90));
+      const hasLevel=/(التميز|التقدم|الانطلاق|التهيئة)/.test(around);
+      const dist=Math.abs(p.index-chunk.indexOf(code));
+      return {...p,hasLevel,dist};
+    }).filter(p=>p.hasLevel).sort((a,b)=>a.dist-b.dist)[0];
+    if(levelMatch)return +levelMatch.value;
+    const close=matches.map(p=>({...p,dist:Math.abs(p.index-chunk.indexOf(code))})).sort((a,b)=>a.dist-b.dist)[0];
+    if(close && close.dist<900)return +close.value;
   }
   return null;
 }
@@ -507,7 +568,7 @@ function parseEvaluationReport(txt){
   let res={school:{},overall:null,domains:[],indicators:[],summaryStrengthCodes:[],summaryImprovementCodes:[]};
   let compact=txt.replace(/\s+/g,' ');
   // استخراج قوائم الملخص: المؤشرات المتميزة والمؤشرات التي تحتاج إلى تحسين من صفحة ملخص النتائج.
-  const codePattern=/\d{1,2}-\d-\d-\d/g;
+  const codePattern=/(?![\d-])\d{1,2}-\d-\d-\d(?![\d-])/g;
   let summaryBlock=windowAround(compact,'ملخص نتائج المدرسة',0,4500) || compact;
   let strengthPart='';
   let improvePart='';
@@ -554,29 +615,41 @@ function parseEvaluationReport(txt){
   const dnames=['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'];
   const standardsByDomain=[['التخطيط','قيادة العملية التعليمية','المجتمع المدرسي','التطوير المؤسسي'],['بناء خبرات التعلم','تقويم التعلم'],['التحصيل التعليمي','التطور الشخصي والصحي والاجتماعي'],['المبنى المدرسي','الأمن والسلامة']];
   let card='';
-  for(let m of ['بطاقة التقويم المدرسي','أداء المدرسة وفق المجالات','أداء المدرسة وفق المعايير']){card=windowAround(compact,m,350,2200); if(card&&extractPercents(card).length>=14)break;}
-  let allp=extractPercents(card);
-  let domainScores=[];
-  if(allp.length>=4){
-    let start=0;
-    // إن ظهرت نسبة التاريخ/أداء السنوات قبل البطاقة، نبحث عن أقرب تسلسل رباعي منطقي للمجالات.
-    for(let i=0;i<=Math.min(4,allp.length-4);i++){
-      let cand=allp.slice(i,i+4);
-      if(cand.every(n=>n>=30&&n<=100)){start=i;break;}
+  for(let m of ['بطاقة التقويم المدرسي','أداء المدرسة وفق المجالات','أداء المدرسة وفق المعايير']){
+    card=windowAround(txt,m,250,6500);
+    if(card&&extractPercents(card).length>=8)break;
+  }
+  let domainScores=dnames.map(n=>scoreNearLabel(card||txt,n,280));
+  if(domainScores.every(n=>Number.isFinite(+n))){
+    res.domains=dnames.map((name,i)=>({name,score:+domainScores[i],standards:[]}));
+  }else{
+    let allp=extractPercents(card).filter(n=>n>=0&&n<=100);
+    if(allp.length>=4){
+      let bestStart=0,bestScore=-1;
+      for(let i=0;i<=Math.min(10,allp.length-4);i++){
+        let cand=allp.slice(i,i+4);
+        let score=cand.filter(n=>n>=30&&n<=100).length;
+        if(score>bestScore){bestScore=score;bestStart=i;}
+      }
+      domainScores=allp.slice(bestStart,bestStart+4);
+      if(domainScores.length>=4)res.domains=dnames.map((name,i)=>({name,score:domainScores[i],standards:[]}));
     }
-    domainScores=allp.slice(start,start+4);
-    allp=allp.slice(start);
   }
-  if(domainScores.length>=4)res.domains=dnames.map((name,i)=>({name,score:domainScores[i],standards:[]}));
-  if(!res.domains.length && /السابعة\s+عشر/.test(compact))res.domains=[95.75,81.25,83.25,90.75].map((score,i)=>({name:dnames[i],score,standards:[]}));
 
-  let standardScores=[];
-  if(allp.length>=14){
-    let group=[allp.slice(6,10),allp.slice(4,6),allp.slice(12,14),allp.slice(10,12)];
-    if(group.every(a=>a.length&&a.every(n=>n>=0&&n<=100)))standardScores=group.flat();
+  let standardScores=standardsByDomain.flat().map(n=>scoreNearLabel(card||txt,n,260));
+  if(!standardScores.every(n=>Number.isFinite(+n))){
+    let allp=extractPercents(card).filter(n=>n>=0&&n<=100);
+    if(allp.length>=14){
+      // غالبًا تظهر البطاقة بـ 4 نسب للمجالات ثم 10 نسب للمعايير؛ نستخدمها فقط كخطة احتياطية.
+      standardScores=allp.slice(4,14);
+    }
   }
-  if(standardScores.length<10 && /السابعة\s+عشر/.test(compact))standardScores=[99.75,94.25,96.00,94.75,81.00,88.25,77.75,95.00,90.75,90.75];
-  if(res.domains.length){let idx=0;res.domains.forEach((d,di)=>{d.standards=standardsByDomain[di].map(n=>[n,standardScores[idx++]]).filter(x=>Number.isFinite(+x[1]));});}
+  if(res.domains.length){
+    let idx=0;
+    res.domains.forEach((d,di)=>{
+      d.standards=standardsByDomain[di].map(n=>[n,Number.isFinite(+standardScores[idx])?+standardScores[idx++]:null]).filter(x=>Number.isFinite(+x[1]));
+    });
+  }
 
   const knownSeventeenthScores={
     '1-1-1-1':99.50,'2-1-1-1':99.75,'1-1-2-1':95.75,'2-1-2-1':98.75,'3-1-2-1':94.00,'4-1-2-1':98.00,'5-1-2-1':92.25,'6-1-2-1':91.75,'1-1-3-1':98.00,'2-1-3-1':95.00,'3-1-3-1':93.75,'1-1-4-1':76.75,'2-1-4-1':98.00,'3-1-4-1':99.50,'4-1-4-1':98.50,
@@ -584,9 +657,7 @@ function parseEvaluationReport(txt){
     '1-1-1-3':87.20,'2-1-1-3':69.06,'3-1-1-3':76.78,'1-1-2-3':99.00,'2-1-2-3':95.50,'3-1-2-3':92.75,'4-1-2-3':90.75,'5-1-2-3':99.25,'6-1-2-3':87.75,'7-1-2-3':97.50,
     '1-1-1-4':94.50,'2-1-1-4':87.25,'3-1-1-4':90.75,'1-1-2-4':87.75,'2-1-2-4':88.25,'3-1-2-4':96.00
   };
-  const isSeventeenth=/السابعة\s+عشر|السابعه\s+عشر/.test(compact);
-  if(isSeventeenth && !res.summaryStrengthCodes.length)res.summaryStrengthCodes=['2-1-1-1','3-1-4-1','5-1-2-3','1-1-2-3','2-1-2-1','2-1-2-2','4-1-4-1','4-1-2-1','1-1-3-1','2-1-4-1'];
-  if(isSeventeenth && !res.summaryImprovementCodes.length)res.summaryImprovementCodes=['2-1-1-3','9-1-1-2','3-1-1-2','4-1-1-2'];
+  const isSeventeenth=false; // تم إلغاء أي نسب محفوظة مسبقًا حتى تكون القراءة من ملف PDF نفسه فقط
   let catalog=getReportCatalog();
   res.indicators=catalog.map(c=>{
     let score=scoreForIndicator(compact,c.code);

@@ -1,4 +1,14 @@
-<!DOCTYPE html>
+#!/usr/bin/env python3
+"""بناء ملف HTML الكامل للمنصة الرقمية"""
+import json
+
+# قراءة البيانات
+with open('/tmp/compact_data.json', 'r', encoding='utf-8') as f:
+    data = json.load(f)
+
+data_json = json.dumps(data, ensure_ascii=False)
+
+html = '''<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
@@ -22,17 +32,17 @@ body{font-family:'Cairo',sans-serif;background:#f0f4f8;direction:rtl;color:#1e29
 .logo-wrap{display:flex;align-items:center;gap:8px;overflow:hidden}
 .logo-icon{width:34px;height:34px;border-radius:8px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .logo-text{overflow:hidden;white-space:nowrap}
-.logo-text p{color:#fff;font-weight:800;font-size:12px;font-family:'Tajawal'}
+.logo-text p{color:#fff;font-weight:800;font-size:12px;font-family:\'Tajawal\'}
 .logo-text span{color:rgba(255,255,255,.55);font-size:10px}
 .toggle-btn{width:28px;height:28px;border-radius:6px;border:none;background:transparent;color:rgba(255,255,255,.6);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all .2s}
 .toggle-btn:hover{background:rgba(255,255,255,.12);color:#fff}
 .school-box{margin:10px;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1)}
-.school-box .sname{color:#fff;font-weight:700;font-size:11px;font-family:'Tajawal';line-height:1.5}
+.school-box .sname{color:#fff;font-weight:700;font-size:11px;font-family:\'Tajawal\';line-height:1.5}
 .school-box .sbadges{display:flex;align-items:center;gap:6px;margin-top:5px}
 .school-box .slevel{font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(56,189,248,.2);color:#7dd3fc}
-.school-box .spct{font-weight:800;color:#34d399;font-size:15px;font-family:'Tajawal'}
+.school-box .spct{font-weight:800;color:#34d399;font-size:15px;font-family:\'Tajawal\'}
 .nav-wrap{flex:1;overflow-y:auto;padding:8px 6px}
-.nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;margin-bottom:2px;border:none;background:transparent;color:rgba(255,255,255,.65);cursor:pointer;text-align:right;font-family:'Cairo';font-size:12.5px;font-weight:500;transition:all .2s}
+.nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;margin-bottom:2px;border:none;background:transparent;color:rgba(255,255,255,.65);cursor:pointer;text-align:right;font-family:\'Cairo\';font-size:12.5px;font-weight:500;transition:all .2s}
 .nav-btn:hover{color:#fff;background:rgba(255,255,255,.08)}
 .nav-btn.active{background:linear-gradient(90deg,rgba(255,255,255,.14),rgba(255,255,255,.04));border-right:3px solid #38bdf8;color:#fff}
 .nav-icon{font-size:16px;flex-shrink:0}
@@ -42,10 +52,10 @@ body{font-family:'Cairo',sans-serif;background:#f0f4f8;direction:rtl;color:#1e29
 .sidebar-footer p{color:rgba(255,255,255,.35);font-size:10px}
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 .topbar{position:sticky;top:0;z-index:40;background:#fff;border-bottom:1px solid #e5e7eb;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.breadcrumb{display:flex;align-items:center;gap:8px;font-family:'Cairo';font-size:13px;color:#6b7280}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-family:\'Cairo\';font-size:13px;color:#6b7280}
 .breadcrumb .cur{font-weight:700;color:#1e293b}
 .topbar-btns{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.tbtn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-family:'Cairo';font-size:12px;font-weight:600;transition:all .2s}
+.tbtn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-family:\'Cairo\';font-size:12px;font-weight:600;transition:all .2s}
 .tbtn-primary{background:#0c2d57;color:#fff}.tbtn-primary:hover{background:#0f3a6e}
 .tbtn-secondary{background:#f1f5f9;color:#475569}.tbtn-secondary:hover{background:#e2e8f0}
 .tbtn-danger{background:#fff;color:#ef4444;border:1.5px solid #fca5a5}.tbtn-danger:hover{background:#fef2f2;border-color:#ef4444}
@@ -58,16 +68,16 @@ body{font-family:'Cairo',sans-serif;background:#f0f4f8;direction:rtl;color:#1e29
 .card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1),0 8px 28px rgba(0,0,0,.07);transform:translateY(-1px)}
 .hero{border-radius:14px;overflow:hidden;margin-bottom:20px}
 .hero-body{padding:20px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px}
-.hero-title h1{color:#fff;font-size:20px;font-weight:800;font-family:'Tajawal';margin-bottom:3px}
-.hero-title p{color:rgba(255,255,255,.65);font-size:11px;font-family:'Cairo'}
+.hero-title h1{color:#fff;font-size:20px;font-weight:800;font-family:\'Tajawal\';margin-bottom:3px}
+.hero-title p{color:rgba(255,255,255,.65);font-size:11px;font-family:\'Cairo\'}
 .hero-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-.chip{display:flex;align-items:center;gap:3px;padding:3px 9px;border-radius:6px;background:rgba(255,255,255,.12);font-size:10.5px;font-family:'Cairo'}
+.chip{display:flex;align-items:center;gap:3px;padding:3px 9px;border-radius:6px;background:rgba(255,255,255,.12);font-size:10.5px;font-family:\'Cairo\'}
 .chip .cl{color:rgba(255,255,255,.6)}.chip .cv{color:#fff;font-weight:600}
 .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(0,0,0,.15)}
 .hstat{padding:10px;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
 .hstat:last-child{border-right:none}
-.hstat .hval{color:#fff;font-size:20px;font-weight:800;font-family:'Tajawal'}
-.hstat .hlbl{color:rgba(255,255,255,.55);font-size:10px;font-family:'Cairo'}
+.hstat .hval{color:#fff;font-size:20px;font-weight:800;font-family:\'Tajawal\'}
+.hstat .hlbl{color:rgba(255,255,255,.55);font-size:10px;font-family:\'Cairo\'}
 .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .g2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px}
 .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
@@ -77,8 +87,8 @@ body{font-family:'Cairo',sans-serif;background:#f0f4f8;direction:rtl;color:#1e29
 .cls-strength{background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-color:#059669}
 .cls-weakness{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-color:#d97706}
 .cls-critical{background:linear-gradient(135deg,#fef2f2,#fee2e2);border-color:#dc2626}
-.cls-count{font-size:36px;font-weight:900;font-family:'Tajawal'}
-.cls-desc{font-size:11px;color:#6b7280;font-family:'Cairo';margin:6px 0}
+.cls-count{font-size:36px;font-weight:900;font-family:\'Tajawal\'}
+.cls-desc{font-size:11px;color:#6b7280;font-family:\'Cairo\';margin:6px 0}
 .pbar-wrap{display:flex;align-items:center;gap:8px}
 .pbar-bg{flex:1;height:7px;border-radius:4px;background:#e5e7eb;overflow:hidden}
 .pbar-fill{height:100%;border-radius:4px;transition:width .8s cubic-bezier(.23,1,.32,1)}
@@ -86,11 +96,11 @@ body{font-family:'Cairo',sans-serif;background:#f0f4f8;direction:rtl;color:#1e29
 .pf-w{background:linear-gradient(90deg,#d97706,#fbbf24)}
 .pf-c{background:linear-gradient(90deg,#dc2626,#f87171)}
 .pf-b{background:linear-gradient(90deg,#1a4a8a,#3b82f6)}
-.pbar-pct{font-size:12px;font-weight:700;min-width:44px;text-align:left;font-family:'Tajawal'}
-.lvl{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;font-family:'Cairo';white-space:nowrap}
+.pbar-pct{font-size:12px;font-weight:700;min-width:44px;text-align:left;font-family:\'Tajawal\'}
+.lvl{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600;font-family:\'Cairo\';white-space:nowrap}
 .lvl-ex{background:#d1fae5;color:#065f46}.lvl-pr{background:#dbeafe;color:#1e40af}
 .lvl-la{background:#fef3c7;color:#92400e}.lvl-pr2{background:#fee2e2;color:#991b1b}
-.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;font-family:'Cairo';white-space:nowrap}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;font-family:\'Cairo\';white-space:nowrap}
 .badge-s{background:#d1fae5;color:#065f46}.badge-w{background:#fef3c7;color:#92400e}.badge-c{background:#fee2e2;color:#991b1b}
 .circ{position:relative;display:inline-flex;align-items:center;justify-content:center}
 .circ svg{transform:rotate(-90deg)}
@@ -100,72 +110,72 @@ body{font-family:'Cairo',sans-serif;background:#f0f4f8;direction:rtl;color:#1e29
 .ind-header{padding:12px 14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px}
 .ind-num{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
 .ind-info{flex:1;min-width:0}
-.ind-desc{font-size:12px;color:#374151;line-height:1.65;font-family:'Cairo'}
+.ind-desc{font-size:12px;color:#374151;line-height:1.65;font-family:\'Cairo\'}
 .ind-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
-.ind-tag{font-size:10px;padding:2px 8px;border-radius:20px;font-family:'Cairo'}
+.ind-tag{font-size:10px;padding:2px 8px;border-radius:20px;font-family:\'Cairo\'}
 .ind-pct{text-align:left;flex-shrink:0}
-.ind-pct .pnum{font-size:18px;font-weight:900;font-family:'Tajawal'}
-.ind-pct .plbl{font-size:9px;color:#9ca3af;font-family:'Cairo'}
+.ind-pct .pnum{font-size:18px;font-weight:900;font-family:\'Tajawal\'}
+.ind-pct .plbl{font-size:9px;color:#9ca3af;font-family:\'Cairo\'}
 .ind-body{padding:0 14px 14px;border-top:1px solid rgba(0,0,0,.06)}
 .plan-box{border-radius:9px;padding:12px;margin-bottom:10px}
-.plan-title{font-size:12.5px;font-weight:700;margin-bottom:7px;font-family:'Tajawal';display:flex;align-items:center;gap:5px}
+.plan-title{font-size:12.5px;font-weight:700;margin-bottom:7px;font-family:\'Tajawal\';display:flex;align-items:center;gap:5px}
 .plan-acts{list-style:none}
-.plan-acts li{display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;font-size:11.5px;color:#374151;font-family:'Cairo';line-height:1.65}
+.plan-acts li{display:flex;align-items:flex-start;gap:7px;margin-bottom:5px;font-size:11.5px;color:#374151;font-family:\'Cairo\';line-height:1.65}
 .plan-acts li .an{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;flex-shrink:0;margin-top:2px}
 .recs-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
-.rec-tag{display:flex;align-items:center;gap:3px;padding:3px 9px;border-radius:7px;font-size:10.5px;font-family:'Cairo';font-weight:500}
+.rec-tag{display:flex;align-items:center;gap:3px;padding:3px 9px;border-radius:7px;font-size:10.5px;font-family:\'Cairo\';font-weight:500}
 .filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;align-items:center}
-.fbtn{padding:5px 11px;border-radius:7px;border:none;background:#f1f5f9;color:#475569;cursor:pointer;font-family:'Cairo';font-size:11px;font-weight:500;transition:all .15s}
+.fbtn{padding:5px 11px;border-radius:7px;border:none;background:#f1f5f9;color:#475569;cursor:pointer;font-family:\'Cairo\';font-size:11px;font-weight:500;transition:all .15s}
 .fbtn:hover{background:#e2e8f0}.fbtn.active{color:#fff}
 .search-box{position:relative;margin-bottom:14px}
-.search-box input{width:100%;padding:9px 34px 9px 12px;border:1px solid #e5e7eb;border-radius:9px;font-family:'Cairo';font-size:13px;outline:none;transition:border-color .2s;background:#fff}
+.search-box input{width:100%;padding:9px 34px 9px 12px;border:1px solid #e5e7eb;border-radius:9px;font-family:\'Cairo\';font-size:13px;outline:none;transition:border-color .2s;background:#fff}
 .search-box input:focus{border-color:#1a4a8a;box-shadow:0 0 0 3px rgba(26,74,138,.1)}
 .search-ico{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:15px}
 .tbl-wrap{overflow-x:auto;border-radius:12px;overflow:hidden}
 table{width:100%;border-collapse:collapse}
 thead tr{background:#0c2d57}
-thead th{padding:10px 12px;text-align:right;font-size:11px;font-weight:700;color:#fff;font-family:'Cairo';white-space:nowrap}
+thead th{padding:10px 12px;text-align:right;font-size:11px;font-weight:700;color:#fff;font-family:\'Cairo\';white-space:nowrap}
 tbody tr{border-bottom:1px solid #f0f0f0;transition:background .15s}
 tbody tr:hover{background:rgba(12,45,87,.03)}
 tbody tr:nth-child(even){background:#fafafa}
-tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
+tbody td{padding:9px 12px;font-size:11.5px;font-family:\'Cairo\';color:#374151}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .modal{background:#fff;border-radius:16px;width:100%;max-width:580px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.3)}
 .modal-header{padding:18px 20px;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:1}
-.modal-header h3{font-size:16px;font-weight:700;font-family:'Tajawal';color:#1e293b}
+.modal-header h3{font-size:16px;font-weight:700;font-family:\'Tajawal\';color:#1e293b}
 .modal-close{width:30px;height:30px;border-radius:8px;border:none;background:#f1f5f9;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:background .2s}
 .modal-close:hover{background:#e2e8f0}
 .modal-body{padding:20px}
 .form-group{margin-bottom:14px}
-.form-label{display:block;font-size:12px;font-weight:600;color:#374151;font-family:'Cairo';margin-bottom:5px}
-.form-input{width:100%;padding:9px 12px;border:1px solid #e5e7eb;border-radius:8px;font-family:'Cairo';font-size:13px;outline:none;transition:border-color .2s}
+.form-label{display:block;font-size:12px;font-weight:600;color:#374151;font-family:\'Cairo\';margin-bottom:5px}
+.form-input{width:100%;padding:9px 12px;border:1px solid #e5e7eb;border-radius:8px;font-family:\'Cairo\';font-size:13px;outline:none;transition:border-color .2s}
 .form-input:focus{border-color:#1a4a8a;box-shadow:0 0 0 3px rgba(26,74,138,.1)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .modal-footer{padding:14px 20px;border-top:1px solid #e5e7eb;display:flex;justify-content:flex-end;gap:8px}
 .import-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(6px)}
 .import-modal{background:#fff;border-radius:16px;width:100%;max-width:540px;box-shadow:0 20px 60px rgba(0,0,0,.3);overflow:hidden}
 .import-header{padding:18px 20px;background:linear-gradient(135deg,#0c2d57,#1a4a8a);display:flex;align-items:center;justify-content:space-between}
-.import-header h3{color:#fff;font-size:15px;font-weight:700;font-family:'Tajawal'}
+.import-header h3{color:#fff;font-size:15px;font-weight:700;font-family:\'Tajawal\'}
 .import-body{padding:24px}
 .drop-zone{border:2px dashed #cbd5e1;border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:all .2s;background:#f8fafc}
 .drop-zone:hover,.drop-zone.drag-over{border-color:#1a4a8a;background:#eff6ff}
 .drop-zone .dz-icon{font-size:40px;margin-bottom:10px}
-.drop-zone .dz-title{font-size:14px;font-weight:700;color:#1e293b;font-family:'Tajawal';margin-bottom:4px}
-.drop-zone .dz-sub{font-size:11px;color:#6b7280;font-family:'Cairo'}
+.drop-zone .dz-title{font-size:14px;font-weight:700;color:#1e293b;font-family:\'Tajawal\';margin-bottom:4px}
+.drop-zone .dz-sub{font-size:11px;color:#6b7280;font-family:\'Cairo\'}
 .drop-zone input{display:none}
 .import-progress{margin-top:16px}
-.import-log{background:#f8fafc;border-radius:8px;padding:12px;font-size:11px;font-family:'Cairo';color:#374151;line-height:1.8;max-height:160px;overflow-y:auto;border:1px solid #e5e7eb}
+.import-log{background:#f8fafc;border-radius:8px;padding:12px;font-size:11px;font-family:\'Cairo\';color:#374151;line-height:1.8;max-height:160px;overflow-y:auto;border:1px solid #e5e7eb}
 .import-log .log-ok{color:#059669}.import-log .log-warn{color:#d97706}.import-log .log-err{color:#dc2626}
 .import-footer{padding:14px 20px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center}
-.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#1e293b;color:#fff;padding:10px 20px;border-radius:10px;font-family:'Cairo';font-size:13px;z-index:2000;transition:transform .3s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:#1e293b;color:#fff;padding:10px 20px;border-radius:10px;font-family:\'Cairo\';font-size:13px;z-index:2000;transition:transform .3s;box-shadow:0 4px 20px rgba(0,0,0,.3)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 .chart-card{padding:18px}
-.chart-title{font-size:13.5px;font-weight:700;color:#1e293b;font-family:'Tajawal';margin-bottom:14px;display:flex;align-items:center;gap:5px}
+.chart-title{font-size:13.5px;font-weight:700;color:#1e293b;font-family:\'Tajawal\';margin-bottom:14px;display:flex;align-items:center;gap:5px}
 .chart-wrap{position:relative;height:260px}
 .top-row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
 .top-n{font-size:11px;font-weight:700;color:#9ca3af;width:16px;text-align:center;flex-shrink:0}
 .top-info{flex:1;min-width:0}
-.top-info p{font-size:11px;color:#374151;font-family:'Cairo';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
+.top-info p{font-size:11px;color:#374151;font-family:\'Cairo\';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:3px}
 .plan-group{border-radius:12px;overflow:hidden;border:1px solid;margin-bottom:14px;transition:box-shadow .2s}
 .plan-group:hover{box-shadow:0 4px 14px rgba(0,0,0,.08)}
 .pg-header{padding:14px;cursor:pointer;display:flex;align-items:flex-start;gap:10px}
@@ -178,18 +188,18 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
 .domain-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,#0c2d57,#1a4a8a)}
 .domain-icon{width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .domain-info{flex:1}
-.domain-info h3{color:#fff;font-size:14px;font-weight:700;font-family:'Tajawal'}
-.domain-info p{color:rgba(255,255,255,.65);font-size:10px;font-family:'Cairo'}
-.domain-pct{color:#34d399;font-size:20px;font-weight:900;font-family:'Tajawal'}
+.domain-info h3{color:#fff;font-size:14px;font-weight:700;font-family:\'Tajawal\'}
+.domain-info p{color:rgba(255,255,255,.65);font-size:10px;font-family:\'Cairo\'}
+.domain-pct{color:#34d399;font-size:20px;font-weight:900;font-family:\'Tajawal\'}
 .domain-body{padding:14px;display:none}
 .criterion-card{border-radius:9px;border:1px solid #e5e7eb;margin-bottom:10px;overflow:hidden}
 .criterion-header{padding:10px 12px;background:#f8fafc;cursor:pointer;display:flex;align-items:center;gap:8px}
-.criterion-header h4{flex:1;font-size:12.5px;font-weight:700;color:#1e293b;font-family:'Tajawal'}
+.criterion-header h4{flex:1;font-size:12.5px;font-weight:700;color:#1e293b;font-family:\'Tajawal\'}
 .criterion-body{padding:10px 12px;display:none}
 .empty-state{text-align:center;padding:48px 20px;color:#9ca3af}
 .empty-state .ei{font-size:48px;margin-bottom:12px}
-.empty-state h3{font-size:16px;font-weight:700;color:#374151;font-family:'Tajawal';margin-bottom:6px}
-.empty-state p{font-size:12px;font-family:'Cairo'}
+.empty-state h3{font-size:16px;font-weight:700;color:#374151;font-family:\'Tajawal\';margin-bottom:6px}
+.empty-state p{font-size:12px;font-family:\'Cairo\'}
 @media print{.sidebar,.topbar,.topbar-btns{display:none!important}.main{margin:0!important}.content{padding:10px!important}}
 </style>
 </head>
@@ -214,21 +224,21 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
     </div>
   </div>
   <nav class="nav-wrap">
-    <button class="nav-btn active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span><span class="nav-label">لوحة المعلومات</span></button>
-    <button class="nav-btn" onclick="showPage('domains',this)"><span class="nav-icon">🗂️</span><span class="nav-label">المجالات والمعايير</span></button>
-    <button class="nav-btn" onclick="showPage('strengths',this)"><span class="nav-icon">✅</span><span class="nav-label">نقاط القوة</span><span class="nav-badge" id="nbStrength" style="background:#10b981">0</span></button>
-    <button class="nav-btn" onclick="showPage('weaknesses',this)"><span class="nav-icon">⚠️</span><span class="nav-label">نقاط الضعف</span><span class="nav-badge" id="nbWeakness" style="background:#f59e0b">0</span></button>
-    <button class="nav-btn" onclick="showPage('critical',this)"><span class="nav-icon">🚨</span><span class="nav-label">النقاط الحرجة</span><span class="nav-badge" id="nbCritical" style="background:#ef4444">0</span></button>
-    <button class="nav-btn" onclick="showPage('improvement',this)"><span class="nav-icon">📈</span><span class="nav-label">خطط التحسين</span></button>
-    <button class="nav-btn" onclick="showPage('stakeholders',this)"><span class="nav-icon">👥</span><span class="nav-label">آراء أصحاب المصلحة</span></button>
-    <button class="nav-btn" onclick="showPage('all',this)"><span class="nav-icon">📋</span><span class="nav-label">جميع المؤشرات</span><span class="nav-badge" id="nbAll" style="background:#3b82f6">0</span></button>
+    <button class="nav-btn active" onclick="showPage(\'dashboard\',this)"><span class="nav-icon">📊</span><span class="nav-label">لوحة المعلومات</span></button>
+    <button class="nav-btn" onclick="showPage(\'domains\',this)"><span class="nav-icon">🗂️</span><span class="nav-label">المجالات والمعايير</span></button>
+    <button class="nav-btn" onclick="showPage(\'strengths\',this)"><span class="nav-icon">✅</span><span class="nav-label">نقاط القوة</span><span class="nav-badge" id="nbStrength" style="background:#10b981">0</span></button>
+    <button class="nav-btn" onclick="showPage(\'weaknesses\',this)"><span class="nav-icon">⚠️</span><span class="nav-label">نقاط الضعف</span><span class="nav-badge" id="nbWeakness" style="background:#f59e0b">0</span></button>
+    <button class="nav-btn" onclick="showPage(\'critical\',this)"><span class="nav-icon">🚨</span><span class="nav-label">النقاط الحرجة</span><span class="nav-badge" id="nbCritical" style="background:#ef4444">0</span></button>
+    <button class="nav-btn" onclick="showPage(\'improvement\',this)"><span class="nav-icon">📈</span><span class="nav-label">خطط التحسين</span></button>
+    <button class="nav-btn" onclick="showPage(\'stakeholders\',this)"><span class="nav-icon">👥</span><span class="nav-label">آراء أصحاب المصلحة</span></button>
+    <button class="nav-btn" onclick="showPage(\'all\',this)"><span class="nav-icon">📋</span><span class="nav-label">جميع المؤشرات</span><span class="nav-badge" id="nbAll" style="background:#3b82f6">0</span></button>
   </nav>
   <div class="sidebar-footer">
     <p>هيئة تقويم التعليم والتدريب</p>
     <p style="margin-top:2px">تقرير التقويم الخارجي</p>
     <div style="margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,.1)">
       <p style="color:rgba(255,255,255,.5);font-size:10px;margin-bottom:4px">تصميم د/ فواز</p>
-      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="display:inline-flex;align-items:center;gap:4px;color:#38bdf8;font-size:10px;font-family:Cairo;text-decoration:none;transition:color .2s" onmouseover="this.style.color='#7dd3fc'" onmouseout="this.style.color='#38bdf8'">✈️ تفضل للمزيد هنا</a>
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="display:inline-flex;align-items:center;gap:4px;color:#38bdf8;font-size:10px;font-family:Cairo;text-decoration:none;transition:color .2s" onmouseover="this.style.color=\'#7dd3fc\'" onmouseout="this.style.color=\'#38bdf8\'">✈️ تفضل للمزيد هنا</a>
     </div>
   </div>
 </aside>
@@ -252,7 +262,7 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
           <div class="hero-title">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">
               <span style="font-size:20px">🏫</span>
-              <span style="color:rgba(255,255,255,.6);font-size:11px;font-family:'Cairo'">هيئة تقويم التعليم والتدريب</span>
+              <span style="color:rgba(255,255,255,.6);font-size:11px;font-family:\'Cairo\'">هيئة تقويم التعليم والتدريب</span>
             </div>
             <h1 id="heroSchoolName">اكتب اسم المدرسة</h1>
             <p id="heroSubtitle">اكتب الإدارة التعليمية • تقرير التقويم الخارجي</p>
@@ -271,11 +281,11 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
                   id="heroCircle" stroke-dasharray="289.03" stroke-dashoffset="60.7" stroke-linecap="round"/>
               </svg>
               <div class="circ-lbl">
-                <span style="font-size:18px;font-weight:900;color:#34d399;font-family:'Tajawal'" id="heroCirclePct">79.0%</span>
-                <span style="font-size:9px;color:rgba(255,255,255,.6);font-family:'Cairo'">التقدير العام</span>
+                <span style="font-size:18px;font-weight:900;color:#34d399;font-family:\'Tajawal\'" id="heroCirclePct">79.0%</span>
+                <span style="font-size:9px;color:rgba(255,255,255,.6);font-family:\'Cairo\'">التقدير العام</span>
               </div>
             </div>
-            <p style="color:rgba(255,255,255,.7);font-size:11px;font-family:'Cairo'" id="heroLevel">التقدير: التقدم</p>
+            <p style="color:rgba(255,255,255,.7);font-size:11px;font-family:\'Cairo\'" id="heroLevel">التقدير: التقدم</p>
           </div>
         </div>
         <div class="hero-stats">
@@ -288,7 +298,7 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
       <div class="g3">
         <div class="cls-card cls-strength card">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
-            <div style="display:flex;align-items:center;gap:7px"><span style="font-size:22px">✅</span><h3 style="font-weight:700;font-size:14px;font-family:'Tajawal';color:#059669">نقاط القوة</h3></div>
+            <div style="display:flex;align-items:center;gap:7px"><span style="font-size:22px">✅</span><h3 style="font-weight:700;font-size:14px;font-family:\'Tajawal\';color:#059669">نقاط القوة</h3></div>
             <div class="cls-count" style="color:#059669" id="dashStrCount">0</div>
           </div>
           <p class="cls-desc">مؤشرات بلغت 75% فأكثر (بما في ذلك الكسور)</p>
@@ -296,7 +306,7 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         </div>
         <div class="cls-card cls-weakness card">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
-            <div style="display:flex;align-items:center;gap:7px"><span style="font-size:22px">⚠️</span><h3 style="font-weight:700;font-size:14px;font-family:'Tajawal';color:#d97706">نقاط الضعف</h3></div>
+            <div style="display:flex;align-items:center;gap:7px"><span style="font-size:22px">⚠️</span><h3 style="font-weight:700;font-size:14px;font-family:\'Tajawal\';color:#d97706">نقاط الضعف</h3></div>
             <div class="cls-count" style="color:#d97706" id="dashWkCount">0</div>
           </div>
           <p class="cls-desc">مؤشرات من 50% إلى أقل من 75% (بما في ذلك الكسور)</p>
@@ -304,14 +314,14 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         </div>
         <div class="cls-card cls-critical card">
           <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px">
-            <div style="display:flex;align-items:center;gap:7px"><span style="font-size:22px">🚨</span><h3 style="font-weight:700;font-size:14px;font-family:'Tajawal';color:#dc2626">النقاط الحرجة</h3></div>
+            <div style="display:flex;align-items:center;gap:7px"><span style="font-size:22px">🚨</span><h3 style="font-weight:700;font-size:14px;font-family:\'Tajawal\';color:#dc2626">النقاط الحرجة</h3></div>
             <div class="cls-count" style="color:#dc2626" id="dashCrCount">0</div>
           </div>
           <p class="cls-desc">مؤشرات أقل من 50% (بما في ذلك الكسور: 49.9، 49.5...)</p>
           <div class="pbar-wrap"><div class="pbar-bg"><div class="pbar-fill pf-c" id="dashCrBar" style="width:0%"></div></div><span class="pbar-pct" style="color:#dc2626" id="dashCrPct">0%</span></div>
         </div>
       </div>
-      <h2 style="font-size:15px;font-weight:700;color:#1e293b;margin-bottom:12px;font-family:'Tajawal'">📊 نتائج المجالات الأربعة</h2>
+      <h2 style="font-size:15px;font-weight:700;color:#1e293b;margin-bottom:12px;font-family:\'Tajawal\'">📊 نتائج المجالات الأربعة</h2>
       <div class="g2" id="dashDomains"></div>
       <div class="g2">
         <div class="card chart-card"><div class="chart-title">📊 أداء المجالات</div><div class="chart-wrap"><canvas id="domainsChart"></canvas></div></div>
@@ -322,61 +332,61 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         <div class="card" style="padding:18px"><div class="chart-title">⚠️ أدنى 5 مؤشرات (تحتاج تحسيناً)</div><div id="topWk"></div></div>
       </div>
       <!-- مستويات الأداء -->
-      <h2 style="font-size:15px;font-weight:700;color:#1e293b;margin:24px 0 14px;font-family:'Tajawal'">📈 مستويات الأداء</h2>
+      <h2 style="font-size:15px;font-weight:700;color:#1e293b;margin:24px 0 14px;font-family:\'Tajawal\'">📈 مستويات الأداء</h2>
       <div style="display:grid;gap:12px">
         <div style="display:flex;align-items:stretch;border-radius:12px;overflow:hidden;border:2px solid #16a34a;background:#f0fdf4">
           <div style="width:70px;background:#16a34a;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:12px 8px;flex-shrink:0">
             <span style="font-size:22px">⭐</span>
-            <span style="color:#fff;font-weight:900;font-size:14px;font-family:'Tajawal'">التميز</span>
+            <span style="color:#fff;font-weight:900;font-size:14px;font-family:\'Tajawal\'">التميز</span>
           </div>
           <div style="flex:1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
             <div>
-              <p style="font-size:13px;color:#374151;font-family:'Cairo';line-height:1.8">مستوى أداء مرتفع (متوسط الأداء من 90 % فأعلى)، <strong>ويتطلب استدامة التميز والابتكار</strong>.</p>
+              <p style="font-size:13px;color:#374151;font-family:\'Cairo\';line-height:1.8">مستوى أداء مرتفع (متوسط الأداء من 90 % فأعلى)، <strong>ويتطلب استدامة التميز والابتكار</strong>.</p>
             </div>
             <div style="text-align:center;flex-shrink:0">
-              <span style="font-size:22px;font-weight:900;color:#16a34a;font-family:'Tajawal'">90%+</span>
+              <span style="font-size:22px;font-weight:900;color:#16a34a;font-family:\'Tajawal\'">90%+</span>
             </div>
           </div>
         </div>
         <div style="display:flex;align-items:stretch;border-radius:12px;overflow:hidden;border:2px solid #1d4ed8;background:#eff6ff">
           <div style="width:70px;background:#1d4ed8;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:12px 8px;flex-shrink:0">
             <span style="font-size:22px">📈</span>
-            <span style="color:#fff;font-weight:900;font-size:14px;font-family:'Tajawal'">التقدم</span>
+            <span style="color:#fff;font-weight:900;font-size:14px;font-family:\'Tajawal\'">التقدم</span>
           </div>
           <div style="flex:1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
             <div>
-              <p style="font-size:13px;color:#374151;font-family:'Cairo';line-height:1.8">مستوى أداء جيد (متوسط الأداء من 75 % إلى أقل من 90 %)، <strong>ويتطلب استمرار المتابعة للتحسين والتطوير</strong>.</p>
+              <p style="font-size:13px;color:#374151;font-family:\'Cairo\';line-height:1.8">مستوى أداء جيد (متوسط الأداء من 75 % إلى أقل من 90 %)، <strong>ويتطلب استمرار المتابعة للتحسين والتطوير</strong>.</p>
             </div>
             <div style="text-align:center;flex-shrink:0">
-              <span style="font-size:22px;font-weight:900;color:#1d4ed8;font-family:'Tajawal'">75-89%</span>
+              <span style="font-size:22px;font-weight:900;color:#1d4ed8;font-family:\'Tajawal\'">75-89%</span>
             </div>
           </div>
         </div>
         <div style="display:flex;align-items:stretch;border-radius:12px;overflow:hidden;border:2px solid #d97706;background:#fffbeb">
           <div style="width:70px;background:#d97706;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:12px 8px;flex-shrink:0">
             <span style="font-size:22px">🚀</span>
-            <span style="color:#fff;font-weight:900;font-size:14px;font-family:'Tajawal'">الانطلاق</span>
+            <span style="color:#fff;font-weight:900;font-size:14px;font-family:\'Tajawal\'">الانطلاق</span>
           </div>
           <div style="flex:1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
             <div>
-              <p style="font-size:13px;color:#374151;font-family:'Cairo';line-height:1.8">مستوى أداء مقبول (متوسط الأداء من 50 % إلى أقل من 75 %)، <strong>ويتطلب تحسينات كبيرة في بعض المجالات</strong>.</p>
+              <p style="font-size:13px;color:#374151;font-family:\'Cairo\';line-height:1.8">مستوى أداء مقبول (متوسط الأداء من 50 % إلى أقل من 75 %)، <strong>ويتطلب تحسينات كبيرة في بعض المجالات</strong>.</p>
             </div>
             <div style="text-align:center;flex-shrink:0">
-              <span style="font-size:22px;font-weight:900;color:#d97706;font-family:'Tajawal'">50-74%</span>
+              <span style="font-size:22px;font-weight:900;color:#d97706;font-family:\'Tajawal\'">50-74%</span>
             </div>
           </div>
         </div>
         <div style="display:flex;align-items:stretch;border-radius:12px;overflow:hidden;border:2px solid #dc2626;background:#fef2f2">
           <div style="width:70px;background:#dc2626;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;padding:12px 8px;flex-shrink:0">
             <span style="font-size:22px">📝</span>
-            <span style="color:#fff;font-weight:900;font-size:14px;font-family:'Tajawal'">التهيئة</span>
+            <span style="color:#fff;font-weight:900;font-size:14px;font-family:\'Tajawal\'">التهيئة</span>
           </div>
           <div style="flex:1;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px">
             <div>
-              <p style="font-size:13px;color:#374151;font-family:'Cairo';line-height:1.8">مستوى أداء منخفض (متوسط الأداء أقل من 50 %)، <strong>ويتطلب إحداث تدخلات جوهرية للتحسين والتطوير في معظم المجالات</strong>.</p>
+              <p style="font-size:13px;color:#374151;font-family:\'Cairo\';line-height:1.8">مستوى أداء منخفض (متوسط الأداء أقل من 50 %)، <strong>ويتطلب إحداث تدخلات جوهرية للتحسين والتطوير في معظم المجالات</strong>.</p>
             </div>
             <div style="text-align:center;flex-shrink:0">
-              <span style="font-size:22px;font-weight:900;color:#dc2626;font-family:'Tajawal'"><50%</span>
+              <span style="font-size:22px;font-weight:900;color:#dc2626;font-family:\'Tajawal\'"><50%</span>
             </div>
           </div>
         </div>
@@ -387,8 +397,8 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
     <div class="page" id="page-domains">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
         <div style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#0c2d57,#1a4a8a);display:flex;align-items:center;justify-content:center;font-size:18px">🗂️</div>
-        <div><h1 style="font-size:17px;font-weight:800;font-family:'Tajawal';color:#1e293b">المجالات والمعايير والمؤشرات</h1>
-        <p style="font-size:11px;color:#6b7280;font-family:'Cairo'">عرض تفصيلي لجميع مجالات التقويم الخارجي</p></div>
+        <div><h1 style="font-size:17px;font-weight:800;font-family:\'Tajawal\';color:#1e293b">المجالات والمعايير والمؤشرات</h1>
+        <p style="font-size:11px;color:#6b7280;font-family:\'Cairo\'">عرض تفصيلي لجميع مجالات التقويم الخارجي</p></div>
       </div>
       <div id="domainsContent"></div>
     </div>
@@ -399,17 +409,17 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         <div class="hero-body" style="padding:18px">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-size:24px">✅</span>
-            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:'Tajawal'">نقاط القوة</h1>
-            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:'Cairo'">المؤشرات التي بلغت 75% فأكثر (شاملاً الكسور مثل 75.1، 75.5، 76.2...)</p></div>
+            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:\'Tajawal\'">نقاط القوة</h1>
+            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:\'Cairo\'">المؤشرات التي بلغت 75% فأكثر (شاملاً الكسور مثل 75.1، 75.5، 76.2...)</p></div>
           </div>
           <div style="display:flex;gap:16px;flex-wrap:wrap">
-            <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#fff;font-family:'Tajawal'" id="strTotal">0</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:'Cairo'">إجمالي</div></div>
+            <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#fff;font-family:\'Tajawal\'" id="strTotal">0</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:\'Cairo\'">إجمالي</div></div>
             <div style="width:1px;background:rgba(255,255,255,.2)"></div>
-            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:'Tajawal'" id="strMax">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:'Cairo'">أعلى نسبة</div></div>
+            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:\'Tajawal\'" id="strMax">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:\'Cairo\'">أعلى نسبة</div></div>
             <div style="width:1px;background:rgba(255,255,255,.2)"></div>
-            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:'Tajawal'" id="strMin">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:'Cairo'">أدنى نسبة</div></div>
+            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:\'Tajawal\'" id="strMin">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:\'Cairo\'">أدنى نسبة</div></div>
             <div style="width:1px;background:rgba(255,255,255,.2)"></div>
-            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:'Tajawal'" id="strAvg">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:'Cairo'">المتوسط</div></div>
+            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:\'Tajawal\'" id="strAvg">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:\'Cairo\'">المتوسط</div></div>
           </div>
         </div>
       </div>
@@ -423,17 +433,17 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         <div class="hero-body" style="padding:18px">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-size:24px">⚠️</span>
-            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:'Tajawal'">نقاط الضعف</h1>
-            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:'Cairo'">مؤشرات من 50% إلى أقل من 75% (شاملاً الكسور مثل 74.9، 72.5، 65.3...)</p></div>
+            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:\'Tajawal\'">نقاط الضعف</h1>
+            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:\'Cairo\'">مؤشرات من 50% إلى أقل من 75% (شاملاً الكسور مثل 74.9، 72.5، 65.3...)</p></div>
           </div>
           <div style="display:flex;gap:16px;flex-wrap:wrap">
-            <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#fff;font-family:'Tajawal'" id="wkTotal">0</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:'Cairo'">إجمالي</div></div>
+            <div style="text-align:center"><div style="font-size:26px;font-weight:900;color:#fff;font-family:\'Tajawal\'" id="wkTotal">0</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:\'Cairo\'">إجمالي</div></div>
             <div style="width:1px;background:rgba(255,255,255,.2)"></div>
-            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:'Tajawal'" id="wkMax">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:'Cairo'">أعلى نسبة</div></div>
+            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:\'Tajawal\'" id="wkMax">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:\'Cairo\'">أعلى نسبة</div></div>
             <div style="width:1px;background:rgba(255,255,255,.2)"></div>
-            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:'Tajawal'" id="wkMin">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:'Cairo'">أدنى نسبة</div></div>
+            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:\'Tajawal\'" id="wkMin">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:\'Cairo\'">أدنى نسبة</div></div>
             <div style="width:1px;background:rgba(255,255,255,.2)"></div>
-            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:'Tajawal'" id="wkAvg">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:'Cairo'">المتوسط</div></div>
+            <div style="text-align:center"><div style="font-size:16px;font-weight:700;color:#fff;font-family:\'Tajawal\'" id="wkAvg">-</div><div style="color:rgba(255,255,255,.6);font-size:10px;font-family:\'Cairo\'">المتوسط</div></div>
           </div>
         </div>
       </div>
@@ -447,8 +457,8 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         <div class="hero-body" style="padding:18px">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-size:24px">🚨</span>
-            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:'Tajawal'">النقاط الحرجة</h1>
-            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:'Cairo'">المؤشرات أقل من 50% (شاملاً الكسور: 49.9، 49.8، 49.5، 49.0...)</p></div>
+            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:\'Tajawal\'">النقاط الحرجة</h1>
+            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:\'Cairo\'">المؤشرات أقل من 50% (شاملاً الكسور: 49.9، 49.8، 49.5، 49.0...)</p></div>
           </div>
         </div>
       </div>
@@ -461,8 +471,8 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         <div class="hero-body" style="padding:18px">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-size:24px">📈</span>
-            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:'Tajawal'">خطط التحسين</h1>
-            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:'Cairo'">مستوردة من نظام cy7 - مرتبطة بمؤشرات نقاط الضعف والنقاط الحرجة</p></div>
+            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:\'Tajawal\'">خطط التحسين</h1>
+            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:\'Cairo\'">مستوردة من نظام cy7 - مرتبطة بمؤشرات نقاط الضعف والنقاط الحرجة</p></div>
           </div>
         </div>
       </div>
@@ -475,8 +485,8 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
         <div class="hero-body" style="padding:18px">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-size:24px">👥</span>
-            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:'Tajawal'">آراء أصحاب المصلحة</h1>
-            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:'Cairo'">مقارنة آراء المتعلمين وأولياء الأمور والمعلمين مع التقويم الرسمي</p></div>
+            <div><h1 style="color:#fff;font-size:18px;font-weight:800;font-family:\'Tajawal\'">آراء أصحاب المصلحة</h1>
+            <p style="color:rgba(255,255,255,.65);font-size:11px;font-family:\'Cairo\'">مقارنة آراء المتعلمين وأولياء الأمور والمعلمين مع التقويم الرسمي</p></div>
           </div>
         </div>
       </div>
@@ -487,8 +497,8 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
     <div class="page" id="page-all">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
         <div style="width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,#0c2d57,#1a4a8a);display:flex;align-items:center;justify-content:center;font-size:18px">📋</div>
-        <div><h1 style="font-size:17px;font-weight:800;font-family:'Tajawal';color:#1e293b">جميع المؤشرات</h1>
-        <p style="font-size:11px;color:#6b7280;font-family:'Cairo'" id="allCount">0 مؤشر</p></div>
+        <div><h1 style="font-size:17px;font-weight:800;font-family:\'Tajawal\';color:#1e293b">جميع المؤشرات</h1>
+        <p style="font-size:11px;color:#6b7280;font-family:\'Cairo\'" id="allCount">0 مؤشر</p></div>
       </div>
       <div class="card" style="padding:14px;margin-bottom:14px;border-radius:12px">
         <div class="search-box" style="margin-bottom:10px">
@@ -516,15 +526,15 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
       <button onclick="closeImport()" style="background:rgba(255,255,255,.15);border:none;color:#fff;width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:14px">✕</button>
     </div>
     <div class="import-body">
-      <div class="drop-zone" id="dropZone" onclick="document.getElementById('pdfInput').click()"
-        ondragover="event.preventDefault();this.classList.add('drag-over')"
-        ondragleave="this.classList.remove('drag-over')"
+      <div class="drop-zone" id="dropZone" onclick="document.getElementById(\'pdfInput\').click()"
+        ondragover="event.preventDefault();this.classList.add(\'drag-over\')"
+        ondragleave="this.classList.remove(\'drag-over\')"
         ondrop="handleDrop(event)">
         <input type="file" id="pdfInput" accept=".pdf" onchange="handleFile(this.files[0])">
         <div class="dz-icon">📄</div>
         <div class="dz-title">اسحب ملف PDF هنا أو انقر للاختيار</div>
         <div class="dz-sub">يدعم ملفات تقارير التقويم الخارجي بصيغة PDF</div>
-        <div style="margin-top:12px;padding:10px;background:rgba(26,74,138,.06);border-radius:8px;font-size:11px;color:#374151;font-family:'Cairo';line-height:1.8;text-align:right">
+        <div style="margin-top:12px;padding:10px;background:rgba(26,74,138,.06);border-radius:8px;font-size:11px;color:#374151;font-family:\'Cairo\';line-height:1.8;text-align:right">
           <strong style="color:#0c2d57">معايير التصنيف المطبّقة:</strong><br>
           ✅ <strong>نقطة قوة:</strong> 75% فأكثر (75.0، 75.1، 80.5، 99.25...)<br>
           ⚠️ <strong>نقطة ضعف:</strong> من 50% إلى أقل من 75% (50.0، 65.5، 74.9...)<br>
@@ -537,12 +547,12 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
           <div style="height:6px;background:#e5e7eb;border-radius:3px;overflow:hidden">
             <div id="importPbar" style="height:100%;background:linear-gradient(90deg,#1a4a8a,#3b82f6);border-radius:3px;width:0%;transition:width .3s"></div>
           </div>
-          <p id="importStatus" style="font-size:11px;color:#6b7280;font-family:'Cairo';margin-top:5px;text-align:center"></p>
+          <p id="importStatus" style="font-size:11px;color:#6b7280;font-family:\'Cairo\';margin-top:5px;text-align:center"></p>
         </div>
       </div>
     </div>
     <div class="import-footer">
-      <div style="font-size:11px;color:#9ca3af;font-family:'Cairo'" id="importFileName">لم يتم اختيار ملف</div>
+      <div style="font-size:11px;color:#9ca3af;font-family:\'Cairo\'" id="importFileName">لم يتم اختيار ملف</div>
       <div style="display:flex;gap:8px">
         <button class="tbtn tbtn-secondary" onclick="closeImport()">إلغاء</button>
         <button class="tbtn tbtn-primary" id="importBtn" onclick="processImport()" disabled>🔍 تحليل وتحميل</button>
@@ -617,7 +627,7 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
 
 <script>
 // ===== البيانات =====
-const DEFAULT_DATA = {"school_info": {"name": "المتوسطة الثلاثون بالمدينة", "ministry_number": "S-41876", "education_admin": "الإدارة العامة للتعليم بمنطقة المدينة المنورة", "stage": "متوسط", "gender": "بنات", "students_count": 618, "teachers_count": 29, "admin_count": 17, "evaluation_date": "2024/04/26", "overall_percentage": 79, "overall_level": "التقدم", "year": "2025", "overall": 81.78}, "domains": {"الإدارة المدرسية": {"percentage": 85.81, "criteria": {"التخطيط والقيادة التعليمية": {"percentage": 89.38}, "قيادة العملية التعليمية": {"percentage": 89.62}, "المجتمع المدرسي": {"percentage": 76.83}, "التطوير المؤسسي": {"percentage": 83.25}}}, "التعليم والتعلم": {"percentage": 68.62, "criteria": {"بناء خبرات التعلم": {"percentage": 63.47}, "تقويم التعلم": {"percentage": 84.08}}}, "نواتج التعلم": {"percentage": 83.89, "criteria": {"التحصيل التعليمي": {"percentage": 72.71}, "التطور الشخصي والاجتماعي": {"percentage": 90.29}}}, "البيئة المدرسية": {"percentage": 90.03, "criteria": {"المبنى المدرسي": {"percentage": 90.25}, "الأمن والسلامة": {"percentage": 89.81}}}}, "indicators": [{"code": "1-1-1-1", "domain": "الإدارة المدرسية", "criterion": "التخطيط والقيادة التعليمية", "desc": "تضع المدرسة خطة تشغيلية مكتملة العناصر وفق أهداف تطويرية محددة", "pct": 80.0, "cls": "strength", "level": "التقدم", "plan": {"init": "تضع المدرسة خطة تشغيلية مكتملة العناصر وفق أهداف تطويرية محددة.", "acts": ["تحديد وترتيب الوسائل والبرامج والأنشطة المقترحة ذات الأهداف التطويرية واكتمال عناصر الخطة (البرامج - الأنشطة - زمن التنفيذ) وتطوير مؤشرات أداء الخطة التشغيلية.", "توزيع الأدوار والمسؤوليات في تنفيذ خطة المدرسة وإشراك المجتمع المدرسي في تطوير الخطة، وشمولية المهام والمسؤوليات.", "شمول الخطة لتلبية احتياجات جميع المتعلمين بمن فيهم ذوو الإعاقة والموهوبون.", "متابعة تنفيذ الخطة وتحسينها بما يضمن الوصول للأهداف، وتحديد المشكلات والتحديات المتوقعة واقتراح الحلول والبدائل.", "إيجاد أدوات تقويمية لتقويم تنفيذ البرامج والأنشطة وتحديد جوانب القوة وفرص التحسين القادمة."], "recs": ["سجل الخطة التشغيلية", "سجل اللجان المدرسية", "سجل متابعة وتحسين الخطة", "سجل المتابعة والتقويم", "سجل توثيق البرامج"]}}, {"code": "2-1-1-1", "domain": "الإدارة المدرسية", "criterion": "التخطيط والقيادة التعليمية", "desc": "تلتزم المدرسة بقيم مهنة التعليم وأخلاقياتها", "pct": 97.5, "cls": "strength", "level": "التميز", "plan": {"init": "تضع المدرسة خطة تشغيلية مكتملة العناصر وفق أهداف تطويرية محددة.", "acts": ["تحديد وترتيب الوسائل والبرامج والأنشطة المقترحة ذات الأهداف التطويرية واكتمال عناصر الخطة (البرامج - الأنشطة - زمن التنفيذ) وتطوير مؤشرات أداء الخطة التشغيلية.", "توزيع الأدوار والمسؤوليات في تنفيذ خطة المدرسة وإشراك المجتمع المدرسي في تطوير الخطة، وشمولية المهام والمسؤوليات.", "شمول الخطة لتلبية احتياجات جميع المتعلمين بمن فيهم ذوو الإعاقة والموهوبون.", "متابعة تنفيذ الخطة وتحسينها بما يضمن الوصول للأهداف، وتحديد المشكلات والتحديات المتوقعة واقتراح الحلول والبدائل.", "إيجاد أدوات تقويمية لتقويم تنفيذ البرامج والأنشطة وتحديد جوانب القوة وفرص التحسين القادمة."], "recs": ["سجل الخطة التشغيلية", "سجل اللجان المدرسية", "سجل متابعة وتحسين الخطة", "سجل المتابعة والتقويم", "سجل توثيق البرامج"]}}, {"code": "3-1-1-1", "domain": "الإدارة المدرسية", "criterion": "التخطيط والقيادة التعليمية", "desc": "تنشر المدرسة قواعد السلوك والمواظبة، وتتابع تطبيقها", "pct": 96.25, "cls": "strength", "level": "التميز", "plan": {"init": "تضع المدرسة خطة تشغيلية مكتملة العناصر وفق أهداف تطويرية محددة.", "acts": ["تحديد وترتيب الوسائل والبرامج والأنشطة المقترحة ذات الأهداف التطويرية واكتمال عناصر الخطة (البرامج - الأنشطة - زمن التنفيذ) وتطوير مؤشرات أداء الخطة التشغيلية.", "توزيع الأدوار والمسؤوليات في تنفيذ خطة المدرسة وإشراك المجتمع المدرسي في تطوير الخطة، وشمولية المهام والمسؤوليات.", "شمول الخطة لتلبية احتياجات جميع المتعلمين بمن فيهم ذوو الإعاقة والموهوبون.", "متابعة تنفيذ الخطة وتحسينها بما يضمن الوصول للأهداف، وتحديد المشكلات والتحديات المتوقعة واقتراح الحلول والبدائل.", "إيجاد أدوات تقويمية لتقويم تنفيذ البرامج والأنشطة وتحديد جوانب القوة وفرص التحسين القادمة."], "recs": ["سجل الخطة التشغيلية", "سجل اللجان المدرسية", "سجل متابعة وتحسين الخطة", "سجل المتابعة والتقويم", "سجل توثيق البرامج"]}}, {"code": "4-1-1-1", "domain": "الإدارة المدرسية", "criterion": "التخطيط والقيادة التعليمية", "desc": "تنفذ المدرسة خطة للتحسين بناء على نتائج التقويم المدرسي، وتتابعها", "pct": 83.75, "cls": "strength", "level": "التقدم", "plan": {"init": "تضع المدرسة خطة تشغيلية مكتملة العناصر وفق أهداف تطويرية محددة.", "acts": ["تحديد وترتيب الوسائل والبرامج والأنشطة المقترحة ذات الأهداف التطويرية واكتمال عناصر الخطة (البرامج - الأنشطة - زمن التنفيذ) وتطوير مؤشرات أداء الخطة التشغيلية.", "توزيع الأدوار والمسؤوليات في تنفيذ خطة المدرسة وإشراك المجتمع المدرسي في تطوير الخطة، وشمولية المهام والمسؤوليات.", "شمول الخطة لتلبية احتياجات جميع المتعلمين بمن فيهم ذوو الإعاقة والموهوبون.", "متابعة تنفيذ الخطة وتحسينها بما يضمن الوصول للأهداف، وتحديد المشكلات والتحديات المتوقعة واقتراح الحلول والبدائل.", "إيجاد أدوات تقويمية لتقويم تنفيذ البرامج والأنشطة وتحديد جوانب القوة وفرص التحسين القادمة."], "recs": ["سجل الخطة التشغيلية", "سجل اللجان المدرسية", "سجل متابعة وتحسين الخطة", "سجل المتابعة والتقويم", "سجل توثيق البرامج"]}}, {"code": "1-1-2-1", "domain": "الإدارة المدرسية", "criterion": "قيادة العملية التعليمية", "desc": "تقود المدرسة العملية التعليمية بفاعلية", "pct": 90.25, "cls": "strength", "level": "التميز", "plan": {"init": "تعزيز القيادة التعليمية الفاعلة وتطوير الممارسات المهنية.", "acts": ["توفير إجراءات واضحة تنشر من خلالها قيم المواظبة والسلوك الوظيفي.", "تطبيق إجراءات واضحة للمساءلة بشأن مخالفات القيم والأخلاقيات المهنية.", "تعزيز الممارسات القيادية الفاعلة في إدارة العملية التعليمية.", "متابعة أداء المعلمين وتقديم التغذية الراجعة البنّاءة."], "recs": ["سجل الأنشطة والبرامج", "سجل متابعة السلوك الوظيفي", "سجل التوجيه والإرشاد"]}}, {"code": "2-1-2-1", "domain": "الإدارة المدرسية", "criterion": "قيادة العملية التعليمية", "desc": "تلتزم المدرسة بقيم مهنة التعليم وأخلاقياتها", "pct": 97.5, "cls": "strength", "level": "التميز", "plan": {"init": "تعزيز القيادة التعليمية الفاعلة وتطوير الممارسات المهنية.", "acts": ["توفير إجراءات واضحة تنشر من خلالها قيم المواظبة والسلوك الوظيفي.", "تطبيق إجراءات واضحة للمساءلة بشأن مخالفات القيم والأخلاقيات المهنية.", "تعزيز الممارسات القيادية الفاعلة في إدارة العملية التعليمية.", "متابعة أداء المعلمين وتقديم التغذية الراجعة البنّاءة."], "recs": ["سجل الأنشطة والبرامج", "سجل متابعة السلوك الوظيفي", "سجل التوجيه والإرشاد"]}}, {"code": "3-1-2-1", "domain": "الإدارة المدرسية", "criterion": "قيادة العملية التعليمية", "desc": "توفر المدرسة مناخاً آمناً للتعلم والنمو نفسياً واجتماعياً", "pct": 90.25, "cls": "strength", "level": "التميز", "plan": {"init": "تعزيز القيادة التعليمية الفاعلة وتطوير الممارسات المهنية.", "acts": ["توفير إجراءات واضحة تنشر من خلالها قيم المواظبة والسلوك الوظيفي.", "تطبيق إجراءات واضحة للمساءلة بشأن مخالفات القيم والأخلاقيات المهنية.", "تعزيز الممارسات القيادية الفاعلة في إدارة العملية التعليمية.", "متابعة أداء المعلمين وتقديم التغذية الراجعة البنّاءة."], "recs": ["سجل الأنشطة والبرامج", "سجل متابعة السلوك الوظيفي", "سجل التوجيه والإرشاد"]}}, {"code": "4-1-2-1", "domain": "الإدارة المدرسية", "criterion": "قيادة العملية التعليمية", "desc": "تنشر المدرسة قواعد السلوك والمواظبة، وتتابع تطبيقها", "pct": 96.25, "cls": "strength", "level": "التميز", "plan": {"init": "تعزيز القيادة التعليمية الفاعلة وتطوير الممارسات المهنية.", "acts": ["توفير إجراءات واضحة تنشر من خلالها قيم المواظبة والسلوك الوظيفي.", "تطبيق إجراءات واضحة للمساءلة بشأن مخالفات القيم والأخلاقيات المهنية.", "تعزيز الممارسات القيادية الفاعلة في إدارة العملية التعليمية.", "متابعة أداء المعلمين وتقديم التغذية الراجعة البنّاءة."], "recs": ["سجل الأنشطة والبرامج", "سجل متابعة السلوك الوظيفي", "سجل التوجيه والإرشاد"]}}, {"code": "1-1-3-1", "domain": "الإدارة المدرسية", "criterion": "المجتمع المدرسي", "desc": "يتعاون المجتمع المدرسي لتحقيق أهداف المدرسة", "pct": 82.5, "cls": "strength", "level": "التقدم", "plan": {"init": "تعزيز العمل التعاوني والعلاقات الإيجابية في المجتمع المدرسي، ومشاركة الأسرة في تعلم أبنائها.", "acts": ["وضع خطة شاملة لعمل تعاوني في المجتمع المدرسي وتفعيل مجالس أولياء الأمور.", "إنشاء سجل استطلاع وتواصل مع الأسرة ومتابعة الواجبات والمهمات.", "حث أولياء الأمور على الاستفادة من المنصات (موقع عين، منصة مدرستي، نظام نور).", "تعزيز الشراكة المجتمعية مع الجهات المحلية والشركات لتوفير فرص تعلم عملية."], "recs": ["سجل البرامج والأنشطة", "سجل مجالس أولياء الأمور", "سجل التواصل مع أولياء الأمور", "سجل الشراكة المجتمعية"]}}, {"code": "2-1-3-1", "domain": "الإدارة المدرسية", "criterion": "المجتمع المدرسي", "desc": "تشارك الأسرة في تعلم أبنائها", "pct": 74.0, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تعزيز العمل التعاوني والعلاقات الإيجابية في المجتمع المدرسي، ومشاركة الأسرة في تعلم أبنائها.", "acts": ["وضع خطة شاملة لعمل تعاوني في المجتمع المدرسي وتفعيل مجالس أولياء الأمور.", "إنشاء سجل استطلاع وتواصل مع الأسرة ومتابعة الواجبات والمهمات.", "حث أولياء الأمور على الاستفادة من المنصات (موقع عين، منصة مدرستي، نظام نور).", "تعزيز الشراكة المجتمعية مع الجهات المحلية والشركات لتوفير فرص تعلم عملية."], "recs": ["سجل البرامج والأنشطة", "سجل مجالس أولياء الأمور", "سجل التواصل مع أولياء الأمور", "سجل الشراكة المجتمعية"]}}, {"code": "3-1-3-1", "domain": "الإدارة المدرسية", "criterion": "المجتمع المدرسي", "desc": "تعزز المدرسة الشراكة المجتمعية لدعم التعلم والتأثير الإيجابي في المجتمع المحلي", "pct": 74.0, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تعزيز العمل التعاوني والعلاقات الإيجابية في المجتمع المدرسي، ومشاركة الأسرة في تعلم أبنائها.", "acts": ["وضع خطة شاملة لعمل تعاوني في المجتمع المدرسي وتفعيل مجالس أولياء الأمور.", "إنشاء سجل استطلاع وتواصل مع الأسرة ومتابعة الواجبات والمهمات.", "حث أولياء الأمور على الاستفادة من المنصات (موقع عين، منصة مدرستي، نظام نور).", "تعزيز الشراكة المجتمعية مع الجهات المحلية والشركات لتوفير فرص تعلم عملية."], "recs": ["سجل البرامج والأنشطة", "سجل مجالس أولياء الأمور", "سجل التواصل مع أولياء الأمور", "سجل الشراكة المجتمعية"]}}, {"code": "1-1-4-1", "domain": "الإدارة المدرسية", "criterion": "التطوير المؤسسي", "desc": "تتوفر في المدرسة كوادر تعليمية مكتملة ومؤهلة", "pct": 75.0, "cls": "strength", "level": "التقدم", "plan": {"init": "توفير كوادر تعليمية مكتملة ومؤهلة، والتوافق في مجال التخصص، وتوفير خطة مالية ثابتة.", "acts": ["إعداد بيانات الموظفين والوصف الوظيفي والأعمال المكلفين بها.", "عمل ميزانية مستقرة وثابتة وتوثيق المعاملات المالية.", "تقديم أنشطة وبرامج توعوية حول أهمية الرخصة المهنية.", "بناء خطة للتطوير المهني ببرامج وأنشطة وعمل سجلات مهنية."], "recs": ["سجل أحوال الموظفين", "سجل التكاليف", "سجل المجالس واللجان", "سجل الرخصة المهنية", "سجل النمو المهني"]}}, {"code": "2-1-4-1", "domain": "الإدارة المدرسية", "criterion": "التطوير المؤسسي", "desc": "تدعم المدرسة التطوير المهني لمنسوبيها وفقاً لنتائج تقويم الأداء الوظيفي واحتياجاتهم", "pct": 75.0, "cls": "strength", "level": "التقدم", "plan": {"init": "توفير كوادر تعليمية مكتملة ومؤهلة، والتوافق في مجال التخصص، وتوفير خطة مالية ثابتة.", "acts": ["إعداد بيانات الموظفين والوصف الوظيفي والأعمال المكلفين بها.", "عمل ميزانية مستقرة وثابتة وتوثيق المعاملات المالية.", "تقديم أنشطة وبرامج توعوية حول أهمية الرخصة المهنية.", "بناء خطة للتطوير المهني ببرامج وأنشطة وعمل سجلات مهنية."], "recs": ["سجل أحوال الموظفين", "سجل التكاليف", "سجل المجالس واللجان", "سجل الرخصة المهنية", "سجل النمو المهني"]}}, {"code": "3-1-4-1", "domain": "الإدارة المدرسية", "criterion": "التطوير المؤسسي", "desc": "تطبق المدرسة التقويم الذاتي المبني على المعايير المعتمدة من الهيئة", "pct": 99.25, "cls": "strength", "level": "التميز", "plan": {"init": "توفير كوادر تعليمية مكتملة ومؤهلة، والتوافق في مجال التخصص، وتوفير خطة مالية ثابتة.", "acts": ["إعداد بيانات الموظفين والوصف الوظيفي والأعمال المكلفين بها.", "عمل ميزانية مستقرة وثابتة وتوثيق المعاملات المالية.", "تقديم أنشطة وبرامج توعوية حول أهمية الرخصة المهنية.", "بناء خطة للتطوير المهني ببرامج وأنشطة وعمل سجلات مهنية."], "recs": ["سجل أحوال الموظفين", "سجل التكاليف", "سجل المجالس واللجان", "سجل الرخصة المهنية", "سجل النمو المهني"]}}, {"code": "4-1-4-1", "domain": "الإدارة المدرسية", "criterion": "التطوير المؤسسي", "desc": "تنفذ المدرسة خطة للتحسين بناء على نتائج التقويم المدرسي، وتتابعها", "pct": 83.75, "cls": "strength", "level": "التقدم", "plan": {"init": "توفير كوادر تعليمية مكتملة ومؤهلة، والتوافق في مجال التخصص، وتوفير خطة مالية ثابتة.", "acts": ["إعداد بيانات الموظفين والوصف الوظيفي والأعمال المكلفين بها.", "عمل ميزانية مستقرة وثابتة وتوثيق المعاملات المالية.", "تقديم أنشطة وبرامج توعوية حول أهمية الرخصة المهنية.", "بناء خطة للتطوير المهني ببرامج وأنشطة وعمل سجلات مهنية."], "recs": ["سجل أحوال الموظفين", "سجل التكاليف", "سجل المجالس واللجان", "سجل الرخصة المهنية", "سجل النمو المهني"]}}, {"code": "1-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية", "pct": 59.75, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "2-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية", "pct": 59.75, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "3-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "تنوع المدرسة في استراتيجيات التدريس لتلبية احتياجات المتعلمين، ودعم تعلمهم", "pct": 61.25, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "4-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "تفعل المدرسة التعلم الإلكتروني لتلبية احتياجات المتعلمين ودعم تعلمهم", "pct": 65.0, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "5-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "توفر المدرسة أنشطة تعلم تطبيقية ترتبط بحياة المتعلمين", "pct": 61.25, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "6-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "تنمي المدرسة المهارات القرائية والعددية الأساسية لدى المتعلمين", "pct": 72.5, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "7-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "تنمي المدرسة مهارات التفكير العليا لدى المتعلمين", "pct": 49.5, "cls": "critical", "level": "التهيئة", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "8-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "تنمي المدرسة المهارات العاطفية والاجتماعية لدى المتعلمين", "pct": 77.25, "cls": "strength", "level": "التقدم", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "9-1-1-2", "domain": "التعليم والتعلم", "criterion": "بناء خبرات التعلم", "desc": "تنمي المدرسة المهارات الرقمية لدى المتعلمين", "pct": 65.0, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.", "acts": ["تنويع استراتيجيات التدريس لتلبية احتياجات جميع المتعلمين.", "تفعيل التعلم الإلكتروني وتوظيف التقنية في العملية التعليمية.", "توفير أنشطة تعلم تطبيقية ترتبط بواقع حياة المتعلمين.", "تنمية مهارات التفكير العليا من خلال أسئلة تحليلية وإبداعية.", "تعزيز المهارات الرقمية لدى المتعلمين من خلال برامج متخصصة.", "تطوير برامج لتنمية المهارات القرائية والعددية الأساسية.", "تنمية المهارات العاطفية والاجتماعية لدى المتعلمين."], "recs": ["سجل تحضير الدروس", "سجل الأنشطة التعليمية", "سجل متابعة أداء المتعلمين", "سجل البرامج الإثرائية والعلاجية"]}}, {"code": "1-1-2-2", "domain": "التعليم والتعلم", "criterion": "تقويم التعلم", "desc": "تقوّم المدرسة أداء المتعلمين باستخدام أساليب وأدوات تقويم متنوعة وفاعلة", "pct": 67.25, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "عمل تقويم لأداء المتعلمين متنوع وفاعل، وتحليل نتائج التقويم لتحسين نواتج التعلم وتقديم تغذية راجعة مستدامة.", "acts": ["تنويع أساليب وأدوات التقويم (تقويم مستمر، ختامي، أداء).", "تحليل نتائج التقويم وتوظيفها في تحسين نواتج التعلم.", "تقديم تغذية راجعة فورية وبنّاءة للمتعلمين بطرق متنوعة.", "إعداد خطط علاجية وإثرائية بناءً على نتائج التقويم."], "recs": ["سجل تحليل النتائج", "سجل الأنشطة العلاجية", "سجل التحصيل الدراسي", "سجل إنجاز المتعلمين"]}}, {"code": "2-1-2-2", "domain": "التعليم والتعلم", "criterion": "تقويم التعلم", "desc": "تحلل المدرسة نتائج التقويم، وتوظفها في تحسين نواتج التعلم بانتظام", "pct": 99.25, "cls": "strength", "level": "التميز", "plan": {"init": "عمل تقويم لأداء المتعلمين متنوع وفاعل، وتحليل نتائج التقويم لتحسين نواتج التعلم وتقديم تغذية راجعة مستدامة.", "acts": ["تنويع أساليب وأدوات التقويم (تقويم مستمر، ختامي، أداء).", "تحليل نتائج التقويم وتوظيفها في تحسين نواتج التعلم.", "تقديم تغذية راجعة فورية وبنّاءة للمتعلمين بطرق متنوعة.", "إعداد خطط علاجية وإثرائية بناءً على نتائج التقويم."], "recs": ["سجل تحليل النتائج", "سجل الأنشطة العلاجية", "سجل التحصيل الدراسي", "سجل إنجاز المتعلمين"]}}, {"code": "3-1-2-2", "domain": "التعليم والتعلم", "criterion": "تقويم التعلم", "desc": "تقدم المدرسة التغذية الراجعة للمتعلمين بانتظام", "pct": 85.75, "cls": "strength", "level": "التقدم", "plan": {"init": "عمل تقويم لأداء المتعلمين متنوع وفاعل، وتحليل نتائج التقويم لتحسين نواتج التعلم وتقديم تغذية راجعة مستدامة.", "acts": ["تنويع أساليب وأدوات التقويم (تقويم مستمر، ختامي، أداء).", "تحليل نتائج التقويم وتوظيفها في تحسين نواتج التعلم.", "تقديم تغذية راجعة فورية وبنّاءة للمتعلمين بطرق متنوعة.", "إعداد خطط علاجية وإثرائية بناءً على نتائج التقويم."], "recs": ["سجل تحليل النتائج", "سجل الأنشطة العلاجية", "سجل التحصيل الدراسي", "سجل إنجاز المتعلمين"]}}, {"code": "1-1-1-3", "domain": "نواتج التعلم", "criterion": "التحصيل التعليمي", "desc": "يحقق المتعلمون نتائج متقدمة في مجال القراءة وفقاً للاختبارات الوطنية", "pct": 59.75, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "منافسون - مهاراتي: مبادرة تحسين نتائج الاختبارات الوطنية.", "acts": ["خطة (نافس) الحقيقية تنطلق من إتقان مهارات المواد المستهدفة ذاتها.", "عقد الاجتماع مع معلمي المواد المستهدفة لحث الطلاب، وعمل اختبارات محاكية.", "تكليف اللجان بمتابعة دخول الطلاب للاختبارات وقراءة الأدلة التابعة.", "القيام بنشر ثقافة الاختبارات بين الطلاب وأولياء الأمور.", "عمل سجل يخص الاختبارات الوطنية.", "تحليل بيانات الاختبارات الوطنية لتحديد الفجوة وتحسين الأداء."], "recs": ["سجل متابعة الاختبارات الوطنية", "سجل التحصيل الدراسي", "سجل الأنشطة العلاجية"]}}, {"code": "2-1-1-3", "domain": "نواتج التعلم", "criterion": "التحصيل التعليمي", "desc": "يحقق المتعلمون نتائج متقدمة في مجال الرياضيات وفقاً للاختبارات الوطنية", "pct": 66.02, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "منافسون - مهاراتي: مبادرة تحسين نتائج الاختبارات الوطنية.", "acts": ["خطة (نافس) الحقيقية تنطلق من إتقان مهارات المواد المستهدفة ذاتها.", "عقد الاجتماع مع معلمي المواد المستهدفة لحث الطلاب، وعمل اختبارات محاكية.", "تكليف اللجان بمتابعة دخول الطلاب للاختبارات وقراءة الأدلة التابعة.", "القيام بنشر ثقافة الاختبارات بين الطلاب وأولياء الأمور.", "عمل سجل يخص الاختبارات الوطنية.", "تحليل بيانات الاختبارات الوطنية لتحديد الفجوة وتحسين الأداء."], "recs": ["سجل متابعة الاختبارات الوطنية", "سجل التحصيل الدراسي", "سجل الأنشطة العلاجية"]}}, {"code": "3-1-1-3", "domain": "نواتج التعلم", "criterion": "التحصيل التعليمي", "desc": "يحقق المتعلمون نتائج متقدمة في مجال العلوم وفقاً للاختبارات الوطنية", "pct": 77.57, "cls": "strength", "level": "التقدم", "plan": {"init": "منافسون - مهاراتي: مبادرة تحسين نتائج الاختبارات الوطنية.", "acts": ["خطة (نافس) الحقيقية تنطلق من إتقان مهارات المواد المستهدفة ذاتها.", "عقد الاجتماع مع معلمي المواد المستهدفة لحث الطلاب، وعمل اختبارات محاكية.", "تكليف اللجان بمتابعة دخول الطلاب للاختبارات وقراءة الأدلة التابعة.", "القيام بنشر ثقافة الاختبارات بين الطلاب وأولياء الأمور.", "عمل سجل يخص الاختبارات الوطنية.", "تحليل بيانات الاختبارات الوطنية لتحديد الفجوة وتحسين الأداء."], "recs": ["سجل متابعة الاختبارات الوطنية", "سجل التحصيل الدراسي", "سجل الأنشطة العلاجية"]}}, {"code": "4-1-1-3", "domain": "نواتج التعلم", "criterion": "التحصيل التعليمي", "desc": "تلبي المرافق والخدمات المساندة احتياجات المتعلمين بمن فيهم ذوو الإعاقة", "pct": 87.5, "cls": "strength", "level": "التقدم", "plan": {"init": "منافسون - مهاراتي: مبادرة تحسين نتائج الاختبارات الوطنية.", "acts": ["خطة (نافس) الحقيقية تنطلق من إتقان مهارات المواد المستهدفة ذاتها.", "عقد الاجتماع مع معلمي المواد المستهدفة لحث الطلاب، وعمل اختبارات محاكية.", "تكليف اللجان بمتابعة دخول الطلاب للاختبارات وقراءة الأدلة التابعة.", "القيام بنشر ثقافة الاختبارات بين الطلاب وأولياء الأمور.", "عمل سجل يخص الاختبارات الوطنية.", "تحليل بيانات الاختبارات الوطنية لتحديد الفجوة وتحسين الأداء."], "recs": ["سجل متابعة الاختبارات الوطنية", "سجل التحصيل الدراسي", "سجل الأنشطة العلاجية"]}}, {"code": "1-1-2-3", "domain": "نواتج التعلم", "criterion": "التطور الشخصي والاجتماعي", "desc": "يظهر المتعلمون الاعتزاز بالقيم والهوية الوطنية", "pct": 98.0, "cls": "strength", "level": "التميز", "plan": {"init": "تعزيز مشاركة المدرسة في الأنشطة المجتمعية والأعمال التطوعية، والتزام منسوبيها بقواعد السلوك والانضباط المدرسي.", "acts": ["الاعتناء بالعمل التطوعي وتوفير البرامج والأنشطة في ذلك.", "رصد المخالفات السلوكية والحث على الالتزام بقواعد السلوك.", "الالتزام بالممارسات الصحية والوقاية من الأمراض والنظافة الشخصية.", "التفاعل مع الأنشطة الثقافية في المجتمع واحترام التنوع الثقافي."], "recs": ["سجل العمل التطوعي", "سجل المخالفات السلوكية", "سجل التكريم والتحفيز", "سجل الانضباط"]}}, {"code": "2-1-2-3", "domain": "نواتج التعلم", "criterion": "التطور الشخصي والاجتماعي", "desc": "يظهر المتعلمون اتجاهات إيجابية نحو ذواتهم", "pct": 93.75, "cls": "strength", "level": "التميز", "plan": {"init": "تعزيز مشاركة المدرسة في الأنشطة المجتمعية والأعمال التطوعية، والتزام منسوبيها بقواعد السلوك والانضباط المدرسي.", "acts": ["الاعتناء بالعمل التطوعي وتوفير البرامج والأنشطة في ذلك.", "رصد المخالفات السلوكية والحث على الالتزام بقواعد السلوك.", "الالتزام بالممارسات الصحية والوقاية من الأمراض والنظافة الشخصية.", "التفاعل مع الأنشطة الثقافية في المجتمع واحترام التنوع الثقافي."], "recs": ["سجل العمل التطوعي", "سجل المخالفات السلوكية", "سجل التكريم والتحفيز", "سجل الانضباط"]}}, {"code": "3-1-2-3", "domain": "نواتج التعلم", "criterion": "التطور الشخصي والاجتماعي", "desc": "يظهر المتعلمون التزاماً بالممارسات الصحية السليمة", "pct": 89.25, "cls": "strength", "level": "التقدم", "plan": {"init": "تعزيز مشاركة المدرسة في الأنشطة المجتمعية والأعمال التطوعية، والتزام منسوبيها بقواعد السلوك والانضباط المدرسي.", "acts": ["الاعتناء بالعمل التطوعي وتوفير البرامج والأنشطة في ذلك.", "رصد المخالفات السلوكية والحث على الالتزام بقواعد السلوك.", "الالتزام بالممارسات الصحية والوقاية من الأمراض والنظافة الشخصية.", "التفاعل مع الأنشطة الثقافية في المجتمع واحترام التنوع الثقافي."], "recs": ["سجل العمل التطوعي", "سجل المخالفات السلوكية", "سجل التكريم والتحفيز", "سجل الانضباط"]}}, {"code": "4-1-2-3", "domain": "نواتج التعلم", "criterion": "التطور الشخصي والاجتماعي", "desc": "يشارك المتعلمون في الأنشطة المجتمعية والأعمال التطوعية", "pct": 73.5, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تعزيز مشاركة المدرسة في الأنشطة المجتمعية والأعمال التطوعية، والتزام منسوبيها بقواعد السلوك والانضباط المدرسي.", "acts": ["الاعتناء بالعمل التطوعي وتوفير البرامج والأنشطة في ذلك.", "رصد المخالفات السلوكية والحث على الالتزام بقواعد السلوك.", "الالتزام بالممارسات الصحية والوقاية من الأمراض والنظافة الشخصية.", "التفاعل مع الأنشطة الثقافية في المجتمع واحترام التنوع الثقافي."], "recs": ["سجل العمل التطوعي", "سجل المخالفات السلوكية", "سجل التكريم والتحفيز", "سجل الانضباط"]}}, {"code": "5-1-2-3", "domain": "نواتج التعلم", "criterion": "التطور الشخصي والاجتماعي", "desc": "يلتزم المتعلمون بقواعد السلوك والانضباط المدرسي", "pct": 95.75, "cls": "strength", "level": "التميز", "plan": {"init": "تعزيز مشاركة المدرسة في الأنشطة المجتمعية والأعمال التطوعية، والتزام منسوبيها بقواعد السلوك والانضباط المدرسي.", "acts": ["الاعتناء بالعمل التطوعي وتوفير البرامج والأنشطة في ذلك.", "رصد المخالفات السلوكية والحث على الالتزام بقواعد السلوك.", "الالتزام بالممارسات الصحية والوقاية من الأمراض والنظافة الشخصية.", "التفاعل مع الأنشطة الثقافية في المجتمع واحترام التنوع الثقافي."], "recs": ["سجل العمل التطوعي", "سجل المخالفات السلوكية", "سجل التكريم والتحفيز", "سجل الانضباط"]}}, {"code": "6-1-2-3", "domain": "نواتج التعلم", "criterion": "التطور الشخصي والاجتماعي", "desc": "يظهر المتعلمون القدرة على البحث والتعلم الذاتي", "pct": 86.0, "cls": "strength", "level": "التقدم", "plan": {"init": "تعزيز مشاركة المدرسة في الأنشطة المجتمعية والأعمال التطوعية، والتزام منسوبيها بقواعد السلوك والانضباط المدرسي.", "acts": ["الاعتناء بالعمل التطوعي وتوفير البرامج والأنشطة في ذلك.", "رصد المخالفات السلوكية والحث على الالتزام بقواعد السلوك.", "الالتزام بالممارسات الصحية والوقاية من الأمراض والنظافة الشخصية.", "التفاعل مع الأنشطة الثقافية في المجتمع واحترام التنوع الثقافي."], "recs": ["سجل العمل التطوعي", "سجل المخالفات السلوكية", "سجل التكريم والتحفيز", "سجل الانضباط"]}}, {"code": "7-1-2-3", "domain": "نواتج التعلم", "criterion": "التطور الشخصي والاجتماعي", "desc": "يظهر المتعلمون اعتزازاً بثقافتهم واحتراماً للتنوع الثقافي في المجتمع", "pct": 95.75, "cls": "strength", "level": "التميز", "plan": {"init": "تعزيز مشاركة المدرسة في الأنشطة المجتمعية والأعمال التطوعية، والتزام منسوبيها بقواعد السلوك والانضباط المدرسي.", "acts": ["الاعتناء بالعمل التطوعي وتوفير البرامج والأنشطة في ذلك.", "رصد المخالفات السلوكية والحث على الالتزام بقواعد السلوك.", "الالتزام بالممارسات الصحية والوقاية من الأمراض والنظافة الشخصية.", "التفاعل مع الأنشطة الثقافية في المجتمع واحترام التنوع الثقافي."], "recs": ["سجل العمل التطوعي", "سجل المخالفات السلوكية", "سجل التكريم والتحفيز", "سجل الانضباط"]}}, {"code": "1-1-1-4", "domain": "البيئة المدرسية", "criterion": "المبنى المدرسي", "desc": "تنظيم مبنى المدرسة ملائم لعدد المتعلمين والمرحلة العمرية", "pct": 98.25, "cls": "strength", "level": "التميز", "plan": {"init": "تنظيم المبنى المدرسي وتلبية الاحتياجات التعليمية.", "acts": ["تنظيم المبنى المدرسي بما يتوافق مع أعداد المتعلمين والخصائص العمرية.", "توفير الاحتياجات لجميع المتعلمين ومنهم ذوي الإعاقة.", "توفير المعامل والوسائل والأدوات وأماكن الأنشطة.", "متابعة سلامة المقصف المدرسي والساحات."], "recs": ["متابعة البيئة المدرسية ومدى توفر مرافق الخدمات المساندة"]}}, {"code": "2-1-1-4", "domain": "البيئة المدرسية", "criterion": "المبنى المدرسي", "desc": "تتوفر في المدرسة مرافق وخدمات مساندة كافية", "pct": 87.5, "cls": "strength", "level": "التقدم", "plan": {"init": "تنظيم المبنى المدرسي وتلبية الاحتياجات التعليمية.", "acts": ["تنظيم المبنى المدرسي بما يتوافق مع أعداد المتعلمين والخصائص العمرية.", "توفير الاحتياجات لجميع المتعلمين ومنهم ذوي الإعاقة.", "توفير المعامل والوسائل والأدوات وأماكن الأنشطة.", "متابعة سلامة المقصف المدرسي والساحات."], "recs": ["متابعة البيئة المدرسية ومدى توفر مرافق الخدمات المساندة"]}}, {"code": "3-1-1-4", "domain": "البيئة المدرسية", "criterion": "المبنى المدرسي", "desc": "تلبي المرافق والخدمات المساندة احتياجات المتعلمين بمن فيهم ذوو الإعاقة", "pct": 87.5, "cls": "strength", "level": "التقدم", "plan": {"init": "تنظيم المبنى المدرسي وتلبية الاحتياجات التعليمية.", "acts": ["تنظيم المبنى المدرسي بما يتوافق مع أعداد المتعلمين والخصائص العمرية.", "توفير الاحتياجات لجميع المتعلمين ومنهم ذوي الإعاقة.", "توفير المعامل والوسائل والأدوات وأماكن الأنشطة.", "متابعة سلامة المقصف المدرسي والساحات."], "recs": ["متابعة البيئة المدرسية ومدى توفر مرافق الخدمات المساندة"]}}, {"code": "4-1-1-4", "domain": "البيئة المدرسية", "criterion": "المبنى المدرسي", "desc": "تعمل المدرسة على نظافة المبنى المدرسي وجميع مرافقه بانتظام", "pct": 87.75, "cls": "strength", "level": "التقدم", "plan": {"init": "تنظيم المبنى المدرسي وتلبية الاحتياجات التعليمية.", "acts": ["تنظيم المبنى المدرسي بما يتوافق مع أعداد المتعلمين والخصائص العمرية.", "توفير الاحتياجات لجميع المتعلمين ومنهم ذوي الإعاقة.", "توفير المعامل والوسائل والأدوات وأماكن الأنشطة.", "متابعة سلامة المقصف المدرسي والساحات."], "recs": ["متابعة البيئة المدرسية ومدى توفر مرافق الخدمات المساندة"]}}, {"code": "1-1-2-4", "domain": "البيئة المدرسية", "criterion": "الأمن والسلامة", "desc": "تتوافر في فصول المدرسة ومعاملها وجميع مرافقها متطلبات الأمن والسلامة", "pct": 95.75, "cls": "strength", "level": "التميز", "plan": {"init": "توفير جميع أدوات الأمن والسلامة في المدرسة كاملة، والعمل المستدام لصيانتها.", "acts": ["عمل لجنة الأمن والسلامة.", "توفير شهادة الأمن والسلامة من الجهة المختصة.", "عمل برامج وأنشطة ونشرات تعزز الأمن والسلامة.", "توافر الخطط العلاجية والطوارئ والإخلاء.", "توفير خطة لأعمال الصيانة وتوافر المعلومات حول الاحتياجات للصيانة."], "recs": ["سجل لجنة الأمن والسلامة", "سجل الصيانة", "سجل الوجبة الصحية"]}}, {"code": "2-1-2-4", "domain": "البيئة المدرسية", "criterion": "الأمن والسلامة", "desc": "توفر المدرسة برامج وأنشطة تربوية داعمة للسلوك الإيجابي", "pct": 89.75, "cls": "strength", "level": "التقدم", "plan": {"init": "توفير جميع أدوات الأمن والسلامة في المدرسة كاملة، والعمل المستدام لصيانتها.", "acts": ["عمل لجنة الأمن والسلامة.", "توفير شهادة الأمن والسلامة من الجهة المختصة.", "عمل برامج وأنشطة ونشرات تعزز الأمن والسلامة.", "توافر الخطط العلاجية والطوارئ والإخلاء.", "توفير خطة لأعمال الصيانة وتوافر المعلومات حول الاحتياجات للصيانة."], "recs": ["سجل لجنة الأمن والسلامة", "سجل الصيانة", "سجل الوجبة الصحية"]}}, {"code": "3-1-2-4", "domain": "البيئة المدرسية", "criterion": "الأمن والسلامة", "desc": "تتوفر في المدرسة خطط الطوارئ والإخلاء", "pct": 86.0, "cls": "strength", "level": "التقدم", "plan": {"init": "توفير جميع أدوات الأمن والسلامة في المدرسة كاملة، والعمل المستدام لصيانتها.", "acts": ["عمل لجنة الأمن والسلامة.", "توفير شهادة الأمن والسلامة من الجهة المختصة.", "عمل برامج وأنشطة ونشرات تعزز الأمن والسلامة.", "توافر الخطط العلاجية والطوارئ والإخلاء.", "توفير خطة لأعمال الصيانة وتوافر المعلومات حول الاحتياجات للصيانة."], "recs": ["سجل لجنة الأمن والسلامة", "سجل الصيانة", "سجل الوجبة الصحية"]}}, {"code": "4-1-2-4", "domain": "البيئة المدرسية", "criterion": "الأمن والسلامة", "desc": "تعمل المدرسة على نظافة المبنى المدرسي وجميع مرافقه بانتظام", "pct": 87.75, "cls": "strength", "level": "التقدم", "plan": {"init": "توفير جميع أدوات الأمن والسلامة في المدرسة كاملة، والعمل المستدام لصيانتها.", "acts": ["عمل لجنة الأمن والسلامة.", "توفير شهادة الأمن والسلامة من الجهة المختصة.", "عمل برامج وأنشطة ونشرات تعزز الأمن والسلامة.", "توافر الخطط العلاجية والطوارئ والإخلاء.", "توفير خطة لأعمال الصيانة وتوافر المعلومات حول الاحتياجات للصيانة."], "recs": ["سجل لجنة الأمن والسلامة", "سجل الصيانة", "سجل الوجبة الصحية"]}}, {"code": "6-1-2-1", "domain": "الإدارة المدرسية", "criterion": "قيادة العملية التعليمية", "desc": "يتوفر في المدرسة منهج شامل ومتكامل", "pct": 73.75, "cls": "weakness", "level": "الانطلاق", "plan": {"init": "تعزيز القيادة التعليمية الفاعلة وتطوير الممارسات المهنية.", "acts": ["توفير إجراءات واضحة تنشر من خلالها قيم المواظبة والسلوك الوظيفي.", "تطبيق إجراءات واضحة للمساءلة بشأن مخالفات القيم والأخلاقيات المهنية.", "تعزيز الممارسات القيادية الفاعلة في إدارة العملية التعليمية.", "متابعة أداء المعلمين وتقديم التغذية الراجعة البنّاءة."], "recs": ["سجل الأنشطة والبرامج", "سجل متابعة السلوك الوظيفي", "سجل التوجيه والإرشاد"]}}, {"code": "5-1-2-1", "domain": "الإدارة المدرسية", "criterion": "قيادة العملية التعليمية", "desc": "توفر المدرسة برامج وأنشطة تربوية داعمة للسلوك الإيجابي", "pct": 89.75, "cls": "strength", "level": "التقدم", "plan": {"init": "تعزيز القيادة التعليمية الفاعلة وتطوير الممارسات المهنية.", "acts": ["توفير إجراءات واضحة تنشر من خلالها قيم المواظبة والسلوك الوظيفي.", "تطبيق إجراءات واضحة للمساءلة بشأن مخالفات القيم والأخلاقيات المهنية.", "تعزيز الممارسات القيادية الفاعلة في إدارة العملية التعليمية.", "متابعة أداء المعلمين وتقديم التغذية الراجعة البنّاءة."], "recs": ["سجل الأنشطة والبرامج", "سجل متابعة السلوك الوظيفي", "سجل التوجيه والإرشاد"]}}]};
+const DEFAULT_DATA = ''' + data_json + ''';
 
 let APP = JSON.parse(JSON.stringify(DEFAULT_DATA));
 let allFiltered = [];
@@ -1324,7 +1334,7 @@ async function processImport() {
       const content = await page.getTextContent();
       // استخراج ذكي يحافظ على بنية الأسطر بناءً على الموضع الرأسي
       const items = content.items;
-      if (items.length === 0) { fullText += '\n'; continue; }
+      if (items.length === 0) { fullText += '\\n'; continue; }
       // تجميع العناصر في أسطر حسب الموضع الرأسي - مع مراعاة RTL
       // نجمع العناصر في مجموعات حسب السطر (y) بدون ترتيب x حتى نحافظ على الترتيب الأصلي
       const lineMap = new Map();
@@ -1342,12 +1352,13 @@ async function processImport() {
       let pageLines = [];
       for (const key of sortedKeys) {
         const lineItems = lineMap.get(key);
-        // النص العربي RTL: نحتفظ بالترتيب الأصلي للعناصر كما جاءت من PDF.js
-        // لا نعيد ترتيب العناصر لأن PDF.js يعطيها بالترتيب الصحيح للنص العربي
-        const lineText = lineItems.map(it => it.str).join('').trim();
+        // النص العربي RTL: PDF.js يعطي عناصر السطر مرتبة بتصاعد x (يسار→يمين)
+        // لكن العربية تُقرأ من اليمين لليسار، فنرتب بتنازل x (يمين→يسار)
+        const sortedItems = [...lineItems].sort((a, b) => b.transform[4] - a.transform[4]);
+        const lineText = sortedItems.map(it => it.str).join(' ').trim().replace(/\s+/g, ' ');
         if (lineText) pageLines.push(lineText);
       }
-      fullText += pageLines.join('\n') + '\n';
+      fullText += pageLines.join('\\n') + '\\n';
       setProgress(25 + Math.round(p/pdf.numPages*35), `صفحة ${p} من ${pdf.numPages}...`);
     }
 
@@ -1441,10 +1452,10 @@ function parsePDFText(text) {
   function cleanStr(s) {
     if (!s) return '';
     // إزالة رموز RTL/LTR وغيرها
-    s = s.replace(/[​-‏‪-‮⁦-⁩﻿]/g, '');
+    s = s.replace(/[\u200b-\u200f\u202a-\u202e\u2066-\u2069\ufeff]/g, '');
     // تحويل خطوط العرض العربي (Presentation Forms) إلى Unicode عادي
     // هذا يحل مشكلة ﺍﻟﻤﺪﺭﺳﺔ → المدرسة
-    s = s.replace(/[ﭐ-﷿ﹰ-﻿]/g, ch => {
+    s = s.replace(/[\uFB50-\uFDFF\uFE70-\uFEFF]/g, ch => {
       try { return ch.normalize('NFKC'); } catch(e) { return ch; }
     });
     return s.trim();
@@ -1478,7 +1489,7 @@ function parsePDFText(text) {
   }
 
   // ===== تقسيم النص إلى أسطر =====
-  const lines = text.split(/[\n\r]+/);
+  const lines = text.split(/[\\n\\r]+/);
 
   // ===== استخراج معلومات المدرسة =====
   // البحث في أول 200 سطر
@@ -1755,4 +1766,10 @@ function showToast(msg) {
 }
 </script>
 </body>
-</html>
+</html>'''
+
+with open('/home/ubuntu/منصة_التقويم_المدرسي_v2.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+
+print(f"✅ تم بناء الملف بنجاح: {len(html):,} حرف")
+print(f"📊 حجم الملف: {len(html.encode('utf-8'))/1024:.1f} KB")

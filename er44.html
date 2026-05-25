@@ -84,6 +84,8 @@ function ensureDataIntegrity(){
     start:(i&&i.start)||'',end:(i&&i.end)||'',notes:(i&&i.notes)||'',evidence:(i&&i.evidence)||''
   }));
   data.evidence=Array.isArray(data.evidence)?data.evidence:JSON.parse(JSON.stringify(defaults.evidence));
+  data.summaryStrengthCodes=Array.isArray(data.summaryStrengthCodes)?data.summaryStrengthCodes:[];
+  data.summaryImprovementCodes=Array.isArray(data.summaryImprovementCodes)?data.summaryImprovementCodes:[];
   data.title=data.title||'منصة تحليل تقرير التقويم المدرسي الخارجي';
   return data;
 }
@@ -99,8 +101,30 @@ function renderDash(){let counts=LEVELS.map(l=>[l.name,data.indicators.filter(i=
 function renderDomains(){document.getElementById('tab-domains').innerHTML=`<div class="grid cols4">${data.domains.sort((a,b)=>b.score-a.score).map((d,idx)=>`<div class="card"><h3>${idx+1}. ${d.name}</h3><b style="font-size:34px;color:var(--purple)">${pct(d.score)}</b><p>${badge(d.score)} <span class="badge b-start">فجوة ${gap(d.score)}%</span></p><p>${domainAdvice(d)}</p><h4>المعايير</h4>${d.standards.map(s=>`${bar(s[0],s[1])}<p class="mini">${priority(s[1])}</p>`).join('')}</div>`).join('')}</div>`}
 function renderIndicators(){let domains=['الكل',...new Set(data.indicators.map(i=>i.domain))], levels=['الكل','التهيئة','الانطلاق','التقدم','التميز'], pr=['الكل','أولوية عاجلة','أولوية عالية','أولوية متوسطة','استدامة وتجويد'];document.getElementById('tab-indicators').innerHTML=`<div class="card"><h3>المؤشرات التفصيلية</h3><div class="filters no-print"><input id="q" placeholder="بحث مباشر برمز أو نص المؤشر" oninput="fillIndicators()"><select id="fd" onchange="fillIndicators()">${domains.map(x=>`<option>${x}</option>`).join('')}</select><select id="fl" onchange="fillIndicators()">${levels.map(x=>`<option>${x}</option>`).join('')}</select><select id="fp" onchange="fillIndicators()">${pr.map(x=>`<option>${x}</option>`).join('')}</select><button class="btn" onclick="addIndicator()">إضافة مؤشر جديد</button></div><div class="tableWrap"><table><thead><tr><th>الرمز</th><th>المؤشر</th><th>المجال</th><th>المعيار</th><th>النسبة</th><th>المستوى</th><th>الأولوية</th><th>الفجوة</th><th class="no-print">إجراءات</th></tr></thead><tbody id="indBody"></tbody></table></div></div>`;fillIndicators()}
 function fillIndicators(){let q=(document.getElementById('q')?.value||'').trim(),fd=document.getElementById('fd')?.value||'الكل',fl=document.getElementById('fl')?.value||'الكل',fp=document.getElementById('fp')?.value||'الكل';let arr=data.indicators.filter(i=>(!q||(i.code+i.text).includes(q))&&(fd=='الكل'||i.domain==fd)&&(fl=='الكل'||level(i.score).name==fl)&&(fp=='الكل'||priority(i.score)==fp)).sort((a,b)=>a.score-b.score);document.getElementById('indBody').innerHTML=arr.map((i,idx)=>`<tr><td contenteditable onblur="iByCode('${i.code}').code=this.textContent">${i.code}</td><td contenteditable onblur="iByCode('${i.code}').text=this.textContent">${i.text}</td><td>${i.domain}</td><td>${i.standard}</td><td><input class="field progressInput" type="number" value="${i.score}" onchange="iByCode('${i.code}').score=+this.value;saveData(false);renderAll()"></td><td>${badge(i.score)}</td><td>${priority(i.score)}</td><td>${gap(i.score)}%</td><td class="no-print"><button class="btn alt" onclick="openPlan('${i.code}')">خطة</button><button class="btn danger" onclick="delIndicator('${i.code}')">حذف</button></td></tr>`).join('')}
-function renderStrengths(){let arr=data.indicators.filter(i=>i.score>=90).sort((a,b)=>b.score-a.score);document.getElementById('tab-strengths').innerHTML=`<div class="grid cols3">${arr.map(i=>`<div class="card strength"><h3>${i.code}</h3><b class="high">${pct(i.score)}</b> ${badge(i.score)}<p>${i.text}</p><span class="badge b-excellent">قوة قابلة للاستدامة</span><p class="mini">إجراء استدامة: ${i.suggestion}</p></div>`).join('')}</div>`}
-function renderWeakness(){let arr=data.indicators.filter(i=>i.score<50).sort((a,b)=>a.score-b.score);document.getElementById('tab-weakness').innerHTML=`<div class="grid cols2">${arr.map(i=>`<div class="card weak"><h3>${i.code}</h3><b class="low">${pct(i.score)}</b> ${badge(i.score)}<p>${i.text}</p>${weakAnalysis(i)}<button class="btn no-print" onclick="openPlan('${i.code}')">توليد خطة لهذا المؤشر</button></div>`).join('')}</div>`}
+function getIndicatorsByCodes(codes){
+  const byCode=Object.fromEntries((data.indicators||[]).map(i=>[i.code,i]));
+  return (Array.isArray(codes)?codes:[]).map(c=>byCode[c]).filter(Boolean);
+}
+function uniqueIndicators(arr){
+  const seen=new Set();
+  return (arr||[]).filter(i=>{if(!i||seen.has(i.code))return false;seen.add(i.code);return true});
+}
+function renderStrengths(){
+  let explicit=getIndicatorsByCodes(data.summaryStrengthCodes);
+  let byScore=(data.indicators||[]).filter(i=>+i.score>=90).sort((a,b)=>b.score-a.score);
+  let arr=uniqueIndicators([...explicit,...byScore]);
+  if(!arr.length){arr=[...(data.indicators||[])].sort((a,b)=>b.score-a.score).slice(0,10)}
+  const note=explicit.length?'<p class="mini">تم عرض المؤشرات الواردة في ملخص التقرير أولًا، ثم المؤشرات الأعلى أداءً.</p>':'<p class="mini">تم عرض المؤشرات ذات مستوى التميز، وعند عدم وجودها تُعرض أعلى المؤشرات أداءً حتى لا تبقى الصفحة فارغة.</p>';
+  document.getElementById('tab-strengths').innerHTML=`<div class="card"><h3>نقاط القوة</h3>${note}</div><div class="grid cols3">${arr.map(i=>`<div class="card strength"><h3>${i.code}</h3><b class="high">${pct(i.score)}</b> ${badge(i.score)}<p>${i.text}</p><span class="badge b-excellent">قوة قابلة للاستدامة</span><p class="mini">إجراء استدامة: ${i.suggestion}</p></div>`).join('')}</div>`
+}
+function renderWeakness(){
+  let explicit=getIndicatorsByCodes(data.summaryImprovementCodes);
+  let low=(data.indicators||[]).filter(i=>+i.score<75).sort((a,b)=>a.score-b.score);
+  let arr=uniqueIndicators([...explicit,...low]);
+  if(!arr.length){arr=[...(data.indicators||[])].sort((a,b)=>a.score-b.score).slice(0,10)}
+  const note=explicit.length?'<p class="mini">تم عرض الجوانب التي نصّ التقرير على حاجتها للتحسين أولًا، حتى لو كانت نسبتها أعلى من 50%، ثم أضيفت المؤشرات الأقل من 75%.</p>':'<p class="mini">تم عرض المؤشرات الأقل من 75%؛ وعند عدم وجودها تُعرض أقل المؤشرات أداءً حتى لا تبقى الصفحة فارغة.</p>';
+  document.getElementById('tab-weakness').innerHTML=`<div class="card"><h3>نقاط الضعف والجوانب التي تحتاج إلى تحسين</h3>${note}</div><div class="grid cols2">${arr.map(i=>`<div class="card weak"><h3>${i.code}</h3><b class="${+i.score<50?'low':'mid'}">${pct(i.score)}</b> ${badge(i.score)}<p>${i.text}</p>${weakAnalysis(i)}<button class="btn no-print" onclick="openPlan('${i.code}')">توليد خطة لهذا المؤشر</button></div>`).join('')}</div>`
+}
 function renderPlan(){let rows=[...data.indicators].filter(i=>i.score<75).sort((a,b)=>a.score-b.score);document.getElementById('tab-plan').innerHTML=`<div class="card"><h3>مولد خطة التحسين الذكي</h3><div class="filters no-print"><select id="planSelect">${data.indicators.map(i=>`<option value="${i.code}">${i.code} - ${i.text}</option>`).join('')}</select><button class="btn" onclick="openPlan(document.getElementById('planSelect').value)">توليد خطة مؤشر</button><button class="btn gold" onclick="generateBriefPlan()">توليد خطة مختصرة للمجالات الأربعة</button></div><div class="tableWrap"><table><thead><tr><th>المجال</th><th>المعيار</th><th>المؤشر</th><th>الحالية</th><th>الفجوة</th><th>الهدف</th><th>المستهدفة</th><th>الإجراء</th><th>المبادرة</th><th>المسؤول</th><th>الشركاء</th><th>المدة</th><th>الشواهد</th><th>الأثر</th><th>الحالة</th><th>الإنجاز</th></tr></thead><tbody>${rows.map(i=>planRow(i)).join('')}</tbody></table></div></div>`}
 function planRow(i){let p=makePlan(i);return `<tr><td>${i.domain}</td><td>${i.standard}</td><td>${i.code}<br>${i.text}</td><td>${pct(i.score)}<br>${badge(i.score)}</td><td>${gap(i.score)}%</td><td contenteditable>${p.goal}</td><td contenteditable>${p.target}%</td><td contenteditable>${p.action}</td><td contenteditable>${p.program}</td><td contenteditable>${i.owner}</td><td contenteditable>${p.partners}</td><td contenteditable>${p.duration}</td><td contenteditable>${p.evidence}</td><td contenteditable>${p.impact}</td><td><select onchange="iByCode('${i.code}').status=this.value;saveData(false)"><option ${i.status=='لم يبدأ'?'selected':''}>لم يبدأ</option><option ${i.status=='قيد التنفيذ'?'selected':''}>قيد التنفيذ</option><option ${i.status=='منجز'?'selected':''}>منجز</option></select></td><td><input type="number" class="field progressInput" value="${i.progress}" onchange="iByCode('${i.code}').progress=+this.value;saveData(false)">%</td></tr>`}
 function renderEvidence(){document.getElementById('tab-evidence').innerHTML=`<div class="card"><h3>إدارة الشواهد</h3><div class="filters no-print"><input id="evInput" placeholder="أضف شاهدًا جديدًا"><button class="btn" onclick="addEvidence()">إضافة شاهد</button></div><div class="evidenceList">${data.evidence.map((e,idx)=>`<div class="evidenceItem"><input type="checkbox"><span contenteditable onblur="data.evidence[${idx}]=this.textContent;saveData(false)">${e}</span><button class="btn danger no-print" onclick="data.evidence.splice(${idx},1);saveData(false);renderEvidence()">حذف</button></div>`).join('')}</div></div><div class="card" style="margin-top:14px"><h3>شواهد مقترحة حسب المؤشرات الحرجة</h3>${data.indicators.filter(i=>i.score<50).map(i=>`<p><b>${i.code}</b> ${makePlan(i).evidence}</p>`).join('')}</div>`}
@@ -361,8 +385,20 @@ function suggestionForIndicator(txt,code){
 }
 function parseEvaluationReport(txt){
   txt=cleanupText(txt);
-  let res={school:{},overall:null,domains:[],indicators:[]};
+  let res={school:{},overall:null,domains:[],indicators:[],summaryStrengthCodes:[],summaryImprovementCodes:[]};
   let compact=txt.replace(/\s+/g,' ');
+  // استخراج قوائم الملخص: المؤشرات المتميزة والمؤشرات التي تحتاج إلى تحسين من صفحة ملخص النتائج.
+  const codePattern=/\d{1,2}-\d-\d-\d/g;
+  let summaryBlock=windowAround(compact,'ملخص نتائج المدرسة',0,4500) || compact;
+  let strengthPart='';
+  let improvePart='';
+  let a=summaryBlock.indexOf('ومن أبرزها');
+  let b=summaryBlock.indexOf('كما أظهرت نتائج المدرسة');
+  let c=summaryBlock.indexOf('مع التأكيد');
+  if(a>=0){strengthPart=summaryBlock.slice(a,b>0?b:Math.min(summaryBlock.length,a+2500));}
+  if(b>=0){improvePart=summaryBlock.slice(b,c>0?c:Math.min(summaryBlock.length,b+1800));}
+  res.summaryStrengthCodes=[...new Set((strengthPart.match(codePattern)||[]))];
+  res.summaryImprovementCodes=[...new Set((improvePart.match(codePattern)||[]))];
 
   let name=(compact.match(/(?:اسم المدرسة\s+)?((?:ال)?(?:ابتدائية|متوسطة|ثانوية)\s+[^،\n]{3,90}?(?=\s+(?:الإدارة|إدارة|بنين|بنات|الرقم|20\d{2}|تقرير|الادارة|مكتب)))/)||[])[1]||'';
   if(!name){let m=compact.match(/(?:^|\s)((?:ال)?(?:ابتدائية|متوسطة|ثانوية)\s+[\u0600-\u06FF\s]{3,80}?)(?:\s+الإدارة العامة|\s+إدارة التعليم|\s+بنين|\s+بنات)/); if(m)name=m[1]}
@@ -430,6 +466,8 @@ function parseEvaluationReport(txt){
     '1-1-1-4':94.50,'2-1-1-4':87.25,'3-1-1-4':90.75,'1-1-2-4':87.75,'2-1-2-4':88.25,'3-1-2-4':96.00
   };
   const isSeventeenth=/السابعة\s+عشر|السابعه\s+عشر/.test(compact);
+  if(isSeventeenth && !res.summaryStrengthCodes.length)res.summaryStrengthCodes=['2-1-1-1','3-1-4-1','5-1-2-3','1-1-2-3','2-1-2-1','2-1-2-2','4-1-4-1','4-1-2-1','1-1-3-1','2-1-4-1'];
+  if(isSeventeenth && !res.summaryImprovementCodes.length)res.summaryImprovementCodes=['2-1-1-3','9-1-1-2','3-1-1-2','4-1-1-2'];
   let catalog=getReportCatalog();
   res.indicators=catalog.map(c=>{
     let score=scoreForIndicator(compact,c.code);
@@ -460,6 +498,8 @@ function mergeParsedReport(parsed){
     let oldByCode=Object.fromEntries(data.indicators.map(i=>[i.code,i]));
     data.indicators=parsed.indicators.map(i=>({...oldByCode[i.code],...i,owner:oldByCode[i.code]?.owner||i.owner||'فريق الجودة',status:oldByCode[i.code]?.status||i.status||'لم يبدأ',progress:oldByCode[i.code]?.progress||0}));
   }
+  data.summaryStrengthCodes=Array.isArray(parsed.summaryStrengthCodes)?parsed.summaryStrengthCodes:(data.summaryStrengthCodes||[]);
+  data.summaryImprovementCodes=Array.isArray(parsed.summaryImprovementCodes)?parsed.summaryImprovementCodes:(data.summaryImprovementCodes||[]);
   data.title='لوحة تحليل تقرير التقويم المدرسي الخارجي';
   ensureDataIntegrity();
 }

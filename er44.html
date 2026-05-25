@@ -137,28 +137,57 @@ function loadImprovementPlanBuilder(){
   if(frame && !frame.dataset.loaded){frame.srcdoc=getImprovementPlanBuilderHtml();frame.dataset.loaded='1'}
 }
 function planPriorityIndicators(domainName){
+  // خطة التحسين تعرض فقط مؤشرات نقاط الضعف والنقاط الحرجة: كل مؤشر أقل من 75%، مع احتساب الكسور.
   return (data.indicators||[]).filter(i=>i.domain===domainName && scoreValue(i.score)<75).sort((a,b)=>scoreValue(a.score)-scoreValue(b.score));
 }
 function planDomainEvidence(domainName){
   const inds=planPriorityIndicators(domainName);
   const evidence=[];
-  inds.slice(0,4).forEach(i=>{
+  inds.forEach(i=>{
     const ev=(makePlan(i).evidence||'').split('،').map(x=>x.trim()).filter(Boolean);
     ev.forEach(x=>{if(!evidence.includes(x)) evidence.push(x)});
   });
-  if(!evidence.length){
-    ['تقارير قياس أثر','محاضر اجتماعات فريق التحسين','نماذج متابعة مؤشرات الأداء','شواهد تنفيذ البرامج'].forEach(x=>evidence.push(x));
-  }
   return evidence.slice(0,6);
+}
+function planIndicatorCard(i){
+  const p=makePlan(i);
+  const s=scoreValue(i.score);
+  const type=s<50?'نقطة حرجة':'نقطة ضعف';
+  const cls=s<50?'b-prep':'b-start';
+  return `<div class="planFocusItem">
+    <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap">
+      <b>${i.code}</b>
+      <span class="badge ${cls}">${type}</span>
+    </div>
+    <p style="margin:6px 0 8px">${i.text}</p>
+    <div class="planSmall"><b>النسبة الحالية:</b> ${pct(s)} | <b>المستهدف:</b> ${p.target}% | <b>الفجوة:</b> ${gap(s)}%</div>
+    <div class="planSmall"><b>الهدف:</b> ${p.goal}</div>
+    <div class="planSmall"><b>إجراء التحسين:</b> ${p.action}</div>
+    <div class="planSmall"><b>البرنامج:</b> ${p.program} | <b>المدة:</b> ${p.duration}</div>
+    <div class="planSmall"><b>الشواهد:</b> ${p.evidence}</div>
+  </div>`;
 }
 function renderPlanDomainCard(d,idx){
   const inds=planPriorityIndicators(d.name);
-  const standards=(d.standards||[]).map(s=>`<div class="planStandardItem"><b>${s[0]}</b><span>${pct(scoreValue(s[1]))}</span></div>`).join('')||'<p class="planSmall">لا توجد معايير مضافة لهذا المجال.</p>';
-  const focus=inds.slice(0,5).map(i=>`<div class="planFocusItem"><b>${i.code}</b> - ${i.text}<br><span class="planSmall">النسبة الحالية: ${pct(scoreValue(i.score))} | المستهدف: ${makePlan(i).target}%</span></div>`).join('')||'<div class="planFocusItem"><b>استدامة وتجويد</b><br><span class="planSmall">لا توجد مؤشرات أقل من 75% في هذا المجال، وتكون الخطة مركزة على استدامة الأداء ورفع جودة الشواهد.</span></div>';
+  if(!inds.length) return '';
   const evidence=planDomainEvidence(d.name).map(e=>`<div class="planEvidenceItem">${e}</div>`).join('');
-  return `<div class="planDomainCard"><div class="planDomainHead"><h4>${idx+1}. ${d.name}</h4><div class="planScore">${pct(scoreValue(d.score))}</div></div><span class="planChip">${domainAdvice(d)}</span><h4 style="margin:14px 0 8px;color:var(--ink)">المعايير</h4><div class="planStandardList">${standards}</div><h4 style="margin:14px 0 8px;color:var(--ink)">محور التحسين المتبع</h4><div class="planFocusList">${focus}</div><h4 style="margin:14px 0 8px;color:var(--ink)">الشواهد المطلوبة</h4><div class="planEvidenceGrid">${evidence}</div></div>`;
+  const criticalCount=inds.filter(i=>scoreValue(i.score)<50).length;
+  const weakCount=inds.filter(i=>scoreValue(i.score)>=50 && scoreValue(i.score)<75).length;
+  return `<div class="planDomainCard">
+    <div class="planDomainHead"><h4>${idx+1}. ${d.name}</h4><div class="planScore">${inds.length} مؤشر</div></div>
+    <span class="planChip">نقاط ضعف: ${weakCount}</span> <span class="planChip">نقاط حرجة: ${criticalCount}</span>
+    <h4 style="margin:14px 0 8px;color:var(--ink)">خطط تحسين المؤشرات الأقل من 75%</h4>
+    <div class="planFocusList">${inds.map(planIndicatorCard).join('')}</div>
+    <h4 style="margin:14px 0 8px;color:var(--ink)">الشواهد المطلوبة لهذه المؤشرات فقط</h4>
+    <div class="planEvidenceGrid">${evidence||'<p class="planSmall">لا توجد شواهد مقترحة.</p>'}</div>
+  </div>`;
 }
-function renderPlan(){let domains=safeDomains();document.getElementById('tab-plan').innerHTML=`<div class="card"><h3>خطة التحسين المتبعة حسب المجالات الأربعة</h3><p class="mini">عرض مختصر ومنظم يكتفي بالمجالات الأربعة، ومحاور التحسين، والشواهد المطلوبة؛ بدل عرض منصة خطة التحسين الكاملة داخل الإطار.</p><div class="planOverview">${domains.map((d,idx)=>renderPlanDomainCard(d,idx)).join('')}</div></div>`}
+function renderPlan(){
+  let domains=safeDomains();
+  const cards=domains.map((d,idx)=>renderPlanDomainCard(d,idx)).filter(Boolean).join('');
+  const total=(data.indicators||[]).filter(i=>scoreValue(i.score)<75).length;
+  document.getElementById('tab-plan').innerHTML=`<div class="card"><h3>خطة التحسين المتبعة لمؤشرات الضعف والحرج فقط</h3><p class="mini">يعرض هذا التبويب خطط تحسين المؤشرات التي تقل نسبتها عن 75% فقط: نقاط الضعف من 50% إلى أقل من 75%، والنقاط الحرجة أقل من 50%، مع احتساب الكسور داخل العدد. مؤشرات القوة لا تظهر هنا حتى لا تزاحم خطة التحسين.</p><div class="planChip">إجمالي مؤشرات التحسين: ${total}</div><div class="planOverview" style="margin-top:14px">${cards||'<div class="planDomainCard"><p>لا توجد مؤشرات ضعف أو نقاط حرجة أقل من 75%.</p></div>'}</div></div>`;
+}
 function planRow(i){let p=makePlan(i);return `<tr><td>${i.domain}</td><td>${i.standard}</td><td>${i.code}<br>${i.text}</td><td>${pct(i.score)}<br>${badge(i.score)}</td><td>${gap(i.score)}%</td><td contenteditable>${p.goal}</td><td contenteditable>${p.target}%</td><td contenteditable>${p.action}</td><td contenteditable>${p.program}</td><td contenteditable>${i.owner}</td><td contenteditable>${p.partners}</td><td contenteditable>${p.duration}</td><td contenteditable>${p.evidence}</td><td contenteditable>${p.impact}</td><td><select onchange="iByCode('${i.code}').status=this.value;saveData(false)"><option ${i.status=='لم يبدأ'?'selected':''}>لم يبدأ</option><option ${i.status=='قيد التنفيذ'?'selected':''}>قيد التنفيذ</option><option ${i.status=='منجز'?'selected':''}>منجز</option></select></td><td><input type="number" class="field progressInput" value="${i.progress}" onchange="iByCode('${i.code}').progress=+this.value;saveData(false)">%</td></tr>`}
 function renderEvidence(){document.getElementById('tab-evidence').innerHTML=`<div class="card"><h3>إدارة الشواهد</h3><div class="filters no-print"><input id="evInput" placeholder="أضف شاهدًا جديدًا"><button class="btn" onclick="addEvidence()">إضافة شاهد</button></div><div class="evidenceList">${data.evidence.map((e,idx)=>`<div class="evidenceItem"><input type="checkbox"><span contenteditable onblur="data.evidence[${idx}]=this.textContent;saveData(false)">${e}</span><button class="btn danger no-print" onclick="data.evidence.splice(${idx},1);saveData(false);renderEvidence()">حذف</button></div>`).join('')}</div></div><div class="card" style="margin-top:14px"><h3>شواهد مقترحة حسب المؤشرات الحرجة</h3>${data.indicators.filter(i=>i.score<=50).map(i=>`<p><b>${i.code}</b> ${makePlan(i).evidence}</p>`).join('')}</div>`}
 function renderExec(){document.getElementById('tab-exec').innerHTML=`<div class="card"><h3>التقرير التنفيذي التلقائي</h3><div class="toolbar no-print"><button class="btn" onclick="genExec()">توليد التقرير التنفيذي</button><button class="btn alt" onclick="copyExec()">نسخ النص</button><button class="btn gold" onclick="printCurrent()">طباعة التقرير</button></div><textarea id="execText" style="width:100%;min-height:360px;border:1px solid var(--line);border-radius:18px;padding:16px;font-size:16px;line-height:1.9">${executiveText()}</textarea></div>`}

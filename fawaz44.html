@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1442,7 +1441,7 @@ function parsePDFText(text) {
   function cleanStr(s) {
     if (!s) return '';
     // إزالة رموز RTL/LTR وغيرها
-    s = s.replace(/[​-‏-⁦-⁩﻿]/g, '');
+    s = s.replace(/[​-‏‪-‮⁦-⁩﻿]/g, '');
     // تحويل خطوط العرض العربي (Presentation Forms) إلى Unicode عادي
     // هذا يحل مشكلة ﺍﻟﻤﺪﺭﺳﺔ → المدرسة
     s = s.replace(/[ﭐ-﷿ﹰ-﻿]/g, ch => {

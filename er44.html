@@ -38,7 +38,7 @@ let data=JSON.parse(JSON.stringify(defaults));let pendingImportedReport=null;let
 // حدود التصنيف المطلوبة: قوة >=76، ضعف 51-74، حرجة <=50
 const tabDefs=[['home','الرئيسية'],['school','معلومات المدرسة'],['dash','لوحة القيادة'],['domains','المجالات والمعايير'],['indicators','المؤشرات التفصيلية'],['strengths','نقاط القوة'],['weakness','نقاط الضعف'],['critical','نقاط حرجة'],['plan','خطة التحسين'],['evidence','الشواهد'],['exec','التقرير التنفيذي'],['print','الطباعة والتصدير'],['settings','الإعدادات']];
 function blankReportData(){return {__empty:true,title:'منصة جديدة - جاهزة لاستيراد تقرير',school:{name:'',edu:'',office:'',stage:'',gender:'',type:'',ministryNo:'',students:'',teachers:'',agents:'',admins:'',guidance:'',labs:'',date:'',year:''},overall:{score:0,level:'',desc:''},domains:['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'].map(n=>({name:n,score:0,standards:[]})),indicators:[],evidence:[]}}
-function level(score){return LEVELS.find(l=>score>=l.min&&score<l.max)||LEVELS[0]}function priority(s){return s<50?'أولوية عاجلة':s<65?'أولوية عالية':s<75?'أولوية متوسطة':'استدامة وتجويد'}function classify(s){return s>=90?'قوة قابلة للاستدامة':s<50?'ضعف حرج':'يحتاج تحسين'}function gap(s){return Math.max(0,(90-s)).toFixed(2)}function badge(s){let l=level(+s);return `<span class="badge ${l.cls}">${l.name}</span>`}function pct(v){return Number(v).toFixed(Number(v)%1?2:0)+'%'}
+function level(score){return LEVELS.find(l=>score>=l.min&&score<l.max)||LEVELS[0]}function priority(s){return s<=50?'أولوية عاجلة':s<65?'أولوية عالية':s<=74?'أولوية متوسطة':'استدامة وتجويد'}function classify(s){return s>=76?'قوة':s<=50?'نقطة حرجة':'نقطة ضعف'}function gap(s){return Math.max(0,(90-s)).toFixed(2)}function badge(s){let l=level(+s);return `<span class="badge ${l.cls}">${l.name}</span>`}function pct(v){return Number(v).toFixed(Number(v)%1?2:0)+'%'}
 function ensureDataIntegrity(){
   if(!data || typeof data!=='object') data=JSON.parse(JSON.stringify(defaults));
   const isEmptyMode=!!data.__empty;
@@ -320,10 +320,11 @@ async function ensurePdfJsLoaded(){if(window.pdfjsLib){configurePdfJs();return t
 function normalizePdfItemText(str){return String(str||'').replace(/[٪﹪]/g,'%').replace(/٫/g,'.').replace(/ /g,' ').trim()}
 async function extractPdfTextByPdfJs(file){await ensurePdfJsLoaded();let buffer=await file.arrayBuffer();let pdf=await window.pdfjsLib.getDocument({data:buffer,disableWorker:/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),useSystemFonts:true,isEvalSupported:false}).promise;let pages=[];for(let pageNo=1;pageNo<=pdf.numPages;pageNo++){let page=await pdf.getPage(pageNo);let tc=await page.getTextContent({normalizeWhitespace:true,disableCombineTextItems:false});let items=(tc.items||[]).map(it=>({str:normalizePdfItemText(it.str),x:it.transform?.[4]||0,y:it.transform?.[5]||0})).filter(it=>it.str);items.sort((a,b)=>Math.abs(b.y-a.y)>2?b.y-a.y:a.x-b.x);let lines=[],curY=null,line=[];for(let it of items){if(curY===null||Math.abs(it.y-curY)<=2.5){line.push(it);curY=curY===null?it.y:(curY+it.y)/2}else{lines.push(line);line=[it];curY=it.y}}if(line.length)lines.push(line);let text=lines.map(arr=>arr.map(i=>i.str).join(' ')).join('\n');pages.push('\n--- صفحة '+pageNo+' ---\n'+text)}return cleanupText(pages.join('\n'))}
 async function extractPdfText(file){let txt='';try{txt=await extractPdfTextByPdfJs(file)}catch(err){console.warn('PDF.js extraction failed, fallback to legacy parser:',err);txt=''}if(!txt||txt.replace(/\s/g,'').length<80){try{txt=(txt||'')+'\n'+await extractPdfTextLegacy(file)}catch(err2){console.warn('legacy extraction failed:',err2)}}return cleanupText(txt)}
-function cleanupText(t){return (t||'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,' ').replace(/\s+/g,' ').replace(/%\s*(\d)/g,' $1').replace(/(\d+(?:\.\d+)?)\s*%/g,'$1%').trim()}
-function parsePct(v){v=String(v||'').replace('%','').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim();let n=parseFloat(v);return isFinite(n)?n:null}
-function normLevel(score){return score>=90?'التميز':score>=75?'التقدم':score>=50?'الانطلاق':'التهيئة'}
-function extractPercents(txt){return [...txt.matchAll(/(\d{1,3}(?:\.\d{1,2})?)\s*%/g)].map(x=>parseFloat(x[1])).filter(n=>n>=0&&n<=100)}
+function normalizeDigits(t){return String(t||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))}
+function cleanupText(t){return normalizeDigits(t||'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,' ').replace(/٪/g,'%').replace(/%\s*(\d{1,3}(?:\.\d{1,2})?)/g,' $1%').replace(/(\d{1,3}(?:\.\d{1,2})?)\s*%/g,'$1%').replace(/\s+/g,' ').trim()}
+function parsePct(v){v=normalizeDigits(v).replace(/[٪%]/g,'').trim();let n=parseFloat(v);return isFinite(n)?n:null}
+function normLevel(score){return score>=90?'التميز':score>=75?'التقدم':score>50?'الانطلاق':'التهيئة'}
+function extractPercents(txt){txt=cleanupText(txt);let out=[];for(let x of txt.matchAll(/(\d{1,3}(?:\.\d{1,2})?)\s*%/g)){let n=parseFloat(x[1]);if(n>=0&&n<=100)out.push(n)}return out}
 function windowAround(txt,marker,before=250,after=500){let i=txt.indexOf(marker);if(i<0)return '';return txt.slice(Math.max(0,i-before),Math.min(txt.length,i+after))}
 function getReportCatalog(){
   const standardsByDomain=[['التخطيط','قيادة العملية التعليمية','المجتمع المدرسي','التطوير المؤسسي'],['بناء خبرات التعلم','تقويم التعلم'],['التحصيل التعليمي','التطور الشخصي والصحي والاجتماعي'],['المبنى المدرسي','الأمن والسلامة']];
@@ -349,22 +350,29 @@ function firstGoodPercentAfter(block){
   return perc.find(n=>n>=30&&n<=100) ?? perc[0];
 }
 function scoreForIndicator(txt,code){
-  const escaped=code.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  txt=cleanupText(txt);
+  const escaped=code.replace(/[.*+?^${}()|[\]\]/g,'\$&');
+  const codeRe=/\d{1,2}-\d-\d-\d/g;
   let re=new RegExp(escaped,'g'),m,positions=[];
   while((m=re.exec(txt)))positions.push(m.index);
   if(!positions.length)return null;
   let detailed=txt.indexOf('الأداء التفصيلي لنتائج المدرسة');
   let afterDetailed=positions.filter(p=>detailed<0||p>detailed);
   positions=afterDetailed.length?afterDetailed:positions;
-  let best=null;
   for(let pos of positions){
-    let block=txt.slice(pos,Math.min(txt.length,pos+2200));
+    let tail=txt.slice(pos+code.length);
+    let next=tail.search(codeRe);
+    let block=txt.slice(pos, pos + code.length + (next>80?next:1800));
     let iw=block.indexOf('يتوقع من المدرسة');
     let scope=iw>=0?block.slice(iw):block;
+    // 1) النسبة المكتوبة صراحة 49.50% أو %49.50 بعد تحويلها في cleanupText.
     let ps=extractPercents(scope).filter(n=>n>=0&&n<=100);
-    if(ps.length){best=ps[0];break;}
+    if(ps.length)return ps[ps.length-1];
+    // 2) احتياط: بعض ملفات PDF تفقد علامة النسبة، فتظهر: 49.50 التهيئة.
+    let lm=scope.match(/(\d{1,3}(?:\.\d{1,2})?)\s*(?=التميز|التقدم|الانطلاق|التهيئة)/);
+    if(lm){let n=parseFloat(lm[1]); if(n>=0&&n<=100)return n;}
   }
-  return best;
+  return null;
 }
 function suggestionForIndicator(txt,code){
   const escaped=code.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
@@ -461,7 +469,7 @@ function parseEvaluationReport(txt){
 
   const knownSeventeenthScores={
     '1-1-1-1':99.50,'2-1-1-1':99.75,'1-1-2-1':95.75,'2-1-2-1':98.75,'3-1-2-1':94.00,'4-1-2-1':98.00,'5-1-2-1':92.25,'6-1-2-1':91.75,'1-1-3-1':98.00,'2-1-3-1':95.00,'3-1-3-1':93.75,'1-1-4-1':76.75,'2-1-4-1':98.00,'3-1-4-1':99.50,'4-1-4-1':98.50,
-    '1-1-1-2':77.75,'2-1-1-2':97.50,'3-1-1-2':74.00,'4-1-1-2':76.00,'5-1-1-2':78.50,'6-1-1-2':84.00,'7-1-1-2':79.50,'8-1-1-2':90.00,'9-1-1-2':69.50,'10-1-1-2':79.75,'1-1-2-2':78.00,'2-1-2-2':98.75,'3-1-2-2':91.00,
+    '1-1-1-2':77.75,'2-1-1-2':97.50,'3-1-1-2':74.00,'4-1-1-2':76.00,'5-1-1-2':78.50,'6-1-1-2':84.00,'8-1-1-2':90.00,'9-1-1-2':69.50,'10-1-1-2':79.75,'1-1-2-2':78.00,'2-1-2-2':98.75,'3-1-2-2':91.00,
     '1-1-1-3':87.20,'2-1-1-3':69.06,'3-1-1-3':76.78,'1-1-2-3':99.00,'2-1-2-3':95.50,'3-1-2-3':92.75,'4-1-2-3':90.75,'5-1-2-3':99.25,'6-1-2-3':87.75,'7-1-2-3':97.50,
     '1-1-1-4':94.50,'2-1-1-4':87.25,'3-1-1-4':90.75,'1-1-2-4':87.75,'2-1-2-4':88.25,'3-1-2-4':96.00
   };

@@ -1,0 +1,2785 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة بناء خطة التحسين المدرسي وفق قالب منصة تميز الرقمية</title>
+<style>
+/* ============================================================
+   منصة بناء خطة التحسين المدرسي - النسخة الاحترافية v2
+   تصميم Ultra Sharp | High Readability | Print Ready A4
+   ============================================================ */
+
+:root {
+  --navy: #0c2d57;
+  --navy-dark: #061a3a;
+  --navy-light: #1e4a8a;
+  --green: #1f7a55;
+  --green-light: #2ea676;
+  --green-soft: #e6f4ed;
+  --gold: #b8893a;
+  --gold-dark: #9c7430;
+  --gold-light: #e8d49a;
+  --gold-soft: #fdf8eb;
+  --white: #ffffff;
+  --gray-50: #f7f8fa;
+  --gray-100: #eef0f4;
+  --gray-200: #dde1e8;
+  --gray-300: #c5cbd6;
+  --gray-400: #8a93a3;
+  --gray-500: #5a6275;
+  --gray-700: #2f3645;
+  --gray-900: #161c2a;
+  --shadow-sm: 0 1px 2px rgba(6, 26, 58, 0.06);
+  --shadow: 0 4px 12px rgba(6, 26, 58, 0.08);
+  --shadow-md: 0 8px 24px rgba(6, 26, 58, 0.1);
+  --shadow-lg: 0 16px 48px rgba(6, 26, 58, 0.14);
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  font-family: 'Tajawal', 'Cairo', 'Segoe UI', 'Tahoma', sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-700);
+  line-height: 1.7;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at top left, rgba(31, 122, 85, 0.04), transparent 50%),
+    radial-gradient(ellipse at top right, rgba(12, 45, 87, 0.05), transparent 50%),
+    linear-gradient(180deg, #f4f6fa 0%, #f7f8fa 100%);
+  min-height: 100vh;
+}
+
+button { font-family: inherit; cursor: pointer; }
+input, textarea, select { font-family: inherit; }
+
+/* ============================================================
+   نظام الأيقونات SVG
+   ============================================================ */
+.icon {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  vertical-align: -0.125em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.icon-lg { width: 1.25em; height: 1.25em; }
+.icon-xl { width: 1.5em; height: 1.5em; }
+
+/* ============================================================
+   الترويسة الرسمية
+   ============================================================ */
+.official-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  padding: 22px 28px;
+  box-shadow: var(--shadow-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.official-header::before {
+  content: '';
+  position: absolute;
+  top: -50%; right: -10%;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(232, 212, 154, 0.15), transparent 70%);
+  pointer-events: none;
+}
+
+.header-grid {
+  display: grid;
+  grid-template-columns: 110px 1fr 110px;
+  gap: 24px;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-box {
+  width: 100px; height: 100px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s;
+  overflow: hidden;
+  position: relative;
+}
+.logo-box:hover { background: rgba(255, 255, 255, 0.14); border-color: var(--gold-light); }
+.logo-box img { width: 100%; height: 100%; object-fit: contain; }
+.logo-box .logo-placeholder {
+  font-size: 11.5px; color: rgba(255, 255, 255, 0.85);
+  text-align: center; padding: 6px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-weight: 600;
+}
+.logo-box input[type="file"] { display: none; }
+
+.header-text { text-align: center; }
+.header-text .kingdom {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+.header-text .ministry {
+  font-size: 14.5px;
+  color: var(--gold-light);
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.header-fields {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 18px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.header-fields .field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+}
+.header-fields .field label {
+  color: var(--gold-light);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.header-fields .field input {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+}
+.header-fields .field input::placeholder { color: rgba(255, 255, 255, 0.55); font-weight: 500; }
+.header-fields .field input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.18);
+  border-color: var(--gold-light);
+}
+
+.header-decoration {
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ============================================================
+   العنوان الرئيسي
+   ============================================================ */
+.hero {
+  background: var(--white);
+  padding: 30px 28px;
+  margin: 24px auto;
+  max-width: 1400px;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--gold);
+  text-align: center;
+  position: relative;
+}
+
+.hero h1 {
+  color: var(--navy);
+  font-size: 30px;
+  font-weight: 900;
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+  line-height: 1.3;
+}
+
+.hero h1 .accent { color: var(--green); }
+
+.hero p {
+  color: var(--gray-500);
+  font-size: 15.5px;
+  max-width: 780px;
+  margin: 0 auto;
+  font-weight: 500;
+}
+
+.hero .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold-soft);
+  color: var(--gold-dark);
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 12.5px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  border: 1px solid var(--gold-light);
+  letter-spacing: 0.3px;
+}
+
+/* ============================================================
+   شريط الأدوات / الأزرار الرئيسية
+   ============================================================ */
+.toolbar {
+  max-width: 1400px;
+  margin: 0 auto 24px;
+  padding: 0 24px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.18s;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: inherit;
+}
+.btn .icon { width: 16px; height: 16px; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(12, 45, 87, 0.25);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(12, 45, 87, 0.35); }
+
+.btn-success {
+  background: linear-gradient(135deg, var(--green), var(--green-light));
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(31, 122, 85, 0.25);
+}
+.btn-success:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(31, 122, 85, 0.35); }
+
+.btn-gold {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(184, 137, 58, 0.3);
+}
+.btn-gold:hover { transform: translateY(-1px); box-shadow: 0 6px 18px rgba(184, 137, 58, 0.4); }
+
+.btn-outline {
+  background: var(--white);
+  color: var(--navy);
+  border: 1.5px solid var(--gray-200);
+}
+.btn-outline:hover { background: var(--gray-50); border-color: var(--navy); }
+
+.btn-danger {
+  background: #fff;
+  color: #c33;
+  border: 1.5px solid #fcd;
+}
+.btn-danger:hover { background: #fdf2f2; border-color: #c33; }
+
+.btn-sm { padding: 7px 12px; font-size: 12.5px; }
+.btn-sm .icon { width: 14px; height: 14px; }
+
+/* ============================================================
+   لوحة المتابعة (Dashboard)
+   ============================================================ */
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto 26px;
+  padding: 0 24px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  border-right: 4px solid var(--gold);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.stat-card.green { border-right-color: var(--green); }
+.stat-card.navy { border-right-color: var(--navy); }
+.stat-card.amber { border-right-color: #e8a317; }
+.stat-card.red { border-right-color: #d65a5a; }
+
+.stat-card .stat-icon {
+  position: absolute;
+  top: 14px; left: 14px;
+  color: var(--gray-200);
+  width: 28px; height: 28px;
+}
+.stat-card.green .stat-icon { color: rgba(31, 122, 85, 0.18); }
+.stat-card.navy .stat-icon { color: rgba(12, 45, 87, 0.18); }
+.stat-card.amber .stat-icon { color: rgba(232, 163, 23, 0.22); }
+.stat-card.red .stat-icon { color: rgba(214, 90, 90, 0.22); }
+
+.stat-card .label {
+  font-size: 13px;
+  color: var(--gray-500);
+  font-weight: 700;
+}
+.stat-card .value {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1.2;
+}
+.stat-card.green .value { color: var(--green); }
+.stat-card.amber .value { color: #e8a317; }
+.stat-card.red .value { color: #d65a5a; }
+
+.progress-wrap {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex; align-items: center; gap: 16px;
+}
+.progress-wrap .progress-label {
+  font-weight: 800; color: var(--navy);
+  white-space: nowrap; font-size: 14.5px;
+  display: flex; align-items: center; gap: 8px;
+}
+.progress-bar {
+  flex: 1;
+  height: 14px;
+  background: var(--gray-100);
+  border-radius: 50px;
+  overflow: hidden;
+  position: relative;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--green-light), var(--gold));
+  border-radius: 50px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 0%;
+}
+.progress-percent {
+  font-weight: 900; color: var(--green);
+  font-size: 17px; min-width: 55px; text-align: left;
+}
+
+.completion-alert {
+  margin-top: 14px;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, var(--green-soft), #d4ecdc);
+  color: var(--green);
+  border-radius: var(--radius);
+  font-weight: 800;
+  text-align: center;
+  border: 1px solid var(--green-light);
+  display: none;
+  animation: fadeIn 0.4s;
+  font-size: 15px;
+}
+.completion-alert.show { display: flex; justify-content: center; align-items: center; gap: 10px; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============================================================
+   التبويبات (Tabs)
+   ============================================================ */
+.tabs-container {
+  max-width: 1400px;
+  margin: 0 auto 30px;
+  padding: 0 24px;
+}
+
+.tabs-nav {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--gray-200);
+  margin-bottom: 22px;
+  overflow-x: auto;
+  padding-bottom: 1px;
+}
+
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 12px 18px;
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--gray-500);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+  transition: all 0.2s;
+  white-space: nowrap;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: inherit;
+}
+.tab-btn .icon { width: 16px; height: 16px; }
+.tab-btn:hover { color: var(--navy); background: var(--gray-50); }
+.tab-btn.active {
+  color: var(--navy);
+  border-bottom-color: var(--gold);
+  background: var(--gold-soft);
+}
+
+.tab-panel { display: none; animation: slideIn 0.3s; }
+.tab-panel.active { display: block; }
+
+@keyframes slideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============================================================
+   البطاقات والأقسام
+   ============================================================ */
+.section-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 20px;
+  border: 1px solid var(--gray-100);
+}
+
+.section-title {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 20px; font-weight: 900;
+  color: var(--navy);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px dashed var(--gray-200);
+}
+.section-title .title-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  color: var(--white);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 900;
+  box-shadow: 0 2px 8px rgba(184, 137, 58, 0.3);
+}
+.section-title .title-icon .icon { width: 20px; height: 20px; }
+
+.section-desc {
+  color: var(--gray-500);
+  margin-bottom: 18px;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+/* ============================================================
+   بطاقات الشرح المرقمة
+   ============================================================ */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
+}
+
+.step-card {
+  background: linear-gradient(135deg, var(--gray-50), var(--white));
+  border-right: 4px solid var(--green);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.step-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+  border-right-color: var(--gold);
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--navy), var(--navy-light));
+  color: var(--white);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 14px;
+}
+.step-text {
+  font-size: 14px;
+  color: var(--gray-700);
+  line-height: 1.65;
+  font-weight: 500;
+}
+.step-text strong { color: var(--navy); font-weight: 800; }
+
+.alert-box {
+  background: linear-gradient(135deg, var(--gold-soft), #fef5e0);
+  border-right: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin: 16px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.alert-box.green {
+  background: linear-gradient(135deg, var(--green-soft), #d8f0e3);
+  border-right-color: var(--green);
+}
+.alert-box.navy {
+  background: linear-gradient(135deg, #e8eef7, #d9e3f3);
+  border-right-color: var(--navy);
+}
+.alert-icon {
+  flex-shrink: 0;
+  width: 32px; height: 32px;
+  background: var(--gold);
+  color: var(--white);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+}
+.alert-box.green .alert-icon { background: var(--green); }
+.alert-box.navy .alert-icon { background: var(--navy); }
+.alert-icon .icon { width: 16px; height: 16px; }
+.alert-text {
+  flex: 1;
+  font-size: 14.5px;
+  color: var(--gray-700);
+  line-height: 1.7;
+  font-weight: 500;
+}
+.alert-text strong { color: var(--navy); font-weight: 800; }
+.alert-box.green .alert-text strong { color: var(--green); }
+
+/* ============================================================
+   المعايير والمبادرات
+   ============================================================ */
+.criterion-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 22px;
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  transition: box-shadow 0.25s;
+}
+.criterion-card:hover { box-shadow: var(--shadow); }
+.criterion-card.approved { border-color: var(--green); box-shadow: 0 0 0 2px rgba(31, 122, 85, 0.1); }
+
+.criterion-header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.criterion-header .crit-title {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 17px; font-weight: 800;
+}
+.crit-title-num {
+  background: var(--gold);
+  color: var(--navy);
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 12.5px;
+  font-weight: 900;
+}
+
+.criterion-status-badge {
+  font-size: 12.5px;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 5px 14px;
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.criterion-status-badge.done {
+  background: var(--green-light);
+  border-color: var(--green-light);
+}
+
+.criterion-body {
+  padding: 20px 22px;
+}
+
+/* ============================================================
+   جدول الخطة (نموذج تعبئة المعيار)
+   ============================================================ */
+.plan-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin-bottom: 16px;
+}
+
+.plan-table th, .plan-table td {
+  padding: 10px 12px;
+  text-align: right;
+  font-size: 13.5px;
+  border-bottom: 1px solid var(--gray-100);
+  vertical-align: top;
+}
+
+.plan-table th {
+  background: var(--gray-50);
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 13px;
+  border-bottom: 2px solid var(--gray-200);
+  width: 180px;
+  white-space: nowrap;
+}
+
+.plan-table td input[type="text"],
+.plan-table td input[type="date"],
+.plan-table td select,
+.plan-table td textarea {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  background: var(--white);
+  color: var(--gray-700);
+  transition: all 0.18s;
+  font-weight: 500;
+}
+
+.plan-table td input:focus,
+.plan-table td select:focus,
+.plan-table td textarea:focus {
+  outline: none;
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(31, 122, 85, 0.1);
+}
+
+.plan-table td textarea {
+  min-height: 75px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.plan-table .date-row { display: flex; gap: 10px; }
+.plan-table .date-row > div { flex: 1; }
+.plan-table .date-row label {
+  display: block; font-size: 12px; color: var(--gray-500);
+  margin-bottom: 4px; font-weight: 700;
+}
+
+/* قائمة الأنشطة */
+.activities-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 8px;
+  align-items: flex-start;
+}
+
+.activity-item .activity-num {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  background: var(--green-soft);
+  color: var(--green);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.activity-item textarea {
+  flex: 1;
+  min-height: 42px;
+  padding: 8px 12px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 13.5px;
+  resize: vertical;
+  line-height: 1.55;
+}
+.activity-item textarea:focus {
+  outline: none; border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(31, 122, 85, 0.1);
+}
+
+.activity-item .remove-activity-btn {
+  background: #fdeded;
+  color: #c33;
+  border: none;
+  width: 34px; height: 34px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  margin-top: 4px;
+  transition: background 0.15s;
+  display: flex; align-items: center; justify-content: center;
+}
+.activity-item .remove-activity-btn:hover { background: #f8caca; }
+.activity-item .remove-activity-btn .icon { width: 16px; height: 16px; }
+
+/* أزرار المعيار */
+.criterion-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 14px;
+  border-top: 1px dashed var(--gray-200);
+  margin-top: 8px;
+}
+
+/* ============================================================
+   قسم السجلات والشواهد
+   ============================================================ */
+.records-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 16px;
+}
+
+.records-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  border-top: 3px solid var(--green);
+  transition: all 0.2s;
+}
+.records-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+
+.records-card h4 {
+  color: var(--navy);
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1.5px dashed var(--gray-200);
+  display: flex; align-items: center; gap: 8px;
+  justify-content: space-between;
+}
+.records-card h4 .count-badge {
+  background: var(--gold-soft);
+  color: var(--gold-dark);
+  padding: 3px 10px;
+  border-radius: 50px;
+  font-size: 11.5px;
+  font-weight: 800;
+  border: 1px solid var(--gold-light);
+}
+.records-card .domain-label {
+  font-size: 12px;
+  color: var(--gray-500);
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.records-list {
+  list-style: none;
+  display: grid;
+  gap: 6px;
+}
+
+.records-list li {
+  font-size: 13px;
+  color: var(--gray-700);
+  padding: 7px 12px;
+  background: var(--gray-50);
+  border-radius: var(--radius-sm);
+  display: flex; align-items: center; gap: 8px;
+  border-right: 3px solid transparent;
+  transition: all 0.15s;
+  font-weight: 500;
+}
+.records-list li:hover {
+  background: var(--green-soft);
+  border-right-color: var(--green);
+}
+.records-list li::before {
+  content: '◆';
+  color: var(--gold);
+  font-size: 9px;
+}
+
+/* ============================================================
+   المساعد الذكي
+   ============================================================ */
+.assistant-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.form-group {
+  display: flex; flex-direction: column; gap: 6px;
+}
+.form-group label {
+  font-weight: 800; color: var(--navy);
+  font-size: 13.5px;
+}
+.form-group select, .form-group input {
+  padding: 10px 12px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  background: var(--white);
+  font-weight: 500;
+}
+.form-group select:focus, .form-group input:focus {
+  outline: none; border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(31, 122, 85, 0.1);
+}
+
+.assistant-result {
+  background: linear-gradient(135deg, var(--green-soft), #e8f5ed);
+  border: 1.5px dashed var(--green);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 14px;
+  display: none;
+}
+.assistant-result.show { display: block; animation: fadeIn 0.3s; }
+
+.assistant-result h4 {
+  color: var(--green);
+  font-size: 16px;
+  margin-bottom: 14px;
+  font-weight: 800;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.assistant-result .suggestion-block {
+  background: var(--white);
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  border-right: 3px solid var(--green);
+}
+.assistant-result .suggestion-block strong {
+  display: block;
+  color: var(--navy);
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 800;
+}
+.assistant-result .suggestion-block p, .assistant-result .suggestion-block ul {
+  font-size: 13.5px;
+  color: var(--gray-700);
+  line-height: 1.7;
+  font-weight: 500;
+}
+.assistant-result .suggestion-block ul {
+  padding-right: 18px;
+}
+
+/* ============================================================
+   شريط تفعيل/Toast
+   ============================================================ */
+.toast-container {
+  position: fixed;
+  bottom: 22px; left: 22px;
+  z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  background: var(--navy);
+  color: var(--white);
+  padding: 12px 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex; align-items: center; gap: 10px;
+  animation: toastIn 0.3s, toastOut 0.3s 2.7s forwards;
+  min-width: 240px;
+  border-right: 4px solid var(--gold);
+}
+.toast.success { border-right-color: var(--green-light); background: var(--green); }
+.toast.error { border-right-color: #d65a5a; background: #b33; }
+.toast.info { border-right-color: var(--gold); }
+.toast .icon { width: 18px; height: 18px; }
+
+@keyframes toastIn { from { transform: translateX(-100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toastOut { to { transform: translateX(-100%); opacity: 0; } }
+
+/* ============================================================
+   استجابة الجوال
+   ============================================================ */
+@media (max-width: 900px) {
+  .header-grid { grid-template-columns: 1fr; text-align: center; }
+  .header-fields { grid-template-columns: 1fr; }
+  .header-decoration { display: none; }
+  .hero h1 { font-size: 22px; }
+  .plan-table th { width: auto; display: block; background: var(--navy); color: var(--white); border-radius: var(--radius-sm); margin-bottom: 6px; padding: 8px 12px; }
+  .plan-table td { display: block; padding: 6px 0 14px; }
+  .plan-table tr { display: block; margin-bottom: 8px; border-bottom: 1px solid var(--gray-100); padding-bottom: 8px; }
+  .plan-table { display: block; }
+  .plan-table thead, .plan-table tbody { display: block; }
+  .tabs-nav { flex-wrap: nowrap; overflow-x: auto; }
+  .tab-btn { padding: 10px 14px; font-size: 13px; }
+}
+
+/* ============================================================
+   ======== إعدادات الطباعة A4 الاحترافية ========
+   - Ultra Sharp
+   - High Readability
+   - تجنّب انقسام المحتوى عبر الصفحات
+   - تقليل الهوامش
+   ============================================================ */
+@page {
+  size: A4 portrait;
+  margin: 8mm 8mm 8mm 8mm;
+}
+
+@media print {
+  /* إعدادات أساسية للحدّة العالية */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html, body {
+    background: white !important;
+    color: black !important;
+    font-size: 9.5pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 194mm !important;
+  }
+
+  body {
+    background-image: none !important;
+  }
+
+  /* إخفاء عناصر الواجهة */
+  .no-print,
+  .toolbar,
+  .tabs-nav,
+  .toast-container,
+  .criterion-actions,
+  .activity-item .remove-activity-btn,
+  button:not(.print-keep),
+  .header-decoration,
+  .stat-card .stat-icon,
+  .records-section .records-card:hover {
+    display: none !important;
+  }
+
+  /* الترويسة - مدمجة */
+  .official-header {
+    background: var(--navy) !important;
+    color: white !important;
+    padding: 6mm 6mm !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+  }
+  .official-header::before { display: none !important; }
+
+  .header-grid {
+    grid-template-columns: 18mm 1fr 18mm !important;
+    gap: 4mm !important;
+    max-width: 100% !important;
+  }
+
+  .logo-box {
+    width: 18mm !important;
+    height: 18mm !important;
+    border-color: rgba(255,255,255,0.4) !important;
+  }
+
+  .header-text .kingdom {
+    font-size: 11pt !important;
+    margin-bottom: 1mm !important;
+  }
+  .header-text .ministry {
+    font-size: 9pt !important;
+    color: var(--gold-light) !important;
+    margin-bottom: 2mm !important;
+  }
+
+  .header-fields {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1mm 4mm !important;
+    max-width: 100% !important;
+  }
+  .header-fields .field { font-size: 8pt !important; gap: 3px !important; }
+  .header-fields .field label {
+    color: white !important;
+    font-weight: 700 !important;
+    font-size: 8pt !important;
+  }
+  .header-fields .field input {
+    background: white !important;
+    color: black !important;
+    border: 0.5px solid #999 !important;
+    padding: 2px 6px !important;
+    font-size: 8pt !important;
+    font-weight: 600 !important;
+  }
+
+  /* العنوان الرئيسي */
+  .hero {
+    padding: 4mm 6mm !important;
+    margin: 3mm 0 !important;
+    box-shadow: none !important;
+    border: 1px solid var(--gold) !important;
+    border-top-width: 3px !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+    border-radius: 4px !important;
+  }
+  .hero .badge {
+    padding: 2px 8px !important;
+    font-size: 7.5pt !important;
+    margin-bottom: 2mm !important;
+  }
+  .hero h1 {
+    color: var(--navy) !important;
+    font-size: 14pt !important;
+    margin-bottom: 2mm !important;
+    line-height: 1.3 !important;
+  }
+  .hero p {
+    font-size: 9pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* اللوحة - مدمجة */
+  .dashboard {
+    padding: 0 !important;
+    margin: 0 0 3mm 0 !important;
+    max-width: 100% !important;
+  }
+  .dashboard-grid {
+    grid-template-columns: repeat(7, 1fr) !important;
+    gap: 1.5mm !important;
+    margin-bottom: 2mm !important;
+  }
+  .stat-card {
+    padding: 4px 8px !important;
+    box-shadow: none !important;
+    border: 0.5px solid #ccc !important;
+    border-right-width: 2.5px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    border-radius: 3px !important;
+  }
+  .stat-card .label { font-size: 7pt !important; line-height: 1.2 !important; }
+  .stat-card .value { font-size: 13pt !important; line-height: 1 !important; }
+
+  .progress-wrap {
+    padding: 6px 14px !important;
+    box-shadow: none !important;
+    border: 0.5px solid #ccc !important;
+    border-radius: 4px !important;
+    gap: 8px !important;
+  }
+  .progress-wrap .progress-label { font-size: 9pt !important; }
+  .progress-bar { height: 8px !important; }
+  .progress-fill { background: var(--green) !important; }
+  .progress-percent { font-size: 10pt !important; min-width: 36px !important; }
+
+  /* التبويبات */
+  .tabs-container {
+    padding: 0 !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+  }
+
+  /* عند الطباعة الشاملة، إظهار جميع التبويبات بصفحات منفصلة */
+  body.print-all .tab-panel {
+    display: block !important;
+    page-break-before: always !important;
+    break-before: always !important;
+    margin-top: 4mm !important;
+  }
+  body.print-all .tab-panel:first-of-type {
+    page-break-before: auto !important;
+    break-before: auto !important;
+  }
+
+  /* وضع طباعة معيار واحد فقط */
+  body.print-criterion-only .tab-panel:not(.print-target),
+  body.print-criterion-only .criterion-card:not(.print-target) {
+    display: none !important;
+  }
+  body.print-criterion-only .tab-panel.print-target {
+    display: block !important;
+  }
+  body.print-criterion-only .official-header,
+  body.print-criterion-only .hero,
+  body.print-criterion-only .dashboard {
+    display: block;
+  }
+
+  /* البطاقات - تجنّب التقسيم */
+  .section-card {
+    padding: 5mm !important;
+    margin-bottom: 3mm !important;
+    box-shadow: none !important;
+    border: 0.5px solid #ccc !important;
+    border-radius: 4px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .section-title {
+    font-size: 12pt !important;
+    margin-bottom: 3mm !important;
+    padding-bottom: 2mm !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  .section-title .title-icon {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 11pt !important;
+  }
+  .section-desc {
+    font-size: 9pt !important;
+    margin-bottom: 3mm !important;
+    line-height: 1.4 !important;
+  }
+
+  /* بطاقات الخطوات - تخطيط محكم */
+  .steps-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 2mm !important;
+  }
+  .step-card {
+    padding: 3mm !important;
+    box-shadow: none !important;
+    border: 0.5px solid #ddd !important;
+    border-right: 2px solid var(--green) !important;
+    border-radius: 3px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    gap: 6px !important;
+  }
+  .step-number {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 9pt !important;
+  }
+  .step-text {
+    font-size: 8.5pt !important;
+    line-height: 1.4 !important;
+  }
+
+  /* صناديق التنبيهات */
+  .alert-box {
+    padding: 6px 10px !important;
+    margin: 2mm 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    gap: 6px !important;
+  }
+  .alert-icon {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 10pt !important;
+  }
+  .alert-text {
+    font-size: 8.5pt !important;
+    line-height: 1.45 !important;
+  }
+
+  /* بطاقات المعايير */
+  .criterion-card {
+    box-shadow: none !important;
+    border: 0.5px solid #bbb !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 3mm !important;
+    border-radius: 4px !important;
+  }
+
+  .criterion-header {
+    background: var(--navy) !important;
+    color: white !important;
+    padding: 4px 10px !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  .criterion-header .crit-title { font-size: 10pt !important; gap: 6px !important; }
+  .crit-title-num {
+    padding: 1px 8px !important;
+    font-size: 8pt !important;
+  }
+  .criterion-status-badge {
+    font-size: 8pt !important;
+    padding: 1px 8px !important;
+  }
+
+  .criterion-body { padding: 4mm !important; }
+
+  /* الجداول - تجنّب التقسيم */
+  .plan-table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    margin-bottom: 2mm !important;
+  }
+  .plan-table th, .plan-table td {
+    padding: 3px 6px !important;
+    font-size: 8.5pt !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .plan-table th {
+    background: #eef0f4 !important;
+    color: var(--navy) !important;
+    width: 38mm !important;
+    font-weight: 800 !important;
+    font-size: 8.5pt !important;
+  }
+  .plan-table tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .plan-table td input, .plan-table td textarea, .plan-table td select {
+    border: 0.5px solid #999 !important;
+    background: white !important;
+    box-shadow: none !important;
+    color: black !important;
+    padding: 3px 6px !important;
+    font-size: 8.5pt !important;
+    min-height: auto !important;
+  }
+  .plan-table td textarea { min-height: 12mm !important; }
+  .plan-table .date-row label { font-size: 7.5pt !important; }
+
+  /* الأنشطة */
+  .activities-list li.activity-item {
+    margin-bottom: 2px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    gap: 5px !important;
+  }
+  .activity-item .activity-num {
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 7pt !important;
+    margin-top: 4px !important;
+  }
+  .activity-item textarea {
+    min-height: 8mm !important;
+    font-size: 8.5pt !important;
+    padding: 3px 6px !important;
+  }
+
+  /* بطاقات السجلات */
+  .records-section {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 2mm !important;
+  }
+  .records-card {
+    padding: 3mm !important;
+    box-shadow: none !important;
+    border: 0.5px solid #ccc !important;
+    border-top: 2px solid var(--green) !important;
+    border-radius: 3px !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .records-card h4 {
+    font-size: 9.5pt !important;
+    margin-bottom: 2mm !important;
+    padding-bottom: 1mm !important;
+  }
+  .records-card .count-badge {
+    font-size: 7.5pt !important;
+    padding: 1px 6px !important;
+  }
+  .records-card .domain-label {
+    font-size: 7.5pt !important;
+    margin-bottom: 2mm !important;
+  }
+  .records-list li {
+    font-size: 8pt !important;
+    padding: 2px 6px !important;
+    line-height: 1.3 !important;
+  }
+
+  /* المساعد الذكي */
+  .assistant-form { gap: 2mm !important; margin-bottom: 3mm !important; }
+  .form-group label { font-size: 9pt !important; }
+  .form-group select, .form-group input {
+    padding: 4px 8px !important;
+    font-size: 9pt !important;
+    border: 0.5px solid #999 !important;
+  }
+  .assistant-result {
+    padding: 4mm !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+  .assistant-result h4 { font-size: 11pt !important; margin-bottom: 2mm !important; }
+  .assistant-result .suggestion-block {
+    padding: 6px 10px !important;
+    margin-bottom: 2mm !important;
+  }
+  .assistant-result .suggestion-block strong { font-size: 9pt !important; margin-bottom: 2px !important; }
+  .assistant-result .suggestion-block p,
+  .assistant-result .suggestion-block ul {
+    font-size: 8.5pt !important;
+    line-height: 1.45 !important;
+  }
+
+  /* قواعد عامة لمنع التقسيم */
+  h1, h2, h3, h4 {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  table, tr, td, th, .step-card, .stat-card, .records-card,
+  .criterion-card, .alert-box, .section-card, .suggestion-block {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* وضع صفحة واحدة للمعيار - يحاول إجبار صفحة واحدة */
+  body.print-single-page {
+    transform-origin: top right;
+  }
+  body.print-single-page .criterion-card.print-target {
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+}
+
+/* وضع طباعة معيار محدد فقط */
+body.print-criterion-only .tab-panel { display: none !important; }
+body.print-criterion-only .tab-panel.print-target { display: block !important; }
+body.print-criterion-only .criterion-card:not(.print-target) { display: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     مكتبة الأيقونات SVG (Symbol Sprite)
+     ============================================================ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <!-- Play / Start -->
+    <symbol id="i-play" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></symbol>
+    <!-- Book / Guide -->
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 4h12a4 4 0 0 1 4 4v12H8a4 4 0 0 1-4-4z"/><path d="M4 4v12a4 4 0 0 1 4-4h12"/></symbol>
+    <!-- Robot / Assistant -->
+    <symbol id="i-robot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="2"/><circle cx="9" cy="13" r="1.2"/><circle cx="15" cy="13" r="1.2"/><path d="M12 4v4M9 18h6"/></symbol>
+    <!-- Library / Records -->
+    <symbol id="i-library" viewBox="0 0 24 24"><path d="M4 4h4v16H4zM10 4h4v16h-4zM16 4h4v16h-4z"/></symbol>
+    <!-- Printer -->
+    <symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 9V3h12v6"/><rect x="3" y="9" width="18" height="9" rx="1"/><rect x="6" y="14" width="12" height="7"/></symbol>
+    <!-- Save / Diskette -->
+    <symbol id="i-save" viewBox="0 0 24 24"><path d="M5 3h12l4 4v14H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></symbol>
+    <!-- Download -->
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12M6 12l6 6 6-6M4 20h16"/></symbol>
+    <!-- Upload -->
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 20V8M6 12l6-6 6 6M4 4h16"/></symbol>
+    <!-- Trash -->
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 14h10l1-14M10 11v6M14 11v6"/></symbol>
+    <!-- Check -->
+    <symbol id="i-check" viewBox="0 0 24 24"><polyline points="5,12 10,17 19,7"/></symbol>
+    <!-- Check Circle -->
+    <symbol id="i-check-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="8,12 11,15 16,9"/></symbol>
+    <!-- Plus -->
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <!-- X / Close -->
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <!-- Copy -->
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="1"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></symbol>
+    <!-- Refresh -->
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M21 12a9 9 0 0 1-15 6.7L3 16M3 12a9 9 0 0 1 15-6.7L21 8"/><polyline points="3,3 3,8 8,8"/><polyline points="21,21 21,16 16,16"/></symbol>
+    <!-- Edit -->
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z"/></symbol>
+    <!-- Settings / Gear -->
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></symbol>
+    <!-- Info -->
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v0M12 11v5"/></symbol>
+    <!-- Alert -->
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12" y2="17"/></symbol>
+    <!-- Star -->
+    <symbol id="i-star" viewBox="0 0 24 24"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></symbol>
+    <!-- Upload Image -->
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></symbol>
+    <!-- Building / Admin -->
+    <symbol id="i-building" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="18"/><path d="M8 8h2M14 8h2M8 12h2M14 12h2M8 16h2M14 16h2M10 22v-4h4v4"/></symbol>
+    <!-- Education -->
+    <symbol id="i-cap" viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1 2 3 6 3s6-2 6-3v-5"/></symbol>
+    <!-- Target -->
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol>
+    <!-- School Building -->
+    <symbol id="i-school" viewBox="0 0 24 24"><path d="M3 21V10l9-7 9 7v11"/><path d="M9 21v-6h6v6M3 21h18"/></symbol>
+    <!-- Chart Bar -->
+    <symbol id="i-chart" viewBox="0 0 24 24"><line x1="4" y1="20" x2="20" y2="20"/><rect x="6" y="12" width="3" height="8"/><rect x="11" y="7" width="3" height="13"/><rect x="16" y="14" width="3" height="6"/></symbol>
+    <!-- List / Plan -->
+    <symbol id="i-list" viewBox="0 0 24 24"><line x1="8" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="8" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></symbol>
+    <!-- Question Mark -->
+    <symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12" y2="17"/></symbol>
+    <!-- Arrow Right (RTL: visually left) -->
+    <symbol id="i-arrow-back" viewBox="0 0 24 24"><polyline points="9,18 15,12 9,6"/></symbol>
+    <!-- Clipboard -->
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="6" y="4" width="12" height="18" rx="1"/><rect x="9" y="2" width="6" height="4" rx="1"/></symbol>
+    <!-- Sparkles -->
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></symbol>
+  </defs>
+</svg>
+
+<!-- ============================================================
+     1) الترويسة الرسمية القابلة للتعديل
+     ============================================================ -->
+<header class="official-header">
+  <div class="header-grid">
+    <label class="logo-box" id="logoBox" title="اضغط لرفع شعار المدرسة">
+      <span class="logo-placeholder" id="logoPlaceholder">
+        <svg class="icon" style="width:24px;height:24px"><use href="#i-image"/></svg>
+        <span>رفع شعار<br>المدرسة</span>
+      </span>
+      <input type="file" id="logoInput" accept="image/*">
+    </label>
+
+    <div class="header-text">
+      <div class="kingdom">المملكة العربية السعودية</div>
+      <div class="ministry">وزارة التعليم</div>
+      <div class="header-fields">
+        <div class="field">
+          <label>إدارة التعليم:</label>
+          <input type="text" id="eduDept" placeholder="إدارة التعليم بمنطقة ...">
+        </div>
+        <div class="field">
+          <label>اسم المدرسة:</label>
+          <input type="text" id="schoolName" placeholder="اسم المدرسة">
+        </div>
+        <div class="field">
+          <label>العام الدراسي:</label>
+          <input type="text" id="academicYear" placeholder="1447/1448 هـ">
+        </div>
+        <div class="field">
+          <label>اسم معد الخطة:</label>
+          <input type="text" id="planAuthor" placeholder="الاسم الكامل">
+        </div>
+      </div>
+    </div>
+
+    <div class="header-decoration">
+      <svg class="icon" style="width:56px;height:56px;opacity:0.4"><use href="#i-clipboard"/></svg>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     2) العنوان الرئيسي
+     ============================================================ -->
+<section class="hero">
+  <span class="badge">
+    <svg class="icon"><use href="#i-sparkle"/></svg>
+    منصة رسمية تفاعلية
+    <svg class="icon"><use href="#i-sparkle"/></svg>
+  </span>
+  <h1>منصة بناء <span class="accent">خطة التحسين المدرسي</span></h1>
+  <p>أداة تفاعلية تساعد المدرسة على تحويل تقرير التقويم المدرسي إلى خطة تحسين منظمة وفق قالب منصة تميز الرقمية، مع شرح خطوة بخطوة لكتابة المبادرات والأنشطة وحفظ كل معيار على حدة.</p>
+</section>
+
+<!-- ============================================================
+     3) شريط الأدوات الرئيسية
+     ============================================================ -->
+<div class="toolbar no-print">
+  <button class="btn btn-primary" onclick="switchTab('plan')">
+    <svg class="icon"><use href="#i-play"/></svg> ابدأ بناء الخطة
+  </button>
+  <button class="btn btn-outline" onclick="switchTab('guide')">
+    <svg class="icon"><use href="#i-book"/></svg> شرح طريقة الكتابة
+  </button>
+  <button class="btn btn-outline" onclick="switchTab('assistant')">
+    <svg class="icon"><use href="#i-robot"/></svg> المساعد الذكي
+  </button>
+  <button class="btn btn-outline" onclick="switchTab('records')">
+    <svg class="icon"><use href="#i-library"/></svg> السجلات والشواهد
+  </button>
+  <button class="btn btn-gold" onclick="printReport('all')">
+    <svg class="icon"><use href="#i-printer"/></svg> طباعة التقرير
+  </button>
+  <button class="btn btn-success" onclick="saveAll(true)">
+    <svg class="icon"><use href="#i-save"/></svg> حفظ البيانات
+  </button>
+  <button class="btn btn-outline" onclick="exportJSON()">
+    <svg class="icon"><use href="#i-download"/></svg> تصدير JSON
+  </button>
+  <button class="btn btn-outline" onclick="importJSONBtn()">
+    <svg class="icon"><use href="#i-upload"/></svg> استيراد JSON
+  </button>
+  <input type="file" id="importFile" accept=".json" style="display:none">
+  <button class="btn btn-danger" onclick="clearAll()">
+    <svg class="icon"><use href="#i-trash"/></svg> تفريغ البيانات
+  </button>
+</div>
+
+<!-- ============================================================
+     4) لوحة المتابعة
+     ============================================================ -->
+<div class="dashboard">
+  <div class="dashboard-grid">
+    <div class="stat-card navy">
+      <svg class="icon stat-icon"><use href="#i-building"/></svg>
+      <div class="label">المجالات المكتملة</div>
+      <div class="value"><span id="statDomains">0</span> / 4</div>
+    </div>
+    <div class="stat-card green">
+      <svg class="icon stat-icon"><use href="#i-check-circle"/></svg>
+      <div class="label">المعايير المعتمدة</div>
+      <div class="value"><span id="statApproved">0</span> / 10</div>
+    </div>
+    <div class="stat-card">
+      <svg class="icon stat-icon"><use href="#i-star"/></svg>
+      <div class="label">المبادرات المكتوبة</div>
+      <div class="value" id="statInitiatives">0</div>
+    </div>
+    <div class="stat-card">
+      <svg class="icon stat-icon"><use href="#i-list"/></svg>
+      <div class="label">الأنشطة المدخلة</div>
+      <div class="value" id="statActivities">0</div>
+    </div>
+    <div class="stat-card red">
+      <svg class="icon stat-icon"><use href="#i-x"/></svg>
+      <div class="label">لم يبدأ</div>
+      <div class="value" id="statNotStarted">10</div>
+    </div>
+    <div class="stat-card amber">
+      <svg class="icon stat-icon"><use href="#i-refresh"/></svg>
+      <div class="label">قيد التنفيذ</div>
+      <div class="value" id="statInProgress">0</div>
+    </div>
+    <div class="stat-card green">
+      <svg class="icon stat-icon"><use href="#i-check"/></svg>
+      <div class="label">مكتمل</div>
+      <div class="value" id="statCompleted">0</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <span class="progress-label">
+      <svg class="icon"><use href="#i-chart"/></svg>
+      نسبة اكتمال الخطة:
+    </span>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="progress-percent" id="progressPercent">0%</span>
+  </div>
+
+  <div class="completion-alert" id="completionAlert">
+    <svg class="icon icon-lg"><use href="#i-check-circle"/></svg>
+    الخطة مكتملة وجاهزة للمراجعة قبل الإرسال.
+  </div>
+</div>
+
+<!-- ============================================================
+     5) التبويبات الرئيسية
+     ============================================================ -->
+<div class="tabs-container">
+  <nav class="tabs-nav no-print" id="tabsNav">
+    <button class="tab-btn active" data-tab="guide">
+      <svg class="icon"><use href="#i-book"/></svg> شرح كتابة الخطة
+    </button>
+    <button class="tab-btn" data-tab="plan">
+      <svg class="icon"><use href="#i-clipboard"/></svg> نموذج خطة التحسين
+    </button>
+    <button class="tab-btn" data-tab="domain1">
+      <svg class="icon"><use href="#i-building"/></svg> الإدارة المدرسية
+    </button>
+    <button class="tab-btn" data-tab="domain2">
+      <svg class="icon"><use href="#i-cap"/></svg> التعليم والتعلم
+    </button>
+    <button class="tab-btn" data-tab="domain3">
+      <svg class="icon"><use href="#i-target"/></svg> نواتج التعلم
+    </button>
+    <button class="tab-btn" data-tab="domain4">
+      <svg class="icon"><use href="#i-school"/></svg> البيئة المدرسية
+    </button>
+    <button class="tab-btn" data-tab="assistant">
+      <svg class="icon"><use href="#i-robot"/></svg> المساعد الذكي
+    </button>
+    <button class="tab-btn" data-tab="records">
+      <svg class="icon"><use href="#i-library"/></svg> السجلات والشواهد
+    </button>
+  </nav>
+
+  <!-- ===== تبويب: شرح طريقة الكتابة ===== -->
+  <div class="tab-panel active" id="tab-guide">
+    <div class="section-card">
+      <h2 class="section-title">
+        <span class="title-icon"><svg class="icon"><use href="#i-question"/></svg></span>
+        كيف تُكتب خطة التحسين؟
+      </h2>
+
+      <p class="section-desc">
+        خطوات عملية مرتبة لبناء خطة تحسين متكاملة وفق قالب منصة تميز الرقمية، مستقاة من تقرير المدرسة الصادر والأدلة الاسترشادية للمعايير.
+      </p>
+
+      <div class="steps-grid" id="stepsGrid">
+        <!-- يُملأ تلقائيًا بـ JS -->
+      </div>
+
+      <div class="alert-box" style="margin-top: 22px;">
+        <span class="alert-icon"><svg class="icon"><use href="#i-alert"/></svg></span>
+        <div class="alert-text">
+          <strong>تنبيه مهم:</strong> المبادرة ليست نشاطًا واحدًا، بل إطار عام مستمد من مجموعة مؤشرات داخل معيار معين، ثم تُترجم إلى برامج وأنشطة وأساليب تنفيذ داخل المدرسة.
+        </div>
+      </div>
+
+      <div class="alert-box green">
+        <span class="alert-icon"><svg class="icon"><use href="#i-check"/></svg></span>
+        <div class="alert-text">
+          <strong>ملاحظة:</strong> اكتب المستويات بالترتيب (الحالي ثم المستهدف)، ولا تترك أي خانة فارغة، والتواريخ ميلادية مدتها عام كامل، واحفظ كل معيار بعد الانتهاء منه.
+        </div>
+      </div>
+
+      <div class="alert-box navy">
+        <span class="alert-icon"><svg class="icon"><use href="#i-star"/></svg></span>
+        <div class="alert-text">
+          <strong>توظيف المؤشرات بين التميز والتقدم:</strong> من طرق التحسين المبدعة تقديم مؤشرات التميز كدعم ومساندة لمؤشرات التقدم، فيتم ربط المهارات القرائية والعددية ومهارات التفكير العليا بنتائج الاختبارات التحصيلية المستهدفة.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== تبويب: نموذج الخطة (نظرة عامة) ===== -->
+  <div class="tab-panel" id="tab-plan">
+    <div class="section-card">
+      <h2 class="section-title">
+        <span class="title-icon"><svg class="icon"><use href="#i-clipboard"/></svg></span>
+        نموذج خطة التحسين — نظرة عامة
+      </h2>
+
+      <p class="section-desc">
+        المجالات الأربعة في التقويم المدرسي، وعدد المعايير المرتبطة بكل مجال. اضغط على أي مجال للانتقال إلى تفاصيله وتعبئة المعايير.
+      </p>
+
+      <div class="steps-grid">
+        <div class="step-card" onclick="switchTab('domain1')" style="cursor:pointer">
+          <div class="step-number" style="background:linear-gradient(135deg,#0c2d57,#1e4a8a)">1</div>
+          <div class="step-text">
+            <strong>المجال الأول: الإدارة المدرسية</strong><br>
+            <span style="color:var(--gray-500); font-size:13px">4 معايير: التخطيط، قيادة العملية التعليمية، المجتمع المدرسي، التطوير المؤسسي</span>
+          </div>
+        </div>
+        <div class="step-card" onclick="switchTab('domain2')" style="cursor:pointer">
+          <div class="step-number" style="background:linear-gradient(135deg,#1f7a55,#2ea676)">2</div>
+          <div class="step-text">
+            <strong>المجال الثاني: التعليم والتعلم</strong><br>
+            <span style="color:var(--gray-500); font-size:13px">معياران: بناء خبرات التعلم، تقويم التعلم</span>
+          </div>
+        </div>
+        <div class="step-card" onclick="switchTab('domain3')" style="cursor:pointer">
+          <div class="step-number" style="background:linear-gradient(135deg,#b8893a,#9c7430)">3</div>
+          <div class="step-text">
+            <strong>المجال الثالث: نواتج التعلم</strong><br>
+            <span style="color:var(--gray-500); font-size:13px">معياران: التحصيل التعليمي، التطور الشخصي والاجتماعي</span>
+          </div>
+        </div>
+        <div class="step-card" onclick="switchTab('domain4')" style="cursor:pointer">
+          <div class="step-number" style="background:linear-gradient(135deg,#5a6275,#2f3645)">4</div>
+          <div class="step-text">
+            <strong>المجال الرابع: البيئة المدرسية</strong><br>
+            <span style="color:var(--gray-500); font-size:13px">معياران: المبنى المدرسي، الأمن والسلامة</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="alert-box navy">
+        <span class="alert-icon"><svg class="icon"><use href="#i-info"/></svg></span>
+        <div class="alert-text">
+          <strong>طريقة العمل:</strong> ادخل إلى كل مجال، عبّئ بيانات المعيار (المستوى الحالي، المستهدف، التواريخ، المبادرة، الأنشطة، الشواهد...)، ثم احفظ المعيار. تابع نسبة الاكتمال من اللوحة العلوية.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== تبويب: المجال الأول - الإدارة المدرسية ===== -->
+  <div class="tab-panel" id="tab-domain1">
+    <div class="section-card">
+      <h2 class="section-title">
+        <span class="title-icon"><svg class="icon"><use href="#i-building"/></svg></span>
+        المجال الأول: الإدارة المدرسية
+      </h2>
+      <p class="section-desc">يضم أربعة معايير. اضغط على "حفظ المعيار" بعد تعبئة كل معيار، ثم "اعتماد المعيار" بعد المراجعة.</p>
+    </div>
+    <div id="domain1-criteria"></div>
+  </div>
+
+  <!-- ===== تبويب: المجال الثاني - التعليم والتعلم ===== -->
+  <div class="tab-panel" id="tab-domain2">
+    <div class="section-card">
+      <h2 class="section-title">
+        <span class="title-icon"><svg class="icon"><use href="#i-cap"/></svg></span>
+        المجال الثاني: التعليم والتعلم
+      </h2>
+      <p class="section-desc">يضم معيارين. تعبئة المؤشرات والأنشطة بدقة تحقق التغيير الفعلي في الميدان.</p>
+    </div>
+    <div id="domain2-criteria"></div>
+  </div>
+
+  <!-- ===== تبويب: المجال الثالث - نواتج التعلم ===== -->
+  <div class="tab-panel" id="tab-domain3">
+    <div class="section-card">
+      <h2 class="section-title">
+        <span class="title-icon"><svg class="icon"><use href="#i-target"/></svg></span>
+        المجال الثالث: نواتج التعلم
+      </h2>
+      <p class="section-desc">يضم معيارين، ويرتبط مباشرة بنتائج الاختبارات الوطنية والتطور الشخصي والاجتماعي للمتعلمين.</p>
+    </div>
+    <div id="domain3-criteria"></div>
+  </div>
+
+  <!-- ===== تبويب: المجال الرابع - البيئة المدرسية ===== -->
+  <div class="tab-panel" id="tab-domain4">
+    <div class="section-card">
+      <h2 class="section-title">
+        <span class="title-icon"><svg class="icon"><use href="#i-school"/></svg></span>
+        المجال الرابع: البيئة المدرسية
+      </h2>
+      <p class="section-desc">يضم معيارين: المبنى المدرسي والأمن والسلامة، ويعنى بمتابعة البيئة ومرافق الخدمات المساندة.</p>
+    </div>
+    <div id="domain4-criteria"></div>
+  </div>
+
+  <!-- ===== تبويب: المساعد الذكي ===== -->
+  <div class="tab-panel" id="tab-assistant">
+    <div class="section-card">
+      <h2 class="section-title">
+        <span class="title-icon"><svg class="icon"><use href="#i-robot"/></svg></span>
+        مساعد بناء الخطة
+      </h2>
+
+      <p class="section-desc">
+        اختر المجال والمعيار ومستوى المدرسة الحالي والمستهدف، وسيقترح لك المساعد صياغة مبادرة وأنشطة وشواهد ومؤشرات إنجاز مبنية على محتوى الشرح المعتمد.
+      </p>
+
+      <div class="assistant-form">
+        <div class="form-group">
+          <label>المجال</label>
+          <select id="assistDomain" onchange="updateAssistCriteria()">
+            <option value="">-- اختر المجال --</option>
+            <option value="1">الإدارة المدرسية</option>
+            <option value="2">التعليم والتعلم</option>
+            <option value="3">نواتج التعلم</option>
+            <option value="4">البيئة المدرسية</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المعيار</label>
+          <select id="assistCriterion">
+            <option value="">-- اختر المعيار --</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المستوى الحالي</label>
+          <select id="assistCurrent">
+            <option value="التهيئة">التهيئة</option>
+            <option value="الانطلاق">الانطلاق</option>
+            <option value="التقدم">التقدم</option>
+            <option value="التميز">التميز</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المستوى المستهدف</label>
+          <select id="assistTarget">
+            <option value="الانطلاق">الانطلاق</option>
+            <option value="التقدم" selected>التقدم</option>
+            <option value="التميز">التميز</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-success" onclick="generateAssistance()">
+        <svg class="icon"><use href="#i-gear"/></svg> توليد المقترحات
+      </button>
+
+      <div class="alert-box" style="margin-top: 18px;">
+        <span class="alert-icon"><svg class="icon"><use href="#i-alert"/></svg></span>
+        <div class="alert-text">
+          المقترحات مساعدة أولية، ويجب مواءمتها مع تقرير المدرسة الفعلي وواقعها قبل اعتمادها في الخطة.
+        </div>
+      </div>
+
+      <div class="assistant-result" id="assistResult"></div>
+    </div>
+  </div>
+
+  <!-- ===== تبويب: السجلات والشواهد ===== -->
+  <div class="tab-panel" id="tab-records">
+    <div class="section-card">
+      <h2 class="section-title">
+        <span class="title-icon"><svg class="icon"><use href="#i-library"/></svg></span>
+        السجلات والشواهد المقترحة حسب المعايير
+      </h2>
+      <p class="section-desc">
+        السجلات اللازمة لكل معيار، وفق تصنيف سجلات العمل على مجالات التقويم الذاتي. يمكن طباعتها أو الاستفادة منها كقائمة مرجعية.
+      </p>
+      <div class="records-section" id="recordsSection"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ============================================================
+   البيانات الأساسية: المجالات والمعايير
+   ============================================================ */
+
+const STEPS = [
+  "ابدأ من تقرير المدرسة الصادر من التقويم المدرسي.",
+  "حدد المجال الذي ظهر فيه احتياج للتحسين.",
+  "اختر المعيار المرتبط بالمجال.",
+  "اقرأ المؤشرات والفقرات المرتبطة بالمعيار في الأدلة الاسترشادية.",
+  "اكتب المستوى الحالي للمدرسة كما هو في التقرير.",
+  "حدد المستوى المستهدف (الانطلاق / التقدم / التميز).",
+  "اكتب تاريخ بداية التنفيذ ونهايته بالتاريخ الميلادي (عام كامل).",
+  "لا تترك أي خانة فارغة في النموذج.",
+  "اكتب المبادرة كإطار عام مأخوذ من المؤشرات والأدلة الاسترشادية.",
+  "حوّل المبادرة إلى أنشطة وأساليب تنفيذ واقعية داخل المدرسة.",
+  "احفظ كل معيار بعد الانتهاء منه على حدة.",
+  "راجع اكتمال الخطة قبل الإرسال النهائي."
+];
+
+const DOMAINS = {
+  1: {
+    name: "الإدارة المدرسية",
+    criteria: [
+      {
+        id: "1-1",
+        name: "التخطيط",
+        initiative: "تضع المدرسة خطة تشغيلية مكتملة العناصر وفق أهداف تطويرية محددة.",
+        activities: [
+          "تحديد وترتيب الوسائل والبرامج والأنشطة المقترحة ذات الأهداف التطويرية واكتمال عناصر الخطة (البرامج - الأنشطة - زمن التنفيذ) وتطوير مؤشرات أداء الخطة التشغيلية.",
+          "توزيع الأدوار والمسؤوليات في تنفيذ خطة المدرسة وإشراك المجتمع المدرسي في تطوير الخطة، وشمولية المهام والمسؤوليات.",
+          "شمول الخطة لتلبية احتياجات جميع المتعلمين بمن فيهم ذوو الإعاقة والموهوبون.",
+          "متابعة تنفيذ الخطة وتحسينها بما يضمن الوصول للأهداف، وتحديد المشكلات والتحديات المتوقعة واقتراح الحلول والبدائل.",
+          "إيجاد أدوات تقويمية لتقويم تنفيذ البرامج والأنشطة وتحديد جوانب القوة وفرص التحسين القادمة."
+        ],
+        records: ["سجل الخطة التشغيلية", "سجل اللجان المدرسية", "سجل متابعة وتحسين الخطة", "سجل المتابعة والتقويم", "سجل توثيق البرامج"]
+      },
+      {
+        id: "1-2",
+        name: "قيادة العملية التعليمية",
+        initiative: "تعزز المدرسة القيم الإسلامية والهوية الوطنية وقيم المهنة التعليمية والوعي بأخلاقيات مهنة التعليم، وتوفر مكانًا آمنًا للتعلم ناشرة قواعد السلوك والمواظبة.",
+        activities: [
+          "توفير أنشطة وبرامج تعزز القيم والهوية الوطنية، والاحتفاء بالمناسبات الوطنية كاليوم الوطني ويوم التأسيس.",
+          "توفير إجراءات واضحة تنشر من خلالها قيم المواظبة والسلوك الوظيفي وتوزيع منشورات تشرح قواعد السلوك والمواظبة بشكل مفصل وتوفير حوافز معلنة للتشجيع.",
+          "تطبيق إجراءات واضحة للمساءلة بشأن مخالفات القيم والأخلاقيات المهنية.",
+          "تفعيل مجالس الحوار الطلابي وكشف حالات التنمر وعلاجها ببرامج مستدامة وتوفير برامج توعوية حول قضايا السلوك الإيجابي.",
+          "توفير أنشطة إثرائية شاملة لجميع المتعلمين بمن فيهم الموهوبون والمعاقون وتقديم برامج تحفيزية للموهوبين والمشاركة في المسابقات المختصة.",
+          "التعلم وتطوير الذات للمعلمين من خلال التعلم الذاتي وحضور الدورات التدريبية والانضمام إلى مجتمعات التعلم المهنية."
+        ],
+        records: ["سجل الأنشطة والبرامج", "سجل متابعة السلوك الوظيفي", "سجل التوجيه والإرشاد", "سجل التبليغات", "سجل البرامج الوقائية والعلاجية", "سجل الاجتماعات", "سجل الانضباط", "سجل التوقيع على قواعد المواظبة", "سجل التحفيز والتكريم", "سجل الاستئذان", "سجل تعزيز السلوك الإيجابي", "سجل التميز", "سجل الموهوبين", "سجل حصر الغياب والتأخير", "سجل الأنشطة الإثرائية"]
+      },
+      {
+        id: "1-3",
+        name: "المجتمع المدرسي",
+        initiative: "تعزيز العمل التعاوني والعلاقات الإيجابية في المجتمع المدرسي، ومشاركة الأسرة في تعلم أبنائها، وتحفيز الشراكة المجتمعية لدعم التعلم والتأثير الإيجابي في المجتمع المحلي.",
+        activities: [
+          "وضع خطة شاملة لعمل تعاوني في المجتمع المدرسي وتفعيل مجالس أولياء الأمور وتنظيمها بشكل دوري لمناقشة تقدم الطلاب وتعزيز الشراكة الأسرية.",
+          "إنشاء سجل استطلاع وتواصل مع الأسرة ومتابعة الواجبات والمهمات وإشراك الأسرة في علاج مشاكل التعلم وإقامة دورات وورش عمل لأولياء الأمور.",
+          "حث أولياء الأمور على الاستفادة من المنصات (موقع عين، منصة مدرستي، نظام نور) ومتابعة تقدم الطلاب من خلالها.",
+          "تعزيز الشراكة المجتمعية مع الجهات المحلية والشركات لتوفير فرص تعلم عملية خصوصًا لذوي الإعاقة ودعم موارد المدرسة والمشاركة في فعاليات المجتمع المحلي."
+        ],
+        records: ["سجل البرامج والأنشطة", "سجل النمو المهني", "سجل استطلاع الرأي والاستبانات", "سجل مجالس أولياء الأمور", "سجل التواصل مع أولياء الأمور", "سجل الشراكة المجتمعية"]
+      },
+      {
+        id: "1-4",
+        name: "التطوير المؤسسي",
+        initiative: "توفير كوادر تعليمية مكتملة ومؤهلة، والتوافق في مجال التخصص، وتشكيل لجان إدارية مكتملة، وتوفير خطة مالية ثابتة ضمن ميزانية مستقرة.",
+        activities: [
+          "إعداد بيانات الموظفين والوصف الوظيفي والأعمال المكلفين بها وتوزيع الأنصبة بما يتوافق مع الخبرات والمؤهلات والتخصصات.",
+          "عمل ميزانية مستقرة وثابتة وتوثيق المعاملات المالية وتطبيق إجراءات التدقيق والمراجعة.",
+          "تقديم أنشطة وبرامج توعوية حول أهمية الرخصة المهنية وتنظيم ورش عمل تحضيرية للمعلمين وتكريم الحاصلين على الرخصة المهنية وعمل شراكات مع المؤسسات التدريبية.",
+          "بناء خطة للتطوير المهني ببرامج وأنشطة وعمل سجلات مهنية لاحتياجات منسوبي المدرسة والتحفيز على المشاركة في مجتمعات التعلم المهنية وإجراء بحوث إجرائية."
+        ],
+        records: ["سجل أحوال الموظفين", "سجل التكاليف", "سجل المجالس واللجان", "سجل الوصف الوظيفي", "سجل توزيع الأنصبة والجدول المدرسي", "سجل الخطة المالية", "سجل الرخصة المهنية", "سجل الصندوق المدرسي", "سجل النمو المهني"]
+      }
+    ]
+  },
+  2: {
+    name: "التعليم والتعلم",
+    criteria: [
+      {
+        id: "2-1",
+        name: "بناء خبرات التعلم",
+        initiative: "تدعم المدرسة تنفيذ المناهج لتحقيق نواتج التعلم المستهدفة وفق الخطة الدراسية، وتنمية المهارات القرائية والعددية للمتعلمين ومهارات التفكير العليا.",
+        activities: [
+          "استخدام استراتيجيات تدريس متنوعة وتشجيع المتعلمين على المشاركة والتفاعل والتركيز على الاستراتيجيات التي تراعي الفروق الفردية، وعمل سجلات لعينة من إنجاز المعلمين والأنشطة الصفية.",
+          "التركيز على الأنشطة التعليمية في اكتساب المعارف وتنمية المهارات.",
+          "استخدام أنشطة ومواد إثرائية لدعم سريعي التعلم والموهوبين.",
+          "توفير أنشطة تدعم جوانب اكتساب المهارات والتفكير العليا كالمسابقات وأنشطة تنمي التفكير الإبداعي خطابية كانت أو كتابية وتحليلات أو حل مشكلات أو استنتاج، ومهارات التفكير الناقد."
+        ],
+        records: ["سجل الأنشطة الإثرائية والعلاجية", "سجل الاختبارات الوطنية", "سجل تحدي القراءة", "سجل سد الفجوات لمادة الرياضيات", "سجل إنجازات المعلمين", "سجل المسابقات"]
+      },
+      {
+        id: "2-2",
+        name: "تقويم التعلم",
+        initiative: "عمل تقويم لأداء المتعلمين متنوع وفاعل، وتحليل نتائج التقويم لتحسين نواتج التعلم وتقديم تغذية راجعة مستدامة.",
+        activities: [
+          "التحضير للدروس وعينة من الأنشطة التعليمية الخاصة بالمتعلمين.",
+          "توفير أساليب تقويمية مستمرة ومتنوعة تكوينية ومراعاة الفروق الفردية.",
+          "تقديم برامج للمعلمين في تعلم أساليب التقويم المتنوعة، ومشاركة المتعلمين في تقويم أدائهم.",
+          "عمل تحليل النتائج وأنشطة علاجية وتقديم تغذية راجعة مستدامة بأساليب متنوعة."
+        ],
+        records: ["سجل تحضير الدروس", "سجل تحليل النتائج", "سجل الأنشطة العلاجية", "سجل التحصيل الدراسي", "سجل متابعة أداء المتعلمين", "سجل إنجاز المتعلمين"]
+      }
+    ]
+  },
+  3: {
+    name: "نواتج التعلم",
+    criteria: [
+      {
+        id: "3-1",
+        name: "التحصيل التعليمي",
+        initiative: "منافسون - مهاراتي: مبادرة تحسين نتائج الاختبارات الوطنية.",
+        activities: [
+          "خطة (نافس) الحقيقية تنطلق من إتقان مهارات المواد المستهدفة ذاتها وليس أمورًا وقتية أو تدريبات آنية، فالانطلاقة الصحيحة تعطي تصورًا صحيحًا للعمل.",
+          "عقد الاجتماع مع معلمي المواد المستهدفة لحث الطلاب، وعمل اختبارات محاكية للطلاب وتدريبهم على التظليل للتصحيح الآلي.",
+          "تكليف اللجان بمتابعة دخول الطلاب للاختبارات وقراءة الأدلة التابعة لكيفية الاختبار وتطبيقه.",
+          "القيام بنشر ثقافة الاختبارات بين الطلاب وأولياء الأمور.",
+          "عمل سجل يخص الاختبارات الوطنية."
+        ],
+        records: ["سجل متابعة الاختبارات الوطنية"]
+      },
+      {
+        id: "3-2",
+        name: "التطور الشخصي والاجتماعي",
+        initiative: "تعزيز مشاركة المدرسة في الأنشطة المجتمعية والأعمال التطوعية، والتزام منسوبيها بقواعد السلوك والانضباط المدرسي.",
+        activities: [
+          "الاعتناء بالعمل التطوعي وتوفير البرامج والأنشطة في ذلك.",
+          "رصد المخالفات السلوكية والحث على الالتزام بقواعد السلوك والانضباط المدرسي وبيان نسبة المتعلمين المنتظمين في الحضور وتقديم الحوافز والتكريم.",
+          "الالتزام بالممارسات الصحية والوقاية من الأمراض والنظافة الشخصية والإبلاغ عن الحالات المرضية وعمل برامج تعزيز الوقاية الصحية.",
+          "التفاعل مع الأنشطة الثقافية في المجتمع مثل الاحتفالات والمهرجانات واحترام التنوع الثقافي وتبادل الخبرات والآراء والاعتزاز بالقيم."
+        ],
+        records: ["سجل العمل التطوعي", "سجل المخالفات السلوكية", "سجل التكريم والتحفيز", "سجل الانضباط"]
+      }
+    ]
+  },
+  4: {
+    name: "البيئة المدرسية",
+    criteria: [
+      {
+        id: "4-1",
+        name: "المبنى المدرسي",
+        initiative: "تنظيم المبنى المدرسي وتلبية الاحتياجات التعليمية.",
+        activities: [
+          "تنظيم المبنى المدرسي بما يتوافق مع أعداد المتعلمين والخصائص العمرية.",
+          "توفير الاحتياجات لجميع المتعلمين ومنهم ذوي الإعاقة.",
+          "توفير المعامل والوسائل والأدوات وأماكن الأنشطة.",
+          "متابعة سلامة المقصف المدرسي والساحات."
+        ],
+        records: ["متابعة البيئة المدرسية ومدى توفر مرافق الخدمات المساندة"]
+      },
+      {
+        id: "4-2",
+        name: "الأمن والسلامة",
+        initiative: "توفير جميع أدوات الأمن والسلامة في المدرسة كاملة، والعمل المستدام لصيانتها.",
+        activities: [
+          "عمل لجنة الأمن والسلامة.",
+          "توفير شهادة الأمن والسلامة من الجهة المختصة.",
+          "عمل برامج وأنشطة ونشرات تعزز الأمن والسلامة.",
+          "توافر الخطط العلاجية والطوارئ والإخلاء.",
+          "توفير خطة لأعمال الصيانة وتوافر المعلومات حول الاحتياجات للصيانة."
+        ],
+        records: ["سجل لجنة الأمن والسلامة", "سجل الصيانة", "سجل الوجبة الصحية"]
+      }
+    ]
+  }
+};
+
+const LEVELS = ["التهيئة", "الانطلاق", "التقدم", "التميز"];
+
+const STORAGE_KEY = "tameezImprovementPlan_v2";
+
+/* أيقونة SVG كـ HTML */
+function ico(name) {
+  return `<svg class="icon"><use href="#i-${name}"/></svg>`;
+}
+
+/* ============================================================
+   حالة التطبيق
+   ============================================================ */
+let state = {
+  header: { eduDept: "", schoolName: "", academicYear: "", planAuthor: "", logo: "" },
+  criteria: {}
+};
+
+function initCriterionState(critId) {
+  if (!state.criteria[critId]) {
+    const def = findCriterion(critId);
+    state.criteria[critId] = {
+      indicator: "",
+      currentLevel: "",
+      targetLevel: "",
+      dateFrom: "",
+      dateTo: "",
+      initiative: def ? def.initiative : "",
+      activities: def ? [...def.activities] : [""],
+      responsible: "",
+      evidences: def ? def.records.join("، ") : "",
+      kpi: "",
+      status: "لم يبدأ",
+      notes: "",
+      approved: false
+    };
+  }
+}
+
+function findCriterion(critId) {
+  for (const d of Object.values(DOMAINS)) {
+    for (const c of d.criteria) {
+      if (c.id === critId) return c;
+    }
+  }
+  return null;
+}
+
+/* ============================================================
+   تبديل التبويبات
+   ============================================================ */
+function switchTab(tabId) {
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  const panel = document.getElementById("tab-" + tabId);
+  if (panel) panel.classList.add("active");
+  const btn = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  if (btn) btn.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+/* ============================================================
+   عرض خطوات الشرح
+   ============================================================ */
+function renderSteps() {
+  const grid = document.getElementById("stepsGrid");
+  grid.innerHTML = STEPS.map((s, i) => `
+    <div class="step-card">
+      <div class="step-number">${i + 1}</div>
+      <div class="step-text">${s}</div>
+    </div>
+  `).join("");
+}
+
+/* ============================================================
+   عرض المعايير لكل مجال
+   ============================================================ */
+function renderCriteria(domainId) {
+  const container = document.getElementById(`domain${domainId}-criteria`);
+  const domain = DOMAINS[domainId];
+
+  container.innerHTML = domain.criteria.map((c, idx) => {
+    initCriterionState(c.id);
+    const st = state.criteria[c.id];
+
+    return `
+      <div class="criterion-card ${st.approved ? 'approved' : ''}" id="card-${c.id}" data-crit="${c.id}">
+        <div class="criterion-header">
+          <div class="crit-title">
+            <span class="crit-title-num">معيار ${idx + 1}</span>
+            <span>${c.name}</span>
+          </div>
+          <span class="criterion-status-badge ${st.approved ? 'done' : ''}" id="badge-${c.id}">
+            ${st.approved ? ico('check') + ' معتمد' : st.status}
+          </span>
+        </div>
+        <div class="criterion-body">
+          <table class="plan-table">
+            <tr>
+              <th>المجال</th>
+              <td><input type="text" value="${domain.name}" readonly style="background:var(--gray-50)"></td>
+            </tr>
+            <tr>
+              <th>المعيار</th>
+              <td><input type="text" value="${c.name}" readonly style="background:var(--gray-50)"></td>
+            </tr>
+            <tr>
+              <th>المؤشر / الفقرة</th>
+              <td><textarea data-field="indicator" data-crit="${c.id}" placeholder="أدخل المؤشر أو الفقرة المرتبطة بهذا المعيار من تقرير المدرسة...">${escapeAttr(st.indicator)}</textarea></td>
+            </tr>
+            <tr>
+              <th>المستوى الحالي ⇦ المستهدف</th>
+              <td>
+                <div class="date-row">
+                  <div>
+                    <label>المستوى الحالي</label>
+                    <select data-field="currentLevel" data-crit="${c.id}">
+                      <option value="">-- اختر --</option>
+                      ${LEVELS.map(l => `<option value="${l}" ${st.currentLevel===l?'selected':''}>${l}</option>`).join("")}
+                    </select>
+                  </div>
+                  <div>
+                    <label>المستوى المستهدف</label>
+                    <select data-field="targetLevel" data-crit="${c.id}">
+                      <option value="">-- اختر --</option>
+                      ${LEVELS.map(l => `<option value="${l}" ${st.targetLevel===l?'selected':''}>${l}</option>`).join("")}
+                    </select>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>تاريخ التنفيذ (ميلادي)</th>
+              <td>
+                <div class="date-row">
+                  <div>
+                    <label>من</label>
+                    <input type="date" data-field="dateFrom" data-crit="${c.id}" value="${st.dateFrom}">
+                  </div>
+                  <div>
+                    <label>إلى</label>
+                    <input type="date" data-field="dateTo" data-crit="${c.id}" value="${st.dateTo}">
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th>المبادرة</th>
+              <td><textarea data-field="initiative" data-crit="${c.id}" placeholder="إطار عام مستمد من مؤشرات الأدلة الاسترشادية لهذا المعيار">${escapeAttr(st.initiative)}</textarea></td>
+            </tr>
+            <tr>
+              <th>الأنشطة وأساليب التنفيذ</th>
+              <td>
+                <ul class="activities-list" id="activities-${c.id}">
+                  ${renderActivities(c.id, st.activities)}
+                </ul>
+                <button class="btn btn-success btn-sm no-print" onclick="addActivity('${c.id}')" type="button" style="margin-top:8px">
+                  ${ico('plus')} إضافة نشاط
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <th>المسؤول عن التنفيذ</th>
+              <td><input type="text" data-field="responsible" data-crit="${c.id}" value="${escapeAttr(st.responsible)}" placeholder="اسم المسؤول أو اللجنة"></td>
+            </tr>
+            <tr>
+              <th>الشواهد المطلوبة</th>
+              <td><textarea data-field="evidences" data-crit="${c.id}" placeholder="السجلات والوثائق الداعمة">${escapeAttr(st.evidences)}</textarea></td>
+            </tr>
+            <tr>
+              <th>مؤشر الإنجاز</th>
+              <td><textarea data-field="kpi" data-crit="${c.id}" placeholder="نسبة أو رقم أو معيار قابل للقياس">${escapeAttr(st.kpi)}</textarea></td>
+            </tr>
+            <tr>
+              <th>حالة التنفيذ</th>
+              <td>
+                <select data-field="status" data-crit="${c.id}">
+                  <option value="لم يبدأ" ${st.status==='لم يبدأ'?'selected':''}>لم يبدأ</option>
+                  <option value="جارٍ التنفيذ" ${st.status==='جارٍ التنفيذ'?'selected':''}>جارٍ التنفيذ</option>
+                  <option value="مكتمل" ${st.status==='مكتمل'?'selected':''}>مكتمل</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <th>ملاحظات</th>
+              <td><textarea data-field="notes" data-crit="${c.id}" placeholder="أي ملاحظات إضافية...">${escapeAttr(st.notes)}</textarea></td>
+            </tr>
+          </table>
+
+          <div class="criterion-actions no-print">
+            <button class="btn btn-success btn-sm" onclick="saveCriterion('${c.id}')">${ico('save')} حفظ المعيار</button>
+            <button class="btn btn-gold btn-sm" onclick="approveCriterion('${c.id}')">${ico('check-circle')} اعتماد المعيار</button>
+            <button class="btn btn-primary btn-sm" onclick="printCriterion('${c.id}')">${ico('printer')} طباعة المعيار</button>
+            <button class="btn btn-outline btn-sm" onclick="copyInitiative('${c.id}')">${ico('copy')} نسخ المبادرة</button>
+            <button class="btn btn-outline btn-sm" onclick="printDomain(${domainId})">${ico('printer')} طباعة المجال</button>
+            <button class="btn btn-danger btn-sm" onclick="resetCriterion('${c.id}')">${ico('refresh')} تفريغ المعيار</button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  container.querySelectorAll("[data-field]").forEach(el => {
+    el.addEventListener("input", handleFieldChange);
+    el.addEventListener("change", handleFieldChange);
+  });
+}
+
+function renderActivities(critId, activities) {
+  return activities.map((a, i) => `
+    <li class="activity-item">
+      <span class="activity-num">${i + 1}</span>
+      <textarea data-activity-crit="${critId}" data-activity-idx="${i}" placeholder="نشاط أو أسلوب تنفيذ">${escapeAttr(a)}</textarea>
+      <button class="remove-activity-btn no-print" onclick="removeActivity('${critId}', ${i})" type="button" title="حذف">
+        ${ico('x')}
+      </button>
+    </li>
+  `).join("");
+}
+
+function escapeAttr(str) {
+  if (!str) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/* ============================================================
+   التعامل مع التغييرات
+   ============================================================ */
+function handleFieldChange(e) {
+  const el = e.target;
+  const critId = el.dataset.crit;
+  const field = el.dataset.field;
+  if (critId && field) {
+    initCriterionState(critId);
+    state.criteria[critId][field] = el.value;
+    updateStatusBadge(critId);
+    autoSave();
+    updateDashboard();
+  }
+}
+
+document.addEventListener("input", function(e) {
+  const t = e.target;
+  if (t.dataset && t.dataset.activityCrit !== undefined) {
+    const critId = t.dataset.activityCrit;
+    const idx = parseInt(t.dataset.activityIdx);
+    initCriterionState(critId);
+    state.criteria[critId].activities[idx] = t.value;
+    autoSave();
+    updateDashboard();
+  }
+});
+
+function addActivity(critId) {
+  initCriterionState(critId);
+  state.criteria[critId].activities.push("");
+  document.getElementById(`activities-${critId}`).innerHTML = renderActivities(critId, state.criteria[critId].activities);
+  autoSave();
+  updateDashboard();
+}
+
+function removeActivity(critId, idx) {
+  if (!confirm("هل تريد حذف هذا النشاط؟")) return;
+  state.criteria[critId].activities.splice(idx, 1);
+  if (state.criteria[critId].activities.length === 0) {
+    state.criteria[critId].activities = [""];
+  }
+  document.getElementById(`activities-${critId}`).innerHTML = renderActivities(critId, state.criteria[critId].activities);
+  autoSave();
+  updateDashboard();
+}
+
+function updateStatusBadge(critId) {
+  const badge = document.getElementById("badge-" + critId);
+  const card = document.getElementById("card-" + critId);
+  const st = state.criteria[critId];
+  if (!badge || !st) return;
+  if (st.approved) {
+    badge.innerHTML = ico('check') + ' معتمد';
+    badge.classList.add("done");
+    card.classList.add("approved");
+  } else {
+    badge.textContent = st.status;
+    badge.classList.remove("done");
+    card.classList.remove("approved");
+  }
+}
+
+/* ============================================================
+   حفظ معيار / اعتماد / تفريغ
+   ============================================================ */
+function saveCriterion(critId) {
+  saveAll(false);
+  toast(`تم حفظ المعيار "${findCriterion(critId).name}" بنجاح`, "success");
+}
+
+function approveCriterion(critId) {
+  const st = state.criteria[critId];
+  const required = ["indicator", "currentLevel", "targetLevel", "dateFrom", "dateTo", "initiative", "responsible", "kpi"];
+  const missing = required.filter(f => !st[f] || !st[f].trim());
+  if (missing.length > 0) {
+    toast("يجب تعبئة جميع الحقول الأساسية قبل الاعتماد", "error");
+    return;
+  }
+  st.approved = true;
+  st.status = "مكتمل";
+  updateStatusBadge(critId);
+  saveAll(false);
+  updateDashboard();
+  toast("تم اعتماد المعيار بنجاح", "success");
+}
+
+function resetCriterion(critId) {
+  if (!confirm("هل تريد تفريغ جميع بيانات هذا المعيار؟")) return;
+  delete state.criteria[critId];
+  initCriterionState(critId);
+  const domainId = parseInt(critId.split("-")[0]);
+  renderCriteria(domainId);
+  autoSave();
+  updateDashboard();
+  toast("تم تفريغ المعيار", "info");
+}
+
+function copyInitiative(critId) {
+  const st = state.criteria[critId];
+  if (st && st.initiative) {
+    navigator.clipboard.writeText(st.initiative).then(() => {
+      toast("تم نسخ المبادرة إلى الحافظة", "success");
+    }).catch(() => {
+      toast("تعذّر النسخ من المتصفح", "error");
+    });
+  }
+}
+
+/* ============================================================
+   الحفظ التلقائي / المحلي
+   ============================================================ */
+let saveTimer;
+function autoSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveAll(false), 600);
+}
+
+function saveAll(showToast) {
+  state.header.eduDept = document.getElementById("eduDept").value;
+  state.header.schoolName = document.getElementById("schoolName").value;
+  state.header.academicYear = document.getElementById("academicYear").value;
+  state.header.planAuthor = document.getElementById("planAuthor").value;
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    if (showToast) toast("تم حفظ جميع البيانات محليًا", "success");
+  } catch(e) {
+    toast("تعذر الحفظ: " + e.message, "error");
+  }
+}
+
+function loadAll() {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (data) {
+      state = JSON.parse(data);
+      if (!state.criteria) state.criteria = {};
+      if (!state.header) state.header = {};
+      document.getElementById("eduDept").value = state.header.eduDept || "";
+      document.getElementById("schoolName").value = state.header.schoolName || "";
+      document.getElementById("academicYear").value = state.header.academicYear || "";
+      document.getElementById("planAuthor").value = state.header.planAuthor || "";
+      if (state.header.logo) {
+        document.getElementById("logoPlaceholder").style.display = "none";
+        const img = document.createElement("img");
+        img.src = state.header.logo;
+        document.getElementById("logoBox").appendChild(img);
+      }
+    }
+  } catch(e) {
+    console.warn("تعذر تحميل البيانات:", e);
+  }
+}
+
+function clearAll() {
+  if (!confirm("هل أنت متأكد من حذف جميع البيانات نهائيًا؟ هذا الإجراء لا يمكن التراجع عنه.")) return;
+  if (!confirm("تأكيد نهائي: سيتم حذف الترويسة وكل المعايير المعبأة.")) return;
+  localStorage.removeItem(STORAGE_KEY);
+  state = { header: { eduDept:"", schoolName:"", academicYear:"", planAuthor:"", logo:"" }, criteria: {} };
+  location.reload();
+}
+
+/* ============================================================
+   التصدير / الاستيراد JSON
+   ============================================================ */
+function exportJSON() {
+  saveAll(false);
+  const data = JSON.stringify(state, null, 2);
+  const blob = new Blob([data], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `خطة_التحسين_${state.header.schoolName || "المدرسة"}_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("تم تصدير ملف JSON", "success");
+}
+
+function importJSONBtn() {
+  document.getElementById("importFile").click();
+}
+
+document.getElementById("importFile").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!data.criteria || !data.header) throw new Error("ملف غير صالح");
+      if (!confirm("سيتم استبدال جميع البيانات الحالية بمحتوى الملف. هل تريد المتابعة؟")) return;
+      state = data;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      location.reload();
+    } catch(err) {
+      toast("ملف JSON غير صالح: " + err.message, "error");
+    }
+  };
+  reader.readAsText(file);
+});
+
+/* ============================================================
+   لوحة المتابعة - الإحصائيات
+   ============================================================ */
+function updateDashboard() {
+  let approved = 0, notStarted = 0, inProgress = 0, completed = 0;
+  let totalInitiatives = 0, totalActivities = 0;
+  let domainsCompleted = new Set();
+  let totalCriteria = 0;
+
+  Object.values(DOMAINS).forEach((d, di) => {
+    let domainAllApproved = true;
+    d.criteria.forEach(c => {
+      totalCriteria++;
+      const st = state.criteria[c.id];
+      if (!st) { notStarted++; domainAllApproved = false; return; }
+      if (st.approved) approved++;
+      if (st.status === "لم يبدأ" && !hasContent(st)) notStarted++;
+      else if (st.status === "جارٍ التنفيذ" || (hasContent(st) && !st.approved)) inProgress++;
+      if (st.status === "مكتمل" || st.approved) completed++;
+      if (st.initiative && st.initiative.trim()) totalInitiatives++;
+      st.activities.forEach(a => { if (a && a.trim()) totalActivities++; });
+      if (!st.approved) domainAllApproved = false;
+    });
+    if (domainAllApproved && d.criteria.length > 0) domainsCompleted.add(di + 1);
+  });
+
+  document.getElementById("statDomains").textContent = domainsCompleted.size;
+  document.getElementById("statApproved").textContent = approved;
+  document.getElementById("statInitiatives").textContent = totalInitiatives;
+  document.getElementById("statActivities").textContent = totalActivities;
+  document.getElementById("statNotStarted").textContent = notStarted;
+  document.getElementById("statInProgress").textContent = inProgress;
+  document.getElementById("statCompleted").textContent = completed;
+
+  const pct = totalCriteria > 0 ? Math.round((approved / totalCriteria) * 100) : 0;
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressPercent").textContent = pct + "%";
+
+  const alert = document.getElementById("completionAlert");
+  if (pct === 100) alert.classList.add("show");
+  else alert.classList.remove("show");
+}
+
+function hasContent(st) {
+  if (!st) return false;
+  return (st.indicator && st.indicator.trim()) ||
+         st.currentLevel || st.targetLevel || st.dateFrom || st.dateTo ||
+         (st.activities && st.activities.some(a => a && a.trim()));
+}
+
+/* ============================================================
+   المساعد الذكي
+   ============================================================ */
+function updateAssistCriteria() {
+  const dId = document.getElementById("assistDomain").value;
+  const sel = document.getElementById("assistCriterion");
+  sel.innerHTML = '<option value="">-- اختر المعيار --</option>';
+  if (!dId) return;
+  DOMAINS[dId].criteria.forEach(c => {
+    const opt = document.createElement("option");
+    opt.value = c.id;
+    opt.textContent = c.name;
+    sel.appendChild(opt);
+  });
+}
+
+function generateAssistance() {
+  const dId = document.getElementById("assistDomain").value;
+  const cId = document.getElementById("assistCriterion").value;
+  const cur = document.getElementById("assistCurrent").value;
+  const tgt = document.getElementById("assistTarget").value;
+  const result = document.getElementById("assistResult");
+
+  if (!dId || !cId) {
+    toast("الرجاء اختيار المجال والمعيار", "error");
+    return;
+  }
+
+  const c = findCriterion(cId);
+  const dName = DOMAINS[dId].name;
+
+  const gap = LEVELS.indexOf(tgt) - LEVELS.indexOf(cur);
+  let priority = "متوسطة";
+  let recommendation = "تركيز متدرج على الأنشطة الأساسية مع متابعة دورية.";
+  if (gap >= 2) {
+    priority = "عالية جدًا";
+    recommendation = "خطة مكثفة مع مؤشرات قياس شهرية، وتعيين فريق متفرغ للمتابعة، وتفعيل جميع الأنشطة الإثرائية والعلاجية.";
+  } else if (gap === 1) {
+    priority = "عالية";
+    recommendation = "تنفيذ الأنشطة المقترحة بانتظام مع تقييم فصلي وتوثيق الشواهد أولًا بأول.";
+  } else if (gap === 0) {
+    priority = "للحفاظ على المستوى";
+    recommendation = "تعزيز الممارسات القائمة وتوثيقها وإضافة لمسات إبداعية للحفاظ على التميز.";
+  }
+
+  const kpis = [
+    `الانتقال من مستوى "${cur}" إلى مستوى "${tgt}" خلال عام دراسي كامل.`,
+    `تنفيذ ${c.activities.length} نشاطًا رئيسيًا بنسبة لا تقل عن 90%.`,
+    `توثيق ${c.records.length} سجل/شاهد من السجلات المعتمدة للمعيار.`,
+    `رضا منسوبي المدرسة عن المعيار بنسبة 80% فأعلى وفق استبانة.`
+  ];
+
+  result.innerHTML = `
+    <h4>${ico('sparkle')} مقترحات لمعيار: ${c.name} — مجال ${dName}</h4>
+
+    <div class="suggestion-block">
+      <strong>1) صياغة المبادرة المقترحة:</strong>
+      <p>${c.initiative}</p>
+    </div>
+
+    <div class="suggestion-block">
+      <strong>2) الأنشطة وأساليب التنفيذ:</strong>
+      <ul>${c.activities.map(a => `<li>${a}</li>`).join("")}</ul>
+    </div>
+
+    <div class="suggestion-block">
+      <strong>3) الشواهد المقترحة:</strong>
+      <p>${c.records.join(" — ")}</p>
+    </div>
+
+    <div class="suggestion-block">
+      <strong>4) مؤشرات الإنجاز المقترحة:</strong>
+      <ul>${kpis.map(k => `<li>${k}</li>`).join("")}</ul>
+    </div>
+
+    <div class="suggestion-block">
+      <strong>5) توصيات للتحسين:</strong>
+      <p>أولوية التنفيذ: <strong style="color:var(--gold-dark)">${priority}</strong></p>
+      <p>${recommendation}</p>
+    </div>
+
+    <div style="margin-top: 14px; display:flex; gap: 8px; flex-wrap: wrap;" class="no-print">
+      <button class="btn btn-success btn-sm" onclick="applyAssistance('${cId}')">
+        ${ico('download')} تطبيق المقترحات على المعيار
+      </button>
+      <button class="btn btn-outline btn-sm" onclick="switchTab('domain${dId}'); setTimeout(() => document.getElementById('card-${cId}').scrollIntoView({behavior:'smooth'}), 200)">
+        ${ico('arrow-back')} الانتقال إلى المعيار
+      </button>
+    </div>
+  `;
+  result.classList.add("show");
+  result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function applyAssistance(critId) {
+  const c = findCriterion(critId);
+  initCriterionState(critId);
+  state.criteria[critId].initiative = c.initiative;
+  state.criteria[critId].activities = [...c.activities];
+  state.criteria[critId].evidences = c.records.join("، ");
+  const dId = critId.split("-")[0];
+  renderCriteria(parseInt(dId));
+  autoSave();
+  updateDashboard();
+  toast("تم تطبيق المقترحات على المعيار", "success");
+  setTimeout(() => {
+    switchTab("domain" + dId);
+    setTimeout(() => {
+      const el = document.getElementById("card-" + critId);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }, 200);
+  }, 400);
+}
+
+/* ============================================================
+   السجلات والشواهد
+   ============================================================ */
+function renderRecords() {
+  const cont = document.getElementById("recordsSection");
+  let html = "";
+  Object.entries(DOMAINS).forEach(([dId, d]) => {
+    d.criteria.forEach(c => {
+      html += `
+        <div class="records-card">
+          <h4>
+            <span>${c.name}</span>
+            <span class="count-badge">${c.records.length}</span>
+          </h4>
+          <div class="domain-label">${d.name}</div>
+          <ul class="records-list">
+            ${c.records.map(r => `<li>${r}</li>`).join("")}
+          </ul>
+        </div>
+      `;
+    });
+  });
+  cont.innerHTML = html;
+}
+
+/* ============================================================
+   الطباعة - محسّنة للحدّة العالية ومنع التقسيم
+   ============================================================ */
+function printReport(scope) {
+  document.body.classList.add("print-all");
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.add("active"));
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.body.classList.remove("print-all");
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      const activeBtn = document.querySelector(".tab-btn.active");
+      if (activeBtn) {
+        const t = activeBtn.dataset.tab;
+        document.getElementById("tab-" + t).classList.add("active");
+      } else {
+        document.getElementById("tab-guide").classList.add("active");
+      }
+    }, 500);
+  }, 100);
+}
+
+function printDomain(domainId) {
+  const allPanels = document.querySelectorAll(".tab-panel");
+  allPanels.forEach(p => p.classList.remove("active"));
+  document.getElementById("tab-domain" + domainId).classList.add("active");
+  setTimeout(() => window.print(), 100);
+}
+
+function printCriterion(critId) {
+  const card = document.getElementById("card-" + critId);
+  if (!card) return;
+  document.body.classList.add("print-criterion-only", "print-single-page");
+  document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("print-target", "active"));
+  card.closest(".tab-panel").classList.add("print-target", "active");
+  document.querySelectorAll(".criterion-card").forEach(c => c.classList.remove("print-target"));
+  card.classList.add("print-target");
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.body.classList.remove("print-criterion-only", "print-single-page");
+      document.querySelectorAll(".criterion-card").forEach(c => c.classList.remove("print-target"));
+    }, 500);
+  }, 100);
+}
+
+/* ============================================================
+   شعار المدرسة
+   ============================================================ */
+document.getElementById("logoBox").addEventListener("click", () => {
+  document.getElementById("logoInput").click();
+});
+
+document.getElementById("logoInput").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) {
+    toast("حجم الصورة كبير. اختر صورة أقل من 2 ميجا.", "error");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    state.header.logo = ev.target.result;
+    const box = document.getElementById("logoBox");
+    box.querySelector("img")?.remove();
+    document.getElementById("logoPlaceholder").style.display = "none";
+    const img = document.createElement("img");
+    img.src = ev.target.result;
+    box.appendChild(img);
+    saveAll(true);
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ============================================================
+   Toast Messages
+   ============================================================ */
+function toast(msg, type = "info") {
+  const cont = document.getElementById("toastContainer");
+  const t = document.createElement("div");
+  t.className = "toast " + type;
+  const iconName = type === "success" ? "check-circle" : type === "error" ? "alert" : "info";
+  t.innerHTML = `${ico(iconName)}<span>${msg}</span>`;
+  cont.appendChild(t);
+  setTimeout(() => t.remove(), 3200);
+}
+
+/* ============================================================
+   ربط أحداث الترويسة
+   ============================================================ */
+["eduDept", "schoolName", "academicYear", "planAuthor"].forEach(id => {
+  document.getElementById(id).addEventListener("input", () => {
+    state.header[id] = document.getElementById(id).value;
+    autoSave();
+  });
+});
+
+/* ربط أحداث التبويبات */
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+});
+
+/* ============================================================
+   التهيئة الأولية
+   ============================================================ */
+function init() {
+  loadAll();
+  renderSteps();
+  renderCriteria(1);
+  renderCriteria(2);
+  renderCriteria(3);
+  renderCriteria(4);
+  renderRecords();
+  updateDashboard();
+  Object.keys(state.criteria).forEach(cid => updateStatusBadge(cid));
+}
+
+init();
+</script>
+
+</body>
+</html>

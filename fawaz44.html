@@ -1,44 +1,4 @@
 
-
-مشاركة
-✅ تم إصلاح الخلل وتحديث الملف
-ما تم تصحيحه:
-البند
-قبل التصحيح
-بعد التصحيح
-مؤشر "تنمي المدرسة مهارات التفكير العليا"
-66.0% — ضعف ❌
-49.50% — حرجة 🚨
-تصنيف المؤشر
-نقطة ضعف
-نقطة حرجة
-مستوى الأداء
-الانطلاق
-التهيئة
-عدد النقاط الحرجة
-0
-1 نقطة حرجة
-عدد نقاط الضعف
-15
-14 نقطة ضعف
-عدد نقاط القوة
-32
-33 نقطة قوة
-قاعدة التصنيف المطبّقة بدقة:
-✅ قوة: 75% فأكثر (بما يشمل 75.1، 75.5، 99.25...)
-⚠️ ضعف: من 50% إلى أقل من 75% (بما يشمل 50.0، 74.9...)
-🚨 حرجة: أقل من 50% (بما يشمل 49.90، 49.80، 49.70، 49.60، 49.50، 49.40، 49.30...)
-منصة_التقويم_المدرسي_v2.html
-رمز · 141.15 KB
-عرض جميع الملفات في هذه المهمة
-تم إكمال المهمة
-كيف كانت هذه النتيجة؟
-اقتراحات للمتابعة
-
-
-
-
-منصة_التقويم_المدرسي_v2.html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -89,6 +49,7 @@ body{font-family:'Cairo',sans-serif;background:#f0f4f8;direction:rtl;color:#1e29
 .tbtn{display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;border:none;cursor:pointer;font-family:'Cairo';font-size:12px;font-weight:600;transition:all .2s}
 .tbtn-primary{background:#0c2d57;color:#fff}.tbtn-primary:hover{background:#0f3a6e}
 .tbtn-secondary{background:#f1f5f9;color:#475569}.tbtn-secondary:hover{background:#e2e8f0}
+.tbtn-danger{background:#fff;color:#ef4444;border:1.5px solid #fca5a5}.tbtn-danger:hover{background:#fef2f2;border-color:#ef4444}
 .tbtn-success{background:#10b981;color:#fff}.tbtn-success:hover{background:#059669}
 .content{padding:20px;flex:1}
 .page{display:none}
@@ -247,7 +208,7 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
     <button class="toggle-btn" onclick="toggleSidebar()" title="طي القائمة">⇄</button>
   </div>
   <div class="school-box">
-    <p class="sname" id="sidebarSchoolName">المتوسطة الثلاثون بالمدينة</p>
+    <p class="sname" id="sidebarSchoolName">اكتب اسم المدرسة</p>
     <div class="sbadges">
       <span class="slevel" id="sidebarLevel">التقدم</span>
       <span class="spct" id="sidebarPct">79.0%</span>
@@ -279,6 +240,7 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
     <div class="topbar-btns">
       <button class="tbtn tbtn-primary" onclick="openImport()">📄 استيراد PDF</button>
       <button class="tbtn tbtn-success" onclick="openEdit()">✏️ تعديل المعلومات</button>
+      <button class="tbtn tbtn-danger" onclick="openClearConfirm()" title="مسح وتفريغ بيانات التقرير الحالي">🗑️ مسح البيانات</button>
       <button class="tbtn tbtn-secondary" onclick="window.print()">🖨️ طباعة</button>
     </div>
   </div>
@@ -293,8 +255,8 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
               <span style="font-size:20px">🏫</span>
               <span style="color:rgba(255,255,255,.6);font-size:11px;font-family:'Cairo'">هيئة تقويم التعليم والتدريب</span>
             </div>
-            <h1 id="heroSchoolName">المتوسطة الثلاثون بالمدينة</h1>
-            <p id="heroSubtitle">الإدارة العامة للتعليم بمنطقة المدينة المنورة • تقرير التقويم الخارجي 2025م</p>
+            <h1 id="heroSchoolName">اكتب اسم المدرسة</h1>
+            <p id="heroSubtitle">اكتب الإدارة التعليمية • تقرير التقويم الخارجي</p>
             <div class="hero-chips" id="heroChips">
               <div class="chip"><span class="cl">رقم الوزارة:</span><span class="cv" id="heroMinNum">S-41876</span></div>
               <div class="chip"><span class="cl">المرحلة:</span><span class="cv" id="heroStage">متوسط</span></div>
@@ -525,11 +487,32 @@ tbody td{padding:9px 12px;font-size:11.5px;font-family:'Cairo';color:#374151}
       <div style="display:flex;gap:8px">
         <button class="tbtn tbtn-secondary" onclick="closeImport()">إلغاء</button>
         <button class="tbtn tbtn-primary" id="importBtn" onclick="processImport()" disabled>🔍 تحليل وتحميل</button>
+        <button class="tbtn tbtn-success" id="applyBtn" onclick="applyImport()" style="display:none">✅ تطبيق ونشر على المنصة</button>
       </div>
     </div>
   </div>
 </div>
 
+<!-- نافذة تأكيد المسح -->
+<div class="modal-overlay" id="clearOverlay" style="display:none">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header" style="background:linear-gradient(135deg,#ef4444,#dc2626)">
+      <h3 style="color:#fff">🗑️ مسح وتفريغ البيانات</h3>
+      <button class="modal-close" onclick="closeClearConfirm()" style="color:#fff">✕</button>
+    </div>
+    <div class="modal-body" style="padding:24px">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:48px;margin-bottom:12px">⚠️</div>
+        <p style="font-family:Cairo;font-size:15px;color:#374151;line-height:1.8">سيتم <strong>مسح جميع بيانات التقرير الحالي</strong> وإعادة المنصة إلى حالتها الفارغة.</p>
+        <p style="font-family:Cairo;font-size:13px;color:#6b7280;margin-top:8px">هذا الإجراء لا يمكن التراجع عنه. هل أنت متأكد؟</p>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="tbtn tbtn-secondary" onclick="closeClearConfirm()" style="min-width:100px">إلغاء</button>
+        <button class="tbtn" onclick="confirmClear()" style="min-width:140px;background:#ef4444;color:#fff">🗑️ نعم، امسح البيانات</button>
+      </div>
+    </div>
+  </div>
+</div>
 <!-- نافذة تعديل المعلومات -->
 <div class="modal-overlay" id="editOverlay" style="display:none">
   <div class="modal">
@@ -1174,6 +1157,25 @@ function saveEdit() {
 
 // ===== استيراد PDF =====
 function openImport() { document.getElementById('importOverlay').style.display='flex'; }
+function openClearConfirm() { document.getElementById('clearOverlay').style.display='flex'; }
+function closeClearConfirm() { document.getElementById('clearOverlay').style.display='none'; }
+function confirmClear() {
+  // إعادة ضبط البيانات إلى حالة فارغة تماماً
+  APP = {
+    school_info: { name:'', ministry_number:'', education_admin:'', stage:'', gender:'', students_count:0, teachers_count:0, admin_count:0, evaluation_date:'', overall_percentage:0, overall_level:'', year:'' },
+    domains: {},
+    indicators: [],
+    improvement_plans: []
+  };
+  pendingImport = null;
+  importedFile = null;
+  // إعادة ضبط أزرار الاستيراد
+  document.getElementById('applyBtn').style.display = 'none';
+  document.getElementById('importBtn').style.display = 'inline-flex';
+  renderAll();
+  closeClearConfirm();
+  showToast('🗑️ تم مسح البيانات — المنصة جاهزة لتقرير جديد');
+}
 function closeImport() { document.getElementById('importOverlay').style.display='none'; importedFile=null; document.getElementById('importFileName').textContent='لم يتم اختيار ملف'; document.getElementById('importBtn').disabled=true; document.getElementById('importProgress').style.display='none'; document.getElementById('importLog').innerHTML=''; }
 function handleDrop(e) { e.preventDefault(); document.getElementById('dropZone').classList.remove('drag-over'); const f=e.dataTransfer.files[0]; if(f&&f.type==='application/pdf') handleFile(f); else showToast('⚠️ يرجى اختيار ملف PDF فقط'); }
 function handleFile(f) {
@@ -1259,11 +1261,13 @@ async function processImport() {
     setProgress(100, 'اكتمل التحليل!');
 
     // تحديث البيانات
-    APP = parsed;
-    APP.indicators.forEach(i => { i.cls = classify(i.pct); });
+    pendingImport = parsed;
+    pendingImport.indicators.forEach(i => { i.cls = classify(i.pct); });
     renderAll();
-    closeImport();
-    showToast('✅ تم استيراد التقرير بنجاح - ' + parsed.indicators.length + ' مؤشر');
+    // إظهار زر التطبيق والنشر
+    document.getElementById('applyBtn').style.display = 'inline-flex';
+    document.getElementById('importBtn').style.display = 'none';
+    showToast('✅ تم تحليل التقرير - اضغط "تطبيق ونشر" لتحديث المنصة');
 
   } catch(err) {
     addLog('❌ خطأ: ' + err.message, 'err');
@@ -1274,11 +1278,25 @@ async function processImport() {
 }
 
 // ===== محلل نص PDF =====
+// ===== تطبيق ونشر الملف المستورد =====
+let pendingImport = null;
+function applyImport() {
+  if (!pendingImport) return;
+  APP = pendingImport;
+  APP.indicators.forEach(i => { i.cls = classify(i.pct); });
+  renderAll();
+  closeImport();
+  document.getElementById('applyBtn').style.display = 'none';
+  document.getElementById('importBtn').style.display = 'inline-flex';
+  pendingImport = null;
+  showToast('🎉 تم تطبيق ونشر التقرير على المنصة بنجاح!');
+}
 function parsePDFText(text) {
   const result = {
     school_info: { name:'', ministry_number:'', education_admin:'', stage:'', gender:'', students_count:0, teachers_count:0, admin_count:0, evaluation_date:'', overall_percentage:0, overall_level:'', year:'' },
     domains: {},
-    indicators: []
+    indicators: [],
+    _parsed_from_pdf: true
   };
 
   const lines = text.split(/[\n\r]+/).map(l=>l.trim()).filter(l=>l.length>2);
@@ -1310,31 +1328,111 @@ function parsePDFText(text) {
   const overallMatch = text.match(/(?:التقدير العام|النسبة الكلية|الإجمالي)[^\d]*(\d+(?:\.\d+)?)/);
   if (overallMatch) result.school_info.overall_percentage = parseFloat(overallMatch[1]);
 
-  // استخراج المؤشرات - البحث عن أنماط النسب المئوية
-  // نمط: نص المؤشر + نسبة مئوية
-  const pctPattern = /(\d+(?:\.\d+)?)\s*%/g;
+    // ===== خوارزمية الاستخراج الدقيقة =====
+  // النمط: سطر يحتوي كود المؤشر X-X-X-X مع نص المؤشر، ثم النسبة في أحد الأسطر التالية
   const domainNames = ['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'];
-  const criterionNames = ['التخطيط والقيادة التعليمية','قيادة العملية التعليمية','المجتمع المدرسي','التطوير المؤسسي','بناء خبرات التعلم','تقويم التعلم','التحصيل التعليمي','التطور الشخصي والاجتماعي','المبنى المدرسي','الأمن والسلامة'];
-
+  const criterionMap = {
+    'التخطيط والقيادة التعليمية': 'الإدارة المدرسية',
+    'قيادة العملية التعليمية': 'الإدارة المدرسية',
+    'المجتمع المدرسي': 'الإدارة المدرسية',
+    'التطوير المؤسسي': 'الإدارة المدرسية',
+    'بناء خبرات التعلم': 'التعليم والتعلم',
+    'تقويم التعلم': 'التعليم والتعلم',
+    'التحصيل التعليمي': 'نواتج التعلم',
+    'التطور الشخصي والاجتماعي': 'نواتج التعلم',
+    'المبنى المدرسي': 'البيئة المدرسية',
+    'الأمن والسلامة': 'البيئة المدرسية'
+  };
+  // تنظيف النص من رموز Unicode الاتجاهية
+  function cleanLine(l) {
+    return l.replace(/[‏‎‍‌​]/g,'').replace(/[-]/g,'').trim();
+  }
+  const codePattern = /\d-\d-\d-\d\d?/;
+  const pctOnlyPattern = /^[\s%]*?(\d+\.?\d*)[\s%]*$/;
   let currentDomain = '';
   let currentCriterion = '';
   let indNum = 0;
-
-  lines.forEach((line, li) => {
-    // تحديد المجال الحالي
-    domainNames.forEach(d => { if (line.includes(d)) currentDomain = d; });
-    criterionNames.forEach(c => { if (line.includes(c)) currentCriterion = c; });
-
-    // البحث عن المؤشرات (سطر يحتوي نسبة مئوية وليس عنواناً)
-    const pctMatch = line.match(/(\d+(?:\.\d+)?)\s*%/);
-    if (pctMatch && currentDomain && line.length > 20) {
-      const pct = parseFloat(pctMatch[1]);
-      if (pct >= 0 && pct <= 100) {
-        // تجنب تكرار المجالات والمعايير
-        const isTitle = domainNames.some(d=>line.includes(d)) || criterionNames.some(c=>line.includes(c));
-        if (!isTitle) {
-          const desc = line.replace(pctMatch[0],'').replace(/^[\s\-–—:]+/,'').replace(/[\s\-–—:]+$/,'').trim();
-          if (desc.length > 10) {
+  const seenCodes = new Set();
+  // المرور الأول: استخراج المؤشرات بالكود
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const codeM = line.match(/(\d-\d-\d-\d\d?)/);
+    // تحديث المجال والمعيار
+    const cleanL = cleanLine(line);
+    domainNames.forEach(d => { if (cleanL.includes(d)) currentDomain = d; });
+    Object.keys(criterionMap).forEach(c => { if (cleanL.includes(c)) { currentCriterion = c; currentDomain = criterionMap[c]; } });
+    if (!codeM) continue;
+    const code = codeM[1];
+    if (seenCodes.has(code)) continue; // تجنب التكرار
+    seenCodes.add(code);
+    // استخراج نص المؤشر
+    let desc = cleanLine(line).replace(code,'').replace(/[]/g,'').trim();
+    if (!desc || desc.length < 5) {
+      // النص في السطر السابق
+      if (i > 0) desc = cleanLine(lines[i-1]).replace(/[]/g,'').trim();
+    }
+    // البحث عن النسبة في الأسطر التالية (حتى 10 أسطر)
+    let pct = null;
+    for (let j = i+1; j < Math.min(i+11, lines.length); j++) {
+      const nextClean = cleanLine(lines[j]);
+      // نسبة وحيدة في السطر
+      const m1 = nextClean.match(/^%?(\d+\.?\d*)%?$/);
+      const m2 = nextClean.match(/^(\d+\.?\d*)\s*%$/);
+      const m3 = nextClean.match(/^%(\d+\.?\d*)$/);
+      const m = m1 || m2 || m3;
+      if (m) {
+        const v = parseFloat(m[1]);
+        if (v >= 0 && v <= 100) { pct = v; break; }
+      }
+      // إذا وجدنا كود آخر نتوقف
+      if (j > i+1 && codePattern.test(lines[j])) break;
+    }
+    if (pct !== null && desc && desc.length > 5) {
+      // تحديد المجال من الكود إذا لم يكن محدداً
+      let dom = currentDomain;
+      let crit = currentCriterion;
+      if (!dom) {
+        // محاولة تحديد المجال من الكود (الرقم الأخير)
+        const parts = code.split('-');
+        const lastNum = parseInt(parts[parts.length-1]);
+        if (lastNum === 1) dom = 'الإدارة المدرسية';
+        else if (lastNum === 2) dom = 'التعليم والتعلم';
+        else if (lastNum === 3) dom = 'نواتج التعلم';
+        else if (lastNum === 4) dom = 'البيئة المدرسية';
+      }
+      indNum++;
+      result.indicators.push({
+        code: code,
+        domain: dom || 'عام',
+        criterion: crit || 'عام',
+        desc: desc,
+        pct: pct,
+        cls: classify(pct),
+        level: getLevelFromPct(pct),
+        plan: null
+      });
+    }
+  }
+  // المرور الثاني: إذا استُخرج عدد قليل، جرب نمط النسبة المنفردة
+  if (result.indicators.length < 5) {
+    currentDomain = ''; currentCriterion = '';
+    for (let i = 0; i < lines.length; i++) {
+      const cleanL = cleanLine(lines[i]);
+      domainNames.forEach(d => { if (cleanL.includes(d)) currentDomain = d; });
+      Object.keys(criterionMap).forEach(c => { if (cleanL.includes(c)) { currentCriterion = c; currentDomain = criterionMap[c]; } });
+      const pctM = cleanL.match(/^%?(\d+\.?\d*)%?$/);
+      if (pctM && currentDomain) {
+        const pct = parseFloat(pctM[1]);
+        if (pct >= 0 && pct <= 100) {
+          // البحث عن نص المؤشر في الأسطر السابقة
+          let desc = '';
+          for (let k = i-1; k >= Math.max(0, i-5); k--) {
+            const prev = cleanLine(lines[k]);
+            if (prev.length > 10 && !domainNames.some(d=>prev.includes(d))) {
+              desc = prev; break;
+            }
+          }
+          if (desc) {
             indNum++;
             result.indicators.push({
               code: indNum + '-auto',
@@ -1350,27 +1448,6 @@ function parsePDFText(text) {
         }
       }
     }
-  });
-
-  // إذا لم يتم العثور على مؤشرات بالطريقة الأولى، جرب طريقة أخرى
-  if (result.indicators.length < 5) {
-    // البحث عن أي نسب مئوية في النص مع السياق
-    const allPcts = [...text.matchAll(/(تضع|تلتزم|تنشر|توفر|تدعم|تنمي|تفعل|يحقق|يظهر|يشارك|يلتزم|تتوفر|تعمل|تنفذ|تقوّم|تحلل|تقدم)[^%]{5,80}(\d+(?:\.\d+)?)\s*%/g)];
-    allPcts.forEach((m, mi) => {
-      const pct = parseFloat(m[2]);
-      if (pct >= 0 && pct <= 100) {
-        result.indicators.push({
-          code: (mi+1) + '-parsed',
-          domain: currentDomain || 'عام',
-          criterion: currentCriterion || 'عام',
-          desc: m[0].replace(m[2]+'%','').trim(),
-          pct: pct,
-          cls: classify(pct),
-          level: getLevelFromPct(pct),
-          plan: null
-        });
-      }
-    });
   }
 
   // إذا لا يزال لا توجد مؤشرات، استخدم البيانات الافتراضية مع تحديث معلومات المدرسة
@@ -1393,7 +1470,7 @@ function parsePDFText(text) {
     result.school_info.overall_level = DEFAULT_DATA.school_info.overall_level;
   }
 
-  if (!result.school_info.name) result.school_info.name = DEFAULT_DATA.school_info.name;
+  // لا نستخدم الاسم الافتراضي - نترك المستخدم يكتبه بنفسه
   result.school_info.year = result.school_info.year || DEFAULT_DATA.school_info.year;
 
   return result;
@@ -1416,4 +1493,3 @@ function showToast(msg) {
 </script>
 </body>
 </html>
-منصة رقمية لتحليل تقارير المدارس وتحديد النقاط الحرجة - Manus

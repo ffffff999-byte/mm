@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -1224,8 +1223,31 @@ async function processImport() {
     for (let p = 1; p <= pdf.numPages; p++) {
       const page = await pdf.getPage(p);
       const content = await page.getTextContent();
-      const pageText = content.items.map(it=>it.str).join(' ');
-      fullText += pageText + '\n';
+      // استخراج ذكي يحافظ على بنية الأسطر بناءً على الموضع الرأسي
+      const items = content.items;
+      if (items.length === 0) { fullText += '\n'; continue; }
+      // تجميع العناصر في أسطر حسب الموضع الرأسي - مع مراعاة RTL
+      // نجمع العناصر في مجموعات حسب السطر (y) بدون ترتيب x حتى نحافظ على الترتيب الأصلي
+      const lineMap = new Map();
+      for (const item of items) {
+        const y = Math.round(item.transform[5]);
+        // إيجاد سطر قريب (±4 نقاط)
+        let lineKey = null;
+        for (const [k] of lineMap) { if (Math.abs(k - y) <= 4) { lineKey = k; break; } }
+        if (lineKey === null) lineKey = y;
+        if (!lineMap.has(lineKey)) lineMap.set(lineKey, []);
+        lineMap.get(lineKey).push(item);
+      }
+      // ترتيب الأسطر من أعلى إلى أسفل (y تنازلي)
+      const sortedKeys = [...lineMap.keys()].sort((a,b) => b - a);
+      let pageLines = [];
+      for (const key of sortedKeys) {
+        const lineItems = lineMap.get(key);
+        // النص العربي RTL: نحتفظ بالترتيب الأصلي للعناصر كما جاءت من PDF
+        const lineText = lineItems.map(it => it.str).join('').trim();
+        if (lineText) pageLines.push(lineText);
+      }
+      fullText += pageLines.join('\n') + '\n';
       setProgress(25 + Math.round(p/pdf.numPages*35), `صفحة ${p} من ${pdf.numPages}...`);
     }
 
@@ -1260,14 +1282,16 @@ async function processImport() {
 
     setProgress(100, 'اكتمل التحليل!');
 
-    // تحديث البيانات
+    // حفظ البيانات المستوردة وتحديث المعاينة المسبقة
     pendingImport = parsed;
     pendingImport.indicators.forEach(i => { i.cls = classify(i.pct); });
+    // تحديث APP مباشرةً لعرض البيانات الجديدة فوراً
+    APP = JSON.parse(JSON.stringify(pendingImport));
     renderAll();
     // إظهار زر التطبيق والنشر
     document.getElementById('applyBtn').style.display = 'inline-flex';
     document.getElementById('importBtn').style.display = 'none';
-    showToast('✅ تم تحليل التقرير - اضغط "تطبيق ونشر" لتحديث المنصة');
+    showToast('✅ تم تحليل التقرير وتحديث المنصة - اضغط "تطبيق ونشر" للتأكيد وإغلاق النافذة');
 
   } catch(err) {
     addLog('❌ خطأ: ' + err.message, 'err');
@@ -1292,186 +1316,300 @@ function applyImport() {
   showToast('🎉 تم تطبيق ونشر التقرير على المنصة بنجاح!');
 }
 function parsePDFText(text) {
+  // ===== الخوارزمية المحسّنة - تعمل على جميع أنماط ملفات التقويم الخارجي =====
   const result = {
-    school_info: { name:'', ministry_number:'', education_admin:'', stage:'', gender:'', students_count:0, teachers_count:0, admin_count:0, evaluation_date:'', overall_percentage:0, overall_level:'', year:'' },
-    domains: {},
+    school_info: {
+      name: '',
+      ministry_number: '',
+      education_admin: '',
+      stage: '',
+      gender: '',
+      students_count: '',
+      teachers_count: '',
+      year: '2025',
+      overall_percentage: 0,
+      overall_level: '',
+      evaluation_date: ''
+    },
+    domains: [],
     indicators: [],
-    _parsed_from_pdf: true
+    stakeholders: { students: 0, parents: 0, teachers: 0 }
   };
 
-  const lines = text.split(/[\n\r]+/).map(l=>l.trim()).filter(l=>l.length>2);
-
-  // استخراج معلومات المدرسة
-  lines.forEach(line => {
-    if (line.includes('اسم المدرسة') || line.includes('المدرسة:')) {
-      const m = line.match(/[:\s]+(.+)/);
-      if (m) result.school_info.name = m[1].trim();
-    }
-    if (line.includes('رقم الوزارة') || line.includes('الرقم الوزاري')) {
-      const m = line.match(/([A-Z]-?\d+)/);
-      if (m) result.school_info.ministry_number = m[1];
-    }
-    if (line.includes('المدينة المنورة') || line.includes('إدارة التعليم')) {
-      result.school_info.education_admin = line.trim();
-    }
-    if (line.match(/\d{4}\/\d{2}\/\d{2}/)) {
-      result.school_info.evaluation_date = line.match(/\d{4}\/\d{2}\/\d{2}/)[0];
-    }
-    if (line.includes('متوسط') && !result.school_info.stage) result.school_info.stage = 'متوسط';
-    if (line.includes('ابتدائي') && !result.school_info.stage) result.school_info.stage = 'ابتدائي';
-    if (line.includes('ثانوي') && !result.school_info.stage) result.school_info.stage = 'ثانوي';
-    if (line.includes('بنات') && !result.school_info.gender) result.school_info.gender = 'بنات';
-    if (line.includes('بنين') && !result.school_info.gender) result.school_info.gender = 'بنين';
-  });
-
-  // استخراج النسبة الإجمالية
-  const overallMatch = text.match(/(?:التقدير العام|النسبة الكلية|الإجمالي)[^\d]*(\d+(?:\.\d+)?)/);
-  if (overallMatch) result.school_info.overall_percentage = parseFloat(overallMatch[1]);
-
-    // ===== خوارزمية الاستخراج الدقيقة =====
-  // النمط: سطر يحتوي كود المؤشر X-X-X-X مع نص المؤشر، ثم النسبة في أحد الأسطر التالية
-  const domainNames = ['الإدارة المدرسية','التعليم والتعلم','نواتج التعلم','البيئة المدرسية'];
-  const criterionMap = {
-    'التخطيط والقيادة التعليمية': 'الإدارة المدرسية',
-    'قيادة العملية التعليمية': 'الإدارة المدرسية',
-    'المجتمع المدرسي': 'الإدارة المدرسية',
-    'التطوير المؤسسي': 'الإدارة المدرسية',
-    'بناء خبرات التعلم': 'التعليم والتعلم',
-    'تقويم التعلم': 'التعليم والتعلم',
-    'التحصيل التعليمي': 'نواتج التعلم',
-    'التطور الشخصي والاجتماعي': 'نواتج التعلم',
-    'المبنى المدرسي': 'البيئة المدرسية',
-    'الأمن والسلامة': 'البيئة المدرسية'
-  };
-  // تنظيف النص من رموز Unicode الاتجاهية
-  function cleanLine(l) {
-    return l.replace(/[‏‎‍‌​]/g,'').replace(/[-]/g,'').trim();
+  // ===== دوال مساعدة =====
+  // تنظيف النص من رموز Unicode الاتجاهية وخطوط العرض العربي
+  function cleanStr(s) {
+    if (!s) return '';
+    // إزالة رموز RTL/LTR وغيرها
+    s = s.replace(/[​-‏‪-‮⁦-⁩﻿]/g, '');
+    // تحويل خطوط العرض العربي (Presentation Forms) إلى Unicode عادي
+    // هذا يحل مشكلة ﺍﻟﻤﺪﺭﺳﺔ → المدرسة
+    s = s.replace(/[ﭐ-﷿ﹰ-﻿]/g, ch => {
+      try { return ch.normalize('NFKC'); } catch(e) { return ch; }
+    });
+    return s.trim();
   }
-  const codePattern = /\d-\d-\d-\d\d?/;
-  const pctOnlyPattern = /^[\s%]*?(\d+\.?\d*)[\s%]*$/;
-  let currentDomain = '';
-  let currentCriterion = '';
-  let indNum = 0;
-  const seenCodes = new Set();
-  // المرور الأول: استخراج المؤشرات بالكود
+
+  // استخراج نسبة مئوية من نص - يتعامل مع جميع الأنماط
+  function extractPct(s) {
+    if (!s) return null;
+    const sc = cleanStr(s);
+    // نمط: %84.50 أو %84 (النسبة بعد %)
+    let m = sc.match(/%\s*(\d{1,3}(?:\.\d{1,2})?)\s*$/);
+    if (m) { const v = parseFloat(m[1]); if (v >= 0 && v <= 100) return v; }
+    // نمط: 84.50% أو 84% (النسبة قبل %)
+    m = sc.match(/(\d{1,3}(?:\.\d{1,2})?)\s*%/);
+    if (m) { const v = parseFloat(m[1]); if (v >= 0 && v <= 100) return v; }
+    // نمط: سطر يحتوي فقط على رقم (مثل 84.50 أو 84)
+    m = sc.match(/^\s*(\d{1,3}(?:\.\d{1,2})?)\s*$/);
+    if (m) { const v = parseFloat(m[1]); if (v > 0 && v <= 100) return v; }
+    return null;
+  }
+
+  // تحديد المجال من كود المؤشر
+  function getDomainFromCode(code) {
+    const parts = code.split('-');
+    if (parts.length < 3) return '';
+    // الكود: رقم-رقم-رقم-رقم
+    // الرقم الثالث من اليسار هو رقم المجال
+    const domNum = parts[2];
+    const domMap = { '1': 'الإدارة المدرسية', '2': 'التعليم والتعلم', '3': 'نواتج التعلم', '4': 'البيئة المدرسية' };
+    return domMap[domNum] || '';
+  }
+
+  // ===== تقسيم النص إلى أسطر =====
+  const lines = text.split(/[
+
+]+/);
+
+  // ===== استخراج معلومات المدرسة =====
+  // البحث في أول 200 سطر
+  const headerLines = lines.slice(0, 200).map(cleanStr).filter(l => l.length > 0);
+
+  for (let i = 0; i < headerLines.length; i++) {
+    const line = headerLines[i];
+    // اسم المدرسة: السطر الذي يحتوي على متوسطة/ابتدائية/ثانوية
+    if (!result.school_info.name && /متوسطة|ابتدائية|ثانوية/.test(line) && line.length > 4 && line.length < 80) {
+      if (!/التقويم|التقرير|الهيئة|وزارة|برنامج|مجال/.test(line)) {
+        result.school_info.name = line;
+      }
+    }
+    // الرقم الوزاري
+    const minM = line.match(/S-\d{4,6}/);
+    if (minM) result.school_info.ministry_number = minM[0];
+    // إدارة التعليم
+    if (/إدارة.*تعليم|تعليم.*منطقة/.test(line) && line.length < 80) {
+      result.school_info.education_admin = line;
+    }
+    // المرحلة
+    if (/متوسط|ابتدائي|ثانوي/.test(line) && line.length < 20) {
+      result.school_info.stage = line.includes('متوسط') ? 'متوسط' : line.includes('ابتدائي') ? 'ابتدائي' : 'ثانوي';
+    }
+    // الجنس
+    if (/بنين|بنات/.test(line) && line.length < 20) {
+      result.school_info.gender = line.includes('بنين') ? 'بنين' : 'بنات';
+    }
+    // عدد الطلاب
+    const studM = line.match(/(\d{2,4})\s*(?:طالب|طالبة|متعلم)/);
+    if (studM) result.school_info.students_count = studM[1];
+    // السنة
+    const yearM = line.match(/20(2[0-9])/);
+    if (yearM) result.school_info.year = yearM[0];
+    // تاريخ التقويم
+    if (/تاريخ.*تطبيق|تاريخ.*تقويم/.test(line)) {
+      const nextLine = headerLines[i+1] || '';
+      const dateM = (line + ' ' + nextLine).match(/\d{4}\/\d{2}\/\d{2}|\d{2}\/\d{2}\/\d{4}/);
+      if (dateM) result.school_info.evaluation_date = dateM[0];
+    }
+  }
+
+  // ===== استخراج النسبة الإجمالية والمستوى =====
+  // البحث عن النسبة الإجمالية في منطقة "الأداء العام للمدرسة"
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    const codeM = line.match(/(\d-\d-\d-\d\d?)/);
-    // تحديث المجال والمعيار
-    const cleanL = cleanLine(line);
-    domainNames.forEach(d => { if (cleanL.includes(d)) currentDomain = d; });
-    Object.keys(criterionMap).forEach(c => { if (cleanL.includes(c)) { currentCriterion = c; currentDomain = criterionMap[c]; } });
-    if (!codeM) continue;
-    const code = codeM[1];
-    if (seenCodes.has(code)) continue; // تجنب التكرار
-    seenCodes.add(code);
-    // استخراج نص المؤشر
-    let desc = cleanLine(line).replace(code,'').replace(/[]/g,'').trim();
-    if (!desc || desc.length < 5) {
-      // النص في السطر السابق
-      if (i > 0) desc = cleanLine(lines[i-1]).replace(/[]/g,'').trim();
-    }
-    // البحث عن النسبة في الأسطر التالية (حتى 10 أسطر)
-    let pct = null;
-    for (let j = i+1; j < Math.min(i+11, lines.length); j++) {
-      const nextClean = cleanLine(lines[j]);
-      // نسبة وحيدة في السطر
-      const m1 = nextClean.match(/^%?(\d+\.?\d*)%?$/);
-      const m2 = nextClean.match(/^(\d+\.?\d*)\s*%$/);
-      const m3 = nextClean.match(/^%(\d+\.?\d*)$/);
-      const m = m1 || m2 || m3;
-      if (m) {
-        const v = parseFloat(m[1]);
-        if (v >= 0 && v <= 100) { pct = v; break; }
+    const cl = cleanStr(lines[i]);
+    if (/الأداء العام|الأداء الكلي|النسبة الكلية|التقدير العام/.test(cl)) {
+      for (let j = i; j < Math.min(i+10, lines.length); j++) {
+        const pct = extractPct(cleanStr(lines[j]));
+        if (pct && pct >= 30 && pct <= 100) {
+          result.school_info.overall_percentage = pct;
+          break;
+        }
       }
-      // إذا وجدنا كود آخر نتوقف
-      if (j > i+1 && codePattern.test(lines[j])) break;
     }
-    if (pct !== null && desc && desc.length > 5) {
-      // تحديد المجال من الكود إذا لم يكن محدداً
-      let dom = currentDomain;
-      let crit = currentCriterion;
-      if (!dom) {
-        // محاولة تحديد المجال من الكود (الرقم الأخير)
-        const parts = code.split('-');
-        const lastNum = parseInt(parts[parts.length-1]);
-        if (lastNum === 1) dom = 'الإدارة المدرسية';
-        else if (lastNum === 2) dom = 'التعليم والتعلم';
-        else if (lastNum === 3) dom = 'نواتج التعلم';
-        else if (lastNum === 4) dom = 'البيئة المدرسية';
+    // البحث عن المستوى والنسبة معاً في نفس المنطقة
+    if (/الانطلاق|التهيئة|التقدم|التميز/.test(cl) && cl.length < 40) {
+      if (!result.school_info.overall_level) {
+        result.school_info.overall_level = cl.match(/الانطلاق|التهيئة|التقدم|التميز/)[0];
       }
-      indNum++;
-      result.indicators.push({
-        code: code,
-        domain: dom || 'عام',
-        criterion: crit || 'عام',
-        desc: desc,
-        pct: pct,
-        cls: classify(pct),
-        level: getLevelFromPct(pct),
-        plan: null
-      });
-    }
-  }
-  // المرور الثاني: إذا استُخرج عدد قليل، جرب نمط النسبة المنفردة
-  if (result.indicators.length < 5) {
-    currentDomain = ''; currentCriterion = '';
-    for (let i = 0; i < lines.length; i++) {
-      const cleanL = cleanLine(lines[i]);
-      domainNames.forEach(d => { if (cleanL.includes(d)) currentDomain = d; });
-      Object.keys(criterionMap).forEach(c => { if (cleanL.includes(c)) { currentCriterion = c; currentDomain = criterionMap[c]; } });
-      const pctM = cleanL.match(/^%?(\d+\.?\d*)%?$/);
-      if (pctM && currentDomain) {
-        const pct = parseFloat(pctM[1]);
-        if (pct >= 0 && pct <= 100) {
-          // البحث عن نص المؤشر في الأسطر السابقة
-          let desc = '';
-          for (let k = i-1; k >= Math.max(0, i-5); k--) {
-            const prev = cleanLine(lines[k]);
-            if (prev.length > 10 && !domainNames.some(d=>prev.includes(d))) {
-              desc = prev; break;
-            }
-          }
-          if (desc) {
-            indNum++;
-            result.indicators.push({
-              code: indNum + '-auto',
-              domain: currentDomain,
-              criterion: currentCriterion || 'عام',
-              desc: desc,
-              pct: pct,
-              cls: classify(pct),
-              level: getLevelFromPct(pct),
-              plan: null
-            });
+      // البحث عن النسبة في الأسطر المجاورة
+      if (!result.school_info.overall_percentage) {
+        for (let j = Math.max(0,i-5); j < Math.min(i+5, lines.length); j++) {
+          const pct = extractPct(cleanStr(lines[j]));
+          if (pct && pct >= 30 && pct <= 100) {
+            result.school_info.overall_percentage = pct;
+            break;
           }
         }
       }
     }
   }
 
-  // إذا لا يزال لا توجد مؤشرات، استخدم البيانات الافتراضية مع تحديث معلومات المدرسة
-  if (result.indicators.length === 0) {
-    result.indicators = DEFAULT_DATA.indicators.map(i=>({...i, cls:classify(i.pct)}));
-    result.domains = DEFAULT_DATA.domains;
-    if (!result.school_info.name) result.school_info = {...DEFAULT_DATA.school_info};
+  // ===== استخراج نسب المجالات =====
+  const domainOrder = ['الإدارة المدرسية', 'التعليم والتعلم', 'نواتج التعلم', 'البيئة المدرسية'];
+  const domainPcts = {};
+  for (let i = 0; i < lines.length; i++) {
+    const cl = cleanStr(lines[i]);
+    for (const dom of domainOrder) {
+      if (cl.includes(dom) && !domainPcts[dom]) {
+        // البحث عن النسبة في الأسطر التالية
+        for (let j = i; j < Math.min(i+8, lines.length); j++) {
+          const pct = extractPct(cleanStr(lines[j]));
+          if (pct && pct >= 30 && pct <= 100) {
+            domainPcts[dom] = pct;
+            break;
+          }
+        }
+      }
+    }
+  }
+  // بناء مصفوفة المجالات
+  for (const dom of domainOrder) {
+    const pct = domainPcts[dom] || 0;
+    result.domains.push({
+      name: dom,
+      pct: pct,
+      level: getLevelFromPct(pct),
+      criteria: []
+    });
   }
 
-  // تحديث المجالات
-  if (Object.keys(result.domains).length === 0) {
-    result.domains = DEFAULT_DATA.domains;
+  // ===== استخراج المؤشرات =====
+  const CODE_RE = /(\d{1,2}-\d-\d-\d{1,2})/;
+  const seenCodes = new Set();
+
+  for (let i = 0; i < lines.length; i++) {
+    const rawLine = lines[i];
+    const cl = cleanStr(rawLine);
+
+    const codeM = cl.match(CODE_RE);
+    if (!codeM) continue;
+
+    const code = codeM[1];
+    if (seenCodes.has(code)) continue;
+
+    // استخراج نص المؤشر
+    let desc = cl.replace(code, '').trim();
+    // إزالة النسبة من النص إن وجدت
+    desc = desc.replace(/%\s*\d+\.?\d*\s*$/, '').replace(/^\s*\d+\.?\d*\s*%\s*/, '').trim();
+    if (!desc || desc.length < 5) {
+      // ابحث في السطر السابق
+      if (i > 0) desc = cleanStr(lines[i-1]).trim();
+    }
+    if (!desc || desc.length < 5) continue;
+
+    // ===== البحث عن النسبة =====
+    let pct = null;
+
+    // 1. في نفس سطر الكود (بعد حذف الكود والنص)
+    const afterCode = cl.replace(code, '').replace(desc, '');
+    pct = extractPct(afterCode);
+
+    // 2. في نفس السطر الكامل (قد تكون النسبة في نهايته)
+    if (pct === null) {
+      const m = cl.match(/%\s*(\d{1,3}(?:\.\d{1,2})?)\s*$|(\d{1,3}(?:\.\d{1,2})?)\s*%\s*$/);
+      if (m) {
+        const v = parseFloat(m[1] || m[2]);
+        if (v >= 0 && v <= 100) pct = v;
+      }
+    }
+
+    // 3. في الأسطر التالية (حتى 15 سطر)
+    if (pct === null) {
+      for (let j = i + 1; j < Math.min(i + 16, lines.length); j++) {
+        const nc = cleanStr(lines[j]);
+        if (!nc) continue;
+        // توقف إذا وجدنا كود آخر (بعد سطرين على الأقل)
+        if (j > i + 2 && CODE_RE.test(nc)) break;
+        const candidate = extractPct(nc);
+        if (candidate !== null && candidate >= 0 && candidate <= 100) {
+          pct = candidate;
+          break;
+        }
+      }
+    }
+
+    if (pct === null) continue;
+
+    seenCodes.add(code);
+
+    // تحديد المجال من الكود
+    const domain = getDomainFromCode(code);
+
+    result.indicators.push({
+      code: code,
+      domain: domain || 'عام',
+      criterion: '',
+      desc: desc.substring(0, 120),
+      pct: pct,
+      cls: classify(pct),
+      level: getLevelFromPct(pct),
+      plan: null
+    });
   }
 
-  // تحديث المستوى العام
-  if (result.school_info.overall_percentage > 0) {
+  // ===== إذا لم تُستخرج مؤشرات كافية، جرب نمط بديل =====
+  if (result.indicators.length < 5) {
+    // نمط بديل: سطر يحتوي نسبة منفردة يسبقه سطر يحتوي نص
+    const pctLineRe = /^\s*%?\s*(\d{1,3}(?:\.\d{1,2})?)\s*%?\s*$/;
+    for (let i = 1; i < lines.length; i++) {
+      const cl = cleanStr(lines[i]);
+      const m = cl.match(pctLineRe);
+      if (!m) continue;
+      const pct = parseFloat(m[1]);
+      if (pct <= 0 || pct > 100) continue;
+      // ابحث عن كود في الأسطر السابقة
+      for (let j = i - 1; j >= Math.max(0, i - 5); j--) {
+        const prev = cleanStr(lines[j]);
+        const codeM2 = prev.match(CODE_RE);
+        if (codeM2) {
+          const code = codeM2[1];
+          if (!seenCodes.has(code)) {
+            seenCodes.add(code);
+            const desc = prev.replace(code, '').trim();
+            if (desc.length > 4) {
+              result.indicators.push({
+                code: code,
+                domain: getDomainFromCode(code) || 'عام',
+                criterion: '',
+                desc: desc.substring(0, 120),
+                pct: pct,
+                cls: classify(pct),
+                level: getLevelFromPct(pct),
+                plan: null
+              });
+            }
+          }
+          break;
+        }
+      }
+    }
+  }
+
+  // ===== حساب النسبة الإجمالية إذا لم تُستخرج =====
+  if (!result.school_info.overall_percentage && result.indicators.length > 0) {
+    const avg = result.indicators.reduce((s, ind) => s + ind.pct, 0) / result.indicators.length;
+    result.school_info.overall_percentage = Math.round(avg * 100) / 100;
+  }
+  if (!result.school_info.overall_level && result.school_info.overall_percentage) {
     result.school_info.overall_level = getLevelFromPct(result.school_info.overall_percentage);
-  } else {
-    result.school_info.overall_percentage = DEFAULT_DATA.school_info.overall_percentage;
-    result.school_info.overall_level = DEFAULT_DATA.school_info.overall_level;
   }
 
-  // لا نستخدم الاسم الافتراضي - نترك المستخدم يكتبه بنفسه
-  result.school_info.year = result.school_info.year || DEFAULT_DATA.school_info.year;
+  // ===== ربط خطط التحسين بالمؤشرات =====
+  result.indicators.forEach(ind => {
+    if (ind.cls === 'weakness' || ind.cls === 'critical') {
+      ind.plan = getImprovementPlan(ind.domain, ind.desc);
+    }
+  });
 
   return result;
 }

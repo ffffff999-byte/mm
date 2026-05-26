@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>استمارة دراسة أسئلة اختبار - صفحة واحدة - متوافقة مع الجوال</title>
+<style>
+:root{
+  --ink:#17212b;--muted:#64748b;--line:#d7dee8;--soft:#f8fafc;--navy:#16324f;--teal:#0f766e;--red:#b42318;--gold:#b7791f;--white:#fff;
+}
+*{box-sizing:border-box} html{-webkit-text-size-adjust:100%;text-size-adjust:100%} body{margin:0;background:#eef2f6;color:var(--ink);font-family:"Arial","Tahoma",sans-serif;line-height:1.35}
+.toolbar{position:sticky;top:0;z-index:10;background:#102a43;color:white;padding:10px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;box-shadow:0 10px 25px rgba(0,0,0,.12)}
+.toolbar button,.toolbar label{border:0;border-radius:12px;background:white;color:#102a43;padding:9px 13px;font-weight:700;cursor:pointer;font-size:13px}.toolbar input{display:none}
+.brandPanel{max-width:210mm;margin:12px auto 18px;background:#ffffff;border:1px solid #d7dee8;border-radius:16px;padding:10px 14px;text-align:center;font-weight:900;color:#102a43;box-shadow:0 10px 30px rgba(15,23,42,.10);line-height:1.8}.brandPanel a{color:#0f766e;text-decoration:none;font-weight:900}
+.page{width:210mm;min-height:297mm;margin:18px auto;background:white;padding:9mm 8mm;border-radius:18px;box-shadow:0 18px 60px rgba(15,23,42,.16);position:relative;overflow:hidden;display:flex;flex-direction:column}
+.header{display:grid;grid-template-columns:1fr 28mm 1fr;gap:6mm;align-items:center;border-bottom:3px solid var(--navy);padding-bottom:5mm;margin-bottom:4mm}.hblock{font-weight:800;font-size:11px;line-height:1.65}.hblock.left{text-align:left}.logoBox{width:25mm;height:25mm;border:1px dashed #b8c3cf;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#f8fafc;color:#789;font-size:10px;text-align:center}.logoBox img{width:100%;height:100%;object-fit:contain}
+.title{display:flex;align-items:center;justify-content:space-between;gap:8px;background:linear-gradient(135deg,#12324a,#0f766e);color:white;border-radius:14px;padding:9px 12px;margin-bottom:8px}.title h1{margin:0;font-size:20px}.badge{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);padding:5px 9px;border-radius:999px;font-weight:800;font-size:12px;white-space:nowrap}
+.meta{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:8px}.field{border:1px solid var(--line);border-radius:11px;padding:6px;background:#fbfdff;min-height:44px}.field span{display:block;color:var(--muted);font-size:10.5px;font-weight:800}.field div{outline:0;font-size:13px;font-weight:800;min-height:18px}.field.wide{grid-column:span 2}
+.summary{display:grid;grid-template-columns:1.1fr .9fr .9fr .9fr;gap:7px;margin-bottom:8px}.card{border:1px solid var(--line);border-radius:13px;padding:8px;background:var(--soft)}.card .k{font-size:10.5px;color:var(--muted);font-weight:800}.card .v{font-size:22px;font-weight:900;color:var(--navy)}.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:6px}.bar{height:100%;width:0;background:linear-gradient(90deg,#0f766e,#16324f);transition:.25s}
+.tableWrap{border:2px solid var(--navy);border-radius:14px;overflow:hidden}.row,.thead{display:grid;grid-template-columns:32mm 1fr 26mm 29mm;align-items:stretch}.thead{background:#16324f;color:white;font-weight:900;font-size:12px}.thead>div{padding:7px;border-inline-start:1px solid rgba(255,255,255,.3)}.row{border-top:1px solid var(--line);min-height:31px}.row:nth-child(odd){background:#fcfdff}.cell{padding:5px 7px;border-inline-start:1px solid var(--line);font-size:11px;display:flex;align-items:center}.domain{font-weight:900;color:#12324a;background:#f1f5f9}.criterion{font-weight:700}.seq{justify-content:center;color:#64748b;font-weight:900}.actions{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px}.choice{border:1px solid var(--line);border-radius:9px;background:white;font-weight:900;font-size:10.5px;cursor:pointer}.choice.done.active{background:#dcfce7;border-color:#16a34a;color:#166534}.choice.not.active{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.notes{display:grid;grid-template-columns:1fr;gap:6px;margin-top:6px}.note{border:1px solid var(--line);border-radius:12px;padding:6px;background:#fff}.note h3{margin:0 0 4px;font-size:12.5px;color:#12324a}.note textarea{width:100%;height:36px;border:1px solid #e5e7eb;border-radius:10px;padding:6px;font-family:inherit;resize:none;font-size:10.5px}.recommend{display:none!important}.sign{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:auto;font-size:11px;padding-top:7px}.sig{border-top:1px solid #94a3b8;padding-top:5px;text-align:center;color:#334155;font-weight:800;outline:0;min-height:24px}.hidePrint{display:initial}
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  html,body{width:210mm;height:297mm;margin:0!important;padding:0!important;overflow:hidden!important;background:white!important}
+  .toolbar,.brandPanel,.hidePrint{display:none!important}
+  .page{margin:0 auto!important;width:190mm;height:277mm;min-height:277mm;border-radius:0;box-shadow:none;padding:5mm 5mm;overflow:hidden!important;page-break-inside:avoid;break-inside:avoid}
+  .header{padding-bottom:3mm;margin-bottom:2.5mm;gap:4mm}.hblock{font-size:9.8px;line-height:1.45}.logoBox{width:21mm;height:21mm}.title{padding:6px 9px;margin-bottom:5px;border-radius:10px}.title h1{font-size:16px}.badge{font-size:10px;padding:3px 7px}.meta{gap:4px;margin-bottom:5px}.field{min-height:34px;padding:4px;border-radius:8px}.field span{font-size:9px}.field div{font-size:10.5px;min-height:14px}.summary{gap:4px;margin-bottom:5px}.card{padding:5px;border-radius:9px}.card .k{font-size:9px}.card .v{font-size:16px}.progress{height:6px;margin-top:3px}.tableWrap{border-radius:10px}.row,.thead{grid-template-columns:28mm 1fr 19mm 25mm}.thead{font-size:9.5px}.thead>div{padding:4px}.row{min-height:22px;page-break-inside:avoid;break-inside:avoid}.cell{font-size:8.7px;padding:2.5px 4px;line-height:1.15}.actions{gap:2px;padding:2px}.choice{font-size:8.5px;border-radius:6px;padding:1px}.notes{gap:4px;margin-top:4px}.note{padding:4px;border-radius:9px}.note h3{font-size:10px;margin-bottom:2px}.notes textarea{height:24px;font-size:9px;padding:4px}.sign{gap:5px;margin-top:auto;font-size:9.5px;padding-top:3px}.sig{padding-top:3px;min-height:18px}
+}
+@media screen and (max-width:900px){
+  body{background:#eef2f6;overflow-x:hidden}.toolbar{position:sticky;top:0;padding:8px 6px;gap:6px}.toolbar button,.toolbar label{flex:1 1 42%;font-size:12px;padding:10px 8px;border-radius:10px}.brandPanel{width:calc(100% - 18px);margin:10px auto 16px;font-size:13px;border-radius:14px;padding:9px 10px;word-break:break-word}.page{width:calc(100% - 16px);min-height:auto;border-radius:14px;margin:8px auto;padding:10px;overflow:visible}.header{grid-template-columns:1fr 64px 1fr;gap:8px;padding-bottom:8px;margin-bottom:8px}.hblock{font-size:10px;line-height:1.5}.logoBox{width:58px;height:58px;border-radius:10px}.title{align-items:flex-start;flex-direction:column;padding:9px 10px}.title h1{font-size:16px}.badge{font-size:11px}.meta{grid-template-columns:1fr 1fr;gap:6px}.field.wide{grid-column:span 2}.field{min-height:40px;padding:6px}.field span{font-size:10px}.field div{font-size:12px}.summary{grid-template-columns:1fr 1fr;gap:6px}.card{padding:7px}.card .v{font-size:18px}.tableWrap{border-radius:12px}.row,.thead{grid-template-columns:29% 1fr 12% 28%}.thead{font-size:10px}.thead>div{padding:5px 3px}.row{min-height:34px}.cell{font-size:9.5px;padding:4px 3px;line-height:1.25}.actions{gap:2px;padding:3px}.choice{font-size:9px;padding:2px;border-radius:7px}.notes{grid-template-columns:1fr}.note textarea{height:42px}.sign{grid-template-columns:1fr;gap:10px;margin-top:10px}.sig{min-height:30px}.hidePrint{display:block}
+}
+@media print and (max-width:900px){
+  html,body{width:210mm!important;height:297mm!important;min-width:210mm!important;max-width:210mm!important;overflow:hidden!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .page{width:190mm!important;height:277mm!important;max-width:190mm!important;min-height:277mm!important;margin:0 auto!important;padding:4.5mm!important;overflow:hidden!important;transform:none!important}
+  .row,.thead{grid-template-columns:27mm 1fr 18mm 24mm!important}.cell{font-size:8.3px!important;line-height:1.12!important}.row{min-height:21px!important}.choice{font-size:8px!important;padding:0!important}.meta{grid-template-columns:repeat(5,1fr)!important}.summary{grid-template-columns:1.1fr .9fr .9fr .9fr!important}.notes{grid-template-columns:1fr!important}.sign{grid-template-columns:repeat(3,1fr)!important}
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <label for="logoInput">رفع الشعار</label><input id="logoInput" type="file" accept="image/*">
+  <button onclick="prepareMobilePrint()">طباعة / حفظ PDF</button>
+  <button onclick="saveLocal()">حفظ البيانات</button>
+  <button onclick="loadLocal()">استعادة الحفظ</button>
+  <button onclick="resetForm()">تفريغ الاستمارة</button>
+</div>
+<main class="page" id="page">
+  <section class="header">
+    <div class="hblock right" contenteditable="true">المملكة العربية السعودية<br>وزارة التعليم<br>إدارة التعليم بـ .................</div>
+    <div class="logoBox" id="logoBox">شعار</div>
+    <div class="hblock left" contenteditable="true">مكتب التعليم بـ .................<br>الشؤون التعليمية<br>قسم/وحدة الاختبارات</div>
+  </section>
+  <section class="title">
+    <h1>استمارة دراسة أسئلة اختبار مادة</h1>
+    <div class="badge">نموذج صفحة واحدة</div>
+  </section>
+  <section class="meta">
+    <div class="field wide"><span>اسم المدرسة</span><div contenteditable="true"></div></div>
+    <div class="field"><span>المادة</span><div contenteditable="true"></div></div>
+    <div class="field"><span>الصف</span><div contenteditable="true"></div></div>
+    <div class="field"><span>الفصل الدراسي</span><div contenteditable="true"></div></div>
+    <div class="field"><span>العام الدراسي</span><div contenteditable="true">14هـ / 14هـ</div></div>
+    <div class="field"><span>اسم المعلم/ـة</span><div contenteditable="true"></div></div>
+    <div class="field"><span>التاريخ</span><div contenteditable="true"></div></div>
+    <div class="field"><span>عدد الأسئلة</span><div contenteditable="true"></div></div>
+  </section>
+  <section class="summary">
+    <div class="card"><div class="k">نسبة التنفيذ</div><div class="v" id="score">0%</div><div class="progress"><div class="bar" id="bar"></div></div></div>
+    <div class="card"><div class="k">نُفِّذ</div><div class="v" id="doneCount">0</div></div>
+    <div class="card"><div class="k">لم يُنفذ</div><div class="v" id="notCount">0</div></div>
+    <div class="card"><div class="k">إجمالي المعايير</div><div class="v" id="totalCount">0</div></div>
+  </section>
+  <section class="tableWrap" id="criteriaTable">
+    <div class="thead"><div>المجال</div><div>المعيار</div><div>التسلسل</div><div>الحالة</div></div>
+  </section>
+  <section class="notes">
+    <div class="note"><h3>ملحوظات المراجع/ـة</h3><textarea id="notes" placeholder="تكتب هنا الملحوظات النوعية..."></textarea></div>
+  </section>
+  <section class="sign">
+    <div class="sig" contenteditable="true">توقيع المعلم/ـة</div><div class="sig" contenteditable="true">توقيع وكيل/ة الشؤون التعليمية</div><div class="sig" contenteditable="true">توقيع مدير/ة المدرسة</div>
+  </section>
+</main>
+<div class="brandPanel hidePrint">تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">https://t.me/TAqhjT3MFVE1Yzk0</a></div>
+<script>
+const data=[
+ {d:'إخراج ورقة الأسئلة',c:'وضوح بيانات الترويسة: المادة، الصف، الفصل الدراسي، العام، والزمن.'},
+ {d:'إخراج ورقة الأسئلة',c:'تنسيق الأسئلة وترقيمها بشكل متتابع وواضح.'},
+ {d:'إخراج ورقة الأسئلة',c:'سلامة اللغة، وخلو الورقة من الأخطاء الإملائية والمطبعية.'},
+ {d:'المواصفات العامة للأسئلة',c:'ارتباط الأسئلة بالأهداف ومحتوى المقرر الدراسي.'},
+ {d:'المواصفات العامة للأسئلة',c:'شمول الأسئلة لمستويات التفكير المناسبة وعدم اقتصارها على التذكر.'},
+ {d:'المواصفات العامة للأسئلة',c:'مراعاة التوازن بين صعوبة الأسئلة وسهولتها.'},
+ {d:'المواصفات العامة للأسئلة',c:'توزيع الدرجات بعدالة ووضوح أمام كل سؤال.'},
+ {d:'الأسئلة المقالية',c:'صياغة السؤال المقالى بوضوح مع تحديد المطلوب من الطالب.'},
+ {d:'الأسئلة المقالية',c:'مناسبة السؤال المقالى للزمن والدرجة المخصصة.'},
+ {d:'الصواب والخطأ',c:'احتواء أسئلة الصواب والخطأ على عبارات صحيحة وأخرى خاطئة.'},
+ {d:'الصواب والخطأ',c:'أن تكون العبارة صحيحة بالكامل أو خاطئة بالكامل دون جزء صحيح وآخر خاطئ.'},
+ {d:'الصواب والخطأ',c:'ترتيب العبارات الصحيحة والخاطئة عشوائيًا.'},
+ {d:'المقابلة',c:'زيادة عدد بنود الاستجابات عن عدد بنود المعطيات.'},
+ {d:'المقابلة',c:'أن تكون فقرات المعطيات من نوع واحد.'},
+ {d:'المقابلة',c:'أن تكون مجموعة الفقرات قصيرة نسبيًا.'},
+ {d:'الإكمال',c:'ألا تتضمن عبارة الإكمال أكثر من فراغين.'},
+ {d:'الإكمال',c:'أن يكون موقع الفراغ قرب نهاية العبارة وليس في أولها.'},
+ {d:'الإكمال',c:'صياغة السؤال في شكل سؤال محدد وإجابة محددة.'},
+ {d:'الاختيار من متعدد',c:'تساوي جميع الأسئلة في عدد البدائل.'},
+ {d:'الاختيار من متعدد',c:'أن يتراوح عدد البدائل بين أربعة أو خمسة.'},
+ {d:'الاختيار من متعدد',c:'توزيع الإجابات الصحيحة على مواقع البدائل عشوائيًا.'},
+ {d:'الاختيار من متعدد',c:'مراعاة التقارب الدقيق بين بدائل السؤال.'},
+ {d:'الاختيار من متعدد',c:'تجنب الإيحاءات والإشارات إلى الإجابة الصحيحة.'},
+ {d:'أسئلة الرسم',c:'وضوح المطلوب في أسئلة الرسم وتحديد عناصر الإجابة والدرجات.'}
+];
+const table=document.getElementById('criteriaTable');
+data.forEach((item,i)=>{
+ const row=document.createElement('div'); row.className='row'; row.dataset.status='';
+ row.innerHTML=`<div class="cell domain">${item.d}</div><div class="cell criterion" contenteditable="true">${item.c}</div><div class="cell seq">${String(i+1).padStart(2,'0')}</div><div class="actions"><button class="choice done" onclick="setStatus(this,'done')">نُفِّذ</button><button class="choice not" onclick="setStatus(this,'not')">لم يُنفذ</button></div>`;
+ table.appendChild(row);
+});
+document.getElementById('totalCount').textContent=data.length;
+function prepareMobilePrint(){
+  document.activeElement && document.activeElement.blur();
+  window.scrollTo({top:0,left:0,behavior:"instant"});
+  setTimeout(()=>window.print(),150);
+}
+function setStatus(btn,status){const row=btn.closest('.row');row.dataset.status=status;row.querySelectorAll('.choice').forEach(b=>b.classList.remove('active'));btn.classList.add('active');calc();}
+function calc(){const rows=[...document.querySelectorAll('.row')];const done=rows.filter(r=>r.dataset.status==='done').length;const not=rows.filter(r=>r.dataset.status==='not').length;const pct=rows.length?Math.round(done/rows.length*100):0;document.getElementById('doneCount').textContent=done;document.getElementById('notCount').textContent=not;document.getElementById('score').textContent=pct+'%';document.getElementById('bar').style.width=pct+'%';}
+function collect(){return {html:document.querySelector('.page').innerHTML,status:[...document.querySelectorAll('.row')].map(r=>r.dataset.status||''),notes:document.getElementById('notes').value,logo:document.querySelector('#logoBox img')?.src||''};}
+function saveLocal(){localStorage.setItem('examFormOnePage',JSON.stringify(collect()));alert('تم حفظ بيانات الاستمارة.');}
+function loadLocal(){const s=localStorage.getItem('examFormOnePage'); if(!s){alert('لا يوجد حفظ سابق.');return} const o=JSON.parse(s); document.getElementById('notes').value=o.notes||''; if(o.logo) document.getElementById('logoBox').innerHTML='<img src="'+o.logo+'">'; [...document.querySelectorAll('.row')].forEach((r,i)=>{r.dataset.status=o.status?.[i]||''; r.querySelectorAll('.choice').forEach(b=>b.classList.remove('active')); if(r.dataset.status) r.querySelector('.'+(r.dataset.status==='done'?'done':'not')).classList.add('active');}); calc();}
+function resetForm(){if(confirm('هل تريد تفريغ حالات التنفيذ فقط؟')){document.querySelectorAll('.row').forEach(r=>{r.dataset.status='';r.querySelectorAll('.choice').forEach(b=>b.classList.remove('active'))});document.getElementById('notes').value='';calc();}}
+document.getElementById('logoInput').addEventListener('change',e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{document.getElementById('logoBox').innerHTML='<img src="'+r.result+'">'};r.readAsDataURL(f)});
+calc();
+</script>
+</body>
+</html>

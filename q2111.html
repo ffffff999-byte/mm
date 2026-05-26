@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ورشة معايير بناء الاختبار الجيد</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;900&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --teal:#0d5c8f;--emerald:#0a7c5c;--gold:#c9a227;--orange:#e67e22;
+  --purple:#7c3aed;--red:#dc2626;--cyan:#0891b2;--green:#16a34a;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;
+  --gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Naskh Arabic',serif;background:#f8fafc;color:var(--gray-800);direction:rtl;line-height:1.7}
+h1,h2,h3,h4,h5{font-family:'Noto Kufi Arabic',sans-serif}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:#f1f5f9}
+::-webkit-scrollbar-thumb{background:var(--teal);border-radius:3px}
+
+/* ── Progress ── */
+#prog{position:fixed;top:0;right:0;left:0;z-index:9999;height:4px;background:linear-gradient(90deg,var(--teal),var(--emerald));width:0%;transition:width .15s}
+
+/* ── Nav ── */
+nav{position:fixed;top:4px;right:0;left:0;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-100);box-shadow:0 2px 20px rgba(0,0,0,.06)}
+.nav-inner{max-width:1280px;margin:0 auto;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;height:62px}
+.nav-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-logo{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--emerald));display:flex;align-items:center;justify-content:center}
+.nav-logo svg{width:20px;height:20px;fill:none;stroke:white;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav-title{font-weight:700;font-size:.8rem;color:var(--teal);line-height:1.3}
+.nav-sub{font-size:.7rem;color:var(--gray-500)}
+.nav-links{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.nl{padding:5px 10px;border-radius:7px;font-size:.75rem;font-weight:600;color:var(--gray-600);cursor:pointer;transition:all .2s;border:none;background:none;font-family:'Noto Kufi Arabic'}
+.nl:hover{background:var(--gray-100);color:var(--teal)}
+.nl.active{background:rgba(13,92,143,.1);color:var(--teal)}
+.menu-btn{display:none;padding:7px;border-radius:8px;border:none;background:none;cursor:pointer;color:var(--gray-700)}
+.menu-btn svg{width:22px;height:22px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round}
+.mob-menu{display:none;position:absolute;top:100%;right:0;left:0;background:white;border-top:1px solid var(--gray-100);box-shadow:0 8px 24px rgba(0,0,0,.1);padding:1rem}
+.mob-menu.open{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mlink{display:flex;align-items:center;gap:8px;padding:9px 12px;border-radius:9px;font-size:.82rem;font-weight:600;color:var(--gray-700);cursor:pointer;border:none;background:none;font-family:'Noto Kufi Arabic';text-align:right;width:100%}
+.mlink:hover{background:var(--gray-50)}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+@media(max-width:960px){.nav-links{display:none}.menu-btn{display:block}}
+
+/* ── Hero ── */
+.hero{min-height:100vh;background:linear-gradient(135deg,#0a3d5c 0%,#0d5c8f 45%,#0a7c5c 100%);position:relative;overflow:hidden;display:flex;align-items:center;padding-top:70px}
+.hero-dots{position:absolute;inset:0;opacity:.05;background-image:radial-gradient(circle at 2px 2px,white 1px,transparent 0);background-size:28px 28px}
+.hero-blob{position:absolute;border-radius:50%;background:rgba(255,255,255,.05)}
+.b1{width:480px;height:480px;top:-180px;left:-80px}
+.b2{width:280px;height:280px;bottom:-80px;right:8%}
+.b3{width:160px;height:160px;top:35%;right:4%;background:rgba(201,162,39,.1)}
+.hex{position:absolute;opacity:.07;background:white;clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%)}
+.h1{width:70px;height:70px;top:14%;left:7%}
+.h2{width:45px;height:45px;top:62%;left:3%}
+.h3{width:55px;height:55px;top:22%;right:14%}
+.hero-content{max-width:1280px;margin:0 auto;padding:4rem 2rem;position:relative;z-index:1;width:100%}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:50px;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);color:white;font-size:.82rem;font-weight:600;margin-bottom:1.5rem}
+.hero-badge svg{width:16px;height:16px;fill:#fbbf24}
+.hero-h1{font-size:clamp(2.2rem,5.5vw,3.8rem);font-weight:900;color:white;margin-bottom:1.25rem;line-height:1.2}
+.hero-h1 span{color:#fbbf24;display:block}
+.hero-desc{color:rgba(255,255,255,.85);font-size:1.05rem;max-width:580px;margin-bottom:2rem;line-height:1.8}
+.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2rem}
+.htag{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:9px;background:rgba(255,255,255,.12);color:white;font-size:.82rem}
+.hero-btns{display:flex;flex-wrap:wrap;gap:10px}
+.btn-g{padding:13px 26px;border-radius:11px;background:linear-gradient(135deg,var(--gold),var(--orange));color:white;font-weight:700;font-size:.95rem;border:none;cursor:pointer;box-shadow:0 8px 24px rgba(201,162,39,.4);transition:transform .15s,box-shadow .15s;font-family:'Noto Kufi Arabic'}
+.btn-g:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(201,162,39,.5)}
+.btn-g:active{transform:scale(.97)}
+.btn-o{padding:13px 26px;border-radius:11px;background:rgba(255,255,255,.15);color:white;font-weight:700;font-size:.95rem;border:2px solid rgba(255,255,255,.3);cursor:pointer;transition:all .15s;font-family:'Noto Kufi Arabic'}
+.btn-o:hover{background:rgba(255,255,255,.25)}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);color:rgba(255,255,255,.55);font-size:.78rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px}
+.arr{width:22px;height:22px;border-right:2px solid rgba(255,255,255,.45);border-bottom:2px solid rgba(255,255,255,.45);transform:rotate(45deg);animation:bounce 1.6s infinite}
+@keyframes bounce{0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translateY(6px)}}
+
+/* ── Sections ── */
+section{padding:4.5rem 0}
+.s-white{background:white}
+.s-gray{background:var(--gray-50)}
+.s-grad{background:linear-gradient(135deg,#f0f9ff,#ecfdf5)}
+.container{max-width:1280px;margin:0 auto;padding:0 1.5rem}
+.stw{text-align:center;margin-bottom:2.5rem}
+.sbadge{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;border-radius:50px;font-size:.78rem;font-weight:600;margin-bottom:.75rem}
+.sh2{font-size:clamp(1.6rem,3.5vw,2.3rem);font-weight:800;color:#1a2e44;margin-bottom:.6rem}
+.ssub{color:var(--gray-500);font-size:.95rem;max-width:560px;margin:0 auto}
+.sdiv{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:.75rem}
+.dline{height:3px;width:56px;border-radius:2px}
+.ddot{width:8px;height:8px;border-radius:50%}
+
+/* ── Cards ── */
+.card{background:white;border-radius:1rem;border:1px solid var(--gray-100);box-shadow:0 2px 8px rgba(0,0,0,.04);transition:transform .25s,box-shadow .25s;overflow:hidden}
+.card:hover{transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(13,92,143,.15)}
+.cb{padding:1.5rem}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:1.25rem}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.1rem}
+@media(max-width:1024px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ── Info card ── */
+.ic{background:white;border-radius:1rem;border:1px solid var(--gray-100);border-top-width:3px;padding:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:transform .25s,box-shadow .25s}
+.ic:hover{transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(13,92,143,.15)}
+.ic-inner{display:flex;align-items:flex-start;gap:.9rem}
+.ic-icon{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ic-icon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic h3{font-weight:700;color:var(--gray-800);margin-bottom:.4rem;font-size:.95rem}
+.ic p{color:var(--gray-600);font-size:.875rem;line-height:1.7}
+
+/* ── Quality card ── */
+.qc{background:white;border-radius:1rem;border:1px solid var(--gray-100);padding:1.25rem;position:relative;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:transform .25s,box-shadow .25s}
+.qc:hover{transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(13,92,143,.15)}
+.qbar{position:absolute;top:0;right:0;left:0;height:4px}
+.qinner{display:flex;align-items:flex-start;gap:.9rem;margin-top:.4rem}
+.qiw{position:relative;flex-shrink:0}
+.qi{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center}
+.qi svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.qnum{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;color:white;font-size:.65rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+.qc h3{font-weight:700;font-size:1rem;color:var(--gray-800);margin-bottom:.4rem}
+.qc p{color:var(--gray-600);font-size:.85rem;line-height:1.7}
+
+/* ── Steps ── */
+.steps-wrap{display:grid;grid-template-columns:1fr 360px;gap:2rem;align-items:start}
+@media(max-width:900px){.steps-wrap{grid-template-columns:1fr}}
+.sticky-box{position:sticky;top:80px}
+.step{display:flex;gap:.9rem;align-items:flex-start;margin-bottom:0}
+.snum{width:38px;height:38px;border-radius:50%;color:white;font-weight:700;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sbody{flex:1;padding-bottom:1.5rem;border-bottom:1px solid var(--gray-100)}
+.sbody:last-child{border-bottom:none;padding-bottom:0}
+.sbody h4{font-weight:700;color:var(--gray-800);margin-bottom:.35rem}
+.sbody p{color:var(--gray-600);font-size:.875rem;line-height:1.7}
+
+/* ── Domain card ── */
+.dc{background:white;border-radius:1rem;border:1px solid var(--gray-100);box-shadow:0 2px 8px rgba(0,0,0,.04);overflow:hidden;margin-bottom:1.25rem}
+.dh{display:flex;align-items:center;gap:1rem;padding:1.1rem 1.4rem;border-bottom:1px solid var(--gray-100)}
+.dicon{width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.dicon svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dlabel{font-size:.72rem;font-weight:600;margin-bottom:3px}
+.dtitle{font-weight:700;font-size:1.05rem;color:var(--gray-800)}
+.dbody{padding:1.1rem 1.4rem}
+.dbody p{color:var(--gray-600);font-size:.875rem;line-height:1.7;margin-bottom:.9rem}
+.stag{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:7px;font-size:.77rem;font-weight:600;margin:3px}
+
+/* ── Gradient box ── */
+.gbox{background:linear-gradient(135deg,var(--teal),var(--emerald));border-radius:1rem;padding:1.75rem;color:white}
+.gbox h3{font-weight:700;font-size:1.05rem;margin-bottom:.75rem}
+.gbox p{color:rgba(255,255,255,.8);font-size:.875rem;margin-bottom:1rem}
+.dmini{display:flex;align-items:center;gap:9px;padding:9px 13px;border-radius:9px;background:rgba(255,255,255,.1);margin-bottom:8px}
+.dmini-n{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#1a2e44}
+.dmini span{color:white;font-weight:600;font-size:.875rem}
+
+/* ── Specs table ── */
+.specs-box{background:linear-gradient(135deg,#ecfdf5,#f0fdfa);border-radius:1.5rem;padding:1.75rem;border:1px solid #a7f3d0}
+.specs-hdr{display:flex;align-items:flex-start;gap:1.25rem;margin-bottom:1.75rem}
+.specs-ico{width:60px;height:60px;border-radius:14px;background:#d1fae5;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.specs-ico svg{width:28px;height:28px;stroke:#065f46;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.specs-hdr h3{font-weight:700;font-size:1.1rem;color:var(--gray-800);margin-bottom:.4rem}
+.specs-hdr p{color:var(--gray-600);font-size:.875rem;line-height:1.7}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th{padding:11px 14px;text-align:right;background:#065f46;color:white;font-family:'Noto Kufi Arabic'}
+th:first-child{border-radius:0 9px 0 0}th:last-child{border-radius:0 0 0 9px}
+td{padding:11px 14px}
+tr:nth-child(even) td{background:#f0fdf4}
+tr:nth-child(odd) td{background:white}
+
+/* ── Criteria ── */
+.clist{display:flex;flex-direction:column;gap:3px}
+.ci{display:flex;align-items:flex-start;gap:9px;padding:9px 11px;border-radius:9px;transition:background .2s}
+.ci:hover{background:var(--gray-50)}
+.ck{width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-size:.65rem;font-weight:700}
+.ci span{color:var(--gray-700);font-size:.875rem;line-height:1.7}
+
+/* ── Pros/Cons ── */
+.pc{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:1.5rem}
+@media(max-width:640px){.pc{grid-template-columns:1fr}}
+.pros{background:#ecfdf5;border-radius:1rem;padding:1.4rem;border:1px solid #a7f3d0}
+.cons{background:#fef2f2;border-radius:1rem;padding:1.4rem;border:1px solid #fecaca}
+.pros h3{color:#065f46;font-weight:700;margin-bottom:.9rem;display:flex;align-items:center;gap:7px}
+.cons h3{color:#991b1b;font-weight:700;margin-bottom:.9rem;display:flex;align-items:center;gap:7px}
+.pros li{display:flex;align-items:flex-start;gap:7px;color:#065f46;font-size:.875rem;margin-bottom:7px}
+.cons li{display:flex;align-items:flex-start;gap:7px;color:#991b1b;font-size:.875rem;margin-bottom:7px}
+.pros li::before{content:"✓";font-weight:700;flex-shrink:0}
+.cons li::before{content:"⚠";flex-shrink:0}
+
+/* ── Compare ── */
+.cmp-g{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem}
+@media(max-width:640px){.cmp-g{grid-template-columns:1fr}}
+.cmp-r{background:#fef2f2;border-radius:1rem;padding:1.4rem;border:1px solid #fecaca}
+.cmp-g2{background:#ecfdf5;border-radius:1rem;padding:1.4rem;border:1px solid #a7f3d0}
+.cmp-r h3{color:#b91c1c;font-weight:700;margin-bottom:.6rem}
+.cmp-g2 h3{color:#065f46;font-weight:700;margin-bottom:.6rem}
+.cmp-r p{color:#dc2626;font-size:.875rem;line-height:1.7}
+.cmp-g2 p{color:#059669;font-size:.875rem;line-height:1.7}
+
+/* ── Type card ── */
+.tc{background:white;border-radius:1rem;border:1px solid var(--gray-100);overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:transform .25s,box-shadow .25s}
+.tc:hover{transform:translateY(-4px);box-shadow:0 20px 40px -12px rgba(13,92,143,.15)}
+.tc-h{padding:1.4rem;border-bottom:1px solid var(--gray-100)}
+.tc-ico{width:52px;height:52px;border-radius:13px;display:flex;align-items:center;justify-content:center;margin-bottom:.9rem}
+.tc-ico svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tc-h h3{font-weight:700;font-size:1rem;color:var(--gray-800)}
+.tc-b{padding:1.1rem 1.4rem}
+.tc-b p{color:var(--gray-600);font-size:.875rem;line-height:1.7;margin-bottom:.9rem}
+.fbadge{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:7px;font-size:.77rem;font-weight:600;margin:3px 3px 0 0}
+
+/* ── Essay types ── */
+.et{padding:.9rem;border-radius:9px;margin-bottom:9px}
+.et1{background:#faf5ff;border:1px solid #ddd6fe}
+.et2{background:#eef2ff;border:1px solid #c7d2fe}
+.et3{background:#eff6ff;border:1px solid #bfdbfe}
+.et h4{font-weight:700;margin-bottom:5px}
+.et1 h4{color:#6b21a8}.et2 h4{color:#3730a3}.et3 h4{color:#1e40af}
+.et p{font-size:.875rem;line-height:1.7}
+.et1 p{color:#7c3aed}.et2 p{color:#4338ca}.et3 p{color:#1d4ed8}
+
+/* ── Accordion ── */
+.acc{border:1px solid var(--gray-200);border-radius:11px;margin-bottom:11px;overflow:hidden}
+.acc-btn{width:100%;display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;background:none;border:none;cursor:pointer;text-align:right;font-family:'Noto Kufi Arabic';transition:background .2s}
+.acc-btn:hover{background:var(--gray-50)}
+.acc-btn span{font-weight:600;color:var(--gray-800);font-size:.95rem}
+.acc-arr{width:20px;height:20px;transition:transform .3s;flex-shrink:0}
+.acc-arr svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.acc-arr.open{transform:rotate(180deg)}
+.acc-body{display:none;padding:1rem 1.2rem;border-top:1px solid var(--gray-100)}
+.acc-body.open{display:block}
+.acc-body p{color:var(--gray-600);font-size:.875rem;line-height:1.8;margin-bottom:.9rem}
+
+/* ── MCQ grid ── */
+.mcq-g{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:.75rem}
+@media(max-width:640px){.mcq-g{grid-template-columns:1fr}}
+.mi{display:flex;align-items:flex-start;gap:7px;padding:7px 9px;border-radius:7px;font-size:.85rem;color:var(--gray-700);transition:background .2s}
+.mi:hover{background:var(--gray-50)}
+.mn{width:21px;height:21px;border-radius:50%;font-size:.68rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* ── Output grid ── */
+.og{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem}
+@media(max-width:640px){.og{grid-template-columns:1fr}}
+.oi{display:flex;align-items:flex-start;gap:10px;padding:.9rem;background:white;border-radius:11px;border:1px solid var(--gray-100);transition:transform .2s,box-shadow .2s}
+.oi:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.on{width:26px;height:26px;border-radius:7px;font-size:.72rem;font-weight:700;color:#0f766e;background:#ccfbf1;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.oi p{color:var(--gray-700);font-size:.85rem;line-height:1.7}
+
+/* ── Quote ── */
+.qblock{background:linear-gradient(135deg,var(--teal),var(--emerald));border-radius:1rem;padding:1.75rem;text-align:center;margin-top:2rem}
+.qblock p{color:white;font-size:1.05rem;font-weight:600;line-height:1.8}
+
+/* ── Inspire ── */
+.inspire{background:linear-gradient(135deg,#fffbeb,#fef3c7);border-radius:1rem;padding:1.4rem;border:1px solid #fde68a;display:flex;align-items:flex-start;gap:.9rem;margin-top:2rem}
+.ins-ico{width:46px;height:46px;border-radius:11px;background:#fef3c7;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ins-ico svg{width:24px;height:24px;stroke:#92400e;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.inspire h4{font-weight:700;color:#92400e;margin-bottom:.4rem}
+.inspire p{color:#b45309;font-size:.875rem;line-height:1.8}
+
+/* ── Info boxes ── */
+.ib{border-radius:1rem;padding:1.25rem;margin-bottom:1.25rem}
+.ib-blue{background:#eff6ff;border:1px solid #bfdbfe}
+.ib-blue p{color:#1e40af;font-size:.875rem;line-height:1.7}
+.ib-purple{background:#faf5ff;border:1px solid #ddd6fe}
+.ib-purple p{color:#6b21a8;font-size:.875rem;line-height:1.7}
+
+/* ── Final CTA ── */
+.final-cta{background:linear-gradient(135deg,#0a3d5c,#0d5c8f,#0a7c5c);border-radius:1.5rem;padding:3rem;text-align:center;position:relative;overflow:hidden;margin-top:2.5rem}
+.final-cta::before{content:'';position:absolute;inset:0;opacity:.05;background-image:radial-gradient(circle at 2px 2px,white 1px,transparent 0);background-size:22px 22px}
+.final-cta>*{position:relative;z-index:1}
+.cta-ico{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
+.cta-ico svg{width:28px;height:28px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.final-cta h3{color:white;font-size:1.4rem;font-weight:800;margin-bottom:.9rem}
+.final-cta p{color:rgba(255,255,255,.85);font-size:.95rem;line-height:1.8;max-width:560px;margin:0 auto 1.25rem}
+.cta-tag{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:9px;background:rgba(255,255,255,.15);color:white;font-size:.875rem}
+
+/* ── Footer ── */
+footer{background:linear-gradient(135deg,#0d5c8f,#0a4a6e,#0a7c5c);padding:2.5rem 0;color:white}
+.ft{max-width:1280px;margin:0 auto;padding:0 1.5rem}
+.ft-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1.5rem;padding-bottom:1.75rem;border-bottom:1px solid rgba(255,255,255,.15)}
+.ft-brand{display:flex;align-items:center;gap:.9rem}
+.ft-logo{width:46px;height:46px;border-radius:11px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center}
+.ft-logo svg{width:22px;height:22px;stroke:white;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ft-title{font-weight:700;font-size:1rem}
+.ft-sub{color:rgba(255,255,255,.6);font-size:.8rem;margin-top:3px}
+.ft-mid{text-align:center}
+.ft-lbl{color:rgba(255,255,255,.6);font-size:.78rem;margin-bottom:3px}
+.ft-name{font-weight:700;font-size:1.05rem}
+.tg-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:9px;background:rgba(255,255,255,.15);color:white;font-size:.85rem;font-weight:600;margin-top:7px;transition:background .2s;border:none;cursor:pointer;font-family:'Noto Kufi Arabic';text-decoration:none}
+.tg-btn:hover{background:rgba(255,255,255,.25)}
+.tg-btn svg{width:18px;height:18px;fill:white}
+.ft-btm{text-align:center;padding-top:1.25rem}
+.ft-btm p{color:rgba(255,255,255,.5);font-size:.82rem}
+
+/* ── Fade-in ── */
+.fi{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.fi.v{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+@media(max-width:768px){.hero-h1{font-size:2rem}.ft-top{flex-direction:column;align-items:center;text-align:center}}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<!-- ══ NAV ══════════════════════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-logo">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+      </div>
+      <div>
+        <div class="nav-title">ورشة معايير بناء الاختبار الجيد</div>
+        <div class="nav-sub">الفريق الحادي عشر · 1445هـ</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <button class="nl active" onclick="goTo('intro')">مقدمة</button>
+      <button class="nl" onclick="goTo('definition')">تعريف</button>
+      <button class="nl" onclick="goTo('objectives')">أهداف</button>
+      <button class="nl" onclick="goTo('steps')">خطوات الإعداد</button>
+      <button class="nl" onclick="goTo('domains')">المجالات</button>
+      <button class="nl" onclick="goTo('qualities')">الخصائص</button>
+      <button class="nl" onclick="goTo('specs')">جدول المواصفات</button>
+      <button class="nl" onclick="goTo('criteria')">المعايير</button>
+      <button class="nl" onclick="goTo('types')">الأنواع</button>
+      <button class="nl" onclick="goTo('essay')">مقالية</button>
+      <button class="nl" onclick="goTo('objective')">موضوعية</button>
+      <button class="nl" onclick="goTo('output')">الإخراج</button>
+      <button class="nl" onclick="goTo('model')">نموذج الإجابة</button>
+    </div>
+    <button class="menu-btn" onclick="toggleMob()">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="mob-menu" id="mob">
+    <button class="mlink" onclick="goTo('intro')"><span class="dot" style="background:#0d5c8f"></span>مقدمة الورشة</button>
+    <button class="mlink" onclick="goTo('definition')"><span class="dot" style="background:#0a7c5c"></span>تعريف الاختبار</button>
+    <button class="mlink" onclick="goTo('objectives')"><span class="dot" style="background:#c9a227"></span>أهداف الاختبار</button>
+    <button class="mlink" onclick="goTo('steps')"><span class="dot" style="background:#e67e22"></span>خطوات الإعداد</button>
+    <button class="mlink" onclick="goTo('domains')"><span class="dot" style="background:#7c3aed"></span>المجالات الذهنية</button>
+    <button class="mlink" onclick="goTo('qualities')"><span class="dot" style="background:#0d5c8f"></span>خصائص الاختبار</button>
+    <button class="mlink" onclick="goTo('specs')"><span class="dot" style="background:#0a7c5c"></span>جدول المواصفات</button>
+    <button class="mlink" onclick="goTo('criteria')"><span class="dot" style="background:#c9a227"></span>معايير الأسئلة</button>
+    <button class="mlink" onclick="goTo('types')"><span class="dot" style="background:#e67e22"></span>أنواع الاختبارات</button>
+    <button class="mlink" onclick="goTo('essay')"><span class="dot" style="background:#7c3aed"></span>الأسئلة المقالية</button>
+    <button class="mlink" onclick="goTo('objective')"><span class="dot" style="background:#0d5c8f"></span>الأسئلة الموضوعية</button>
+    <button class="mlink" onclick="goTo('output')"><span class="dot" style="background:#0a7c5c"></span>إخراج الورقة</button>
+    <button class="mlink" onclick="goTo('model')"><span class="dot" style="background:#c9a227"></span>نموذج الإجابة</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══════════════════════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-blob b1"></div><div class="hero-blob b2"></div><div class="hero-blob b3"></div>
+  <div class="hex h1"></div><div class="hex h2"></div><div class="hex h3"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      المملكة العربية السعودية · وزارة التعليم · إدارة تعليم الرياض
+    </div>
+    <h1 class="hero-h1">
+      ورشة معايير بناء
+      <span>الاختبار الجيد</span>
+    </h1>
+    <p class="hero-desc">برنامج تدريبي متكامل يهدف إلى تمكين المعلمات من صياغة الأسئلة التحصيلية وفق دليل إجراءات ونظم الاختبارات</p>
+    <div class="hero-tags">
+      <div class="htag">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        الفريق الحادي عشر
+      </div>
+      <div class="htag">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        مكتب التعليم الملز
+      </div>
+      <div class="htag">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        1445هـ
+      </div>
+    </div>
+    <div class="hero-btns">
+      <button class="btn-g" onclick="goTo('intro')">ابدأ الورشة</button>
+      <button class="btn-o" onclick="goTo('qualities')">خصائص الاختبار الجيد</button>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>مرر للأسفل</span><div class="arr"></div></div>
+</section>
+
+<!-- ══ INTRO ══════════════════════════════════════════════════════════════ -->
+<section id="intro" class="s-white">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(13,92,143,.1);color:#0d5c8f"><span class="dot" style="background:#0d5c8f"></span>محتوى الورشة</div>
+      <h2 class="sh2">مقدمة الورشة</h2>
+      <p class="ssub">أهداف الورشة التدريبية ومحاورها الرئيسية</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#0d5c8f,transparent)"></div><div class="ddot" style="background:#0d5c8f"></div><div class="dline" style="background:linear-gradient(270deg,#0d5c8f,transparent)"></div></div>
+    </div>
+    <div class="g3">
+      <div class="card fi d1" style="border-top:4px solid #0d5c8f">
+        <div class="cb" style="text-align:center">
+          <div style="width:62px;height:62px;border-radius:15px;background:rgba(13,92,143,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0d5c8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          </div>
+          <div style="font-size:2.2rem;font-weight:900;color:rgba(13,92,143,.15);margin-bottom:.4rem">01</div>
+          <h3 style="font-weight:700;color:#1f2937;font-size:1rem;margin-bottom:.6rem">الهدف الأول</h3>
+          <p style="color:#4b5563;font-size:.875rem;line-height:1.7">التعرف على معنى الاختبارات وأنواعها</p>
+        </div>
+      </div>
+      <div class="card fi d2" style="border-top:4px solid #0a7c5c">
+        <div class="cb" style="text-align:center">
+          <div style="width:62px;height:62px;border-radius:15px;background:rgba(10,124,92,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0a7c5c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <div style="font-size:2.2rem;font-weight:900;color:rgba(10,124,92,.15);margin-bottom:.4rem">02</div>
+          <h3 style="font-weight:700;color:#1f2937;font-size:1rem;margin-bottom:.6rem">الهدف الثاني</h3>
+          <p style="color:#4b5563;font-size:.875rem;line-height:1.7">التعرف على معايير بناء الاختبارات الجيدة</p>
+        </div>
+      </div>
+      <div class="card fi d3" style="border-top:4px solid #c9a227">
+        <div class="cb" style="text-align:center">
+          <div style="width:62px;height:62px;border-radius:15px;background:rgba(201,162,39,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#c9a227" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <div style="font-size:2.2rem;font-weight:900;color:rgba(201,162,39,.15);margin-bottom:.4rem">03</div>
+          <h3 style="font-weight:700;color:#1f2937;font-size:1rem;margin-bottom:.6rem">الهدف الثالث</h3>
+          <p style="color:#4b5563;font-size:.875rem;line-height:1.7">التعرف على مميزات وعيوب الاختبارات بأنواعها</p>
+        </div>
+      </div>
+    </div>
+    <div class="inspire fi">
+      <div class="ins-ico">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div>
+        <h4>إلهام</h4>
+        <p>ما يفعله الفنان الأذربيجاني "رشاد علي أكبروف" أنه يقوم بجمع وترصيص أشياء عادية أمام مصدر ضوء ليرسم بظلها على الحائط لوحات مدهشة.. كذلك المعلم الماهر يصنع من أسئلة بسيطة أداةً تكشف عمق التعلم.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DEFINITION ══════════════════════════════════════════════════════════ -->
+<section id="definition" class="s-gray">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(10,124,92,.1);color:#0a7c5c"><span class="dot" style="background:#0a7c5c"></span>محتوى الورشة</div>
+      <h2 class="sh2">تعريف الاختبار</h2>
+      <p class="ssub">ماذا نعني بالاختبار؟ وما الفرق بينه وبين الامتحان؟</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#0a7c5c,transparent)"></div><div class="ddot" style="background:#0a7c5c"></div><div class="dline" style="background:linear-gradient(270deg,#0a7c5c,transparent)"></div></div>
+    </div>
+    <div class="cmp-g fi">
+      <div class="cmp-r">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:.6rem">
+          <div style="width:38px;height:38px;border-radius:9px;background:#fee2e2;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <h3>امتحان</h3>
+        </div>
+        <p>مصطلح مشتق من <strong>المحنة</strong> — يصاحبه الرهبة والمعاناة والخوف</p>
+      </div>
+      <div class="cmp-g2">
+        <div style="display:flex;align-items:center;gap:9px;margin-bottom:.6rem">
+          <div style="width:38px;height:38px;border-radius:9px;background:#d1fae5;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <h3>اختبار ✓</h3>
+        </div>
+        <p>مصطلح مشتق من <strong>الخبرة</strong> — يُعبّر عن قياس موضوعي للتعلم</p>
+      </div>
+    </div>
+    <div class="g2 fi">
+      <div class="card" style="border-right:4px solid #0a7c5c">
+        <div class="cb">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:.9rem">
+            <div style="width:38px;height:38px;border-radius:9px;background:#ecfdf5;display:flex;align-items:center;justify-content:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <h3 style="font-weight:700;color:#1f2937">التعريف الأول</h3>
+          </div>
+          <p style="color:#4b5563;line-height:1.8;font-size:.875rem">هو <strong style="color:#1f2937">طريقة منظمة</strong> لتحديد مستوى تحصيل الطالبات من المعلومات والمهارات في مادة دراسية تم تعلمها مسبقاً وذلك من خلال إجاباتهم على مجموعة من المثيرات (الأسئلة) تمثل محتوى تلك المادة الدراسية.</p>
+        </div>
+      </div>
+      <div class="card" style="border-right:4px solid #0d5c8f">
+        <div class="cb">
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:.9rem">
+            <div style="width:38px;height:38px;border-radius:9px;background:#eff6ff;display:flex;align-items:center;justify-content:center">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <h3 style="font-weight:700;color:#1f2937">التعريف الثاني</h3>
+          </div>
+          <p style="color:#4b5563;line-height:1.8;font-size:.875rem"><strong style="color:#1f2937">أداة تستخدم</strong> لتحديد مستوى كسب المتعلم لمعلومات ومهارات في مادة دراسية كان قد تم تعلمها مسبقاً بصفة رسمية، من خلال إجاباته على عينة من الأسئلة (الفقرات) التي تمثل محتوى المادة الدراسية.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ OBJECTIVES ══════════════════════════════════════════════════════════ -->
+<section id="objectives" class="s-white">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(201,162,39,.1);color:#c9a227"><span class="dot" style="background:#c9a227"></span>محتوى الورشة</div>
+      <h2 class="sh2">أهداف الاختبار</h2>
+      <p class="ssub">ما الذي يسعى الاختبار إلى تحقيقه؟</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#c9a227,transparent)"></div><div class="ddot" style="background:#c9a227"></div><div class="dline" style="background:linear-gradient(270deg,#c9a227,transparent)"></div></div>
+    </div>
+    <div class="g3">
+      <div class="ic fi d1" style="border-top-color:#0d5c8f">
+        <div class="ic-inner">
+          <div class="ic-icon" style="background:rgba(13,92,143,.1);color:#0d5c8f"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+          <div><h3>قياس مستوى التحصيل</h3><p>قياس مستوى تحصيل الطالبات وتشخيص نقاط القوة والضعف لديهن</p></div>
+        </div>
+      </div>
+      <div class="ic fi d2" style="border-top-color:#0a7c5c">
+        <div class="ic-inner">
+          <div class="ic-icon" style="background:rgba(10,124,92,.1);color:#0a7c5c"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <div><h3>تصنيف الطالبات</h3><p>تصنيف الطالبات في مجموعات وقياس مستوى تقدمهن</p></div>
+        </div>
+      </div>
+      <div class="ic fi d3" style="border-top-color:#c9a227">
+        <div class="ic-inner">
+          <div class="ic-icon" style="background:rgba(201,162,39,.1);color:#c9a227"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+          <div><h3>الكشف عن الفروق</h3><p>الكشف عن الفروق بين الطالبات (المتفوقة - العادية - بطيئة التعلم)</p></div>
+        </div>
+      </div>
+      <div class="ic fi d1" style="border-top-color:#e67e22">
+        <div class="ic-inner">
+          <div class="ic-icon" style="background:rgba(230,126,34,.1);color:#e67e22"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+          <div><h3>تنشيط واقعية التعلم</h3><p>تنشيط واقعية التعلم والنقل من صف إلى آخر</p></div>
+        </div>
+      </div>
+      <div class="ic fi d2" style="border-top-color:#7c3aed">
+        <div class="ic-inner">
+          <div class="ic-icon" style="background:rgba(124,58,237,.1);color:#7c3aed"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><h3>التنبؤ بالأداء</h3><p>التنبؤ بأداء الطالبات في المستقبل</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ STEPS ══════════════════════════════════════════════════════════════ -->
+<section id="steps" class="s-gray">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(230,126,34,.1);color:#e67e22"><span class="dot" style="background:#e67e22"></span>محتوى الورشة</div>
+      <h2 class="sh2">خطوات إعداد الاختبار التحصيلي</h2>
+      <p class="ssub">المراحل الأربع لإعداد اختبار تحصيلي متكامل</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#e67e22,transparent)"></div><div class="ddot" style="background:#e67e22"></div><div class="dline" style="background:linear-gradient(270deg,#e67e22,transparent)"></div></div>
+    </div>
+    <div class="steps-wrap fi">
+      <div>
+        <div class="step"><div class="snum" style="background:linear-gradient(135deg,#0d5c8f,#0d5c8faa)">1</div><div class="sbody"><h4>تحليل المحتوى</h4><p>تحليل المحتوى الدراسي: الخبرات المعرفية والمهارية والوجدانية المتضمنة في المقرر الدراسي والتي تحقق النمو المتكامل للمتعلم. مثل: معرفة أقسام الحديث (معرفية)، إتقان حكم الإقلاب (مهارية)، محبة الخلفاء الراشدين (وجدانية).</p></div></div>
+        <div class="step"><div class="snum" style="background:linear-gradient(135deg,#0a7c5c,#0a7c5caa)">2</div><div class="sbody"><h4>صياغة الأهداف</h4><p>الأهداف التدريسية: تلك الأنماط من السلوك التي نتوقع أن تصدرها الطالبة بدرجة من الإتقان. أي تغيير يراد إحداثه في سلوك المتعلم نتيجة لعملية التعلم.</p></div></div>
+        <div class="step"><div class="snum" style="background:linear-gradient(135deg,#c9a227,#c9a227aa)">3</div><div class="sbody"><h4>بناء الفقرات الاختبارية</h4><p>صياغة الأسئلة وفق المعايير العلمية المحددة، مع مراعاة التنوع بين الأسئلة المقالية والموضوعية وتغطية جميع مستويات الأهداف.</p></div></div>
+        <div class="step"><div class="snum" style="background:linear-gradient(135deg,#e67e22,#e67e22aa)">4</div><div class="sbody" style="border-bottom:none;padding-bottom:0"><h4>تحليل نتائج الاختبار</h4><p>مراجعة وتحليل نتائج الاختبار للتحقق من مدى تحقيق الأهداف التدريسية وتحديد نقاط القوة والضعف في التعلم.</p></div></div>
+      </div>
+      <div class="sticky-box">
+        <div class="gbox">
+          <h3>المجالات الذهنية للاختبارات</h3>
+          <p>تعتمد الاختبارات اعتماداً كبيراً على المجالات الذهنية في بناء وحل الأسئلة</p>
+          <div class="dmini"><div class="dmini-n" style="background:#fde68a">1</div><span>مجال المعرفة</span></div>
+          <div class="dmini"><div class="dmini-n" style="background:#fed7aa">2</div><span>مجال التطبيق</span></div>
+          <div class="dmini"><div class="dmini-n" style="background:#ddd6fe">3</div><span>مجال التفكير المنطقي</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ DOMAINS ══════════════════════════════════════════════════════════════ -->
+<section id="domains" class="s-white">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(124,58,237,.1);color:#7c3aed"><span class="dot" style="background:#7c3aed"></span>محتوى الورشة</div>
+      <h2 class="sh2">المجالات الذهنية للاختبارات</h2>
+      <p class="ssub">المجالات الثلاثة التي تقيسها الاختبارات التحصيلية</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#7c3aed,transparent)"></div><div class="ddot" style="background:#7c3aed"></div><div class="dline" style="background:linear-gradient(270deg,#7c3aed,transparent)"></div></div>
+    </div>
+    <div class="dc fi">
+      <div class="dh" style="background:linear-gradient(135deg,rgba(13,92,143,.05),rgba(13,92,143,.01))">
+        <div class="dicon" style="background:#eff6ff;color:#1d4ed8"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
+        <div><div class="dlabel" style="color:#3b82f6">المجال الأول</div><div class="dtitle">مجال المعرفة</div></div>
+      </div>
+      <div class="dbody">
+        <p>وتعني قدرة الطالبة على الاستدعاء والتعرف والاستيعاب، ومن ذلك معرفة المصطلحات والرموز والمدلولات والحقائق وتحويل الرسالة إلى صيغ أخرى وفهم معانيها.</p>
+        <div>
+          <span class="stag" style="background:rgba(13,92,143,.08);color:#0d5c8f;border:1px solid rgba(13,92,143,.2)">الشرح أو التفسير</span>
+          <span class="stag" style="background:rgba(13,92,143,.08);color:#0d5c8f;border:1px solid rgba(13,92,143,.2)">التعريف</span>
+          <span class="stag" style="background:rgba(13,92,143,.08);color:#0d5c8f;border:1px solid rgba(13,92,143,.2)">الاستدعاء أو التميز</span>
+          <span class="stag" style="background:rgba(13,92,143,.08);color:#0d5c8f;border:1px solid rgba(13,92,143,.2)">الوصف</span>
+          <span class="stag" style="background:rgba(13,92,143,.08);color:#0d5c8f;border:1px solid rgba(13,92,143,.2)">المقارنة والتصنيف</span>
+          <span class="stag" style="background:rgba(13,92,143,.08);color:#0d5c8f;border:1px solid rgba(13,92,143,.2)">التوضيح والتمثيل</span>
+          <span class="stag" style="background:rgba(13,92,143,.08);color:#0d5c8f;border:1px solid rgba(13,92,143,.2)">المعرفة بالأدوات العلمية</span>
+        </div>
+      </div>
+    </div>
+    <div class="dc fi">
+      <div class="dh" style="background:linear-gradient(135deg,rgba(10,124,92,.05),rgba(10,124,92,.01))">
+        <div class="dicon" style="background:#ecfdf5;color:#059669"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+        <div><div class="dlabel" style="color:#10b981">المجال الثاني</div><div class="dtitle">مجال التطبيق</div></div>
+      </div>
+      <div class="dbody">
+        <p>وهو قدرة الطالب على تطبيق التجريدات، أي توظيف النظريات والمبادئ والقواعد والإجراءات والأفكار في مشكلات جديدة وحالات جديدة وبمعنى آخر (انتقال التعلم إلى حالات وظروف جديدة) دون وجود إيحاءات بالكيفية التي يستخدم بها التجريد.</p>
+        <div>
+          <span class="stag" style="background:rgba(10,124,92,.08);color:#0a7c5c;border:1px solid rgba(10,124,92,.2)">المقارنة</span>
+          <span class="stag" style="background:rgba(10,124,92,.08);color:#0a7c5c;border:1px solid rgba(10,124,92,.2)">الشرح</span>
+          <span class="stag" style="background:rgba(10,124,92,.08);color:#0a7c5c;border:1px solid rgba(10,124,92,.2)">النمذجة واستخدام النماذج</span>
+          <span class="stag" style="background:rgba(10,124,92,.08);color:#0a7c5c;border:1px solid rgba(10,124,92,.2)">الربط</span>
+          <span class="stag" style="background:rgba(10,124,92,.08);color:#0a7c5c;border:1px solid rgba(10,124,92,.2)">التصنيف</span>
+          <span class="stag" style="background:rgba(10,124,92,.08);color:#0a7c5c;border:1px solid rgba(10,124,92,.2)">حل مشكلات اعتيادية روتينية</span>
+        </div>
+      </div>
+    </div>
+    <div class="dc fi">
+      <div class="dh" style="background:linear-gradient(135deg,rgba(124,58,237,.05),rgba(124,58,237,.01))">
+        <div class="dicon" style="background:#faf5ff;color:#7c3aed"><svg viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636-.707.707M21 12h-1M4 12H3m3.343-5.657-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg></div>
+        <div><div class="dlabel" style="color:#8b5cf6">المجال الثالث</div><div class="dtitle">مجال التفكير المنطقي (الاستدلال)</div></div>
+      </div>
+      <div class="dbody">
+        <p>يمكن القول بأنه عبارة عن سلسلة من النشاطات العقلية التي يقوم بها الدماغ عندما يتعرض لمثير يتم استقباله بواحدة أو أكثر من الحواس الخمس، وقدرة الطالب على إدراك معنى المادة المتعلمة وإيجاد الحلول للمواقف المختلفة.</p>
+        <div>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">التحليل</span>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">الفروض – التنبؤ</span>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">الدمج</span>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">الاستنتاج</span>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">التعميم</span>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">التصميم</span>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">التسويغ</span>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">التقويم</span>
+          <span class="stag" style="background:rgba(124,58,237,.08);color:#7c3aed;border:1px solid rgba(124,58,237,.2)">حل مشكلات غير اعتيادية</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ QUALITIES ══════════════════════════════════════════════════════════ -->
+<section id="qualities" class="s-grad">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(13,92,143,.1);color:#0d5c8f"><span class="dot" style="background:#0d5c8f"></span>محتوى الورشة</div>
+      <h2 class="sh2">خصائص الاختبار الجيد</h2>
+      <p class="ssub">ثمانية معايير تميز الاختبار الجيد عن غيره</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#0d5c8f,transparent)"></div><div class="ddot" style="background:#0d5c8f"></div><div class="dline" style="background:linear-gradient(270deg,#0d5c8f,transparent)"></div></div>
+    </div>
+    <div class="g4">
+      <div class="qc fi d1"><div class="qbar" style="background:linear-gradient(90deg,#0d5c8f,rgba(13,92,143,.3))"></div><div class="qinner"><div class="qiw"><div class="qi" style="background:rgba(13,92,143,.1);color:#0d5c8f"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="22" y1="12" x2="18" y2="12"/><line x1="6" y1="12" x2="2" y2="12"/><line x1="12" y1="6" x2="12" y2="2"/><line x1="12" y1="22" x2="12" y2="18"/></svg></div><div class="qnum" style="background:#0d5c8f">1</div></div><div><h3>الصدق</h3><p>أن يقيس الاختبار ما صُمِّم لأجله</p></div></div></div>
+      <div class="qc fi d2"><div class="qbar" style="background:linear-gradient(90deg,#0a7c5c,rgba(10,124,92,.3))"></div><div class="qinner"><div class="qiw"><div class="qi" style="background:rgba(10,124,92,.1);color:#0a7c5c"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="qnum" style="background:#0a7c5c">2</div></div><div><h3>الثبات</h3><p>استقرار النتائج في حال تكرار تطبيقه على نفس العينة</p></div></div></div>
+      <div class="qc fi d3"><div class="qbar" style="background:linear-gradient(90deg,#c9a227,rgba(201,162,39,.3))"></div><div class="qinner"><div class="qiw"><div class="qi" style="background:rgba(201,162,39,.1);color:#c9a227"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="qnum" style="background:#c9a227">3</div></div><div><h3>الموضوعية</h3><p>عدم تأثر النتائج بذاتية المصحح</p></div></div></div>
+      <div class="qc fi d4"><div class="qbar" style="background:linear-gradient(90deg,#e67e22,rgba(230,126,34,.3))"></div><div class="qinner"><div class="qiw"><div class="qi" style="background:rgba(230,126,34,.1);color:#e67e22"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></div><div class="qnum" style="background:#e67e22">4</div></div><div><h3>الشمولية</h3><p>أن يكون الاختبار شاملاً وممثلاً للأهداف التدريسية المراد قياسها</p></div></div></div>
+      <div class="qc fi d1"><div class="qbar" style="background:linear-gradient(90deg,#7c3aed,rgba(124,58,237,.3))"></div><div class="qinner"><div class="qiw"><div class="qi" style="background:rgba(124,58,237,.1);color:#7c3aed"><svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="m9 12 2 2 4-4"/></svg></div><div class="qnum" style="background:#7c3aed">5</div></div><div><h3>العدالة</h3><p>تكون فقرات الاختبار مناسبة للطالبات وتراعي الفروق دون تفضيل فئة عن فئة</p></div></div></div>
+      <div class="qc fi d2"><div class="qbar" style="background:linear-gradient(90deg,#dc2626,rgba(220,38,38,.3))"></div><div class="qinner"><div class="qiw"><div class="qi" style="background:rgba(220,38,38,.1);color:#dc2626"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div><div class="qnum" style="background:#dc2626">6</div></div><div><h3>الواقعية</h3><p>أن يكون تطبيق الاختبار في حدود الظروف المتاحة وأن يتناسب طوله مع الوقت المحدد له</p></div></div></div>
+      <div class="qc fi d3"><div class="qbar" style="background:linear-gradient(90deg,#0891b2,rgba(8,145,178,.3))"></div><div class="qinner"><div class="qiw"><div class="qi" style="background:rgba(8,145,178,.1);color:#0891b2"><svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg></div><div class="qnum" style="background:#0891b2">7</div></div><div><h3>سهولة التصحيح</h3><p>الأخذ في الاعتبار توزيع الدرجات عند إعداد فقرات الاختبار وخصوصاً الفقرات المقالية</p></div></div></div>
+      <div class="qc fi d4"><div class="qbar" style="background:linear-gradient(90deg,#16a34a,rgba(22,163,74,.3))"></div><div class="qinner"><div class="qiw"><div class="qi" style="background:rgba(22,163,74,.1);color:#16a34a"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="qnum" style="background:#16a34a">8</div></div><div><h3>التمييز</h3><p>أن يكون الاختبار قادراً على الكشف عن الفروق الفردية بين الطالبات والتميز بينهن في المستوى الدراسي</p></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SPECS ══════════════════════════════════════════════════════════════ -->
+<section id="specs" class="s-white">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(10,124,92,.1);color:#0a7c5c"><span class="dot" style="background:#0a7c5c"></span>محتوى الورشة</div>
+      <h2 class="sh2">جدول المواصفات</h2>
+      <p class="ssub">أداة لضمان توازن الاختبار وشموليته</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#0a7c5c,transparent)"></div><div class="ddot" style="background:#0a7c5c"></div><div class="dline" style="background:linear-gradient(270deg,#0a7c5c,transparent)"></div></div>
+    </div>
+    <div class="specs-box fi">
+      <div class="specs-hdr">
+        <div class="specs-ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></div>
+        <div>
+          <h3>ما هو جدول المواصفات؟</h3>
+          <p>جدول المواصفات هو أداة تخطيطية تُستخدم لضمان أن الاختبار يغطي جميع الأهداف التدريسية بصورة متوازنة، ويُحدد فيه توزيع الأسئلة على الموضوعات والمستويات المعرفية المختلفة.</p>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>الموضوع / الوحدة</th><th style="text-align:center">المعرفة</th><th style="text-align:center">التطبيق</th><th style="text-align:center">الاستدلال</th><th style="text-align:center">المجموع</th></tr></thead>
+          <tbody>
+            <tr><td style="font-weight:600">الوحدة الأولى</td><td style="text-align:center;color:#1d4ed8">30%</td><td style="text-align:center;color:#059669">40%</td><td style="text-align:center;color:#7c3aed">30%</td><td style="text-align:center;font-weight:700">100%</td></tr>
+            <tr><td style="font-weight:600">الوحدة الثانية</td><td style="text-align:center;color:#1d4ed8">25%</td><td style="text-align:center;color:#059669">45%</td><td style="text-align:center;color:#7c3aed">30%</td><td style="text-align:center;font-weight:700">100%</td></tr>
+            <tr><td style="font-weight:600">الوحدة الثالثة</td><td style="text-align:center;color:#1d4ed8">35%</td><td style="text-align:center;color:#059669">35%</td><td style="text-align:center;color:#7c3aed">30%</td><td style="text-align:center;font-weight:700">100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:.78rem;color:#9ca3af;text-align:center;margin-top:.9rem">* هذا مثال توضيحي لجدول المواصفات</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CRITERIA ══════════════════════════════════════════════════════════ -->
+<section id="criteria" class="s-gray">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(201,162,39,.1);color:#c9a227"><span class="dot" style="background:#c9a227"></span>محتوى الورشة</div>
+      <h2 class="sh2">المعايير العامة لكتابة الأسئلة</h2>
+      <p class="ssub">الضوابط العلمية لصياغة أسئلة الاختبار</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#c9a227,transparent)"></div><div class="ddot" style="background:#c9a227"></div><div class="dline" style="background:linear-gradient(270deg,#c9a227,transparent)"></div></div>
+    </div>
+    <div class="g2 fi">
+      <ul class="clist">
+        <li class="ci"><div class="ck" style="background:rgba(13,92,143,.1);color:#0d5c8f">✓</div><span>صحة السؤال وخلوه من الأخطاء العلمية واللغوية</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(10,124,92,.1);color:#0a7c5c">✓</div><span>التقيد بقائمة الأهداف وجدول المواصفات</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(201,162,39,.1);color:#c9a227">✓</div><span>تجنب التعقيد اللفظي في السؤال</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(230,126,34,.1);color:#e67e22">✓</div><span>مراعاة معايير بناء الاختبار وجودته</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(124,58,237,.1);color:#7c3aed">✓</div><span>الدقة في صياغة السؤال بحيث يتحدد المطلوب منه تماماً</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(220,38,38,.1);color:#dc2626">✓</div><span>مراعاة تناسب وقت الاختبار وعدد الأسئلة</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(8,145,178,.1);color:#0891b2">✓</div><span>التنويع بين الأسئلة المقالية والموضوعية حسب النسبة المحددة</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(22,163,74,.1);color:#16a34a">✓</div><span>مراعاة أن يكون لكل سؤال إجابة صحيحة متفق عليها في الكتاب المقرر</span></li>
+      </ul>
+      <ul class="clist">
+        <li class="ci"><div class="ck" style="background:rgba(13,92,143,.1);color:#0d5c8f">✓</div><span>اكتبي من الأسئلة أكثر مما تحتاجينه في الاختبار</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(10,124,92,.1);color:#0a7c5c">✓</div><span>يجب أن يتناول كل سؤال أجزاء هامة من المقرر الدراسي</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(201,162,39,.1);color:#c9a227">✓</div><span>يجب أن يكون كل سؤال مستقلاً بذاته</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(230,126,34,.1);color:#e67e22">✓</div><span>عدم كتابة معلومات في السؤال لا تفيد الطالبة</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(124,58,237,.1);color:#7c3aed">✓</div><span>مراعاة أن يكون كل سؤال يطرح موقفاً جديداً</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(220,38,38,.1);color:#dc2626">✓</div><span>يراعى ألا يشترك في إعداد الأسئلة من له قريب من الدرجة الأولى</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(8,145,178,.1);color:#0891b2">✓</div><span>إذا كان مطلوباً حل سؤال له عدة طرق فلا تحدد طريقة معينة</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(22,163,74,.1);color:#16a34a">✓</div><span>التقيد بمعايير الأسئلة المقالية والموضوعية</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(13,92,143,.1);color:#0d5c8f">✓</div><span>تنويع الأسئلة من حيث السهولة والصعوبة مع مراعاة الفروق الفردية</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(10,124,92,.1);color:#0a7c5c">✓</div><span>الإخراج الجيد للورقة من حيث الطباعة والتوجيهات الأخرى</span></li>
+        <li class="ci"><div class="ck" style="background:rgba(201,162,39,.1);color:#c9a227">✓</div><span>يجب مراعاة التوجيهات الخاصة بالاختبار لكل مادة ضمن تعاميم الاختبارات</span></li>
+      </ul>
+    </div>
+    <div class="qblock fi"><p>"أصول النجاح أن يرضى الله عنك، وأن يرضى عنك من حولك، وأن تكون نفسك راضية، وأن تقدم عملاً مثمراً"</p></div>
+  </div>
+</section>
+
+<!-- ══ TYPES ══════════════════════════════════════════════════════════════ -->
+<section id="types" class="s-white">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(230,126,34,.1);color:#e67e22"><span class="dot" style="background:#e67e22"></span>محتوى الورشة</div>
+      <h2 class="sh2">أنواع الاختبارات</h2>
+      <p class="ssub">التصنيفات الرئيسية للاختبارات التحصيلية</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#e67e22,transparent)"></div><div class="ddot" style="background:#e67e22"></div><div class="dline" style="background:linear-gradient(270deg,#e67e22,transparent)"></div></div>
+    </div>
+    <div class="g3">
+      <div class="tc fi d1">
+        <div class="tc-h" style="background:linear-gradient(135deg,rgba(13,92,143,.05),rgba(13,92,143,.01))">
+          <div class="tc-ico" style="background:rgba(13,92,143,.1);color:#0d5c8f"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
+          <h3>الاختبارات التحريرية</h3>
+        </div>
+        <div class="tc-b">
+          <p>تصنف إلى اختبارات مقالية وموضوعية. يراد بها تقويم التحصيل الدراسي في نهاية الوحدة أو الفصل الدراسي، وتقدم للطالب على هيئة أسئلة مكتوبة تصاغ وفق ضوابط وشروط محددة.</p>
+          <span class="fbadge" style="background:rgba(13,92,143,.1);color:#0d5c8f">أسئلة مقالية</span>
+          <span class="fbadge" style="background:rgba(13,92,143,.1);color:#0d5c8f">أسئلة موضوعية</span>
+        </div>
+      </div>
+      <div class="tc fi d2">
+        <div class="tc-h" style="background:linear-gradient(135deg,rgba(10,124,92,.05),rgba(10,124,92,.01))">
+          <div class="tc-ico" style="background:rgba(10,124,92,.1);color:#0a7c5c"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <h3>الاختبارات الشفوية</h3>
+        </div>
+        <div class="tc-b">
+          <p>أسئلة تُلقى على الطالب بطريقة شفوية، ويطلب منه الإجابة عنها بالطريقة نفسها، تهدف إلى معرفة مدى فهم الطالب للمادة الدراسية وقياس تحقق الأهداف المطلوبة.</p>
+          <span class="fbadge" style="background:rgba(10,124,92,.1);color:#0a7c5c">تفاعل مباشر</span>
+          <span class="fbadge" style="background:rgba(10,124,92,.1);color:#0a7c5c">تقييم الفهم</span>
+        </div>
+      </div>
+      <div class="tc fi d3">
+        <div class="tc-h" style="background:linear-gradient(135deg,rgba(230,126,34,.05),rgba(230,126,34,.01))">
+          <div class="tc-ico" style="background:rgba(230,126,34,.1);color:#e67e22"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div>
+          <h3>الاختبارات الأدائية</h3>
+        </div>
+        <div class="tc-b">
+          <p>اختبارات تقيس أداء الطالب بهدف التعرف على بعض الجوانب العملية والأدائية في المادة، حيث تعتمد على ما يقدمه الطالب من أداء عملي في الواقع.</p>
+          <span class="fbadge" style="background:rgba(230,126,34,.1);color:#e67e22">أداء عملي</span>
+          <span class="fbadge" style="background:rgba(230,126,34,.1);color:#e67e22">تقييم مهاري</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ESSAY ══════════════════════════════════════════════════════════════ -->
+<section id="essay" class="s-gray">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(124,58,237,.1);color:#7c3aed"><span class="dot" style="background:#7c3aed"></span>محتوى الورشة</div>
+      <h2 class="sh2">الأسئلة المقالية</h2>
+      <p class="ssub">الأسئلة الإنشائية: أنواعها ومعاييرها ومميزاتها وعيوبها</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#7c3aed,transparent)"></div><div class="ddot" style="background:#7c3aed"></div><div class="dline" style="background:linear-gradient(270deg,#7c3aed,transparent)"></div></div>
+    </div>
+    <div class="ib ib-purple fi"><p>تُعرف أيضاً بالاختبارات الإنشائية وتستخدم لقياس مستويات التحليل والتطبيق والبرهان.</p></div>
+    <div class="g2 fi" style="margin-bottom:1.25rem">
+      <div class="card">
+        <div class="cb">
+          <h3 style="font-weight:700;color:#1f2937;margin-bottom:1rem">أنواع الأسئلة المقالية</h3>
+          <div class="et et1"><h4>1. محدود الإجابة (القصيرة)</h4><p>تركز على فكرة واحدة وتكون إجاباتها قصيرة ومحددة بعدد أسطر أو (عرّفي، عددي...)</p></div>
+          <div class="et et2"><h4>2. المستفيض (طويلة الإجابة)</h4><p>ذات الإجابات المستفيضة (غير المحددة) وتعطي للطالبة حرية تحديد طبيعة إجاباتها ومداها مما يتيح لها إظهار مهاراتها في التحليل والتركيب. تستخدم لقياس هدف من المستويات العليا.</p></div>
+          <div class="et et3"><h4>3. أسئلة الإكمال</h4><p>أسئلة تتطلب إكمال جمل ناقصة بكلمة أو عبارة مناسبة</p></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="cb">
+          <h3 style="font-weight:700;color:#1f2937;margin-bottom:1rem">المعايير الخاصة بالأسئلة المقالية</h3>
+          <ul class="clist">
+            <li class="ci"><div class="ck" style="background:rgba(124,58,237,.1);color:#7c3aed">✓</div><span>كتابة السؤال بصيغة محددة بحيث يبدأ بكلمات محددة مثل (وازني، ميزي، بيني..)</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(13,92,143,.1);color:#0d5c8f">✓</div><span>أن يختصر السؤال قدر الإمكان</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(10,124,92,.1);color:#0a7c5c">✓</div><span>عدم اشتمال السؤال على عدة موضوعات</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(201,162,39,.1);color:#c9a227">✓</div><span>أن يكون الوقت المتاح للإجابة مناسباً لطول السؤال</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(230,126,34,.1);color:#e67e22">✓</div><span>تحديد موضوع السؤال بدقة</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(220,38,38,.1);color:#dc2626">✓</div><span>تحديد نوع العمليات المراد من الطالبة استخدامها في الإجابة قبل البدء في كتابة السؤال</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="card fi" style="margin-bottom:1.25rem">
+      <div class="cb">
+        <h3 style="font-weight:700;color:#1f2937;margin-bottom:1rem">المعايير الخاصة بأسئلة الإكمال</h3>
+        <div class="g2">
+          <ul class="clist">
+            <li class="ci"><div class="ck" style="background:rgba(13,92,143,.1);color:#0d5c8f">✓</div><span>أن تكون صياغتها محددة</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(10,124,92,.1);color:#0a7c5c">✓</div><span>ألا تكون الكلمة المطلوبة لأحد الفراغات متضمنة في سؤال آخر</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(201,162,39,.1);color:#c9a227">✓</div><span>لا يكون الفراغ في بداية الجملة بل قرب نهاية العبارة</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(230,126,34,.1);color:#e67e22">✓</div><span>أن تكون مساحة الفراغ مناسبة للإجابة المطلوبة</span></li>
+          </ul>
+          <ul class="clist">
+            <li class="ci"><div class="ck" style="background:rgba(124,58,237,.1);color:#7c3aed">✓</div><span>أن تكون الكلمة المحذوفة مناسبة للإجابة المطلوبة</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(220,38,38,.1);color:#dc2626">✓</div><span>تجنب الإيحاء سواء اللغوية أو الإيحاء بطول أو قصر الإجابة</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(8,145,178,.1);color:#0891b2">✓</div><span>أن تحتوي الجملة على فراغ أو فراغين على الأكثر</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="pc fi">
+      <div class="pros"><h3>مميزات الأسئلة المقالية</h3><ul><li>سهولة الإعداد</li><li>لا تسمح بالتخمين وتقلل من إمكانية الغش</li><li>تمنح الطالبة حرية الإجابة</li><li>تظهر مهارة الطالبة في التنظيم وترتيب الأفكار</li><li>تركز على الأفكار الرئيسية والمفاهيم الكلية</li><li>تقيس أهدافاً عليا كالتحليل والتركيب</li></ul></div>
+      <div class="cons"><h3>عيوب الأسئلة المقالية</h3><ul><li>تفتقد إلى خاصية الشمولية</li><li>لغة الطالبة وخطها وتنظيمها يؤثران على موضوعية التصحيح</li><li>تستغرق وقتاً وجهداً في التصحيح</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ OBJECTIVE ══════════════════════════════════════════════════════════ -->
+<section id="objective" class="s-white">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(13,92,143,.1);color:#0d5c8f"><span class="dot" style="background:#0d5c8f"></span>محتوى الورشة</div>
+      <h2 class="sh2">الأسئلة الموضوعية</h2>
+      <p class="ssub">الاختيار من متعدد، المزاوجة، الصواب والخطأ</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#0d5c8f,transparent)"></div><div class="ddot" style="background:#0d5c8f"></div><div class="dline" style="background:linear-gradient(270deg,#0d5c8f,transparent)"></div></div>
+    </div>
+    <div class="ib ib-blue fi">
+      <p>هي الأسئلة التي تنتقي الطالبة إجابتها من بين عدة إجابات أمامها.</p>
+      <p style="margin-top:.5rem"><strong>سُميت موضوعية:</strong> لأن تصحيحها يتسم بالموضوعية أي أنه لا يتأثر بذاتية المصححة أو بعدد المصححات أو باختلاف الأوقات.</p>
+    </div>
+
+    <!-- MCQ -->
+    <div class="acc fi">
+      <button class="acc-btn" onclick="tog(this)">
+        <span>أسئلة الاختيار من متعدد</span>
+        <div class="acc-arr open"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="acc-body open">
+        <p>عبارة عن سؤال يتبعها عادة عدة أجوبة أحدها صحيح، ويعتبر هذا النوع من الأسئلة أكثر الأنواع شيوعاً ويمكن استخدامه في قياس أهداف مختلفة مثل التذكر كما يستخدم في قياس الفهم والتطبيق.</p>
+        <h4 style="font-weight:700;color:#1f2937;margin-bottom:.6rem">المعايير الخاصة بأسئلة الاختيار من متعدد:</h4>
+        <div class="mcq-g">
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">1</div>أن يعرض الجذر مشكلة واضحة ومحددة</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">2</div>أن تؤلف البدائل إجابات معقولة ظاهرياً</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">3</div>يجب التأكد أنه ليس هناك إلا إجابة واحدة صحيحة</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">4</div>أن يتراوح عدد البدائل بين (4-6) بدائل</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">5</div>أن ترتب جميع البدائل منطقياً</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">6</div>تجنب الإيحاءات اللغوية التي تدل على الإجابة الصحيحة</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">7</div>أن يكون الجذر مستقلاً عن البدائل</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">8</div>تجنب استخدام كلمات مثل "الكل" و"لا شيء" كبدائل</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">9</div>تجنب استخدام السلب المزدوج في الجذر</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">10</div>أن يكون جذر السؤال موجباً قدر الإمكان</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">11</div>أن تكون البدائل متجانسة من حيث الطول والمحتوى</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">12</div>تجنب استخدام "جميع ما ذكر" أو "لا شيء مما ذكر"</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">13</div>أن يكون الجذر مكتوباً بصورة كاملة</div>
+          <div class="mi"><div class="mn" style="background:#dbeafe;color:#1d4ed8">14</div>تجنب الإيحاء بالإجابة الصحيحة من خلال الجذر</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Matching -->
+    <div class="acc fi">
+      <button class="acc-btn" onclick="tog(this)">
+        <span>أسئلة المزاوجة (المطابقة)</span>
+        <div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="acc-body">
+        <p>عبارة عن عمودين من العبارات أو الكلمات، يطلب من الطالبة أن تجد العلاقة بين عبارات العمود الأول وعبارات العمود الثاني.</p>
+        <h4 style="font-weight:700;color:#1f2937;margin-bottom:.6rem">المعايير الخاصة بأسئلة المزاوجة:</h4>
+        <div class="mcq-g">
+          <div class="mi"><div class="mn" style="background:#d1fae5;color:#065f46">1</div>أن تكون عبارات كل عمود من نوع واحد</div>
+          <div class="mi"><div class="mn" style="background:#d1fae5;color:#065f46">2</div>أن يحتوي العمود الأيسر على عدد أكثر من عبارات العمود الأيمن</div>
+          <div class="mi"><div class="mn" style="background:#d1fae5;color:#065f46">3</div>ألا يزيد عدد عبارات كل عمود عن 10 عبارات</div>
+          <div class="mi"><div class="mn" style="background:#d1fae5;color:#065f46">4</div>ترتيب عبارات العمود الأيسر ترتيباً منطقياً</div>
+          <div class="mi"><div class="mn" style="background:#d1fae5;color:#065f46">5</div>أن تكون جميع عبارات السؤال في صفحة واحدة</div>
+          <div class="mi"><div class="mn" style="background:#d1fae5;color:#065f46">6</div>أن تكون التعليمات واضحة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- True/False -->
+    <div class="acc fi">
+      <button class="acc-btn" onclick="tog(this)">
+        <span>أسئلة الصواب والخطأ</span>
+        <div class="acc-arr"><svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="acc-body">
+        <p>عبارة عن جمل تقريرية صحيحة أو خاطئة، وتطلب من الطالبة تحديد ما إذا كانت الجملة صحيحة أم خاطئة.</p>
+        <h4 style="font-weight:700;color:#1f2937;margin-bottom:.6rem">المعايير الخاصة بأسئلة الصواب والخطأ:</h4>
+        <div class="mcq-g">
+          <div class="mi"><div class="mn" style="background:#f
+ef3c7;color:#92400e">1</div>أن تكون الجملة صحيحة تماماً أو خاطئة تماماً</div>
+          <div class="mi"><div class="mn" style="background:#fef3c7;color:#92400e">2</div>تجنب استخدام الجمل المركبة</div>
+          <div class="mi"><div class="mn" style="background:#fef3c7;color:#92400e">3</div>تجنب استخدام الجمل المنقولة حرفياً من الكتاب</div>
+          <div class="mi"><div class="mn" style="background:#fef3c7;color:#92400e">4</div>أن يكون عدد الجمل الصحيحة مساوياً لعدد الجمل الخاطئة</div>
+          <div class="mi"><div class="mn" style="background:#fef3c7;color:#92400e">5</div>تجنب استخدام الكلمات المطلقة مثل (دائماً، أبداً، لا شيء)</div>
+          <div class="mi"><div class="mn" style="background:#fef3c7;color:#92400e">6</div>أن تكون الجملة قصيرة وواضحة</div>
+          <div class="mi"><div class="mn" style="background:#fef3c7;color:#92400e">7</div>تجنب استخدام النفي المزدوج</div>
+          <div class="mi"><div class="mn" style="background:#fef3c7;color:#92400e">8</div>أن تتضمن الجملة فكرة واحدة فقط</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pc fi">
+      <div class="pros"><h3>مميزات الأسئلة الموضوعية</h3><ul><li>تتسم بالموضوعية في التصحيح</li><li>تغطي جزءاً كبيراً من المقرر الدراسي</li><li>سهولة وسرعة التصحيح</li><li>تقلل من تأثير عامل الصدفة</li><li>يمكن تحليلها إحصائياً بسهولة</li></ul></div>
+      <div class="cons"><h3>عيوب الأسئلة الموضوعية</h3><ul><li>تشجع على التخمين</li><li>لا تقيس مهارات التعبير والكتابة</li><li>تستغرق وقتاً طويلاً في الإعداد</li><li>لا تقيس القدرة على التنظيم والتفكير المنطقي المتسلسل</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ OUTPUT ══════════════════════════════════════════════════════════════ -->
+<section id="output" class="s-grad">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(10,124,92,.1);color:#0a7c5c"><span class="dot" style="background:#0a7c5c"></span>محتوى الورشة</div>
+      <h2 class="sh2">ضوابط إخراج ورقة الاختبار</h2>
+      <p class="ssub">المعايير الفنية لإخراج ورقة الاختبار بصورة احترافية</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#0a7c5c,transparent)"></div><div class="ddot" style="background:#0a7c5c"></div><div class="dline" style="background:linear-gradient(270deg,#0a7c5c,transparent)"></div></div>
+    </div>
+    <div class="og fi">
+      <div class="oi"><div class="on">1</div><p>أن تكون ورقة الاختبار نظيفة وواضحة وخالية من الأخطاء المطبعية</p></div>
+      <div class="oi"><div class="on">2</div><p>أن تكون التعليمات واضحة وكاملة في بداية كل قسم</p></div>
+      <div class="oi"><div class="on">3</div><p>أن تكون الأسئلة مرتبة من السهل إلى الصعب</p></div>
+      <div class="oi"><div class="on">4</div><p>أن يكون حجم الخط مناسباً وسهل القراءة</p></div>
+      <div class="oi"><div class="on">5</div><p>أن تكون المسافات بين الأسئلة مناسبة لكتابة الإجابات</p></div>
+      <div class="oi"><div class="on">6</div><p>أن يُذكر في بداية الورقة: المادة، الصف، التاريخ، الزمن، ومجموع الدرجات</p></div>
+      <div class="oi"><div class="on">7</div><p>أن تكون الأسئلة المتعلقة بموضوع واحد في صفحة واحدة</p></div>
+      <div class="oi"><div class="on">8</div><p>توزيع الدرجات على الأسئلة بصورة واضحة</p></div>
+      <div class="oi"><div class="on">9</div><p>مراجعة الورقة قبل طباعتها للتأكد من خلوها من الأخطاء</p></div>
+      <div class="oi"><div class="on">10</div><p>أن تكون الصور والأشكال المستخدمة واضحة ودقيقة</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ MODEL ANSWER ══════════════════════════════════════════════════════ -->
+<section id="model" class="s-white">
+  <div class="container">
+    <div class="stw fi">
+      <div class="sbadge" style="background:rgba(201,162,39,.1);color:#c9a227"><span class="dot" style="background:#c9a227"></span>محتوى الورشة</div>
+      <h2 class="sh2">معايير نموذج الإجابة</h2>
+      <p class="ssub">الضوابط الواجب مراعاتها عند إعداد نموذج الإجابة</p>
+      <div class="sdiv"><div class="dline" style="background:linear-gradient(90deg,#c9a227,transparent)"></div><div class="ddot" style="background:#c9a227"></div><div class="dline" style="background:linear-gradient(270deg,#c9a227,transparent)"></div></div>
+    </div>
+    <div class="g2 fi">
+      <div class="card" style="border-top:4px solid #c9a227">
+        <div class="cb">
+          <h3 style="font-weight:700;color:#1f2937;font-size:1rem;margin-bottom:1rem">نموذج الإجابة للأسئلة المقالية</h3>
+          <ul class="clist">
+            <li class="ci"><div class="ck" style="background:rgba(201,162,39,.1);color:#c9a227">✓</div><span>إعداد نموذج الإجابة قبل تطبيق الاختبار</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(13,92,143,.1);color:#0d5c8f">✓</div><span>تحديد الإجابة النموذجية بدقة مع ذكر النقاط الأساسية المطلوبة</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(10,124,92,.1);color:#0a7c5c">✓</div><span>تحديد الدرجة لكل نقطة أو جزء من الإجابة</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(230,126,34,.1);color:#e67e22">✓</div><span>قبول الإجابات المختلفة التي تؤدي نفس المعنى</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(124,58,237,.1);color:#7c3aed">✓</div><span>مراجعة النموذج بعد تصحيح عدد من الأوراق للتأكد من دقته</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="border-top:4px solid #0d5c8f">
+        <div class="cb">
+          <h3 style="font-weight:700;color:#1f2937;font-size:1rem;margin-bottom:1rem">نموذج الإجابة للأسئلة الموضوعية</h3>
+          <ul class="clist">
+            <li class="ci"><div class="ck" style="background:rgba(13,92,143,.1);color:#0d5c8f">✓</div><span>تحديد الإجابة الصحيحة لكل سؤال بوضوح</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(10,124,92,.1);color:#0a7c5c">✓</div><span>توزيع الإجابات الصحيحة توزيعاً عشوائياً بين البدائل</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(201,162,39,.1);color:#c9a227">✓</div><span>الإشارة إلى الدرجة المخصصة لكل سؤال</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(230,126,34,.1);color:#e67e22">✓</div><span>التأكد من أن الإجابات الصحيحة لا تتبع نمطاً ثابتاً</span></li>
+            <li class="ci"><div class="ck" style="background:rgba(124,58,237,.1);color:#7c3aed">✓</div><span>مراجعة النموذج من قِبل زميل متخصص قبل التطبيق</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="final-cta fi">
+      <div class="cta-ico">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <h3>شكراً لمشاركتكم في هذه الورشة</h3>
+      <p>نأمل أن تكون هذه الورشة قد أضافت إلى رصيدكم المعرفي والمهني، وأن تُسهم في تطوير أدوات التقييم لدى معلماتنا الفاضلات</p>
+      <div class="cta-tag">⭐ الفريق الحادي عشر · مكتب التعليم الملز · 1445هـ</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="ft">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <div class="ft-logo">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg>
+        </div>
+        <div>
+          <div class="ft-title">ورشة معايير بناء الاختبار الجيد</div>
+          <div class="ft-sub">الفريق الحادي عشر · مكتب التعليم الملز · 1445هـ</div>
+        </div>
+      </div>
+      <div class="ft-mid">
+        <div class="ft-lbl">إعداد</div>
+        <div class="ft-name">المشرفة التربوية نوره الغامدي</div>
+        <div style="margin-top:8px">
+          <div class="ft-lbl">تصميم</div>
+          <div class="ft-name">د / فواز</div>
+        </div>
+      </div>
+      <div>
+        <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="tg-btn">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-1.97 9.289c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.932z"/></svg>
+          تفضل للمزيد هنا
+        </a>
+      </div>
+    </div>
+    <div class="ft-btm">
+      <p>جميع الحقوق محفوظة © 1445هـ · ورشة معايير بناء الاختبار الجيد</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll',()=>{
+  const p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;
+  document.getElementById('prog').style.width=p+'%';
+});
+
+// Navigation
+function goTo(id){
+  const el=document.getElementById(id);
+  if(el){window.scrollTo({top:el.getBoundingClientRect().top+window.scrollY-70,behavior:'smooth'});}
+  document.getElementById('mob').classList.remove('open');
+}
+
+// Mobile menu
+function toggleMob(){document.getElementById('mob').classList.toggle('open');}
+
+// Active nav
+const secs=['intro','definition','objectives','steps','domains','qualities','specs','criteria','types','essay','objective','output','model'];
+window.addEventListener('scroll',()=>{
+  let cur='';
+  secs.forEach(id=>{const el=document.getElementById(id);if(el&&window.scrollY>=el.offsetTop-100)cur=id;});
+  document.querySelectorAll('.nl').forEach(b=>{
+    b.classList.remove('active');
+    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+cur+"'"))b.classList.add('active');
+  });
+});
+
+// Accordion
+function tog(btn){
+  const arr=btn.querySelector('.acc-arr');
+  const body=btn.nextElementSibling;
+  const open=body.classList.contains('open');
+  document.querySelectorAll('.acc-body').forEach(b=>b.classList.remove('open'));
+  document.querySelectorAll('.acc-arr').forEach(a=>a.classList.remove('open'));
+  if(!open){body.classList.add('open');arr.classList.add('open');}
+}
+
+// Fade-in
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('v');});
+},{threshold:0.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.fi').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>

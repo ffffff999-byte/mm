@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نشرة تربوية | تجويد بناء أسئلة الاختبارات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Tajawal:wght@300;400;500;700;800;900&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --ink:#0a1f3d;
+  --ink-soft:#1a3a5c;
+  --ink-dark:#051529;
+  --gold:#c9a961;
+  --gold-deep:#a8893f;
+  --gold-light:#e8d5a3;
+  --cream:#faf6ee;
+  --cream-warm:#f3ead5;
+  --paper:#fdfbf5;
+  --teal:#0d7377;
+  --burgundy:#7d2e3a;
+  --olive:#5c6b3a;
+  --rust:#c65d3e;
+  --shadow:0 20px 60px -20px rgba(10,31,61,0.25);
+  --shadow-deep:0 30px 80px -30px rgba(10,31,61,0.45);
+  --sidebar-w:320px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:30px}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  line-height:1.9;
+  overflow-x:hidden;
+  font-size:18px;
+  font-weight:400;
+}
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(201,169,97,0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(13,115,119,0.06) 0%, transparent 50%);
+  pointer-events:none;z-index:0;
+}
+
+/* ============ SIDEBAR ============ */
+.sidebar{
+  position:fixed;
+  top:0;right:0;
+  width:var(--sidebar-w);
+  height:100vh;
+  background:linear-gradient(180deg,var(--ink-dark) 0%,var(--ink) 100%);
+  color:var(--cream);
+  padding:0;
+  overflow-y:auto;
+  z-index:50;
+  border-left:1px solid rgba(201,169,97,0.2);
+  box-shadow:-10px 0 40px rgba(0,0,0,0.15);
+  transition:transform 0.4s ease;
+}
+.sidebar::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 50% 0%, rgba(201,169,97,0.15) 0%, transparent 60%),
+    repeating-linear-gradient(45deg,transparent,transparent 30px,rgba(201,169,97,0.025) 30px,rgba(201,169,97,0.025) 31px);
+  pointer-events:none;
+}
+.sidebar-inner{position:relative;z-index:2;padding:32px 0}
+
+.sidebar-brand{
+  display:flex;flex-direction:column;align-items:center;
+  padding:0 28px 32px;
+  border-bottom:1px solid rgba(201,169,97,0.2);
+  margin-bottom:24px;
+  text-align:center;
+}
+.brand-circle{
+  width:90px;height:90px;
+  background:linear-gradient(135deg,var(--gold-light) 0%,var(--gold) 50%,var(--gold-deep) 100%);
+  border-radius:50%;
+  display:grid;place-items:center;
+  color:var(--ink);
+  font-size:2rem;
+  box-shadow:0 10px 30px rgba(201,169,97,0.3);
+  position:relative;
+  margin-bottom:20px;
+}
+.brand-circle::before{
+  content:'';position:absolute;inset:-8px;
+  border:1px solid rgba(201,169,97,0.4);
+  border-radius:50%;
+}
+.brand-circle::after{
+  content:'';position:absolute;inset:-16px;
+  border:1px dashed rgba(201,169,97,0.25);
+  border-radius:50%;
+  animation:spin 40s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.sidebar-title{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--gold-light);
+  margin-bottom:8px;
+  letter-spacing:0.5px;
+}
+.sidebar-subtitle{
+  color:var(--gold);
+  font-size:0.95rem;
+  font-weight:500;
+  letter-spacing:1px;
+}
+
+.sidebar-section-label{
+  padding:0 28px;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:0.8rem;
+  color:var(--gold);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.sidebar-section-label::after{
+  content:'';flex:1;
+  height:1px;background:rgba(201,169,97,0.2);
+}
+
+.sidebar-nav{list-style:none;margin-bottom:24px}
+.sidebar-nav li{position:relative}
+.sidebar-nav a{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 28px;
+  color:rgba(250,246,238,0.75);
+  text-decoration:none;
+  font-size:1rem;
+  font-weight:500;
+  transition:all 0.3s ease;
+  border-right:3px solid transparent;
+  position:relative;
+}
+.sidebar-nav a:hover{
+  background:rgba(201,169,97,0.08);
+  color:var(--gold-light);
+  border-right-color:rgba(201,169,97,0.5);
+  padding-right:34px;
+}
+.sidebar-nav a.active{
+  background:linear-gradient(90deg,rgba(201,169,97,0.15) 0%,transparent 100%);
+  color:var(--gold);
+  border-right-color:var(--gold);
+  font-weight:700;
+}
+.sidebar-nav .nav-icon{
+  width:32px;height:32px;
+  background:rgba(201,169,97,0.08);
+  border-radius:8px;
+  display:grid;place-items:center;
+  font-size:0.85rem;
+  color:var(--gold);
+  flex-shrink:0;
+  transition:all 0.3s ease;
+}
+.sidebar-nav a:hover .nav-icon,
+.sidebar-nav a.active .nav-icon{
+  background:var(--gold);
+  color:var(--ink);
+}
+.sidebar-nav .nav-num{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:0.78rem;
+  opacity:0.5;
+  margin-right:auto;
+  font-weight:400;
+}
+
+.sidebar-footer{
+  padding:24px 28px 0;
+  border-top:1px solid rgba(201,169,97,0.2);
+  margin-top:16px;
+}
+.sidebar-meta{
+  display:flex;align-items:center;gap:10px;
+  color:rgba(250,246,238,0.5);
+  font-size:0.82rem;
+  margin-bottom:8px;
+}
+.sidebar-meta i{color:var(--gold);font-size:0.75rem}
+
+/* ============ MOBILE TOGGLE ============ */
+.menu-toggle{
+  display:none;
+  position:fixed;
+  top:20px;right:20px;
+  z-index:60;
+  width:52px;height:52px;
+  background:var(--ink);
+  color:var(--gold);
+  border:1px solid var(--gold);
+  border-radius:12px;
+  font-size:1.3rem;
+  cursor:pointer;
+  box-shadow:0 6px 20px rgba(10,31,61,0.3);
+}
+.sidebar-overlay{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(10,31,61,0.5);
+  backdrop-filter:blur(4px);
+  z-index:45;
+}
+
+/* ============ MAIN CONTENT ============ */
+.main{
+  margin-right:var(--sidebar-w);
+  position:relative;z-index:2;
+}
+
+/* ============ HERO ============ */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  padding:80px 60px;
+  background:linear-gradient(135deg,var(--ink-dark) 0%,var(--ink) 50%,var(--ink-soft) 100%);
+  color:var(--cream);
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(45deg,transparent,transparent 35px,rgba(201,169,97,0.04) 35px,rgba(201,169,97,0.04) 36px),
+    radial-gradient(circle at 30% 20%, rgba(201,169,97,0.15) 0%, transparent 40%),
+    radial-gradient(circle at 70% 80%, rgba(13,115,119,0.2) 0%, transparent 40%);
+}
+.hero-ornament{
+  position:absolute;
+  width:600px;height:600px;
+  border:1px solid rgba(201,169,97,0.2);
+  border-radius:50%;
+  top:-200px;left:-200px;
+  animation:spin 60s linear infinite;
+}
+.hero-ornament::before{
+  content:'';position:absolute;inset:40px;
+  border:1px dashed rgba(201,169,97,0.15);
+  border-radius:50%;
+}
+.hero-inner{
+  position:relative;z-index:2;
+  max-width:1000px;width:100%;
+  text-align:center;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:14px;
+  padding:12px 28px;
+  background:rgba(201,169,97,0.1);
+  border:1px solid rgba(201,169,97,0.3);
+  border-radius:100px;
+  color:var(--gold-light);
+  font-size:1rem;
+  font-weight:500;
+  letter-spacing:2px;
+  margin-bottom:36px;
+}
+.hero-eyebrow i{color:var(--gold);font-size:0.9rem}
+.hero-title{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:clamp(3rem,6vw,5.5rem);
+  font-weight:700;
+  line-height:1.15;
+  margin-bottom:28px;
+}
+.hero-title .accent{
+  display:block;
+  background:linear-gradient(135deg,var(--gold-light) 0%,var(--gold) 50%,var(--gold-deep) 100%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;
+  margin-top:8px;
+}
+.hero-divider{
+  display:flex;align-items:center;justify-content:center;
+  gap:16px;margin:36px 0;
+}
+.hero-divider .line{
+  width:100px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.hero-divider .diamond{
+  width:10px;height:10px;
+  background:var(--gold);
+  transform:rotate(45deg);
+}
+.hero-subtitle{
+  font-size:1.25rem;
+  color:rgba(250,246,238,0.85);
+  max-width:820px;
+  margin:0 auto 56px;
+  font-weight:300;
+  line-height:2;
+}
+.hero-stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:20px;
+  max-width:900px;margin:0 auto;
+}
+.stat{
+  padding:30px 20px;
+  background:rgba(201,169,97,0.05);
+  border:1px solid rgba(201,169,97,0.2);
+  border-radius:16px;
+  text-align:center;
+  backdrop-filter:blur(10px);
+  transition:all 0.3s ease;
+}
+.stat:hover{
+  background:rgba(201,169,97,0.1);
+  transform:translateY(-4px);
+  border-color:rgba(201,169,97,0.5);
+}
+.stat-num{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:2.8rem;
+  font-weight:700;
+  color:var(--gold);
+  display:block;margin-bottom:6px;
+}
+.stat-label{font-size:1rem;color:rgba(250,246,238,0.75)}
+
+/* ============ SECTIONS ============ */
+section{position:relative;z-index:2}
+.container{max-width:1400px;margin:0 auto;padding:100px 60px}
+
+.section-head{
+  text-align:center;
+  margin-bottom:80px;
+}
+.section-tag{
+  display:inline-block;
+  padding:10px 24px;
+  background:var(--ink);
+  color:var(--gold);
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1rem;
+  letter-spacing:2px;
+  border-radius:100px;
+  margin-bottom:24px;
+}
+.section-title{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:clamp(2.4rem,4.5vw,3.8rem);
+  font-weight:700;
+  color:var(--ink);
+  line-height:1.2;
+  margin-bottom:20px;
+}
+.section-title .gold{color:var(--gold-deep)}
+.section-sub{
+  color:var(--ink-soft);
+  font-size:1.2rem;
+  max-width:780px;
+  margin:0 auto;
+  font-weight:400;
+  line-height:1.8;
+}
+.ornate-divider{
+  display:flex;align-items:center;justify-content:center;
+  gap:16px;margin:28px 0;
+}
+.ornate-divider .leaf{
+  color:var(--gold);font-size:1rem;
+}
+.ornate-divider .ln{
+  width:80px;height:1px;background:var(--gold);opacity:0.5;
+}
+
+/* ============ INTRO ============ */
+.intro-block{
+  background:var(--paper);
+  border-radius:28px;
+  padding:70px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(201,169,97,0.3);
+}
+.intro-block::before{
+  content:'';position:absolute;
+  top:0;right:0;width:250px;height:250px;
+  background:radial-gradient(circle, rgba(201,169,97,0.15) 0%, transparent 70%);
+}
+.intro-block::after{
+  content:'';position:absolute;
+  bottom:0;left:0;width:250px;height:250px;
+  background:radial-gradient(circle, rgba(13,115,119,0.1) 0%, transparent 70%);
+}
+.intro-quote-mark{
+  font-family:'Amiri',serif;
+  font-size:7rem;
+  color:var(--gold);
+  line-height:0.8;
+  opacity:0.5;
+  margin-bottom:24px;
+}
+.intro-text{
+  font-size:1.3rem;
+  color:var(--ink);
+  line-height:2.1;
+  position:relative;z-index:2;
+  font-weight:400;
+}
+.intro-text strong{color:var(--burgundy);font-weight:700}
+.intro-pillars{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:24px;
+  margin-top:48px;
+  padding-top:48px;
+  border-top:1px dashed rgba(201,169,97,0.4);
+}
+.pillar{
+  display:flex;align-items:center;gap:16px;
+}
+.pillar-icon{
+  width:54px;height:54px;
+  background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  border-radius:14px;
+  display:grid;place-items:center;
+  color:var(--ink);
+  font-size:1.25rem;
+  flex-shrink:0;
+  box-shadow:0 6px 18px -8px var(--gold-deep);
+}
+.pillar-text{font-size:1.05rem;font-weight:600;color:var(--ink-soft)}
+
+/* ============ CLASSIFICATION ============ */
+.classification-bg{background:linear-gradient(180deg,var(--cream) 0%,var(--cream-warm) 100%)}
+.tree-root{
+  text-align:center;
+  margin-bottom:70px;
+}
+.tree-root-badge{
+  display:inline-flex;align-items:center;gap:14px;
+  padding:20px 40px;
+  background:linear-gradient(135deg,var(--ink) 0%,var(--ink-soft) 100%);
+  color:var(--gold);
+  border-radius:100px;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.4rem;
+  font-weight:600;
+  box-shadow:0 10px 30px rgba(10,31,61,0.3);
+}
+.tree-root-badge i{font-size:1.6rem}
+.types-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:32px;
+}
+.type-card{
+  background:var(--paper);
+  border-radius:24px;
+  padding:42px 36px;
+  position:relative;
+  overflow:hidden;
+  transition:all 0.4s cubic-bezier(0.2,0.9,0.3,1.2);
+  border:1px solid rgba(201,169,97,0.2);
+  box-shadow:0 4px 20px rgba(10,31,61,0.06);
+}
+.type-card::before{
+  content:'';position:absolute;
+  top:0;right:0;width:100%;height:8px;
+  background:linear-gradient(90deg,var(--c1),var(--c2));
+}
+.type-card:nth-child(1){--c1:var(--teal);--c2:#0a9b9f}
+.type-card:nth-child(2){--c1:var(--rust);--c2:#e87653}
+.type-card:nth-child(3){--c1:var(--burgundy);--c2:#a13e4d}
+.type-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 25px 60px rgba(10,31,61,0.18);
+}
+.type-num{
+  position:absolute;top:24px;left:24px;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:6rem;
+  font-weight:700;
+  color:rgba(201,169,97,0.15);
+  line-height:1;
+}
+.type-icon{
+  width:72px;height:72px;
+  background:linear-gradient(135deg,var(--c1),var(--c2));
+  border-radius:18px;
+  display:grid;place-items:center;
+  color:#fff;
+  font-size:1.8rem;
+  margin-bottom:24px;
+  box-shadow:0 10px 24px -10px var(--c1);
+}
+.type-title{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.7rem;
+  font-weight:700;
+  color:var(--ink);
+  margin-bottom:12px;
+}
+.type-arabic{
+  color:var(--gold-deep);
+  font-size:1.1rem;
+  margin-bottom:18px;
+  font-weight:500;
+}
+.type-desc{
+  color:var(--ink-soft);
+  font-size:1.05rem;
+  line-height:1.85;
+}
+
+/* ============ DETAILED TYPES ============ */
+.detail-section{padding:100px 60px}
+.detail-section.alt{background:var(--cream-warm)}
+.detail-grid{
+  max-width:1400px;margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:70px;
+  align-items:start;
+}
+.detail-content .badge{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:10px 22px;
+  border-radius:100px;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:0.95rem;
+  font-weight:600;
+  margin-bottom:24px;
+  letter-spacing:1px;
+}
+.badge.teal{background:rgba(13,115,119,0.1);color:var(--teal)}
+.badge.rust{background:rgba(198,93,62,0.1);color:var(--rust)}
+.badge.burgundy{background:rgba(125,46,58,0.1);color:var(--burgundy)}
+.badge.olive{background:rgba(92,107,58,0.1);color:var(--olive)}
+.detail-content h3{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:2.6rem;
+  color:var(--ink);
+  margin-bottom:20px;
+  line-height:1.3;
+}
+.detail-content p{
+  color:var(--ink-soft);
+  font-size:1.15rem;
+  margin-bottom:28px;
+  line-height:2;
+}
+.feature-list{list-style:none}
+.feature-list li{
+  display:flex;align-items:flex-start;gap:16px;
+  padding:18px 0;
+  border-bottom:1px dashed rgba(201,169,97,0.3);
+  font-size:1.1rem;
+  color:var(--ink);
+  line-height:1.7;
+}
+.feature-list li:last-child{border-bottom:none}
+.feature-list .check{
+  width:32px;height:32px;
+  border-radius:50%;
+  color:#fff;
+  display:grid;place-items:center;
+  font-size:0.85rem;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.feature-list.teal .check{background:var(--teal)}
+.feature-list.rust .check{background:var(--rust)}
+.feature-list.burgundy .check{background:var(--burgundy)}
+.feature-list.olive .check{background:var(--olive)}
+
+.detail-visual{
+  background:var(--paper);
+  border-radius:28px;
+  padding:48px;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(201,169,97,0.3);
+  position:relative;
+  overflow:hidden;
+}
+.guidelines-title{
+  display:flex;align-items:center;gap:14px;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.5rem;
+  color:var(--ink);
+  margin-bottom:28px;
+  padding-bottom:20px;
+  border-bottom:2px solid var(--gold);
+}
+.guidelines-title i{color:var(--gold-deep);font-size:1.4rem}
+.guideline-item{
+  display:flex;gap:16px;
+  padding:18px 0;
+  border-bottom:1px dashed rgba(201,169,97,0.25);
+}
+.guideline-item:last-child{border-bottom:none}
+.guideline-num{
+  width:36px;height:36px;
+  background:var(--ink);
+  color:var(--gold);
+  border-radius:50%;
+  display:grid;place-items:center;
+  font-size:0.95rem;
+  font-weight:700;
+  flex-shrink:0;
+}
+.guideline-text{
+  font-size:1.05rem;
+  color:var(--ink-soft);
+  line-height:1.8;
+}
+
+/* ============ OBJECTIVE TYPES ============ */
+.obj-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:28px;
+  margin-top:60px;
+}
+.obj-card{
+  background:var(--paper);
+  border-radius:22px;
+  padding:38px 32px;
+  border:1px solid rgba(201,169,97,0.2);
+  transition:all 0.4s ease;
+  position:relative;
+  overflow:hidden;
+}
+.obj-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 25px 50px -15px rgba(10,31,61,0.2);
+  border-color:var(--c);
+}
+.obj-num{
+  display:inline-block;
+  padding:7px 16px;
+  background:var(--c);
+  color:#fff;
+  border-radius:100px;
+  font-size:0.85rem;
+  font-weight:700;
+  letter-spacing:1px;
+  margin-bottom:18px;
+}
+.obj-card.c1{--c:#0d7377}
+.obj-card.c2{--c:#c65d3e}
+.obj-card.c3{--c:#7d2e3a}
+.obj-card.c4{--c:#5c6b3a}
+.obj-icon{
+  width:64px;height:64px;
+  background:var(--c);
+  color:#fff;
+  border-radius:16px;
+  display:grid;place-items:center;
+  font-size:1.6rem;
+  margin-bottom:22px;
+}
+.obj-title{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.5rem;
+  color:var(--ink);
+  margin-bottom:14px;
+  font-weight:700;
+}
+.obj-desc{
+  color:var(--ink-soft);
+  font-size:1.02rem;
+  line-height:1.8;
+}
+
+/* ============ MISTAKES SECTION ============ */
+.mistakes-section{
+  padding:100px 60px;
+  background:linear-gradient(180deg,var(--ink-dark) 0%,var(--ink) 100%);
+  color:var(--cream);
+  position:relative;
+  overflow:hidden;
+}
+.mistakes-section::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle at 50% 50%, rgba(201,169,97,0.08) 0%, transparent 50%);
+}
+.mistakes-section .section-tag{background:var(--gold);color:var(--ink)}
+.mistakes-section .section-title{color:var(--cream)}
+.mistakes-section .section-title .gold{color:var(--gold-light)}
+.mistakes-section .section-sub{color:rgba(250,246,238,0.75)}
+.mistakes-table{
+  max-width:1300px;margin:0 auto;
+  background:rgba(250,246,238,0.04);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(201,169,97,0.2);
+  border-radius:24px;
+  overflow:hidden;
+  position:relative;z-index:2;
+}
+.mistakes-row{
+  display:grid;
+  grid-template-columns:1fr 1.5fr 0.4fr 1.5fr;
+  border-bottom:1px solid rgba(201,169,97,0.15);
+}
+.mistakes-row:last-child{border-bottom:none}
+.mistakes-row.header{
+  background:rgba(201,169,97,0.15);
+  font-family:'Reem Kufi',sans-serif;
+}
+.mistakes-cell{
+  padding:24px 28px;
+  display:flex;align-items:center;
+  font-size:1.05rem;
+  line-height:1.7;
+}
+.mistakes-cell.label{
+  font-weight:700;color:var(--gold-light);
+  border-left:1px solid rgba(201,169,97,0.15);
+  flex-direction:column;align-items:flex-start;
+  gap:6px;
+}
+.mistakes-cell.label small{
+  font-size:0.85rem;font-weight:400;
+  opacity:0.65;color:var(--gold);
+}
+.mistakes-cell.wrong{
+  color:rgba(250,246,238,0.95);
+  background:rgba(198,93,62,0.07);
+}
+.mistakes-cell.arrow{
+  justify-content:center;
+  color:var(--gold);
+  font-size:1.4rem;
+  background:rgba(201,169,97,0.05);
+}
+.mistakes-cell.right{
+  color:rgba(232,213,163,0.98);
+  background:rgba(13,115,119,0.08);
+}
+.mistakes-row.header .mistakes-cell{
+  padding:22px 28px;
+  color:var(--gold);
+  font-size:1.05rem;
+  letter-spacing:1px;
+}
+
+/* ============ BLOOM TAXONOMY ============ */
+.bloom-section{padding:100px 60px;background:var(--cream-warm)}
+.bloom-table{
+  max-width:1300px;margin:60px auto 0;
+  background:var(--paper);
+  border-radius:24px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  border:1px solid rgba(201,169,97,0.3);
+}
+.bloom-row{
+  display:grid;
+  grid-template-columns:1fr 1.6fr 1.6fr;
+  border-bottom:1px solid rgba(201,169,97,0.2);
+}
+.bloom-row:last-child{border-bottom:none}
+.bloom-row.header{
+  background:linear-gradient(135deg,var(--ink) 0%,var(--ink-soft) 100%);
+  color:var(--gold);
+}
+.bloom-cell{
+  padding:26px 28px;
+  font-size:1.05rem;
+  line-height:1.8;
+  border-left:1px solid rgba(201,169,97,0.15);
+}
+.bloom-cell:last-child{border-left:none}
+.bloom-row.header .bloom-cell{
+  font-family:'Reem Kufi',sans-serif;
+  font-weight:600;
+  padding:22px 28px;
+  font-size:1.1rem;
+}
+.bloom-level{
+  font-family:'Reem Kufi',sans-serif;
+  font-weight:700;
+  font-size:1.2rem;
+  color:var(--ink);
+  display:flex;align-items:center;gap:12px;
+}
+.bloom-level .dot{
+  width:12px;height:12px;border-radius:50%;
+  background:var(--lc);
+}
+.bloom-row:nth-child(2) .bloom-level{--lc:#0d7377}
+.bloom-row:nth-child(3) .bloom-level{--lc:#5c6b3a}
+.bloom-row:nth-child(4) .bloom-level{--lc:#c9a961}
+.bloom-row:nth-child(5) .bloom-level{--lc:#c65d3e}
+.bloom-row:nth-child(6) .bloom-level{--lc:#7d2e3a}
+.bloom-row:nth-child(7) .bloom-level{--lc:#0a1f3d}
+.bloom-en{
+  font-size:0.88rem;color:var(--gold-deep);
+  font-family:'Reem Kufi',sans-serif;
+  display:block;margin-top:6px;
+  letter-spacing:0.5px;
+}
+.bloom-desc,.bloom-verbs{color:var(--ink-soft)}
+.bloom-verbs{font-style:italic;font-size:1rem}
+
+/* ============ CHARACTERISTICS ============ */
+.chars-section{padding:100px 60px;background:var(--paper)}
+.chars-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:28px;
+  margin-top:60px;
+}
+.char-card{
+  background:var(--cream);
+  border-radius:22px;
+  padding:42px 32px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(201,169,97,0.2);
+  transition:all 0.4s ease;
+}
+.char-card::before{
+  content:attr(data-num);
+  position:absolute;top:-25px;right:-15px;
+  font-family:'Reem Kufi',sans-serif;
+  font-size:8rem;
+  font-weight:700;
+  color:var(--c);
+  opacity:0.1;
+  line-height:1;
+}
+.char-card.c1{--c:#0d7377}
+.char-card.c2{--c:#c9a961}
+.char-card.c3{--c:#c65d3e}
+.char-card.c4{--c:#7d2e3a}
+.char-card.c5{--c:#5c6b3a}
+.char-card.c6{--c:#0a1f3d}
+.char-card.c7{--c:#a8893f}
+.char-card.c8{--c:#1a3a5c}
+.char-card:hover{
+  transform:translateY(-8px) scale(1.02);
+  border-color:var(--c);
+  box-shadow:0 25px 50px -18px rgba(10,31,61,0.25);
+}
+.char-icon{
+  width:78px;height:78px;
+  margin:0 auto 22px;
+  background:linear-gradient(135deg,var(--c),color-mix(in srgb, var(--c) 70%, white));
+  border-radius:50%;
+  display:grid;place-items:center;
+  color:#fff;
+  font-size:1.8rem;
+  box-shadow:0 10px 24px -10px var(--c);
+  position:relative;z-index:2;
+}
+.char-title{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.45rem;
+  color:var(--ink);
+  margin-bottom:14px;
+  font-weight:700;
+  position:relative;z-index:2;
+}
+.char-desc{
+  font-size:1rem;
+  color:var(--ink-soft);
+  line-height:1.8;
+  position:relative;z-index:2;
+}
+
+/* ============ AIMS ============ */
+.aims-section{
+  padding:120px 60px;
+  background:linear-gradient(135deg,var(--ink) 0%,var(--ink-soft) 100%);
+  color:var(--cream);
+  position:relative;
+  overflow:hidden;
+}
+.aims-section::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(60deg,transparent,transparent 40px,rgba(201,169,97,0.03) 40px,rgba(201,169,97,0.03) 41px);
+}
+.aims-section .section-tag{background:var(--gold);color:var(--ink)}
+.aims-section .section-title{color:var(--cream)}
+.aims-section .section-title .gold{color:var(--gold-light)}
+.aims-section .section-sub{color:rgba(250,246,238,0.75)}
+.aims-flow{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:24px;
+  margin-top:70px;
+  max-width:1300px;
+  margin-right:auto;margin-left:auto;
+  position:relative;z-index:2;
+}
+.aim-step{
+  background:rgba(250,246,238,0.04);
+  border:1px solid rgba(201,169,97,0.25);
+  backdrop-filter:blur(10px);
+  border-radius:20px;
+  padding:38px 24px;
+  text-align:center;
+  transition:all 0.4s ease;
+  position:relative;
+}
+.aim-step:hover{
+  background:rgba(201,169,97,0.1);
+  transform:translateY(-8px);
+  border-color:var(--gold);
+}
+.aim-circle{
+  width:74px;height:74px;
+  margin:0 auto 22px;
+  background:linear-gradient(135deg,var(--gold-light),var(--gold));
+  color:var(--ink);
+  border-radius:50%;
+  display:grid;place-items:center;
+  font-size:1.7rem;
+  box-shadow:0 8px 24px rgba(201,169,97,0.3);
+}
+.aim-step h4{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.2rem;
+  color:var(--gold-light);
+  margin-bottom:12px;
+  font-weight:600;
+}
+.aim-step p{
+  font-size:1rem;
+  color:rgba(250,246,238,0.8);
+  line-height:1.8;
+}
+
+/* ============ CLOSING + SETTINGS ============ */
+.closing-section{
+  padding:140px 60px;
+  background:linear-gradient(180deg,var(--cream) 0%,var(--cream-warm) 100%);
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.closing-ornament{
+  font-family:'Amiri',serif;
+  font-size:3.5rem;
+  color:var(--gold);
+  margin-bottom:24px;
+  letter-spacing:10px;
+}
+.closing-text{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:clamp(2.4rem,4vw,3.4rem);
+  color:var(--ink);
+  font-weight:700;
+  margin-bottom:32px;
+}
+.closing-quote{
+  max-width:780px;margin:0 auto 48px;
+  font-size:1.2rem;
+  color:var(--ink-soft);
+  line-height:2;
+  font-style:italic;
+}
+
+.settings-panel{
+  max-width:980px;
+  margin:60px auto 0;
+  background:var(--paper);
+  border-radius:28px;
+  padding:56px 48px;
+  border:1px solid rgba(201,169,97,0.3);
+  box-shadow:var(--shadow);
+}
+.settings-title{
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.7rem;
+  color:var(--ink);
+  margin-bottom:36px;
+  text-align:center;
+  padding-bottom:22px;
+  border-bottom:2px solid var(--gold);
+}
+.settings-title i{color:var(--gold-deep);margin-left:12px}
+.settings-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+}
+.input-row{
+  display:flex;flex-direction:column;
+  gap:10px;
+}
+.input-row label{
+  font-size:1rem;
+  color:var(--ink-soft);
+  font-weight:600;
+}
+.input-row label i{color:var(--gold-deep);margin-left:8px}
+.input-row input,.input-row select{
+  padding:14px 18px;
+  border:1px solid rgba(201,169,97,0.3);
+  border-radius:12px;
+  background:var(--cream);
+  font-family:'Tajawal',sans-serif;
+  font-size:1.05rem;
+  color:var(--ink);
+  transition:all 0.3s ease;
+}
+.input-row input:focus,.input-row select:focus{
+  outline:none;
+  border-color:var(--gold);
+  background:#fff;
+  box-shadow:0 0 0 4px rgba(201,169,97,0.15);
+}
+.designer-signature{
+  margin-top:44px;
+  padding:32px;
+  background:linear-gradient(135deg,var(--ink) 0%,var(--ink-soft) 100%);
+  border-radius:18px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.designer-signature::before{
+  content:'';position:absolute;
+  top:-50%;right:-20%;width:250px;height:250px;
+  background:radial-gradient(circle, rgba(201,169,97,0.2) 0%, transparent 60%);
+}
+.designer-text{
+  color:var(--gold-light);
+  font-family:'Reem Kufi',sans-serif;
+  font-size:1.3rem;
+  margin-bottom:18px;
+  position:relative;z-index:2;
+}
+.designer-text strong{color:var(--gold);font-weight:700}
+.designer-link{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:14px 32px;
+  background:var(--gold);
+  color:var(--ink);
+  text-decoration:none;
+  border-radius:100px;
+  font-weight:700;
+  font-size:1.05rem;
+  transition:all 0.3s ease;
+  position:relative;z-index:2;
+}
+.designer-link:hover{
+  background:var(--gold-light);
+  transform:translateY(-2px);
+  box-shadow:0 10px 24px rgba(201,169,97,0.4);
+}
+.designer-link i{font-size:1.2rem}
+
+/* ============ FOOTER ============ */
+footer{
+  background:var(--ink-dark);
+  color:rgba(250,246,238,0.6);
+  text-align:center;
+  padding:50px 20px;
+  font-size:1rem;
+  border-top:1px solid rgba(201,169,97,0.2);
+}
+footer .gold-line{
+  width:80px;height:2px;
+  background:var(--gold);
+  margin:0 auto 24px;
+}
+
+/* ============ SCROLL REVEAL ============ */
+.reveal{opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.2,0.9,0.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width:1200px){
+  .types-grid{grid-template-columns:repeat(2,1fr)}
+  .obj-grid{grid-template-columns:repeat(2,1fr)}
+  .chars-grid{grid-template-columns:repeat(2,1fr)}
+  .aims-flow{grid-template-columns:repeat(3,1fr)}
+  .intro-pillars{grid-template-columns:repeat(2,1fr)}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:992px){
+  :root{--sidebar-w:280px}
+  .container,.detail-section,.mistakes-section,.bloom-section,.chars-section,.aims-section,.closing-section{padding-left:40px;padding-right:40px}
+  .intro-block{padding:50px 36px}
+  .detail-grid{grid-template-columns:1fr;gap:40px}
+}
+@media (max-width:850px){
+  .sidebar{transform:translateX(100%);width:300px}
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-overlay.open{display:block}
+  .menu-toggle{display:grid;place-items:center}
+  .main{margin-right:0}
+  .hero{padding:100px 40px 80px}
+}
+@media (max-width:600px){
+  body{font-size:16px}
+  .container,.detail-section,.mistakes-section,.bloom-section,.chars-section,.aims-section,.closing-section{padding-left:24px;padding-right:24px}
+  .hero{padding:100px 24px 60px}
+  .hero-title{font-size:2.4rem}
+  .types-grid,.obj-grid,.chars-grid,.aims-flow,.intro-pillars,.hero-stats,.settings-grid{grid-template-columns:1fr}
+  .intro-block{padding:36px 24px}
+  .detail-visual{padding:32px 24px}
+  .mistakes-row{grid-template-columns:1fr}
+  .mistakes-cell{border-bottom:1px solid rgba(201,169,97,0.1);border-left:none}
+  .mistakes-cell.arrow{display:none}
+  .bloom-row{grid-template-columns:1fr}
+  .bloom-cell{border-left:none;border-bottom:1px solid rgba(201,169,97,0.15)}
+  .section-title{font-size:2rem}
+  .detail-content h3{font-size:1.9rem}
+  .intro-text{font-size:1.1rem}
+  .settings-panel{padding:36px 24px}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE TOGGLE -->
+<button class="menu-toggle" onclick="document.querySelector('.sidebar').classList.add('open');document.querySelector('.sidebar-overlay').classList.add('open')">
+  <i class="fas fa-bars"></i>
+</button>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('open')"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-inner">
+    <div class="sidebar-brand">
+      <div class="brand-circle">
+        <i class="fas fa-book-open"></i>
+      </div>
+      <h1 class="sidebar-title">نشرة تربوية</h1>
+      <span class="sidebar-subtitle">تجويد بناء الأسئلة</span>
+    </div>
+
+    <div class="sidebar-section-label">
+      <i class="fas fa-compass"></i>
+      <span>محتويات النشرة</span>
+    </div>
+
+    <ul class="sidebar-nav">
+      <li><a href="#intro" data-target="intro">
+        <span class="nav-icon"><i class="fas fa-feather"></i></span>
+        <span>المقدمة</span>
+        <span class="nav-num">٠١</span>
+      </a></li>
+      <li><a href="#types" data-target="types">
+        <span class="nav-icon"><i class="fas fa-sitemap"></i></span>
+        <span>تصنيف الاختبارات</span>
+        <span class="nav-num">٠٢</span>
+      </a></li>
+      <li><a href="#oral" data-target="oral">
+        <span class="nav-icon"><i class="fas fa-microphone-lines"></i></span>
+        <span>الشفوية</span>
+        <span class="nav-num">٠٣</span>
+      </a></li>
+      <li><a href="#performance" data-target="performance">
+        <span class="nav-icon"><i class="fas fa-hand-sparkles"></i></span>
+        <span>العملية</span>
+        <span class="nav-num">٠٤</span>
+      </a></li>
+      <li><a href="#written" data-target="written">
+        <span class="nav-icon"><i class="fas fa-pen-fancy"></i></span>
+        <span>المقالية</span>
+        <span class="nav-num">٠٥</span>
+      </a></li>
+      <li><a href="#objective" data-target="objective">
+        <span class="nav-icon"><i class="fas fa-list-check"></i></span>
+        <span>الموضوعية</span>
+        <span class="nav-num">٠٦</span>
+      </a></li>
+      <li><a href="#multiple" data-target="multiple">
+        <span class="nav-icon"><i class="fas fa-list-ol"></i></span>
+        <span>الاختيار من متعدد</span>
+        <span class="nav-num">٠٧</span>
+      </a></li>
+      <li><a href="#mistakes" data-target="mistakes">
+        <span class="nav-icon"><i class="fas fa-triangle-exclamation"></i></span>
+        <span>الأخطاء الشائعة</span>
+        <span class="nav-num">٠٨</span>
+      </a></li>
+      <li><a href="#bloom" data-target="bloom">
+        <span class="nav-icon"><i class="fas fa-brain"></i></span>
+        <span>تصنيف بلوم</span>
+        <span class="nav-num">٠٩</span>
+      </a></li>
+      <li><a href="#characteristics" data-target="characteristics">
+        <span class="nav-icon"><i class="fas fa-medal"></i></span>
+        <span>خصائص الاختبار الجيد</span>
+        <span class="nav-num">١٠</span>
+      </a></li>
+      <li><a href="#aims" data-target="aims">
+        <span class="nav-icon"><i class="fas fa-bullseye"></i></span>
+        <span>أهداف الاختبار</span>
+        <span class="nav-num">١١</span>
+      </a></li>
+      <li><a href="#settings" data-target="settings">
+        <span class="nav-icon"><i class="fas fa-sliders"></i></span>
+        <span>الإعدادات</span>
+        <span class="nav-num">١٢</span>
+      </a></li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-meta">
+        <i class="fas fa-bookmark"></i>
+        <span>دليل ١٤٤٤هـ</span>
+      </div>
+      <div class="sidebar-meta">
+        <i class="fas fa-graduation-cap"></i>
+        <span>قياس وتقويم</span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-ornament"></div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <i class="fas fa-feather"></i>
+      <span>دليل تربوي متخصص</span>
+      <i class="fas fa-feather"></i>
+    </div>
+    <h1 class="hero-title">
+      نشرة تربوية
+      <span class="accent">لتجويد بناء أسئلة الاختبارات</span>
+    </h1>
+    <div class="hero-divider">
+      <span class="line"></span>
+      <span class="diamond"></span>
+      <span class="line"></span>
+    </div>
+    <p class="hero-subtitle">
+      مرجع شامل لتطوير أدوات القياس والتقويم، يحقق التوازن بين الأهداف التعليمية ومستويات التفكير،
+      ويسهم في إعداد اختبارات مبنية على أسس علمية تراعي الفروقات الفردية وتدعم اتخاذ قرارات تربوية دقيقة.
+    </p>
+    <div class="hero-stats">
+      <div class="stat">
+        <span class="stat-num">٠٣</span>
+        <span class="stat-label">أنواع الاختبارات</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">٠٤</span>
+        <span class="stat-label">الأسئلة الموضوعية</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">٠٦</span>
+        <span class="stat-label">مستويات بلوم</span>
+      </div>
+      <div class="stat">
+        <span class="stat-num">٠٨</span>
+        <span class="stat-label">خصائص الاختبار</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- INTRO -->
+<section id="intro" class="container">
+  <div class="section-head reveal">
+    <span class="section-tag">المقدمة</span>
+    <h2 class="section-title">أهمية <span class="gold">تجويد الأسئلة</span></h2>
+    <div class="ornate-divider">
+      <span class="ln"></span>
+      <i class="fas fa-star-of-life leaf"></i>
+      <span class="ln"></span>
+    </div>
+    <p class="section-sub">منطلقات نسعى من خلالها لتطوير منظومة القياس والتقويم بما يحقق الجودة الشاملة</p>
+  </div>
+
+  <div class="intro-block reveal">
+    <div class="intro-quote-mark">”</div>
+    <p class="intro-text">
+      تُعد عملية <strong>تجويد أسئلة الاختبارات</strong> إحدى الركائز الأساسية لتحسين مخرجات التعليم وضمان العدالة والموضوعية
+      في تقييم أداء الطالب. ويأتي العمل وفق دليل المواصفات ليحقق التوازن بين الأهداف التعليمية ومستويات التفكير،
+      مما يسهم في إعداد اختبارات مبنية على أسس علمية تراعي الفروقات الفردية وتدعم اتخاذ قرارات تربوية دقيقة.
+      ومن هذا المنطلق نسعى إلى تطوير أدوات القياس والتقويم بما يحقق الجودة الشاملة في العملية التعليمية،
+      مع الالتزام بما جاء في <strong>دليل أنظمة وإجراءات الاختبارات ١٤٤٤هـ</strong>.
+    </p>
+
+    <div class="intro-pillars">
+      <div class="pillar">
+        <div class="pillar-icon"><i class="fas fa-balance-scale"></i></div>
+        <div class="pillar-text">العدالة والموضوعية</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><i class="fas fa-bullseye"></i></div>
+        <div class="pillar-text">دقة قياس الأهداف</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><i class="fas fa-layer-group"></i></div>
+        <div class="pillar-text">تنوع التفكير</div>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon"><i class="fas fa-users"></i></div>
+        <div class="pillar-text">مراعاة الفروق</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLASSIFICATION -->
+<section id="types" class="classification-bg">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="section-tag">التصنيف</span>
+      <h2 class="section-title">أنواع <span class="gold">الاختبارات</span></h2>
+      <div class="ornate-divider">
+        <span class="ln"></span>
+        <i class="fas fa-star-of-life leaf"></i>
+        <span class="ln"></span>
+      </div>
+      <p class="section-sub">تصنف الاختبارات إلى ثلاثة أنواع رئيسية، يعتمد اختيار النوع المناسب على طبيعة المادة والأهداف التعليمية المراد قياسها</p>
+    </div>
+
+    <div class="reveal">
+      <div class="tree-root">
+        <div class="tree-root-badge">
+          <i class="fas fa-sitemap"></i>
+          <span>تصنيف الاختبارات</span>
+        </div>
+      </div>
+
+      <div class="types-grid">
+        <article class="type-card">
+          <span class="type-num">١</span>
+          <div class="type-icon"><i class="fas fa-microphone-lines"></i></div>
+          <h3 class="type-title">الاختبارات الشفوية</h3>
+          <p class="type-arabic">Oral Tests</p>
+          <p class="type-desc">
+            أسئلة تُلقى على الطالب بطريقة شفوية، ويُطلب منه الإجابة عنها بالطريقة نفسها؛ تهدف إلى معرفة مدى فهم
+            المادة الدراسية وقياس تحقق الأهداف.
+          </p>
+        </article>
+
+        <article class="type-card">
+          <span class="type-num">٢</span>
+          <div class="type-icon"><i class="fas fa-hand-sparkles"></i></div>
+          <h3 class="type-title">الاختبارات العملية</h3>
+          <p class="type-arabic">Performance Tests</p>
+          <p class="type-desc">
+            اختبارات تقيس أداء الطالب بهدف التعرف على بعض الجوانب العملية والأدائية في المادة،
+            حيث تعتمد على ما يقدمه الطالب من أداء عملي في الواقع.
+          </p>
+        </article>
+
+        <article class="type-card">
+          <span class="type-num">٣</span>
+          <div class="type-icon"><i class="fas fa-pen-fancy"></i></div>
+          <h3 class="type-title">الاختبارات التحريرية</h3>
+          <p class="type-arabic">Written Tests</p>
+          <p class="type-desc">
+            تُقدم للطالب على هيئة أسئلة مكتوبة تنقسم إلى
+            <strong style="color:var(--gold-deep)">مقالية</strong> و<strong style="color:var(--gold-deep)">موضوعية</strong>،
+            بهدف تقويم التحصيل الدراسي.
+          </p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ORAL TESTS DETAIL -->
+<section id="oral" class="detail-section">
+  <div class="detail-grid">
+    <div class="detail-content reveal">
+      <span class="badge teal"><i class="fas fa-microphone-lines"></i> النوع الأول</span>
+      <h3>الاختبارات الشفوية</h3>
+      <p>
+        تتميز بقدرتها على الكشف عن مهارات النطق والتعبير اللفظي، وتساعد المعلم في التعرف على نواحي القوة والضعف
+        لدى الطلاب من خلال متابعة الحوار والنقاش.
+      </p>
+      <ul class="feature-list teal">
+        <li><span class="check"><i class="fas fa-check"></i></span> تكشف عن قدرة الطالب على النطق والتعبير اللفظي والمحادثة</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تساعد المعلم في تحديد نقاط القوة والضعف</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> توفر تغذية راجعة فورية للطالب</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تنمي مهارات التواصل والحوار واحترام الآراء</li>
+      </ul>
+    </div>
+
+    <div class="detail-visual reveal">
+      <div class="guidelines-title">
+        <i class="fas fa-list-check"></i>
+        <span>ضوابط الصياغة</span>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">١</div>
+        <p class="guideline-text">اشتقاق السؤال من الأهداف التربوية بحيث تغطي جميع عناصر الموقف التعليمي.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٢</div>
+        <p class="guideline-text">صياغة السؤال بشكل موجز ومختصر يخلو من الجمل التفسيرية المطولة.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٣</div>
+        <p class="guideline-text">تنويع الأسئلة وتدرجها لتشمل مستويات معرفية متعددة من المعرفة إلى التفكير العليا.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٤</div>
+        <p class="guideline-text">الابتعاد عن الأسئلة التي تكون إجابتها بنعم أو لا لتجنب التخمين.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERFORMANCE TESTS DETAIL -->
+<section id="performance" class="detail-section alt">
+  <div class="detail-grid">
+    <div class="detail-content reveal">
+      <span class="badge rust"><i class="fas fa-hand-sparkles"></i> النوع الثاني</span>
+      <h3>الاختبارات العملية</h3>
+      <p>
+        تركز على قياس المهارات الحركية والأدائية، وتُساند الاختبارات التحريرية في قياس التحصيل الدراسي،
+        خاصة في المجالات التي تتطلب قياس الأداء الفعلي للمهارات.
+      </p>
+      <ul class="feature-list rust">
+        <li><span class="check"><i class="fas fa-check"></i></span> تقيس المهارات الحركية وبعض جوانب الأهداف المعرفية</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تُساند الاختبارات التحريرية في قياس التحصيل</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> مثالية لقياس مهارات التحليل والتطبيق</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تكشف الأداء الفعلي للطالب في المهارات</li>
+      </ul>
+    </div>
+
+    <div class="detail-visual reveal">
+      <div class="guidelines-title">
+        <i class="fas fa-clipboard-check"></i>
+        <span>ضوابط الصياغة</span>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">١</div>
+        <p class="guideline-text">تحديد الهدف الذي سيلاحظه المعلم وكيفية قياسه.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٢</div>
+        <p class="guideline-text">تحديد سقف لأداء الطالب يمثل معيارًا للنجاح.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٣</div>
+        <p class="guideline-text">تحليل المهارة إلى مكوناتها ليسهل قياسها.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٤</div>
+        <p class="guideline-text">استخدام بطاقة ملاحظة تتضمن معايير الإتقان والاجتياز.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٥</div>
+        <p class="guideline-text">احتواء البطاقات أسئلة متنوعة كمًا وكيفًا تشمل موضوعات المقرر.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WRITTEN -->
+<section id="written" class="detail-section">
+  <div class="detail-grid">
+    <div class="detail-content reveal">
+      <span class="badge burgundy"><i class="fas fa-pen-fancy"></i> النوع الثالث - المقالية</span>
+      <h3>الاختبارات المقالية</h3>
+      <p>
+        أسئلة تعرض أفكارًا أو مشكلات محددة، تتفاوت إجابة الطالب فيها من سطر واحد إلى عدة صفحات.
+        تستخدم لقياس مهارات التعبير، وترتيب الأفكار، والتحليل، والتقويم، وإبداء الرأي.
+      </p>
+      <ul class="feature-list burgundy">
+        <li><span class="check"><i class="fas fa-check"></i></span> تقيس قدرة الطالب على التعبير وترتيب الأفكار</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تكشف القدرة على الوصف والتحليل والتفسير</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تقلل من احتمال الغش وتمنع التخمين</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تمنح حرية التعبير عن الاستجابة</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تبدأ بكلمات: صف، اذكر، اشرح، علل، قارن، ناقش</li>
+      </ul>
+    </div>
+
+    <div class="detail-visual reveal">
+      <div class="guidelines-title">
+        <i class="fas fa-feather-pointed"></i>
+        <span>ضوابط صياغة الاختبار المقالي</span>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">١</div>
+        <p class="guideline-text">تحديد الأهداف التي يُراد قياسها بدقة.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٢</div>
+        <p class="guideline-text">عدم كتابة أسئلة تتناول موضوعات عدة في سؤال واحد.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٣</div>
+        <p class="guideline-text">تحديد نوع العمليات العقلية المطلوبة قبل البدء في كتابة السؤال.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٤</div>
+        <p class="guideline-text">صياغة بكلمات محددة: وازن، وضح، ميز، بيّن.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٥</div>
+        <p class="guideline-text">توضيح حدود الإجابة المطلوبة والدرجة المستحقة.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٦</div>
+        <p class="guideline-text">تقدير الزمن اللازم للإجابة عن جميع الأسئلة.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIVE TYPES -->
+<section id="objective" class="container">
+  <div class="section-head reveal">
+    <span class="section-tag">الاختبارات الموضوعية</span>
+    <h2 class="section-title">أسئلة <span class="gold">الإجابة المنتقاة</span></h2>
+    <div class="ornate-divider">
+      <span class="ln"></span>
+      <i class="fas fa-star-of-life leaf"></i>
+      <span class="ln"></span>
+    </div>
+    <p class="section-sub">اختبارات تكون استجابتها قصيرة وإجاباتها محددة، يختار الطالب الإجابة الصحيحة من بدائل متعددة</p>
+  </div>
+
+  <div class="obj-grid reveal">
+    <article class="obj-card c1">
+      <span class="obj-num">النوع الأول</span>
+      <div class="obj-icon"><i class="fas fa-check-double"></i></div>
+      <h3 class="obj-title">الصواب والخطأ</h3>
+      <p class="obj-desc">
+        عبارات تقريرية يستجيب لها الطالب بإحدى إجابتين: صواب أو خطأ. تستخدم لقياس التعرف والحفظ والتذكر.
+      </p>
+    </article>
+
+    <article class="obj-card c2">
+      <span class="obj-num">النوع الثاني</span>
+      <div class="obj-icon"><i class="fas fa-pen-to-square"></i></div>
+      <h3 class="obj-title">إكمال الفراغ</h3>
+      <p class="obj-desc">
+        أسئلة أو عبارات ناقصة تتطلب كتابة كلمة أو أكثر لإتمام المعنى. تقلل من أثر التخمين.
+      </p>
+    </article>
+
+    <article class="obj-card c3">
+      <span class="obj-num">النوع الثالث</span>
+      <div class="obj-icon"><i class="fas fa-list-ol"></i></div>
+      <h3 class="obj-title">الاختيار من متعدد</h3>
+      <p class="obj-desc">
+        جذر سؤال يطرح مشكلة محددة، وبدائل تتضمن حلولًا متعددة منها إجابة صحيحة واحدة.
+      </p>
+    </article>
+
+    <article class="obj-card c4">
+      <span class="obj-num">النوع الرابع</span>
+      <div class="obj-icon"><i class="fas fa-link"></i></div>
+      <h3 class="obj-title">الربط والمزاوجة</h3>
+      <p class="obj-desc">
+        عمودان متوازيان، الأول للمثيرات والثاني للاستجابات. تعطي درجات ثبات جيدة.
+      </p>
+    </article>
+  </div>
+</section>
+
+<!-- MULTIPLE CHOICE DETAILED -->
+<section id="multiple" class="detail-section alt">
+  <div class="detail-grid">
+    <div class="detail-content reveal">
+      <span class="badge olive"><i class="fas fa-list-ol"></i> معايير صياغة جذر السؤال</span>
+      <h3>الاختيار من متعدد</h3>
+      <p>
+        من أكثر أنواع الأسئلة استخدامًا لقدرتها على قياس مستويات عقلية متعددة، ولكن صياغتها تتطلب
+        دقة في تصميم الجذر والبدائل لضمان الجودة.
+      </p>
+      <ul class="feature-list olive">
+        <li><span class="check"><i class="fas fa-check"></i></span> أن تكون البدائل قصيرة بشكل مناسب</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تجنب نقل النص الحرفي من المادة الدراسية</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> احتواء الجذر على مشكلة محددة وواضحة</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> وضع الكلمات المشتركة في جذر السؤال</li>
+        <li><span class="check"><i class="fas fa-check"></i></span> تجنب صيغة النفي قدر الإمكان</li>
+      </ul>
+    </div>
+
+    <div class="detail-visual reveal">
+      <div class="guidelines-title">
+        <i class="fas fa-bullseye"></i>
+        <span>معايير البدائل</span>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">١</div>
+        <p class="guideline-text">أن تكون البدائل متجانسة في محتواها ومرتبطة بمجال المشكلة.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٢</div>
+        <p class="guideline-text">بناء البدائل على الأخطاء الناشئة من نقص المعلومات.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٣</div>
+        <p class="guideline-text">أن تكون البدائل معقولة ومقبولة وشائعة الحدوث.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٤</div>
+        <p class="guideline-text">لغة البدائل سهلة وواضحة، والمصطلحات معروفة.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٥</div>
+        <p class="guideline-text">توزيع الإجابة الصحيحة عشوائيًا بين البدائل.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٦</div>
+        <p class="guideline-text">يفضل ألا يقل عدد البدائل عن أربعة.</p>
+      </div>
+      <div class="guideline-item">
+        <div class="guideline-num">٧</div>
+        <p class="guideline-text">ترتيب البدائل عموديًا وليس أفقيًا.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISTAKES -->
+<section id="mistakes" class="mistakes-section">
+  <div class="section-head reveal">
+    <span class="section-tag">أخطاء شائعة</span>
+    <h2 class="section-title">من أبرز أخطاء <span class="gold">صياغة الأسئلة</span></h2>
+    <div class="ornate-divider">
+      <span class="ln" style="background:var(--gold)"></span>
+      <i class="fas fa-triangle-exclamation leaf" style="color:var(--gold)"></i>
+      <span class="ln" style="background:var(--gold)"></span>
+    </div>
+    <p class="section-sub">أمثلة عملية على الأخطاء الشائعة في صياغة الأسئلة وكيفية تصحيحها</p>
+  </div>
+
+  <div class="mistakes-table reveal">
+    <div class="mistakes-row header">
+      <div class="mistakes-cell">نوع السؤال</div>
+      <div class="mistakes-cell">الصياغة الخاطئة</div>
+      <div class="mistakes-cell"></div>
+      <div class="mistakes-cell">الصياغة الصحيحة</div>
+    </div>
+
+    <div class="mistakes-row">
+      <div class="mistakes-cell label">
+        <span>الأسئلة المقالية</span>
+        <small>الإجابة مفتوحة</small>
+      </div>
+      <div class="mistakes-cell wrong">عدد آداب الطعام والشراب.</div>
+      <div class="mistakes-cell arrow"><i class="fas fa-arrow-left"></i></div>
+      <div class="mistakes-cell right">عدد ثلاثة من آداب الطعام والشراب.</div>
+    </div>
+
+    <div class="mistakes-row">
+      <div class="mistakes-cell label">
+        <span>الأسئلة المقالية</span>
+        <small>السؤال مركب</small>
+      </div>
+      <div class="mistakes-cell wrong">ما أقوى الحركات وما أضعفها؟ وهل صياغة (يتفائل) صحيحة؟ ولماذا؟</div>
+      <div class="mistakes-cell arrow"><i class="fas fa-arrow-left"></i></div>
+      <div class="mistakes-cell right">ما أقوى الحركات وما أضعفها؟</div>
+    </div>
+
+    <div class="mistakes-row">
+      <div class="mistakes-cell label">
+        <span>الصواب والخطأ</span>
+        <small>يحتمل الصواب والخطأ</small>
+      </div>
+      <div class="mistakes-cell wrong">يسبغ الوضوء ويتوضأ بماء كثير. ( )</div>
+      <div class="mistakes-cell arrow"><i class="fas fa-arrow-left"></i></div>
+      <div class="mistakes-cell right">يتوضأ بماء كثير. ( )</div>
+    </div>
+
+    <div class="mistakes-row">
+      <div class="mistakes-cell label">
+        <span>الاختيار المتعدد</span>
+        <small>جميع الاختيارات صحيحة</small>
+      </div>
+      <div class="mistakes-cell wrong">ترسل الشمس أشعتها (الشمس):<br>□ اسم  □ فاعل  □ جميع ما ذكر</div>
+      <div class="mistakes-cell arrow"><i class="fas fa-arrow-left"></i></div>
+      <div class="mistakes-cell right">ترسل الشمس أشعتها (الشمس):<br>□ اسم  □ فعل  □ حرف</div>
+    </div>
+
+    <div class="mistakes-row">
+      <div class="mistakes-cell label">
+        <span>ملء الفراغ</span>
+        <small>غامض وعدة إجابات</small>
+      </div>
+      <div class="mistakes-cell wrong">مؤسس الدولة ............ الثانية، هو ............</div>
+      <div class="mistakes-cell arrow"><i class="fas fa-arrow-left"></i></div>
+      <div class="mistakes-cell right">مؤسس الدولة السعودية الثانية هو الإمام ........ بن ........</div>
+    </div>
+  </div>
+</section>
+
+<!-- BLOOM -->
+<section id="bloom" class="bloom-section">
+  <div class="section-head reveal">
+    <span class="section-tag">المجال المعرفي</span>
+    <h2 class="section-title">مستويات <span class="gold">تصنيف بلوم</span></h2>
+    <div class="ornate-divider">
+      <span class="ln"></span>
+      <i class="fas fa-brain leaf"></i>
+      <span class="ln"></span>
+    </div>
+    <p class="section-sub">المستويات الستة للمجال المعرفي Cognitive Domain وفق التصنيف التقليدي لبلوم</p>
+  </div>
+
+  <div class="bloom-table reveal">
+    <div class="bloom-row header">
+      <div class="bloom-cell">المستوى المعرفي</div>
+      <div class="bloom-cell">المفهوم</div>
+      <div class="bloom-cell">الأفعال الدالة عليه</div>
+    </div>
+
+    <div class="bloom-row">
+      <div class="bloom-cell">
+        <div class="bloom-level"><span class="dot"></span>التذكر</div>
+        <span class="bloom-en">Knowledge</span>
+      </div>
+      <div class="bloom-cell bloom-desc">القدرة على استدعاء المادة التعليمية واستذكارها.</div>
+      <div class="bloom-cell bloom-verbs">يحدد، يصف، يُعرّف، يتعرف على، يعدد، يسرد، يذكر، يسمي ...</div>
+    </div>
+
+    <div class="bloom-row">
+      <div class="bloom-cell">
+        <div class="bloom-level"><span class="dot"></span>الفهم والاستيعاب</div>
+        <span class="bloom-en">Comprehension</span>
+      </div>
+      <div class="bloom-cell bloom-desc">القدرة على استيعاب معنى المادة التعليمية المتعلمة وإدراكها.</div>
+      <div class="bloom-cell bloom-verbs">يصنف، يصف، يميز، يكتب (تقريرًا)، يوضح، يلخص، يفسر، يعبر، يستعرض، يختار، يعين، يشرح، يترجم ...</div>
+    </div>
+
+    <div class="bloom-row">
+      <div class="bloom-cell">
+        <div class="bloom-level"><span class="dot"></span>التطبيق</div>
+        <span class="bloom-en">Application</span>
+      </div>
+      <div class="bloom-cell bloom-desc">القدرة على استخدام المعرفة التي تعلمها في مواقف جديدة.</div>
+      <div class="bloom-cell bloom-verbs">يطبق، يختار، يجري (عملية تمرين)، يلاحظ، يحول، يرسم، يوظف، يحل (مسألة)، يستخدم، يفسر، ينفذ، يحضر ...</div>
+    </div>
+
+    <div class="bloom-row">
+      <div class="bloom-cell">
+        <div class="bloom-level"><span class="dot"></span>التحليل</div>
+        <span class="bloom-en">Analysis</span>
+      </div>
+      <div class="bloom-cell bloom-desc">القدرة على تجزئة أو تحليل المادة العلمية إلى عناصرها أو مكوناتها وإدراك ما بينها من علاقات.</div>
+      <div class="bloom-cell bloom-verbs">يحلل، يجزئ، يميز، يربط، يعزل، يقارن، يستخلص، يثبت، يعد ...</div>
+    </div>
+
+    <div class="bloom-row">
+      <div class="bloom-cell">
+        <div class="bloom-level"><span class="dot"></span>التركيب</div>
+        <span class="bloom-en">Synthesis</span>
+      </div>
+      <div class="bloom-cell bloom-desc">القدرة على إنتاج كيانات جديدة وفريدة من خلال جمع جزيئات أو عناصر متفرقة.</div>
+      <div class="bloom-cell bloom-verbs">يصنف، يثمن، يميز، يحسب، يفحص، يوازن، يجرب، يعمم، يصنف (فئات)، يسأل، يخترع، يرتب، يعيد بناء ...</div>
+    </div>
+
+    <div class="bloom-row">
+      <div class="bloom-cell">
+        <div class="bloom-level"><span class="dot"></span>التقويم</div>
+        <span class="bloom-en">Evaluation</span>
+      </div>
+      <div class="bloom-cell bloom-desc">القدرة على إصدار أحكام تجاه قيمة المادة المتعلمة وفق معايير محددة وواضحة.</div>
+      <div class="bloom-cell bloom-verbs">يقوّم، يحكم، يبرر، يجادل، يقدر، ينقد، يقيس، يختار، يقارن، يثمن، يزود، ينفذ ...</div>
+    </div>
+  </div>
+</section>
+
+<!-- CHARACTERISTICS -->
+<section id="characteristics" class="chars-section">
+  <div class="section-head reveal">
+    <span class="section-tag">المواصفات</span>
+    <h2 class="section-title">صفات <span class="gold">الاختبار الجيد</span></h2>
+    <div class="ornate-divider">
+      <span class="ln"></span>
+      <i class="fas fa-medal leaf"></i>
+      <span class="ln"></span>
+    </div>
+    <p class="section-sub">الخصائص الأساسية التي ينبغي توافرها في الاختبار التربوي الجيد لضمان جودته وفعاليته</p>
+  </div>
+
+  <div class="chars-grid reveal">
+    <div class="char-card c1" data-num="1">
+      <div class="char-icon"><i class="fas fa-bullseye"></i></div>
+      <h3 class="char-title">الصدق</h3>
+      <p class="char-desc">يقصد به قياس الاختبار لما أُعد لقياسه، ولا يقيس شيئًا مختلفًا. مناسبة الأسئلة لأهداف الدرس.</p>
+    </div>
+
+    <div class="char-card c2" data-num="2">
+      <div class="char-icon"><i class="fas fa-anchor"></i></div>
+      <h3 class="char-title">الثبات</h3>
+      <p class="char-desc">يقصد به استقرار النتائج في حال تكرار تطبيقه على نفس العينة، فتأتي النتائج متقاربة.</p>
+    </div>
+
+    <div class="char-card c3" data-num="3">
+      <div class="char-icon"><i class="fas fa-scale-balanced"></i></div>
+      <h3 class="char-title">الموضوعية</h3>
+      <p class="char-desc">عدم اختلاف علامة الطالب باختلاف المصححين. محددة وخالية من اللبس، مع وجود نموذج إجابة.</p>
+    </div>
+
+    <div class="char-card c4" data-num="4">
+      <div class="char-icon"><i class="fas fa-layer-group"></i></div>
+      <h3 class="char-title">الشمولية</h3>
+      <p class="char-desc">أن تغطي الأسئلة جميع مهارات المادة، شاملة لمفردات المقرر ومهاراته وموضوعاته.</p>
+    </div>
+
+    <div class="char-card c5" data-num="5">
+      <div class="char-icon"><i class="fas fa-gavel"></i></div>
+      <h3 class="char-title">العدالة</h3>
+      <p class="char-desc">أن تكون فقرات الاختبار مناسبة للطلاب وتراعي الفروق دون تفضيل فئة على فئة.</p>
+    </div>
+
+    <div class="char-card c6" data-num="6">
+      <div class="char-icon"><i class="fas fa-clock"></i></div>
+      <h3 class="char-title">الواقعية</h3>
+      <p class="char-desc">تطبيق الاختبار في حدود الظروف المتاحة، وتناسب طوله مع الوقت المحدد له.</p>
+    </div>
+
+    <div class="char-card c7" data-num="7">
+      <div class="char-icon"><i class="fas fa-marker"></i></div>
+      <h3 class="char-title">سهولة التصحيح</h3>
+      <p class="char-desc">الأخذ في الاعتبار توزيع الدرجات عند إعداد الفقرات، خاصة المقالية لأن قيمة الاختبار تقل عند التعقيد.</p>
+    </div>
+
+    <div class="char-card c8" data-num="8">
+      <div class="char-icon"><i class="fas fa-star-half-stroke"></i></div>
+      <h3 class="char-title">التمييز</h3>
+      <p class="char-desc">أن يكون الاختبار قادرًا على الكشف عن الفروق الفردية بين الطلاب والتمييز بينهم في المستوى الدراسي.</p>
+    </div>
+  </div>
+</section>
+
+<!-- AIMS -->
+<section id="aims" class="aims-section">
+  <div class="section-head reveal">
+    <span class="section-tag">الغايات</span>
+    <h2 class="section-title">أهداف <span class="gold">الاختبار</span></h2>
+    <div class="ornate-divider">
+      <span class="ln" style="background:var(--gold)"></span>
+      <i class="fas fa-bullseye leaf" style="color:var(--gold)"></i>
+      <span class="ln" style="background:var(--gold)"></span>
+    </div>
+    <p class="section-sub">الأهداف التي يسعى الاختبار التربوي إلى تحقيقها في العملية التعليمية</p>
+  </div>
+
+  <div class="aims-flow reveal">
+    <div class="aim-step">
+      <div class="aim-circle"><i class="fas fa-chart-line"></i></div>
+      <h4>التنبؤ بالأداء</h4>
+      <p>التنبؤ بأداء الطلاب في المستقبل وقدراتهم القادمة.</p>
+    </div>
+
+    <div class="aim-step">
+      <div class="aim-circle"><i class="fas fa-layer-group"></i></div>
+      <h4>التصنيف</h4>
+      <p>تصنيف الطلاب في مجموعات وقياس مستوى تقدمهم.</p>
+    </div>
+
+    <div class="aim-step">
+      <div class="aim-circle"><i class="fas fa-magnifying-glass-chart"></i></div>
+      <h4>قياس التحصيل</h4>
+      <p>قياس مستوى التحصيل وتشخيص نقاط القوة والضعف.</p>
+    </div>
+
+    <div class="aim-step">
+      <div class="aim-circle"><i class="fas fa-arrow-up-right-from-square"></i></div>
+      <h4>تنشيط التعلم</h4>
+      <p>تنشيط واقعية التعلم والنقل من صف إلى آخر بفاعلية.</p>
+    </div>
+
+    <div class="aim-step">
+      <div class="aim-circle"><i class="fas fa-users-between-lines"></i></div>
+      <h4>كشف الفروق</h4>
+      <p>الكشف عن الفروق بين الطلاب: المتفوقون، العاديون، بطيئو التعلم.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING + SETTINGS -->
+<section id="settings" class="closing-section">
+  <div class="closing-ornament">۞ ۞ ۞</div>
+  <h2 class="closing-text">تمّت بحمد الله</h2>
+  <p class="closing-quote">
+    «نسأل الله التوفيق في خدمة أبنائنا الطلاب، وتطوير العملية التعليمية بما يحقق الجودة الشاملة في القياس والتقويم»
+  </p>
+
+  <div class="settings-panel reveal">
+    <h3 class="settings-title">
+      <i class="fas fa-sliders"></i>
+      قائمة الإعدادات
+    </h3>
+
+    <div class="settings-grid">
+      <div class="input-row">
+        <label><i class="fas fa-map-marker-alt"></i> الإدارة العامة للتعليم بمنطقة</label>
+        <input type="text" placeholder="اسم المنطقة">
+      </div>
+
+      <div class="input-row">
+        <label><i class="fas fa-school"></i> اسم المدرسة / المؤسسة</label>
+        <input type="text" placeholder="اسم المدرسة">
+      </div>
+
+      <div class="input-row">
+        <label><i class="fas fa-user-tie"></i> مدير المدرسة</label>
+        <input type="text" placeholder="اسم مدير المدرسة">
+      </div>
+
+      <div class="input-row">
+        <label><i class="fas fa-user-graduate"></i> المشرف التربوي</label>
+        <input type="text" placeholder="اسم المشرف التربوي">
+      </div>
+
+      <div class="input-row">
+        <label><i class="fas fa-calendar"></i> العام الدراسي</label>
+        <input type="text" placeholder="١٤٤٦ - ١٤٤٧هـ" value="١٤٤٧هـ">
+      </div>
+
+      <div class="input-row">
+        <label><i class="fas fa-bookmark"></i> الفصل الدراسي</label>
+        <select>
+          <option>الفصل الدراسي الأول</option>
+          <option>الفصل الدراسي الثاني</option>
+          <option>الفصل الدراسي الثالث</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="designer-signature">
+      <p class="designer-text">
+        تصميم <strong>د/ فواز</strong>
+      </p>
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="designer-link">
+        <i class="fab fa-telegram"></i>
+        <span>تفضل للمزيد هنا</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="gold-line"></div>
+  <p>© نشرة تربوية لتجويد بناء أسئلة الاختبارات &nbsp;•&nbsp; جميع الحقوق محفوظة</p>
+</footer>
+
+</main>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// Active sidebar link tracking
+const sections = document.querySelectorAll('section[id], header.hero');
+const navLinks = document.querySelectorAll('.sidebar-nav a');
+
+function updateActiveLink(){
+  let current = '';
+  const scrollPos = window.scrollY + 100;
+  sections.forEach(s=>{
+    const top = s.offsetTop;
+    const height = s.offsetHeight;
+    if(scrollPos >= top && scrollPos < top + height){
+      current = s.id || '';
+    }
+  });
+  navLinks.forEach(l=>{
+    l.classList.remove('active');
+    const target = l.getAttribute('data-target');
+    if(target === current) l.classList.add('active');
+  });
+}
+window.addEventListener('scroll', updateActiveLink);
+updateActiveLink();
+
+// Close mobile sidebar on link click
+document.querySelectorAll('.sidebar-nav a').forEach(a=>{
+  a.addEventListener('click',()=>{
+    if(window.innerWidth <= 850){
+      document.querySelector('.sidebar').classList.remove('open');
+      document.querySelector('.sidebar-overlay').classList.remove('open');
+    }
+  });
+});
+</script>
+
+</body>
+</html>

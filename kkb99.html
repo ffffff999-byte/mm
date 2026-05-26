@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ورشة معايير بناء الاختبار الجيد</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@400;600;700;900&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ─── Reset & Base ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --teal: #0d5c8f;
+      --emerald: #0a7c5c;
+      --gold: #c9a227;
+      --orange: #e67e22;
+      --purple: #7c3aed;
+      --red: #dc2626;
+      --cyan: #0891b2;
+      --green: #16a34a;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --radius: 1rem;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Naskh Arabic', serif;
+      background: var(--bg);
+      color: var(--gray-800);
+      direction: rtl;
+      line-height: 1.7;
+    }
+    h1,h2,h3,h4,h5,h6 { font-family: 'Noto Kufi Arabic', sans-serif; }
+    a { text-decoration: none; color: inherit; }
+    ul { list-style: none; }
+    img { max-width: 100%; }
+
+    /* ─── Scrollbar ─────────────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+
+    /* ─── Progress Bar ──────────────────────────────────────────────────── */
+    #progress-bar {
+      position: fixed; top: 0; right: 0; left: 0; z-index: 9999;
+      height: 4px;
+      background: linear-gradient(90deg, var(--teal), var(--emerald));
+      width: 0%;
+      transition: width 0.2s ease;
+      border-radius: 2px;
+    }
+
+    /* ─── Navigation ────────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 4px; right: 0; left: 0; z-index: 100;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-100);
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 12px; }
+    .nav-brand-icon {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--teal), var(--emerald));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-size: 20px;
+    }
+    .nav-brand-text .title { font-weight: 700; font-size: 0.875rem; color: var(--teal); font-family: 'Noto Kufi Arabic'; }
+    .nav-brand-text .sub { font-size: 0.75rem; color: var(--gray-500); }
+    .nav-links { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+    .nav-link {
+      padding: 6px 12px; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 600; color: var(--gray-600);
+      cursor: pointer; transition: all 0.2s ease; border: none; background: none;
+      font-family: 'Noto Kufi Arabic';
+    }
+    .nav-link:hover { background: var(--gray-100); color: var(--teal); }
+    .nav-link.active { background: rgba(13,92,143,0.1); color: var(--teal); }
+    .menu-btn {
+      display: none; padding: 8px; border-radius: 8px;
+      border: none; background: none; cursor: pointer; color: var(--gray-700);
+    }
+    .mobile-menu {
+      display: none; position: absolute; top: 100%; right: 0; left: 0;
+      background: white; border-top: 1px solid var(--gray-100);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      padding: 1rem;
+    }
+    .mobile-menu.open { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .mobile-nav-link {
+      display: flex; align-items: center; gap: 8px;
+      padding: 10px 12px; border-radius: 10px;
+      font-size: 0.85rem; font-weight: 600; color: var(--gray-700);
+      cursor: pointer; transition: background 0.2s; border: none; background: none;
+      font-family: 'Noto Kufi Arabic'; text-align: right;
+    }
+    .mobile-nav-link:hover { background: var(--gray-50); }
+    .mobile-nav-link .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .menu-btn { display: block; }
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a3d5c 0%, #0d5c8f 40%, #0a7c5c 100%);
+      position: relative; overflow: hidden;
+      display: flex; align-items: center;
+      padding-top: 80px;
+    }
+    .hero-pattern {
+      position: absolute; inset: 0; opacity: 0.06;
+      background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0);
+      background-size: 32px 32px;
+    }
+    .hero-shapes { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .hero-shape {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+    }
+    .hero-shape-1 { width: 500px; height: 500px; top: -200px; left: -100px; }
+    .hero-shape-2 { width: 300px; height: 300px; bottom: -100px; right: 10%; }
+    .hero-shape-3 { width: 200px; height: 200px; top: 30%; right: 5%; background: rgba(201,162,39,0.1); }
+    .hero-hex {
+      position: absolute; opacity: 0.08;
+      width: 80px; height: 80px;
+      background: white;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    }
+    .hero-hex-1 { top: 15%; left: 8%; }
+    .hero-hex-2 { top: 60%; left: 3%; width: 50px; height: 50px; }
+    .hero-hex-3 { top: 25%; right: 15%; width: 60px; height: 60px; }
+    .hero-content {
+      max-width: 1280px; margin: 0 auto; padding: 4rem 2rem;
+      position: relative; z-index: 1;
+      width: 100%;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 50px;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px);
+      color: white; font-size: 0.85rem; font-weight: 600; margin-bottom: 1.5rem;
+    }
+    .hero-badge .star { color: #fbbf24; }
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 900; color: white; margin-bottom: 1.5rem;
+      line-height: 1.2;
+    }
+    .hero-title .highlight { color: #fbbf24; display: block; }
+    .hero-desc {
+      color: rgba(255,255,255,0.85); font-size: 1.1rem;
+      max-width: 600px; margin-bottom: 2rem; line-height: 1.8;
+    }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 2.5rem; }
+    .hero-tag {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 10px;
+      background: rgba(255,255,255,0.12); color: white; font-size: 0.85rem;
+    }
+    .hero-btns { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn-primary {
+      padding: 14px 28px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--orange));
+      color: white; font-weight: 700; font-size: 1rem;
+      border: none; cursor: pointer;
+      box-shadow: 0 8px 24px rgba(201,162,39,0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      font-family: 'Noto Kufi Arabic';
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(201,162,39,0.5); }
+    .btn-primary:active { transform: scale(0.97); }
+    .btn-secondary {
+      padding: 14px 28px; border-radius: 12px;
+      background: rgba(255,255,255,0.15); color: white; font-weight: 700; font-size: 1rem;
+      border: 2px solid rgba(255,255,255,0.3); cursor: pointer;
+      transition: all 0.15s ease; font-family: 'Noto Kufi Arabic';
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+    .scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      color: rgba(255,255,255,0.6); font-size: 0.8rem; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .scroll-arrow {
+      width: 24px; height: 24px; border-right: 2px solid rgba(255,255,255,0.5);
+      border-bottom: 2px solid rgba(255,255,255,0.5);
+      transform: rotate(45deg); animation: bounce 1.5s infinite;
+    }
+    @keyframes bounce { 0%,100%{transform:rotate(45deg) translateY(0)} 50%{transform:rotate(45deg) translateY(6px)} }
+
+    /* ─── Sections ──────────────────────────────────────────────────────── */
+    section { padding: 5rem 0; }
+    .section-bg-white { background: white; }
+    .section-bg-gray { background: var(--gray-50); }
+    .section-bg-gradient { background: linear-gradient(135deg, #f0f9ff, #ecfdf5); }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+
+    .section-title-wrap { text-align: center; margin-bottom: 3rem; }
+    .section-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 16px; border-radius: 50px;
+      font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;
+    }
+    .section-badge .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .section-heading {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 800; color: #1a2e44; margin-bottom: 0.75rem;
+    }
+    .section-sub { color: var(--gray-500); font-size: 1rem; max-width: 600px; margin: 0 auto; }
+    .section-divider {
+      display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 1rem;
+    }
+    .divider-line { height: 3px; width: 64px; border-radius: 2px; }
+    .divider-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* ─── Cards ─────────────────────────────────────────────────────────── */
+    .card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--gray-100);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      overflow: hidden;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(13,92,143,0.15); }
+    .card-body { padding: 1.5rem; }
+
+    /* ─── Grid Layouts ──────────────────────────────────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 1.25rem; }
+    @media (max-width: 1024px) {
+      .grid-4 { grid-template-columns: repeat(2,1fr); }
+      .grid-3 { grid-template-columns: repeat(2,1fr); }
+    }
+    @media (max-width: 640px) {
+      .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; }
+    }
+
+    /* ─── Info Card ─────────────────────────────────────────────────────── */
+    .info-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--gray-100); border-top-width: 3px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .info-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(13,92,143,0.15); }
+    .info-card-inner { display: flex; align-items: flex-start; gap: 1rem; }
+    .info-card-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+      font-size: 1.25rem;
+    }
+    .info-card h3 { font-weight: 700; color: var(--gray-800); margin-bottom: 0.5rem; font-family: 'Noto Kufi Arabic'; }
+    .info-card p { color: var(--gray-600); font-size: 0.9rem; line-height: 1.7; }
+
+    /* ─── Quality Card ──────────────────────────────────────────────────── */
+    .quality-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--gray-100); padding: 1.5rem;
+      position: relative; overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .quality-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(13,92,143,0.15); }
+    .quality-card-bar { position: absolute; top: 0; right: 0; left: 0; height: 4px; }
+    .quality-card-inner { display: flex; align-items: flex-start; gap: 1rem; margin-top: 0.5rem; }
+    .quality-icon-wrap { position: relative; flex-shrink: 0; }
+    .quality-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+    }
+    .quality-num {
+      position: absolute; top: -8px; right: -8px;
+      width: 24px; height: 24px; border-radius: 50%;
+      color: white; font-size: 0.7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .quality-card h3 { font-weight: 700; font-size: 1.05rem; color: var(--gray-800); margin-bottom: 0.5rem; font-family: 'Noto Kufi Arabic'; }
+    .quality-card p { color: var(--gray-600); font-size: 0.875rem; line-height: 1.7; }
+
+    /* ─── Numbered Step ─────────────────────────────────────────────────── */
+    .step-item { display: flex; gap: 1rem; align-items: flex-start; }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%;
+      color: white; font-weight: 700; font-size: 1.1rem;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .step-body { flex: 1; padding-bottom: 1.5rem; border-bottom: 1px solid var(--gray-100); }
+    .step-body:last-child { border-bottom: none; }
+    .step-body h4 { font-weight: 700; color: var(--gray-800); margin-bottom: 0.4rem; font-family: 'Noto Kufi Arabic'; }
+    .step-body p { color: var(--gray-600); font-size: 0.9rem; line-height: 1.7; }
+
+    /* ─── Accordion ─────────────────────────────────────────────────────── */
+    .accordion-item { border: 1px solid var(--gray-200); border-radius: 12px; margin-bottom: 12px; overflow: hidden; }
+    .accordion-btn {
+      width: 100%; display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem; background: none; border: none; cursor: pointer;
+      text-align: right; font-family: 'Noto Kufi Arabic';
+      transition: background 0.2s;
+    }
+    .accordion-btn:hover { background: var(--gray-50); }
+    .accordion-btn span { font-weight: 600; color: var(--gray-800); font-size: 1rem; }
+    .accordion-icon { transition: transform 0.3s ease; font-size: 1.1rem; }
+    .accordion-icon.open { transform: rotate(180deg); }
+    .accordion-body { display: none; padding: 1rem 1.25rem; border-top: 1px solid var(--gray-100); }
+    .accordion-body.open { display: block; }
+    .accordion-body p { color: var(--gray-600); font-size: 0.9rem; line-height: 1.8; margin-bottom: 1rem; }
+
+    /* ─── Criteria List ─────────────────────────────────────────────────── */
+    .criteria-list { display: flex; flex-direction: column; gap: 4px; }
+    .criteria-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      transition: background 0.2s;
+    }
+    .criteria-item:hover { background: var(--gray-50); }
+    .criteria-check {
+      width: 22px; height: 22px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+      font-size: 0.7rem;
+    }
+    .criteria-item span { color: var(--gray-700); font-size: 0.9rem; line-height: 1.7; }
+
+    /* ─── Skill Tags ─────────────────────────────────────────────────────── */
+    .skill-tag {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 6px 12px; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 600; margin: 4px;
+    }
+
+    /* ─── Feature Badge ─────────────────────────────────────────────────── */
+    .feature-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 8px;
+      font-size: 0.8rem; font-weight: 600; margin: 4px 4px 0 0;
+    }
+
+    /* ─── Pros/Cons ─────────────────────────────────────────────────────── */
+    .pros-cons-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    @media (max-width: 640px) { .pros-cons-grid { grid-template-columns: 1fr; } }
+    .pros-box { background: #ecfdf5; border-radius: var(--radius); padding: 1.5rem; border: 1px solid #a7f3d0; }
+    .cons-box { background: #fef2f2; border-radius: var(--radius); padding: 1.5rem; border: 1px solid #fecaca; }
+    .pros-box h3 { color: #065f46; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; font-family: 'Noto Kufi Arabic'; }
+    .cons-box h3 { color: #991b1b; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; font-family: 'Noto Kufi Arabic'; }
+    .pros-box li { display: flex; align-items: flex-start; gap: 8px; color: #065f46; font-size: 0.9rem; margin-bottom: 8px; }
+    .cons-box li { display: flex; align-items: flex-start; gap: 8px; color: #991b1b; font-size: 0.9rem; margin-bottom: 8px; }
+
+    /* ─── Table ─────────────────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { padding: 12px; text-align: right; font-family: 'Noto Kufi Arabic'; }
+    td { padding: 12px; }
+    tr:nth-child(even) td { background: #f0fdf4; }
+    tr:nth-child(odd) td { background: white; }
+
+    /* ─── Alert/Info Boxes ──────────────────────────────────────────────── */
+    .info-box { border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+    .info-box-blue { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .info-box-blue p { color: #1e40af; }
+    .info-box-purple { background: #faf5ff; border: 1px solid #ddd6fe; }
+    .info-box-purple p { color: #6b21a8; }
+    .info-box-teal { background: #f0fdfa; border: 1px solid #99f6e4; }
+    .info-box-teal p { color: #134e4a; }
+    .info-box-amber { background: #fffbeb; border: 1px solid #fde68a; }
+    .info-box-amber p { color: #92400e; }
+    .info-box-orange { background: #fff7ed; border: 1px solid #fed7aa; }
+    .info-box-orange p { color: #9a3412; }
+
+    /* ─── Comparison Cards ──────────────────────────────────────────────── */
+    .compare-card { border-radius: var(--radius); padding: 1.5rem; }
+    .compare-red { background: #fef2f2; border: 1px solid #fecaca; }
+    .compare-green { background: #ecfdf5; border: 1px solid #a7f3d0; }
+    .compare-card h3 { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.75rem; font-family: 'Noto Kufi Arabic'; }
+    .compare-card p { font-size: 0.9rem; line-height: 1.7; }
+    .compare-red h3 { color: #b91c1c; }
+    .compare-red p { color: #dc2626; }
+    .compare-green h3 { color: #065f46; }
+    .compare-green p { color: #059669; }
+
+    /* ─── Domain Card ───────────────────────────────────────────────────── */
+    .domain-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--gray-100);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04); overflow: hidden;
+    }
+    .domain-header {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gray-100);
+    }
+    .domain-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
+    }
+    .domain-label { font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; }
+    .domain-title { font-weight: 700; font-size: 1.1rem; color: var(--gray-800); font-family: 'Noto Kufi Arabic'; }
+    .domain-body { padding: 1.25rem 1.5rem; }
+    .domain-body p { color: var(--gray-600); font-size: 0.9rem; line-height: 1.7; margin-bottom: 1rem; }
+
+    /* ─── Gradient Box ──────────────────────────────────────────────────── */
+    .gradient-box {
+      background: linear-gradient(135deg, var(--teal), var(--emerald));
+      border-radius: var(--radius); padding: 2rem; color: white;
+    }
+    .gradient-box h3 { font-weight: 700; font-size: 1.1rem; margin-bottom: 1rem; font-family: 'Noto Kufi Arabic'; }
+    .gradient-box p { color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-bottom: 1.25rem; }
+    .domain-mini {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 10px; background: rgba(255,255,255,0.1);
+      margin-bottom: 10px;
+    }
+    .domain-mini-num {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem; font-weight: 700; color: #1a2e44;
+    }
+    .domain-mini span { color: white; font-weight: 600; font-size: 0.9rem; }
+
+    /* ─── Steps Layout ──────────────────────────────────────────────────── */
+    .steps-layout { display: grid; grid-template-columns: 1fr 380px; gap: 2.5rem; align-items: start; }
+    @media (max-width: 900px) { .steps-layout { grid-template-columns: 1fr; } }
+    .steps-sticky { position: sticky; top: 90px; }
+
+    /* ─── Specs Table ───────────────────────────────────────────────────── */
+    .specs-wrap {
+      background: linear-gradient(135deg, #ecfdf5, #f0fdfa);
+      border-radius: 1.5rem; padding: 2rem; border: 1px solid #a7f3d0;
+    }
+    .specs-header { display: flex; align-items: flex-start; gap: 1.5rem; margin-bottom: 2rem; }
+    .specs-icon {
+      width: 64px; height: 64px; border-radius: 16px;
+      background: #d1fae5; display: flex; align-items: center; justify-content: center;
+      font-size: 1.8rem; flex-shrink: 0;
+    }
+    .specs-header h3 { font-weight: 700; font-size: 1.2rem; color: var(--gray-800); margin-bottom: 0.5rem; font-family: 'Noto Kufi Arabic'; }
+    .specs-header p { color: var(--gray-600); font-size: 0.9rem; line-height: 1.7; }
+    .specs-table th { background: #065f46; color: white; }
+    .specs-table th:first-child { border-radius: 0 10px 0 0; }
+    .specs-table th:last-child { border-radius: 0 0 0 10px; }
+
+    /* ─── MCQ Criteria ──────────────────────────────────────────────────── */
+    .mcq-criteria { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    @media (max-width: 640px) { .mcq-criteria { grid-template-columns: 1fr; } }
+    .mcq-item {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 8px 10px; border-radius: 8px; font-size: 0.875rem; color: var(--gray-700);
+      transition: background 0.2s;
+    }
+    .mcq-item:hover { background: var(--gray-50); }
+    .mcq-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      font-size: 0.7rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
+    }
+
+    /* ─── Output Grid ───────────────────────────────────────────────────── */
+    .output-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    @media (max-width: 640px) { .output-grid { grid-template-columns: 1fr; } }
+    .output-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 1rem; background: white; border-radius: 12px;
+      border: 1px solid var(--gray-100);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .output-item:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+    .output-num {
+      width: 28px; height: 28px; border-radius: 8px;
+      font-size: 0.75rem; font-weight: 700; color: #0f766e;
+      background: #ccfbf1; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .output-item p { color: var(--gray-700); font-size: 0.875rem; line-height: 1.7; }
+
+    /* ─── Quote Block ───────────────────────────────────────────────────── */
+    .quote-block {
+      background: linear-gradient(135deg, var(--teal), var(--emerald));
+      border-radius: var(--radius); padding: 2rem; text-align: center; margin-top: 2.5rem;
+    }
+    .quote-block p { color: white; font-size: 1.1rem; font-weight: 600; line-height: 1.8; font-family: 'Noto Kufi Arabic'; }
+
+    /* ─── Inspirational Box ─────────────────────────────────────────────── */
+    .inspire-box {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border-radius: var(--radius); padding: 1.5rem; border: 1px solid #fde68a;
+      display: flex; align-items: flex-start; gap: 1rem; margin-top: 2.5rem;
+    }
+    .inspire-icon {
+      width: 48px; height: 48px; border-radius: 12px; background: #fef3c7;
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0;
+    }
+    .inspire-box h4 { font-weight: 700; color: #92400e; margin-bottom: 0.5rem; font-family: 'Noto Kufi Arabic'; }
+    .inspire-box p { color: #b45309; font-size: 0.9rem; line-height: 1.8; }
+
+    /* ─── Type Card ─────────────────────────────────────────────────────── */
+    .type-card { background: white; border-radius: var(--radius); border: 1px solid var(--gray-100); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: transform 0.25s ease, box-shadow 0.25s ease; }
+    .type-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(13,92,143,0.15); }
+    .type-card-header { padding: 1.5rem; border-bottom: 1px solid var(--gray-100); }
+    .type-card-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1rem; }
+    .type-card-header h3 { font-weight: 700; font-size: 1.05rem; color: var(--gray-800); font-family: 'Noto Kufi Arabic'; }
+    .type-card-body { padding: 1.25rem 1.5rem; }
+    .type-card-body p { color: var(--gray-600); font-size: 0.875rem; line-height: 1.7; margin-bottom: 1rem; }
+
+    /* ─── Essay Types ───────────────────────────────────────────────────── */
+    .essay-type { padding: 1rem; border-radius: 10px; margin-bottom: 10px; }
+    .essay-type-1 { background: #faf5ff; border: 1px solid #ddd6fe; }
+    .essay-type-2 { background: #eef2ff; border: 1px solid #c7d2fe; }
+    .essay-type-3 { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .essay-type h4 { font-weight: 700; margin-bottom: 6px; font-family: 'Noto Kufi Arabic'; }
+    .essay-type-1 h4 { color: #6b21a8; }
+    .essay-type-2 h4 { color: #3730a3; }
+    .essay-type-3 h4 { color: #1e40af; }
+    .essay-type p { font-size: 0.875rem; line-height: 1.7; }
+    .essay-type-1 p { color: #7c3aed; }
+    .essay-type-2 p { color: #4338ca; }
+    .essay-type-3 p { color: #1d4ed8; }
+
+    /* ─── Footer ────────────────────────────────────────────────────────── */
+    footer {
+      background: linear-gradient(135deg, #0d5c8f, #0a4a6e, #0a7c5c);
+      padding: 3rem 0; color: white;
+    }
+    .footer-inner {
+      max-width: 1280px; margin: 0 auto; padding: 0 1.5rem;
+    }
+    .footer-top {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 2rem; padding-bottom: 2rem; border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+    .footer-brand { display: flex; align-items: center; gap: 1rem; }
+    .footer-brand-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+    }
+    .footer-brand-title { font-weight: 700; font-size: 1.1rem; font-family: 'Noto Kufi Arabic'; }
+    .footer-brand-sub { color: rgba(255,255,255,0.65); font-size: 0.85rem; margin-top: 4px; }
+    .footer-center { text-align: center; }
+    .footer-label { color: rgba(255,255,255,0.65); font-size: 0.8rem; margin-bottom: 4px; }
+    .footer-name { font-weight: 700; font-size: 1.1rem; font-family: 'Noto Kufi Arabic'; }
+    .footer-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; border-radius: 10px;
+      background: rgba(255,255,255,0.15); color: white;
+      font-size: 0.875rem; font-weight: 600; margin-top: 8px;
+      transition: background 0.2s; border: none; cursor: pointer;
+      font-family: 'Noto Kufi Arabic'; text-decoration: none;
+    }
+    .footer-link:hover { background: rgba(255,255,255,0.25); }
+    .footer-bottom { text-align: center; padding-top: 1.5rem; }
+    .footer-bottom p { color: rgba(255,255,255,0.55); font-size: 0.85rem; }
+
+    /* ─── Animations ────────────────────────────────────────────────────── */
+    .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .fade-in-delay-1 { transition-delay: 0.1s; }
+    .fade-in-delay-2 { transition-delay: 0.2s; }
+    .fade-in-delay-3 { transition-delay: 0.3s; }
+    .fade-in-delay-4 { transition-delay: 0.4s; }
+
+    /* ─── Responsive ────────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2rem; }
+      .footer-top { flex-direction: column; align-items: center; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <div class="nav-brand-icon">📋</div>
+      <div class="nav-brand-text">
+        <div class="title">ورشة معايير بناء الاختبار الجيد</div>
+        <div class="sub">الفريق الحادي عشر · 1445هـ</div>
+      </div>
+    </div>
+    <div class="nav-links">
+      <button class="nav-link active" onclick="scrollTo('intro')">مقدمة الورشة</button>
+      <button class="nav-link" onclick="scrollTo('definition')">تعريف الاختبار</button>
+      <button class="nav-link" onclick="scrollTo('objectives')">أهداف الاختبار</button>
+      <button class="nav-link" onclick="scrollTo('steps')">خطوات الإعداد</button>
+      <button class="nav-link" onclick="scrollTo('domains')">المجالات الذهنية</button>
+      <button class="nav-link" onclick="scrollTo('qualities')">خصائص الاختبار</button>
+      <button class="nav-link" onclick="scrollTo('specs')">جدول المواصفات</button>
+      <button class="nav-link" onclick="scrollTo('criteria')">معايير الأسئلة</button>
+      <button class="nav-link" onclick="scrollTo('types')">أنواع الاختبارات</button>
+      <button class="nav-link" onclick="scrollTo('essay')">الأسئلة المقالية</button>
+      <button class="nav-link" onclick="scrollTo('objective')">الأسئلة الموضوعية</button>
+      <button class="nav-link" onclick="scrollTo('output')">إخراج الورقة</button>
+      <button class="nav-link" onclick="scrollTo('model')">نموذج الإجابة</button>
+    </div>
+    <button class="menu-btn" onclick="toggleMenu()" id="menu-btn">☰</button>
+  </div>
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="mobile-nav-link" onclick="scrollTo('intro')"><span class="dot" style="background:#0d5c8f"></span>مقدمة الورشة</button>
+    <button class="mobile-nav-link" onclick="scrollTo('definition')"><span class="dot" style="background:#0a7c5c"></span>تعريف الاختبار</button>
+    <button class="mobile-nav-link" onclick="scrollTo('objectives')"><span class="dot" style="background:#c9a227"></span>أهداف الاختبار</button>
+    <button class="mobile-nav-link" onclick="scrollTo('steps')"><span class="dot" style="background:#e67e22"></span>خطوات الإعداد</button>
+    <button class="mobile-nav-link" onclick="scrollTo('domains')"><span class="dot" style="background:#7c3aed"></span>المجالات الذهنية</button>
+    <button class="mobile-nav-link" onclick="scrollTo('qualities')"><span class="dot" style="background:#0d5c8f"></span>خصائص الاختبار</button>
+    <button class="mobile-nav-link" onclick="scrollTo('specs')"><span class="dot" style="background:#0a7c5c"></span>جدول المواصفات</button>
+    <button class="mobile-nav-link" onclick="scrollTo('criteria')"><span class="dot" style="background:#c9a227"></span>معايير الأسئلة</button>
+    <button class="mobile-nav-link" onclick="scrollTo('types')"><span class="dot" style="background:#e67e22"></span>أنواع الاختبارات</button>
+    <button class="mobile-nav-link" onclick="scrollTo('essay')"><span class="dot" style="background:#7c3aed"></span>الأسئلة المقالية</button>
+    <button class="mobile-nav-link" onclick="scrollTo('objective')"><span class="dot" style="background:#0d5c8f"></span>الأسئلة الموضوعية</button>
+    <button class="mobile-nav-link" onclick="scrollTo('output')"><span class="dot" style="background:#0a7c5c"></span>إخراج الورقة</button>
+    <button class="mobile-nav-link" onclick="scrollTo('model')"><span class="dot" style="background:#c9a227"></span>نموذج الإجابة</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- HERO -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section class="hero" id="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-shapes">
+    <div class="hero-shape hero-shape-1"></div>
+    <div class="hero-shape hero-shape-2"></div>
+    <div class="hero-shape hero-shape-3"></div>
+    <div class="hero-hex hero-hex-1"></div>
+    <div class="hero-hex hero-hex-2"></div>
+    <div class="hero-hex hero-hex-3"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="star">★</span>
+      المملكة العربية السعودية · وزارة التعليم · إدارة تعليم الرياض
+    </div>
+    <h1 class="hero-title">
+      ورشة معايير بناء
+      <span class="highlight">الاختبار الجيد</span>
+    </h1>
+    <p class="hero-desc">
+      برنامج تدريبي متكامل يهدف إلى تمكين المعلمات من صياغة الأسئلة التحصيلية وفق دليل إجراءات ونظم الاختبارات
+    </p>
+    <div class="hero-tags">
+      <div class="hero-tag">🏆 الفريق الحادي عشر</div>
+      <div class="hero-tag">📚 مكتب التعليم الملز</div>
+      <div class="hero-tag">⭐ 1445هـ</div>
+    </div>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="scrollTo('intro')">ابدأ الورشة</button>
+      <button class="btn-secondary" onclick="scrollTo('qualities')">خصائص الاختبار الجيد</button>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <span>مرر للأسفل</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: INTRO -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="intro" class="section-bg-white">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(13,92,143,0.1);color:#0d5c8f">
+        <span class="dot" style="background:#0d5c8f"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">مقدمة الورشة</h2>
+      <p class="section-sub">أهداف الورشة التدريبية ومحاورها الرئيسية</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#0d5c8f,transparent)"></div>
+        <div class="divider-dot" style="background:#0d5c8f"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#0d5c8f,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="grid-3 fade-in">
+      <div class="card fade-in fade-in-delay-1" style="border-top:4px solid #0d5c8f">
+        <div class="card-body" style="text-align:center">
+          <div style="width:64px;height:64px;border-radius:16px;background:rgba(13,92,143,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem">📖</div>
+          <div style="font-size:2.5rem;font-weight:900;color:rgba(13,92,143,0.2);font-family:'Noto Kufi Arabic';margin-bottom:0.5rem">01</div>
+          <h3 style="font-weight:700;color:#1f2937;font-size:1.05rem;margin-bottom:0.75rem;font-family:'Noto Kufi Arabic'">الهدف الأول</h3>
+          <p style="color:#4b5563;font-size:0.9rem;line-height:1.7">التعرف على معنى الاختبارات وأنواعها</p>
+        </div>
+      </div>
+      <div class="card fade-in fade-in-delay-2" style="border-top:4px solid #0a7c5c">
+        <div class="card-body" style="text-align:center">
+          <div style="width:64px;height:64px;border-radius:16px;background:rgba(10,124,92,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem">🏆</div>
+          <div style="font-size:2.5rem;font-weight:900;color:rgba(10,124,92,0.2);font-family:'Noto Kufi Arabic';margin-bottom:0.5rem">02</div>
+          <h3 style="font-weight:700;color:#1f2937;font-size:1.05rem;margin-bottom:0.75rem;font-family:'Noto Kufi Arabic'">الهدف الثاني</h3>
+          <p style="color:#4b5563;font-size:0.9rem;line-height:1.7">التعرف على معايير بناء الاختبارات الجيدة</p>
+        </div>
+      </div>
+      <div class="card fade-in fade-in-delay-3" style="border-top:4px solid #c9a227">
+        <div class="card-body" style="text-align:center">
+          <div style="width:64px;height:64px;border-radius:16px;background:rgba(201,162,39,0.1);display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:1.8rem">📊</div>
+          <div style="font-size:2.5rem;font-weight:900;color:rgba(201,162,39,0.2);font-family:'Noto Kufi Arabic';margin-bottom:0.5rem">03</div>
+          <h3 style="font-weight:700;color:#1f2937;font-size:1.05rem;margin-bottom:0.75rem;font-family:'Noto Kufi Arabic'">الهدف الثالث</h3>
+          <p style="color:#4b5563;font-size:0.9rem;line-height:1.7">التعرف على مميزات وعيوب الاختبارات بأنواعها</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="inspire-box fade-in">
+      <div class="inspire-icon">💡</div>
+      <div>
+        <h4>إلهام</h4>
+        <p>ما يفعله الفنان الأذربيجاني "رشاد علي أكبروف" أنه يقوم بجمع وترصيص أشياء عادية أمام مصدر ضوء ليرسم بظلها على الحائط لوحات مدهشة.. كذلك المعلم الماهر يصنع من أسئلة بسيطة أداةً تكشف عمق التعلم.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: DEFINITION -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="definition" class="section-bg-gray">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(10,124,92,0.1);color:#0a7c5c">
+        <span class="dot" style="background:#0a7c5c"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">تعريف الاختبار</h2>
+      <p class="section-sub">ماذا نعني بالاختبار؟ وما الفرق بينه وبين الامتحان؟</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#0a7c5c,transparent)"></div>
+        <div class="divider-dot" style="background:#0a7c5c"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#0a7c5c,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="grid-2 fade-in" style="margin-bottom:1.5rem">
+      <div class="compare-card compare-red">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem">
+          <div style="width:40px;height:40px;border-radius:10px;background:#fee2e2;display:flex;align-items:center;justify-content:center;font-size:1.2rem">⚠️</div>
+          <h3>امتحان</h3>
+        </div>
+        <p>مصطلح مشتق من <strong>المحنة</strong> — يصاحبه الرهبة والمعاناة والخوف</p>
+      </div>
+      <div class="compare-card compare-green">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:0.75rem">
+          <div style="width:40px;height:40px;border-radius:10px;background:#d1fae5;display:flex;align-items:center;justify-content:center;font-size:1.2rem">✅</div>
+          <h3>اختبار ✓</h3>
+        </div>
+        <p>مصطلح مشتق من <strong>الخبرة</strong> — يُعبّر عن قياس موضوعي للتعلم</p>
+      </div>
+    </div>
+
+    <div class="grid-2 fade-in">
+      <div class="card" style="border-right:4px solid #0a7c5c">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+            <div style="width:40px;height:40px;border-radius:10px;background:#ecfdf5;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#059669">#</div>
+            <h3 style="font-weight:700;color:#1f2937;font-family:'Noto Kufi Arabic'">التعريف الأول</h3>
+          </div>
+          <p style="color:#4b5563;line-height:1.8;font-size:0.9rem">هو <strong style="color:#1f2937">طريقة منظمة</strong> لتحديد مستوى تحصيل الطالبات من المعلومات والمهارات في مادة دراسية تم تعلمها مسبقاً وذلك من خلال إجاباتهم على مجموعة من المثيرات (الأسئلة) تمثل محتوى تلك المادة الدراسية.</p>
+        </div>
+      </div>
+      <div class="card" style="border-right:4px solid #0d5c8f">
+        <div class="card-body">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem">
+            <div style="width:40px;height:40px;border-radius:10px;background:#eff6ff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#2563eb">#</div>
+            <h3 style="font-weight:700;color:#1f2937;font-family:'Noto Kufi Arabic'">التعريف الثاني</h3>
+          </div>
+          <p style="color:#4b5563;line-height:1.8;font-size:0.9rem"><strong style="color:#1f2937">أداة تستخدم</strong> لتحديد مستوى كسب المتعلم لمعلومات ومهارات في مادة دراسية كان قد تم تعلمها مسبقاً بصفة رسمية، من خلال إجاباته على عينة من الأسئلة (الفقرات) التي تمثل محتوى المادة الدراسية.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: OBJECTIVES -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="objectives" class="section-bg-white">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(201,162,39,0.1);color:#c9a227">
+        <span class="dot" style="background:#c9a227"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">أهداف الاختبار</h2>
+      <p class="section-sub">ما الذي يسعى الاختبار إلى تحقيقه؟</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#c9a227,transparent)"></div>
+        <div class="divider-dot" style="background:#c9a227"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#c9a227,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="grid-3 fade-in">
+      <div class="info-card fade-in fade-in-delay-1" style="border-top-color:#0d5c8f">
+        <div class="info-card-inner">
+          <div class="info-card-icon" style="background:rgba(13,92,143,0.1);color:#0d5c8f">📊</div>
+          <div><h3>قياس مستوى التحصيل</h3><p>قياس مستوى تحصيل الطالبات وتشخيص نقاط القوة والضعف لديهن</p></div>
+        </div>
+      </div>
+      <div class="info-card fade-in fade-in-delay-2" style="border-top-color:#0a7c5c">
+        <div class="info-card-inner">
+          <div class="info-card-icon" style="background:rgba(10,124,92,0.1);color:#0a7c5c">🗂️</div>
+          <div><h3>تصنيف الطالبات</h3><p>تصنيف الطالبات في مجموعات وقياس مستوى تقدمهن</p></div>
+        </div>
+      </div>
+      <div class="info-card fade-in fade-in-delay-3" style="border-top-color:#c9a227">
+        <div class="info-card-inner">
+          <div class="info-card-icon" style="background:rgba(201,162,39,0.1);color:#c9a227">👁️</div>
+          <div><h3>الكشف عن الفروق</h3><p>الكشف عن الفروق بين الطالبات (المتفوقة - العادية - بطيئة التعلم)</p></div>
+        </div>
+      </div>
+      <div class="info-card fade-in fade-in-delay-1" style="border-top-color:#e67e22">
+        <div class="info-card-inner">
+          <div class="info-card-icon" style="background:rgba(230,126,34,0.1);color:#e67e22">⚡</div>
+          <div><h3>تنشيط واقعية التعلم</h3><p>تنشيط واقعية التعلم والنقل من صف إلى آخر</p></div>
+        </div>
+      </div>
+      <div class="info-card fade-in fade-in-delay-2" style="border-top-color:#7c3aed">
+        <div class="info-card-inner">
+          <div class="info-card-icon" style="background:rgba(124,58,237,0.1);color:#7c3aed">🎯</div>
+          <div><h3>التنبؤ بالأداء</h3><p>التنبؤ بأداء الطالبات في المستقبل</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: STEPS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="steps" class="section-bg-gray">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(230,126,34,0.1);color:#e67e22">
+        <span class="dot" style="background:#e67e22"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">خطوات إعداد الاختبار التحصيلي</h2>
+      <p class="section-sub">المراحل الأربع لإعداد اختبار تحصيلي متكامل</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#e67e22,transparent)"></div>
+        <div class="divider-dot" style="background:#e67e22"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#e67e22,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="steps-layout fade-in">
+      <div>
+        <div class="step-item" style="margin-bottom:0">
+          <div class="step-num" style="background:linear-gradient(135deg,#0d5c8f,#0d5c8fcc)">1</div>
+          <div class="step-body">
+            <h4>تحليل المحتوى</h4>
+            <p>تحليل المحتوى الدراسي: الخبرات المعرفية والمهارية والوجدانية المتضمنة في المقرر الدراسي والتي تحقق النمو المتكامل للمتعلم. مثل: معرفة أقسام الحديث (معرفية)، إتقان حكم الإقلاب (مهارية)، محبة الخلفاء الراشدين (وجدانية).</p>
+          </div>
+        </div>
+        <div class="step-item" style="margin-bottom:0">
+          <div class="step-num" style="background:linear-gradient(135deg,#0a7c5c,#0a7c5ccc)">2</div>
+          <div class="step-body">
+            <h4>صياغة الأهداف</h4>
+            <p>الأهداف التدريسية: تلك الأنماط من السلوك التي نتوقع أن تصدرها الطالبة بدرجة من الإتقان. أي تغيير يراد إحداثه في سلوك المتعلم نتيجة لعملية التعلم.</p>
+          </div>
+        </div>
+        <div class="step-item" style="margin-bottom:0">
+          <div class="step-num" style="background:linear-gradient(135deg,#c9a227,#c9a227cc)">3</div>
+          <div class="step-body">
+            <h4>بناء الفقرات الاختبارية</h4>
+            <p>صياغة الأسئلة وفق المعايير العلمية المحددة، مع مراعاة التنوع بين الأسئلة المقالية والموضوعية وتغطية جميع مستويات الأهداف.</p>
+          </div>
+        </div>
+        <div class="step-item" style="margin-bottom:0">
+          <div class="step-num" style="background:linear-gradient(135deg,#e67e22,#e67e22cc)">4</div>
+          <div class="step-body" style="border-bottom:none">
+            <h4>تحليل نتائج الاختبار</h4>
+            <p>مراجعة وتحليل نتائج الاختبار للتحقق من مدى تحقيق الأهداف التدريسية وتحديد نقاط القوة والضعف في التعلم.</p>
+          </div>
+        </div>
+      </div>
+      <div class="steps-sticky">
+        <div class="gradient-box">
+          <h3>المجالات الذهنية للاختبارات</h3>
+          <p>تعتمد الاختبارات اعتماداً كبيراً على المجالات الذهنية في بناء وحل الأسئلة</p>
+          <div class="domain-mini">
+            <div class="domain-mini-num" style="background:#c9a227">1</div>
+            <span>مجال المعرفة</span>
+          </div>
+          <div class="domain-mini">
+            <div class="domain-mini-num" style="background:#e67e22">2</div>
+            <span>مجال التطبيق</span>
+          </div>
+          <div class="domain-mini">
+            <div class="domain-mini-num" style="background:#a78bfa">3</div>
+            <span>مجال التفكير المنطقي (الاستدلال)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: DOMAINS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="domains" class="section-bg-white">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(124,58,237,0.1);color:#7c3aed">
+        <span class="dot" style="background:#7c3aed"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">المجالات الذهنية للاختبارات</h2>
+      <p class="section-sub">المجالات الثلاثة التي تقيسها الاختبارات التحصيلية</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#7c3aed,transparent)"></div>
+        <div class="divider-dot" style="background:#7c3aed"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#7c3aed,transparent)"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1.5rem">
+      <div class="domain-card fade-in">
+        <div class="domain-header" style="background:linear-gradient(135deg,rgba(13,92,143,0.05),rgba(13,92,143,0.02))">
+          <div class="domain-icon" style="background:#eff6ff;color:#1d4ed8">📖</div>
+          <div>
+            <div class="domain-label" style="color:#3b82f6">المجال الأول</div>
+            <div class="domain-title">مجال المعرفة</div>
+          </div>
+        </div>
+        <div class="domain-body">
+          <p>وتعني قدرة الطالبة على الاستدعاء والتعرف والاستيعاب، ومن ذلك معرفة المصطلحات والرموز والمدلولات والحقائق وتحويل الرسالة إلى صيغ أخرى وفهم معانيها.</p>
+          <div>
+            <span class="skill-tag" style="background:rgba(13,92,143,0.08);color:#0d5c8f;border:1px solid rgba(13,92,143,0.2)">⚡ الشرح أو التفسير</span>
+            <span class="skill-tag" style="background:rgba(13,92,143,0.08);color:#0d5c8f;border:1px solid rgba(13,92,143,0.2)">⚡ التعريف</span>
+            <span class="skill-tag" style="background:rgba(13,92,143,0.08);color:#0d5c8f;border:1px solid rgba(13,92,143,0.2)">⚡ الاستدعاء أو التميز</span>
+            <span class="skill-tag" style="background:rgba(13,92,143,0.08);color:#0d5c8f;border:1px solid rgba(13,92,143,0.2)">⚡ الوصف</span>
+            <span class="skill-tag" style="background:rgba(13,92,143,0.08);color:#0d5c8f;border:1px solid rgba(13,92,143,0.2)">⚡ المقارنة والتصنيف</span>
+            <span class="skill-tag" style="background:rgba(13,92,143,0.08);color:#0d5c8f;border:1px solid rgba(13,92,143,0.2)">⚡ التوضيح والتمثيل</span>
+            <span class="skill-tag" style="background:rgba(13,92,143,0.08);color:#0d5c8f;border:1px solid rgba(13,92,143,0.2)">⚡ المعرفة بالأدوات العلمية</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="domain-card fade-in">
+        <div class="domain-header" style="background:linear-gradient(135deg,rgba(10,124,92,0.05),rgba(10,124,92,0.02))">
+          <div class="domain-icon" style="background:#ecfdf5;color:#059669">✏️</div>
+          <div>
+            <div class="domain-label" style="color:#10b981">المجال الثاني</div>
+            <div class="domain-title">مجال التطبيق</div>
+          </div>
+        </div>
+        <div class="domain-body">
+          <p>وهو قدرة الطالب على تطبيق التجريدات، أي توظيف النظريات والمبادئ والقواعد والإجراءات والأفكار في مشكلات جديدة وحالات جديدة وبمعنى آخر (انتقال التعلم إلى حالات وظروف جديدة) دون وجود إيحاءات بالكيفية التي يستخدم بها التجريد.</p>
+          <div>
+            <span class="skill-tag" style="background:rgba(10,124,92,0.08);color:#0a7c5c;border:1px solid rgba(10,124,92,0.2)">⚡ المقارنة</span>
+            <span class="skill-tag" style="background:rgba(10,124,92,0.08);color:#0a7c5c;border:1px solid rgba(10,124,92,0.2)">⚡ الشرح</span>
+            <span class="skill-tag" style="background:rgba(10,124,92,0.08);color:#0a7c5c;border:1px solid rgba(10,124,92,0.2)">⚡ النمذجة واستخدام النماذج</span>
+            <span class="skill-tag" style="background:rgba(10,124,92,0.08);color:#0a7c5c;border:1px solid rgba(10,124,92,0.2)">⚡ الربط</span>
+            <span class="skill-tag" style="background:rgba(10,124,92,0.08);color:#0a7c5c;border:1px solid rgba(10,124,92,0.2)">⚡ التصنيف</span>
+            <span class="skill-tag" style="background:rgba(10,124,92,0.08);color:#0a7c5c;border:1px solid rgba(10,124,92,0.2)">⚡ حل مشكلات اعتيادية روتينية</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="domain-card fade-in">
+        <div class="domain-header" style="background:linear-gradient(135deg,rgba(124,58,237,0.05),rgba(124,58,237,0.02))">
+          <div class="domain-icon" style="background:#faf5ff;color:#7c3aed">🧠</div>
+          <div>
+            <div class="domain-label" style="color:#8b5cf6">المجال الثالث</div>
+            <div class="domain-title">مجال التفكير المنطقي (الاستدلال)</div>
+          </div>
+        </div>
+        <div class="domain-body">
+          <p>يمكن القول بأنه عبارة عن سلسلة من النشاطات العقلية التي يقوم بها الدماغ عندما يتعرض لمثير يتم استقباله بواحدة أو أكثر من الحواس الخمس، وقدرة الطالب على إدراك معنى المادة المتعلمة وإيجاد الحلول للمواقف المختلفة.</p>
+          <div>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ التحليل</span>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ الفروض – التنبؤ</span>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ الدمج</span>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ الاستنتاج</span>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ التعميم</span>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ التصميم</span>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ التسويغ</span>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ التقويم</span>
+            <span class="skill-tag" style="background:rgba(124,58,237,0.08);color:#7c3aed;border:1px solid rgba(124,58,237,0.2)">⚡ حل مشكلات غير اعتيادية</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: QUALITIES -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="qualities" class="section-bg-gradient">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(13,92,143,0.1);color:#0d5c8f">
+        <span class="dot" style="background:#0d5c8f"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">خصائص الاختبار الجيد</h2>
+      <p class="section-sub">ثمانية معايير تميز الاختبار الجيد عن غيره</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#0d5c8f,transparent)"></div>
+        <div class="divider-dot" style="background:#0d5c8f"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#0d5c8f,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="grid-4 fade-in">
+      <div class="quality-card fade-in fade-in-delay-1">
+        <div class="quality-card-bar" style="background:linear-gradient(90deg,#0d5c8f,rgba(13,92,143,0.3))"></div>
+        <div class="quality-card-inner">
+          <div class="quality-icon-wrap">
+            <div class="quality-icon" style="background:rgba(13,92,143,0.1);color:#0d5c8f">🎯</div>
+            <div class="quality-num" style="background:#0d5c8f">1</div>
+          </div>
+          <div><h3>الصدق</h3><p>أن يقيس الاختبار ما صُمِّم لأجله</p></div>
+        </div>
+      </div>
+      <div class="quality-card fade-in fade-in-delay-2">
+        <div class="quality-card-bar" style="background:linear-gradient(90deg,#0a7c5c,rgba(10,124,92,0.3))"></div>
+        <div class="quality-card-inner">
+          <div class="quality-icon-wrap">
+            <div class="quality-icon" style="background:rgba(10,124,92,0.1);color:#0a7c5c">🛡️</div>
+            <div class="quality-num" style="background:#0a7c5c">2</div>
+          </div>
+          <div><h3>الثبات</h3><p>استقرار النتائج في حال تكرار تطبيقه على نفس العينة</p></div>
+        </div>
+      </div>
+      <div class="quality-card fade-in fade-in-delay-3">
+        <div class="quality-card-bar" style="background:linear-gradient(90deg,#c9a227,rgba(201,162,39,0.3))"></div>
+        <div class="quality-card-inner">
+          <div class="quality-icon-wrap">
+            <div class="quality-icon" style="background:rgba(201,162,39,0.1);color:#c9a227">⚖️</div>
+            <div class="quality-num" style="background:#c9a227">3</div>
+          </div>
+          <div><h3>الموضوعية</h3><p>عدم تأثر النتائج بذاتية المصحح</p></div>
+        </div>
+      </div>
+      <div class="quality-card fade-in fade-in-delay-4">
+        <div class="quality-card-bar" style="background:linear-gradient(90deg,#e67e22,rgba(230,126,34,0.3))"></div>
+        <div class="quality-card-inner">
+          <div class="quality-icon-wrap">
+            <div class="quality-icon" style="background:rgba(230,126,34,0.1);color:#e67e22">🗂️</div>
+            <div class="quality-num" style="background:#e67e22">4</div>
+          </div>
+          <div><h3>الشمولية</h3><p>أن يكون الاختبار شاملاً وممثلاً للأهداف التدريسية المراد قياسها</p></div>
+        </div>
+      </div>
+      <div class="quality-card fade-in fade-in-delay-1">
+        <div class="quality-card-bar" style="background:linear-gradient(90deg,#7c3aed,rgba(124,58,237,0.3))"></div>
+        <div class="quality-card-inner">
+          <div class="quality-icon-wrap">
+            <div class="quality-icon" style="background:rgba(124,58,237,0.1);color:#7c3aed">⚖️</div>
+            <div class="quality-num" style="background:#7c3aed">5</div>
+          </div>
+          <div><h3>العدالة</h3><p>تكون فقرات الاختبار مناسبة للطالبات وتراعي الفروق دون تفضيل فئة عن فئة</p></div>
+        </div>
+      </div>
+      <div class="quality-card fade-in fade-in-delay-2">
+        <div class="quality-card-bar" style="background:linear-gradient(90deg,#dc2626,rgba(220,38,38,0.3))"></div>
+        <div class="quality-card-inner">
+          <div class="quality-icon-wrap">
+            <div class="quality-icon" style="background:rgba(220,38,38,0.1);color:#dc2626">✅</div>
+            <div class="quality-num" style="background:#dc2626">6</div>
+          </div>
+          <div><h3>الواقعية</h3><p>أن يكون تطبيق الاختبار في حدود الظروف المتاحة وأن يتناسب طوله مع الوقت المحدد له</p></div>
+        </div>
+      </div>
+      <div class="quality-card fade-in fade-in-delay-3">
+        <div class="quality-card-bar" style="background:linear-gradient(90deg,#0891b2,rgba(8,145,178,0.3))"></div>
+        <div class="quality-card-inner">
+          <div class="quality-icon-wrap">
+            <div class="quality-icon" style="background:rgba(8,145,178,0.1);color:#0891b2">📋</div>
+            <div class="quality-num" style="background:#0891b2">7</div>
+          </div>
+          <div><h3>سهولة التصحيح والتعامل مع الدرجات</h3><p>الأخذ في الاعتبار توزيع الدرجات عند إعداد فقرات الاختبار وخصوصاً الفقرات المقالية</p></div>
+        </div>
+      </div>
+      <div class="quality-card fade-in fade-in-delay-4">
+        <div class="quality-card-bar" style="background:linear-gradient(90deg,#16a34a,rgba(22,163,74,0.3))"></div>
+        <div class="quality-card-inner">
+          <div class="quality-icon-wrap">
+            <div class="quality-icon" style="background:rgba(22,163,74,0.1);color:#16a34a">📊</div>
+            <div class="quality-num" style="background:#16a34a">8</div>
+          </div>
+          <div><h3>التمييز</h3><p>أن يكون الاختبار قادراً على الكشف عن الفروق الفردية بين الطالبات والتميز بينهن في المستوى الدراسي</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: SPECS TABLE -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="specs" class="section-bg-white">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(10,124,92,0.1);color:#0a7c5c">
+        <span class="dot" style="background:#0a7c5c"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">جدول المواصفات</h2>
+      <p class="section-sub">أداة لضمان توازن الاختبار وشموليته</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#0a7c5c,transparent)"></div>
+        <div class="divider-dot" style="background:#0a7c5c"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#0a7c5c,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="specs-wrap fade-in">
+      <div class="specs-header">
+        <div class="specs-icon">📊</div>
+        <div>
+          <h3>ما هو جدول المواصفات؟</h3>
+          <p>جدول المواصفات هو أداة تخطيطية تُستخدم لضمان أن الاختبار يغطي جميع الأهداف التدريسية بصورة متوازنة، ويُحدد فيه توزيع الأسئلة على الموضوعات والمستويات المعرفية المختلفة.</p>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="specs-table">
+          <thead>
+            <tr>
+              <th style="text-align:right;padding:12px 16px;border-radius:0 10px 0 0">الموضوع / الوحدة</th>
+              <th style="text-align:center;padding:12px">المعرفة</th>
+              <th style="text-align:center;padding:12px">التطبيق</th>
+              <th style="text-align:center;padding:12px">الاستدلال</th>
+              <th style="text-align:center;padding:12px;border-radius:0 0 0 10px">المجموع</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:#1f2937;padding:12px 16px">الوحدة الأولى</td>
+              <td style="text-align:center;color:#1d4ed8;padding:12px">30%</td>
+              <td style="text-align:center;color:#059669;padding:12px">40%</td>
+              <td style="text-align:center;color:#7c3aed;padding:12px">30%</td>
+              <td style="text-align:center;font-weight:700;color:#1f2937;padding:12px">100%</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:#1f2937;padding:12px 16px">الوحدة الثانية</td>
+              <td style="text-align:center;color:#1d4ed8;padding:12px">25%</td>
+              <td style="text-align:center;color:#059669;padding:12px">45%</td>
+              <td style="text-align:center;color:#7c3aed;padding:12px">30%</td>
+              <td style="text-align:center;font-weight:700;color:#1f2937;padding:12px">100%</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:#1f2937;padding:12px 16px">الوحدة الثالثة</td>
+              <td style="text-align:center;color:#1d4ed8;padding:12px">35%</td>
+              <td style="text-align:center;color:#059669;padding:12px">35%</td>
+              <td style="text-align:center;color:#7c3aed;padding:12px">30%</td>
+              <td style="text-align:center;font-weight:700;color:#1f2937;padding:12px">100%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:0.8rem;color:#9ca3af;text-align:center;margin-top:1rem">* هذا مثال توضيحي لجدول المواصفات</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: CRITERIA -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="criteria" class="section-bg-gray">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(201,162,39,0.1);color:#c9a227">
+        <span class="dot" style="background:#c9a227"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">المعايير العامة لكتابة الأسئلة</h2>
+      <p class="section-sub">الضوابط العلمية لصياغة أسئلة الاختبار</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#c9a227,transparent)"></div>
+        <div class="divider-dot" style="background:#c9a227"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#c9a227,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="grid-2 fade-in">
+      <ul class="criteria-list">
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓</div><span>صحة السؤال وخلوه من الأخطاء العلمية واللغوية</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓</div><span>التقيد بقائمة الأهداف وجدول المواصفات</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(201,162,39,0.1);color:#c9a227">✓</div><span>تجنب التعقيد اللفظي في السؤال</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(230,126,34,0.1);color:#e67e22">✓</div><span>مراعاة معايير بناء الاختبار وجودته</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(124,58,237,0.1);color:#7c3aed">✓</div><span>الدقة في صياغة السؤال بحيث يتحدد المطلوب منه تماماً</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(220,38,38,0.1);color:#dc2626">✓</div><span>مراعاة تناسب وقت الاختبار وعدد الأسئلة</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(8,145,178,0.1);color:#0891b2">✓</div><span>التنويع بين الأسئلة المقالية والموضوعية حسب النسبة المحددة</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(22,163,74,0.1);color:#16a34a">✓</div><span>مراعاة أن يكون لكل سؤال إجابة صحيحة متفق عليها في الكتاب المقرر</span></li>
+      </ul>
+      <ul class="criteria-list">
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓</div><span>اكتبي من الأسئلة أكثر مما تحتاجينه في الاختبار</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓</div><span>يجب أن يتناول كل سؤال أجزاء هامة من المقرر الدراسي</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(201,162,39,0.1);color:#c9a227">✓</div><span>يجب أن يكون كل سؤال مستقلاً بذاته</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(230,126,34,0.1);color:#e67e22">✓</div><span>عدم كتابة معلومات في السؤال لا تفيد الطالبة</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(124,58,237,0.1);color:#7c3aed">✓</div><span>مراعاة أن يكون كل سؤال يطرح موقفاً جديداً</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(220,38,38,0.1);color:#dc2626">✓</div><span>يراعى ألا يشترك في إعداد الأسئلة من له قريب من الدرجة الأولى</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(8,145,178,0.1);color:#0891b2">✓</div><span>إذا كان مطلوباً حل سؤال له عدة طرق فلا تحدد طريقة معينة</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(22,163,74,0.1);color:#16a34a">✓</div><span>التقيد بمعايير الأسئلة المقالية والموضوعية</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓</div><span>تنويع الأسئلة من حيث السهولة والصعوبة مع مراعاة الفروق الفردية</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓</div><span>الإخراج الجيد للورقة من حيث الطباعة والتوجيهات الأخرى</span></li>
+        <li class="criteria-item"><div class="criteria-check" style="background:rgba(201,162,39,0.1);color:#c9a227">✓</div><span>يجب مراعاة التوجيهات الخاصة بالاختبار لكل مادة ضمن تعاميم الاختبارات</span></li>
+      </ul>
+    </div>
+
+    <div class="quote-block fade-in">
+      <p>"أصول النجاح أن يرضى الله عنك، وأن يرضى عنك من حولك، وأن تكون نفسك راضية، وأن تقدم عملاً مثمراً"</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: TYPES -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="types" class="section-bg-white">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(230,126,34,0.1);color:#e67e22">
+        <span class="dot" style="background:#e67e22"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">أنواع الاختبارات</h2>
+      <p class="section-sub">التصنيفات الرئيسية للاختبارات التحصيلية</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#e67e22,transparent)"></div>
+        <div class="divider-dot" style="background:#e67e22"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#e67e22,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="grid-3 fade-in">
+      <div class="type-card">
+        <div class="type-card-header" style="background:linear-gradient(135deg,rgba(13,92,143,0.06),rgba(13,92,143,0.02))">
+          <div class="type-card-icon" style="background:rgba(13,92,143,0.1);color:#0d5c8f">📄</div>
+          <h3>الاختبارات التحريرية</h3>
+        </div>
+        <div class="type-card-body">
+          <p>تصنف إلى اختبارات مقالية وموضوعية. يراد بها تقويم التحصيل الدراسي في نهاية الوحدة أو الفصل الدراسي، وتقدم للطالب على هيئة أسئلة مكتوبة تصاغ وفق ضوابط وشروط محددة، ويطلب منهم الإجابة عنها كتابة، ثم تصحح من قبل المعلم أو مجموعة من المعلمين.</p>
+          <span class="feature-badge" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓ أسئلة مقالية</span>
+          <span class="feature-badge" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓ أسئلة موضوعية</span>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-card-header" style="background:linear-gradient(135deg,rgba(10,124,92,0.06),rgba(10,124,92,0.02))">
+          <div class="type-card-icon" style="background:rgba(10,124,92,0.1);color:#0a7c5c">💬</div>
+          <h3>الاختبارات الشفوية</h3>
+        </div>
+        <div class="type-card-body">
+          <p>أسئلة تُلقى على الطالب بطريقة شفوية، ويطلب منه الإجابة عنها بالطريقة نفسها، تهدف إلى معرفة مدى فهم الطالب للمادة الدراسية وقياس تحقق الأهداف المطلوبة.</p>
+          <span class="feature-badge" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓ تفاعل مباشر</span>
+          <span class="feature-badge" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓ تقييم الفهم</span>
+        </div>
+      </div>
+      <div class="type-card">
+        <div class="type-card-header" style="background:linear-gradient(135deg,rgba(230,126,34,0.06),rgba(230,126,34,0.02))">
+          <div class="type-card-icon" style="background:rgba(230,126,34,0.1);color:#e67e22">✏️</div>
+          <h3>الاختبارات الأدائية</h3>
+        </div>
+        <div class="type-card-body">
+          <p>اختبارات تقيس أداء الطالب بهدف التعرف على بعض الجوانب العملية والأدائية في المادة، حيث تعتمد على ما يقدمه الطالب من أداء عملي في الواقع.</p>
+          <span class="feature-badge" style="background:rgba(230,126,34,0.1);color:#e67e22">✓ أداء عملي</span>
+          <span class="feature-badge" style="background:rgba(230,126,34,0.1);color:#e67e22">✓ تقييم مهاري</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: ESSAY QUESTIONS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="essay" class="section-bg-gray">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(124,58,237,0.1);color:#7c3aed">
+        <span class="dot" style="background:#7c3aed"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">الأسئلة المقالية</h2>
+      <p class="section-sub">الأسئلة الإنشائية: أنواعها ومعاييرها ومميزاتها وعيوبها</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#7c3aed,transparent)"></div>
+        <div class="divider-dot" style="background:#7c3aed"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#7c3aed,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="info-box info-box-purple fade-in">
+      <p>تُعرف أيضاً بالاختبارات الإنشائية وتستخدم لقياس مستويات التحليل والتطبيق والبرهان.</p>
+    </div>
+
+    <div class="grid-2 fade-in" style="margin-bottom:1.5rem">
+      <div class="card">
+        <div class="card-body">
+          <h3 style="font-weight:700;color:#1f2937;font-size:1.05rem;margin-bottom:1rem;font-family:'Noto Kufi Arabic'">أنواع الأسئلة المقالية</h3>
+          <div class="essay-type essay-type-1">
+            <h4>1. محدود الإجابة (القصيرة)</h4>
+            <p>تركز على فكرة واحدة وتكون إجاباتها قصيرة ومحددة بعدد أسطر أو (عرّفي، عددي...)</p>
+          </div>
+          <div class="essay-type essay-type-2">
+            <h4>2. المستفيض (طويلة الإجابة)</h4>
+            <p>ذات الإجابات المستفيضة (غير المحددة) وتعطي للطالبة حرية تحديد طبيعة إجاباتها ومداها مما يتيح لها إظهار مهاراتها في التحليل والتركيب. تستخدم لقياس هدف من المستويات العليا كحل متكامل لمسألة رياضية.</p>
+          </div>
+          <div class="essay-type essay-type-3">
+            <h4>3. أسئلة الإكمال</h4>
+            <p>أسئلة تتطلب إكمال جمل ناقصة بكلمة أو عبارة مناسبة</p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h3 style="font-weight:700;color:#1f2937;font-size:1.05rem;margin-bottom:1rem;font-family:'Noto Kufi Arabic'">المعايير الخاصة بالأسئلة المقالية</h3>
+          <ul class="criteria-list">
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(124,58,237,0.1);color:#7c3aed">✓</div><span>كتابة السؤال بصيغة محددة بحيث يبدأ بكلمات محددة مثل (وازني، ميزي، بيني..)</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓</div><span>أن يختصر السؤال قدر الإمكان</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓</div><span>عدم اشتمال السؤال على عدة موضوعات</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(201,162,39,0.1);color:#c9a227">✓</div><span>أن يكون الوقت المتاح للإجابة مناسباً لطول السؤال</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(230,126,34,0.1);color:#e67e22">✓</div><span>تحديد موضوع السؤال بدقة</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(220,38,38,0.1);color:#dc2626">✓</div><span>تحديد نوع العمليات المراد من الطالبة استخدامها في الإجابة قبل البدء في كتابة السؤال</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="card fade-in" style="margin-bottom:1.5rem">
+      <div class="card-body">
+        <h3 style="font-weight:700;color:#1f2937;font-size:1.05rem;margin-bottom:1rem;font-family:'Noto Kufi Arabic'">المعايير الخاصة بأسئلة الإكمال</h3>
+        <div class="grid-2">
+          <ul class="criteria-list">
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓</div><span>أن تكون صياغتها محددة</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓</div><span>ألا تكون الكلمة المطلوبة لأحد الفراغات متضمنة في سؤال آخر</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(201,162,39,0.1);color:#c9a227">✓</div><span>لا يكون الفراغ في بداية الجملة بل قرب نهاية العبارة</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(230,126,34,0.1);color:#e67e22">✓</div><span>أن تكون مساحة الفراغ مناسبة للإجابة المطلوبة</span></li>
+          </ul>
+          <ul class="criteria-list">
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(124,58,237,0.1);color:#7c3aed">✓</div><span>أن تكون الكلمة المحذوفة مناسبة للإجابة المطلوبة</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(220,38,38,0.1);color:#dc2626">✓</div><span>تجنب الإيحاء سواء اللغوية أو الإيحاء بطول أو قصر الإجابة</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(8,145,178,0.1);color:#0891b2">✓</div><span>أن تحتوي الجملة على فراغ أو فراغين على الأكثر</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="pros-cons-grid fade-in">
+      <div class="pros-box">
+        <h3>✅ مميزات الأسئلة المقالية</h3>
+        <ul>
+          <li>✓ سهولة الإعداد</li>
+          <li>✓ لا تسمح بالتخمين وتقلل من إمكانية الغش</li>
+          <li>✓ تمنح الطالبة حرية الإجابة</li>
+          <li>✓ تظهر مهارة الطالبة في التنظيم وترتيب الأفكار</li>
+          <li>✓ تركز على الأفكار الرئيسية والمفاهيم الكلية</li>
+          <li>✓ تقيس أهدافاً عليا تعجز الاختبارات الموضوعية عن قياسها مثل التحليل والتركيب</li>
+        </ul>
+      </div>
+      <div class="cons-box">
+        <h3>⚠️ عيوب الأسئلة المقالية</h3>
+        <ul>
+          <li>⚠️ تفتقد إلى خاصية الشمولية</li>
+          <li>⚠️ لغة الطالبة وخطها وتنظيمها وسرعتها في الحل تؤثر على موضوعية التصحيح</li>
+          <li>⚠️ تستغرق وقتاً وجهداً في التصحيح</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: OBJECTIVE QUESTIONS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="objective" class="section-bg-white">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(13,92,143,0.1);color:#0d5c8f">
+        <span class="dot" style="background:#0d5c8f"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">الأسئلة الموضوعية</h2>
+      <p class="section-sub">الاختيار من متعدد، المزاوجة، الصواب والخطأ</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#0d5c8f,transparent)"></div>
+        <div class="divider-dot" style="background:#0d5c8f"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#0d5c8f,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="info-box info-box-blue fade-in">
+      <p>هي الأسئلة التي تنتقي الطالبة إجابتها من بين عدة إجابات أمامها.</p>
+      <p style="font-size:0.875rem;margin-top:0.5rem"><strong>سُميت موضوعية:</strong> لأن تصحيحها يتسم بالموضوعية أي أنه لا يتأثر بذاتية المصححة أو بعدد المصححات أو باختلاف الأوقات.</p>
+    </div>
+
+    <!-- MCQ -->
+    <div class="accordion-item fade-in">
+      <button class="accordion-btn" onclick="toggleAccordion(this)" style="color:#0d5c8f">
+        <span>أسئلة الاختيار من متعدد</span>
+        <span class="accordion-icon open" style="color:#0d5c8f">▼</span>
+      </button>
+      <div class="accordion-body open">
+        <p>عبارة عن سؤال يتبعها عادة عدة أجوبة أحدها صحيح، ويعتبر هذا النوع من الأسئلة أكثر الأنواع شيوعاً ويمكن استخدامه في قياس أهداف مختلفة مثل التذكر كما يستخدم في قياس الفهم والتطبيق.</p>
+        <h4 style="font-weight:700;color:#1f2937;margin-bottom:0.75rem;font-family:'Noto Kufi Arabic'">المعايير الخاصة بأسئلة الاختيار من متعدد:</h4>
+        <div class="mcq-criteria">
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">1</div>أن يعرض الجذر مشكلة واضحة ومحددة</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">2</div>أن تؤلف البدائل إجابات معقولة ظاهرياً</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">3</div>يجب التأكد أنه ليس هناك إلا إجابة واحدة صحيحة بين الإجابات</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">4</div>أن يتراوح عدد البدائل بين (4-6) بدائل</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">5</div>أن ترتب جميع البدائل منطقياً</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">
+6</div>تجنب الإيحاءات اللغوية التي تدل على الإجابة الصحيحة</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">7</div>أن يكون الجذر مستقلاً عن البدائل</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">8</div>تجنب استخدام كلمات مثل "الكل" و "لا شيء" كبدائل</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">9</div>تجنب استخدام السلب المزدوج في الجذر</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">10</div>أن يكون جذر السؤال موجباً قدر الإمكان</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">11</div>أن تكون البدائل متجانسة من حيث الطول والمحتوى</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">12</div>تجنب استخدام "جميع ما ذكر" أو "لا شيء مما ذكر" كبدائل</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">13</div>أن يكون الجذر مكتوباً بصورة كاملة</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#dbeafe;color:#1d4ed8">14</div>تجنب الإيحاء بالإجابة الصحيحة من خلال الجذر</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Matching -->
+    <div class="accordion-item fade-in">
+      <button class="accordion-btn" onclick="toggleAccordion(this)" style="color:#0a7c5c">
+        <span>أسئلة المزاوجة (المطابقة)</span>
+        <span class="accordion-icon" style="color:#0a7c5c">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>عبارة عن عمودين من العبارات أو الكلمات، يطلب من الطالبة أن تجد العلاقة بين عبارات العمود الأول وعبارات العمود الثاني.</p>
+        <h4 style="font-weight:700;color:#1f2937;margin-bottom:0.75rem;font-family:'Noto Kufi Arabic'">المعايير الخاصة بأسئلة المزاوجة:</h4>
+        <div class="mcq-criteria">
+          <div class="mcq-item"><div class="mcq-num" style="background:#d1fae5;color:#065f46">1</div>أن تكون عبارات كل عمود من نوع واحد</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#d1fae5;color:#065f46">2</div>أن يحتوي العمود الأيسر على عدد أكثر من عبارات العمود الأيمن</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#d1fae5;color:#065f46">3</div>ألا يزيد عدد عبارات كل عمود عن 10 عبارات</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#d1fae5;color:#065f46">4</div>ترتيب عبارات العمود الأيسر ترتيباً منطقياً</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#d1fae5;color:#065f46">5</div>أن تكون جميع عبارات السؤال في صفحة واحدة</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#d1fae5;color:#065f46">6</div>أن تكون التعليمات واضحة</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- True/False -->
+    <div class="accordion-item fade-in">
+      <button class="accordion-btn" onclick="toggleAccordion(this)" style="color:#c9a227">
+        <span>أسئلة الصواب والخطأ</span>
+        <span class="accordion-icon" style="color:#c9a227">▼</span>
+      </button>
+      <div class="accordion-body">
+        <p>عبارة عن جمل تقريرية صحيحة أو خاطئة، وتطلب من الطالبة تحديد ما إذا كانت الجملة صحيحة أم خاطئة.</p>
+        <h4 style="font-weight:700;color:#1f2937;margin-bottom:0.75rem;font-family:'Noto Kufi Arabic'">المعايير الخاصة بأسئلة الصواب والخطأ:</h4>
+        <div class="mcq-criteria">
+          <div class="mcq-item"><div class="mcq-num" style="background:#fef3c7;color:#92400e">1</div>أن تكون الجملة صحيحة تماماً أو خاطئة تماماً</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#fef3c7;color:#92400e">2</div>تجنب استخدام الجمل المركبة</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#fef3c7;color:#92400e">3</div>تجنب استخدام الجمل المنقولة حرفياً من الكتاب</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#fef3c7;color:#92400e">4</div>أن يكون عدد الجمل الصحيحة مساوياً لعدد الجمل الخاطئة</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#fef3c7;color:#92400e">5</div>تجنب استخدام الكلمات المطلقة مثل (دائماً، أبداً، لا شيء)</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#fef3c7;color:#92400e">6</div>أن تكون الجملة قصيرة وواضحة</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#fef3c7;color:#92400e">7</div>تجنب استخدام النفي المزدوج</div>
+          <div class="mcq-item"><div class="mcq-num" style="background:#fef3c7;color:#92400e">8</div>أن تتضمن الجملة فكرة واحدة فقط</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pros/Cons Objective -->
+    <div class="pros-cons-grid fade-in" style="margin-top:1.5rem">
+      <div class="pros-box">
+        <h3>✅ مميزات الأسئلة الموضوعية</h3>
+        <ul>
+          <li>✓ تتسم بالموضوعية في التصحيح</li>
+          <li>✓ تغطي جزءاً كبيراً من المقرر الدراسي</li>
+          <li>✓ سهولة وسرعة التصحيح</li>
+          <li>✓ تقلل من تأثير عامل الصدفة</li>
+          <li>✓ يمكن تحليلها إحصائياً بسهولة</li>
+        </ul>
+      </div>
+      <div class="cons-box">
+        <h3>⚠️ عيوب الأسئلة الموضوعية</h3>
+        <ul>
+          <li>⚠️ تشجع على التخمين</li>
+          <li>⚠️ لا تقيس مهارات التعبير والكتابة</li>
+          <li>⚠️ تستغرق وقتاً طويلاً في الإعداد</li>
+          <li>⚠️ لا تقيس القدرة على التنظيم والتفكير المنطقي المتسلسل</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: OUTPUT -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="output" class="section-bg-gradient">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(10,124,92,0.1);color:#0a7c5c">
+        <span class="dot" style="background:#0a7c5c"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">ضوابط إخراج ورقة الاختبار</h2>
+      <p class="section-sub">المعايير الفنية لإخراج ورقة الاختبار بصورة احترافية</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#0a7c5c,transparent)"></div>
+        <div class="divider-dot" style="background:#0a7c5c"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#0a7c5c,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="output-grid fade-in">
+      <div class="output-item"><div class="output-num">1</div><p>أن تكون ورقة الاختبار نظيفة وواضحة وخالية من الأخطاء المطبعية</p></div>
+      <div class="output-item"><div class="output-num">2</div><p>أن تكون التعليمات واضحة وكاملة في بداية كل قسم</p></div>
+      <div class="output-item"><div class="output-num">3</div><p>أن تكون الأسئلة مرتبة من السهل إلى الصعب</p></div>
+      <div class="output-item"><div class="output-num">4</div><p>أن يكون حجم الخط مناسباً وسهل القراءة</p></div>
+      <div class="output-item"><div class="output-num">5</div><p>أن تكون المسافات بين الأسئلة مناسبة لكتابة الإجابات</p></div>
+      <div class="output-item"><div class="output-num">6</div><p>أن يُذكر في بداية الورقة: المادة، الصف، التاريخ، الزمن، ومجموع الدرجات</p></div>
+      <div class="output-item"><div class="output-num">7</div><p>أن تكون الأسئلة المتعلقة بموضوع واحد في صفحة واحدة</p></div>
+      <div class="output-item"><div class="output-num">8</div><p>توزيع الدرجات على الأسئلة بصورة واضحة</p></div>
+      <div class="output-item"><div class="output-num">9</div><p>مراجعة الورقة قبل طباعتها للتأكد من خلوها من الأخطاء</p></div>
+      <div class="output-item"><div class="output-num">10</div><p>أن تكون الصور والأشكال المستخدمة واضحة ودقيقة</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SECTION: MODEL ANSWER -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<section id="model" class="section-bg-white">
+  <div class="container">
+    <div class="section-title-wrap fade-in">
+      <div class="section-badge" style="background:rgba(201,162,39,0.1);color:#c9a227">
+        <span class="dot" style="background:#c9a227"></span>محتوى الورشة
+      </div>
+      <h2 class="section-heading">معايير نموذج الإجابة</h2>
+      <p class="section-sub">الضوابط الواجب مراعاتها عند إعداد نموذج الإجابة</p>
+      <div class="section-divider">
+        <div class="divider-line" style="background:linear-gradient(90deg,#c9a227,transparent)"></div>
+        <div class="divider-dot" style="background:#c9a227"></div>
+        <div class="divider-line" style="background:linear-gradient(270deg,#c9a227,transparent)"></div>
+      </div>
+    </div>
+
+    <div class="grid-2 fade-in">
+      <div class="card" style="border-top:4px solid #c9a227">
+        <div class="card-body">
+          <h3 style="font-weight:700;color:#1f2937;font-size:1.05rem;margin-bottom:1rem;font-family:'Noto Kufi Arabic'">معايير نموذج الإجابة للأسئلة المقالية</h3>
+          <ul class="criteria-list">
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(201,162,39,0.1);color:#c9a227">✓</div><span>إعداد نموذج الإجابة قبل تطبيق الاختبار</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓</div><span>تحديد الإجابة النموذجية بدقة مع ذكر النقاط الأساسية المطلوبة</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓</div><span>تحديد الدرجة لكل نقطة أو جزء من الإجابة</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(230,126,34,0.1);color:#e67e22">✓</div><span>قبول الإجابات المختلفة التي تؤدي نفس المعنى</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(124,58,237,0.1);color:#7c3aed">✓</div><span>مراجعة النموذج بعد تصحيح عدد من الأوراق للتأكد من دقته</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="card" style="border-top:4px solid #0d5c8f">
+        <div class="card-body">
+          <h3 style="font-weight:700;color:#1f2937;font-size:1.05rem;margin-bottom:1rem;font-family:'Noto Kufi Arabic'">معايير نموذج الإجابة للأسئلة الموضوعية</h3>
+          <ul class="criteria-list">
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(13,92,143,0.1);color:#0d5c8f">✓</div><span>تحديد الإجابة الصحيحة لكل سؤال بوضوح</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(10,124,92,0.1);color:#0a7c5c">✓</div><span>توزيع الإجابات الصحيحة توزيعاً عشوائياً بين البدائل</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(201,162,39,0.1);color:#c9a227">✓</div><span>الإشارة إلى الدرجة المخصصة لكل سؤال</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(230,126,34,0.1);color:#e67e22">✓</div><span>التأكد من أن الإجابات الصحيحة لا تتبع نمطاً ثابتاً</span></li>
+            <li class="criteria-item"><div class="criteria-check" style="background:rgba(124,58,237,0.1);color:#7c3aed">✓</div><span>مراجعة النموذج من قِبل زميل متخصص قبل التطبيق</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final Motivational Box -->
+    <div style="margin-top:2.5rem;background:linear-gradient(135deg,#0a3d5c,#0d5c8f,#0a7c5c);border-radius:1.5rem;padding:3rem;text-align:center;position:relative;overflow:hidden" class="fade-in">
+      <div style="position:absolute;inset:0;opacity:0.05;background-image:radial-gradient(circle at 2px 2px,white 1px,transparent 0);background-size:24px 24px"></div>
+      <div style="position:relative;z-index:1">
+        <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:2rem">🌟</div>
+        <h3 style="color:white;font-size:1.5rem;font-weight:800;margin-bottom:1rem;font-family:'Noto Kufi Arabic'">شكراً لمشاركتكم في هذه الورشة</h3>
+        <p style="color:rgba(255,255,255,0.85);font-size:1rem;line-height:1.8;max-width:600px;margin:0 auto 1.5rem">نأمل أن تكون هذه الورشة قد أضافت إلى رصيدكم المعرفي والمهني، وأن تُسهم في تطوير أدوات التقييم لدى معلماتنا الفاضلات</p>
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;background:rgba(255,255,255,0.15);color:white;font-size:0.9rem">
+          ⭐ الفريق الحادي عشر · مكتب التعليم الملز · 1445هـ
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="footer-brand-icon">📋</div>
+        <div>
+          <div class="footer-brand-title">ورشة معايير بناء الاختبار الجيد</div>
+          <div class="footer-brand-sub">الفريق الحادي عشر · مكتب التعليم الملز · 1445هـ</div>
+        </div>
+      </div>
+      <div class="footer-center">
+        <div class="footer-label">إعداد</div>
+        <div class="footer-name">المشرفة التربوية نوره الغامدي</div>
+        <div style="margin-top:8px">
+          <div class="footer-label">تصميم</div>
+          <div class="footer-name">د / فواز</div>
+        </div>
+      </div>
+      <div>
+        <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="footer-link">
+          ✈️ تفضل للمزيد هنا
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>جميع الحقوق محفوظة © 1445هـ · ورشة معايير بناء الاختبار الجيد</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!-- SCRIPTS -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+  });
+
+  // Scroll to section
+  function scrollTo(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      const navH = 72;
+      const top = el.getBoundingClientRect().top + window.scrollY - navH;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
+    // Close mobile menu
+    document.getElementById('mobile-menu').classList.remove('open');
+  }
+
+  // Mobile menu toggle
+  function toggleMenu() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('open');
+  }
+
+  // Active nav link
+  const sections = ['intro','definition','objectives','steps','domains','qualities','specs','criteria','types','essay','objective','output','model'];
+  const navLinks = document.querySelectorAll('.nav-link');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && window.scrollY >= el.offsetTop - 100) current = id;
+    });
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(current)) {
+        link.classList.add('active');
+      }
+    });
+  });
+
+  // Fade-in on scroll
+  const fadeEls = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  fadeEls.forEach(el => observer.observe(el));
+
+  // Accordion toggle
+  function toggleAccordion(btn) {
+    const icon = btn.querySelector('.accordion-icon');
+    const body = btn.nextElementSibling;
+    const isOpen = body.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.accordion-body').forEach(b => b.classList.remove('open'));
+    document.querySelectorAll('.accordion-icon').forEach(i => i.classList.remove('open'));
+    // Open clicked if was closed
+    if (!isOpen) {
+      body.classList.add('open');
+      icon.classList.add('open');
+    }
+  }
+</script>
+
+</body>
+</html>

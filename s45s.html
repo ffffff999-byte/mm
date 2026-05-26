@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>تجويد أسئلة الاختبار</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #1a6b5a;
+      --primary-light: #2a9d8f;
+      --primary-ultra: #e8f5f2;
+      --secondary: #264653;
+      --accent: #e9c46a;
+      --accent2: #f4a261;
+      --accent3: #e76f51;
+      --blue: #457b9d;
+      --blue-light: #a8dadc;
+      --blue-ultra: #e8f4f8;
+      --green: #2d6a4f;
+      --green-light: #52b788;
+      --green-ultra: #d8f3dc;
+      --white: #ffffff;
+      --gray-light: #f8f9fa;
+      --gray: #e9ecef;
+      --text-dark: #1a1a2e;
+      --text-mid: #2d3748;
+      --shadow: 0 8px 32px rgba(26,107,90,0.13);
+      --shadow-hover: 0 16px 48px rgba(26,107,90,0.22);
+      --radius: 18px;
+      --radius-sm: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      min-height: 100vh;
+      color: var(--text-dark);
+    }
+
+    /* ===== HERO HEADER ===== */
+    .hero {
+      background: linear-gradient(135deg, #1a6b5a 0%, #2a9d8f 40%, #264653 100%);
+      padding: 60px 20px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; left: -60px;
+      width: 220px; height: 220px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -40px;
+      width: 300px; height: 300px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 50%;
+    }
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      color: #e9c46a;
+      border: 1.5px solid rgba(233,196,106,0.4);
+      border-radius: 50px;
+      padding: 6px 22px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(8px);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 4px 24px rgba(0,0,0,0.3);
+      margin-bottom: 16px;
+      line-height: 1.3;
+    }
+    .hero h1 span {
+      color: #e9c46a;
+    }
+    .hero p {
+      color: rgba(255,255,255,0.85);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+    .hero-divider {
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #e9c46a, #f4a261);
+      border-radius: 2px;
+      margin: 20px auto 0;
+    }
+
+    /* ===== MAIN CONTAINER ===== */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 20px 60px;
+    }
+
+    /* ===== SECTION TITLE ===== */
+    .section-label {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .section-label h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #e9c46a;
+      letter-spacing: 1px;
+    }
+    .section-label p {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.95rem;
+      margin-top: 6px;
+    }
+
+    /* ===== ACCORDION CARD ===== */
+    .accordion-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      margin-bottom: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+    }
+    .accordion-card:hover {
+      box-shadow: var(--shadow-hover);
+    }
+
+    /* ===== ACCORDION HEADER ===== */
+    .accordion-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 28px;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.3s;
+      gap: 16px;
+    }
+    .accordion-header:hover {
+      filter: brightness(0.97);
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex: 1;
+    }
+    .header-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .header-text h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+    .header-text .subtitle {
+      font-size: 0.85rem;
+      margin-top: 3px;
+      opacity: 0.75;
+      font-weight: 500;
+    }
+    .accordion-arrow {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
+      flex-shrink: 0;
+      color: inherit;
+    }
+    .accordion-card.open .accordion-arrow {
+      transform: rotate(180deg);
+      background: rgba(0,0,0,0.12);
+    }
+
+    /* ===== ACCORDION BODY ===== */
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .accordion-card.open .accordion-body {
+      max-height: 3000px;
+    }
+    .accordion-inner {
+      padding: 0 28px 28px;
+    }
+    .accordion-inner .divider {
+      height: 1.5px;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent);
+      margin-bottom: 22px;
+    }
+
+    /* ===== COLOR THEMES ===== */
+    /* Green Theme */
+    .theme-green .accordion-header { background: linear-gradient(135deg, #d8f3dc, #b7e4c7); color: #1b4332; }
+    .theme-green .header-icon { background: linear-gradient(135deg, #2d6a4f, #52b788); color: #fff; }
+    .theme-green .accordion-arrow { color: #1b4332; }
+
+    /* Blue Theme */
+    .theme-blue .accordion-header { background: linear-gradient(135deg, #dbeafe, #bfdbfe); color: #1e3a5f; }
+    .theme-blue .header-icon { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #fff; }
+    .theme-blue .accordion-arrow { color: #1e3a5f; }
+
+    /* Teal Theme */
+    .theme-teal .accordion-header { background: linear-gradient(135deg, #ccfbf1, #99f6e4); color: #134e4a; }
+    .theme-teal .header-icon { background: linear-gradient(135deg, #0f766e, #14b8a6); color: #fff; }
+    .theme-teal .accordion-arrow { color: #134e4a; }
+
+    /* Orange Theme */
+    .theme-orange .accordion-header { background: linear-gradient(135deg, #fff7ed, #fed7aa); color: #7c2d12; }
+    .theme-orange .header-icon { background: linear-gradient(135deg, #c2410c, #f97316); color: #fff; }
+    .theme-orange .accordion-arrow { color: #7c2d12; }
+
+    /* Purple Theme */
+    .theme-purple .accordion-header { background: linear-gradient(135deg, #f3e8ff, #ddd6fe); color: #3b0764; }
+    .theme-purple .header-icon { background: linear-gradient(135deg, #7e22ce, #a855f7); color: #fff; }
+    .theme-purple .accordion-arrow { color: #3b0764; }
+
+    /* ===== CONTENT BLOCKS ===== */
+    .definition-box {
+      background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+      border-right: 5px solid #16a34a;
+      border-radius: var(--radius-sm);
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      line-height: 1.9;
+      color: #14532d;
+      font-weight: 500;
+    }
+    .definition-box.blue {
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border-right-color: #2563eb;
+      color: #1e3a5f;
+    }
+    .definition-box.teal {
+      background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+      border-right-color: #0d9488;
+      color: #134e4a;
+    }
+    .definition-box.orange {
+      background: linear-gradient(135deg, #fff7ed, #ffedd5);
+      border-right-color: #ea580c;
+      color: #7c2d12;
+    }
+    .definition-box.purple {
+      background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+      border-right-color: #9333ea;
+      color: #3b0764;
+    }
+
+    /* ===== SECTION HEADING ===== */
+    .sec-heading {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--secondary);
+      margin: 22px 0 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--gray);
+    }
+    .sec-heading .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-green { background: #16a34a; }
+    .dot-blue { background: #2563eb; }
+    .dot-teal { background: #0d9488; }
+    .dot-orange { background: #ea580c; }
+    .dot-purple { background: #9333ea; }
+
+    /* ===== ITEMS LIST ===== */
+    .items-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .items-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      font-size: 0.97rem;
+      line-height: 1.8;
+      background: var(--gray-light);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .items-list li:hover {
+      background: var(--gray);
+      transform: translateX(-3px);
+    }
+    .items-list li .bullet {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .bullet-green { background: #dcfce7; color: #15803d; }
+    .bullet-blue { background: #dbeafe; color: #1d4ed8; }
+    .bullet-teal { background: #ccfbf1; color: #0f766e; }
+    .bullet-orange { background: #ffedd5; color: #c2410c; }
+    .bullet-purple { background: #f3e8ff; color: #7e22ce; }
+
+    /* ===== TWO COLUMN GRID ===== */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 16px;
+    }
+    @media (max-width: 640px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+    .col-card {
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      border: 1.5px solid;
+    }
+    .col-card h4 {
+      font-size: 0.95rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .col-card.green-card { background: #f0fdf4; border-color: #86efac; }
+    .col-card.green-card h4 { color: #15803d; }
+    .col-card.blue-card { background: #eff6ff; border-color: #93c5fd; }
+    .col-card.blue-card h4 { color: #1d4ed8; }
+    .col-card.teal-card { background: #f0fdfa; border-color: #5eead4; }
+    .col-card.teal-card h4 { color: #0f766e; }
+    .col-card.orange-card { background: #fff7ed; border-color: #fdba74; }
+    .col-card.orange-card h4 { color: #c2410c; }
+
+    /* ===== TYPES GRID ===== */
+    .types-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 16px 0;
+    }
+    @media (max-width: 500px) {
+      .types-grid { grid-template-columns: 1fr; }
+    }
+    .type-card {
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      text-align: center;
+      border: 2px solid;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .type-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .type-card .type-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .type-card h4 { font-size: 0.9rem; font-weight: 800; margin-bottom: 4px; }
+    .type-card p { font-size: 0.78rem; opacity: 0.75; line-height: 1.5; }
+
+    .tc-1 { background: #f0fdf4; border-color: #86efac; color: #14532d; }
+    .tc-2 { background: #eff6ff; border-color: #93c5fd; color: #1e3a5f; }
+    .tc-3 { background: #fff7ed; border-color: #fdba74; color: #7c2d12; }
+    .tc-4 { background: #faf5ff; border-color: #d8b4fe; color: #3b0764; }
+
+    /* ===== HIGHLIGHT BOX ===== */
+    .highlight-box {
+      background: linear-gradient(135deg, #fef9c3, #fef08a);
+      border: 1.5px solid #fbbf24;
+      border-radius: var(--radius-sm);
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #78350f;
+      font-weight: 500;
+    }
+    .highlight-box strong { color: #92400e; }
+
+    /* ===== MAWASAFAT GRID ===== */
+    .mawasafat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    .mawasafat-item {
+      background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+      border: 1.5px solid #5eead4;
+      border-radius: var(--radius-sm);
+      padding: 16px 12px;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+    .mawasafat-item:hover { transform: translateY(-3px); }
+    .mawasafat-item .m-icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .mawasafat-item p { font-size: 0.85rem; font-weight: 700; color: #134e4a; line-height: 1.5; }
+
+    /* ===== REFERENCE BAR ===== */
+    .ref-bar {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      margin-top: 20px;
+      font-size: 0.82rem;
+      color: #6c757d;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #dee2e6;
+    }
+    .ref-bar span { font-size: 1rem; }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: linear-gradient(135deg, #0f2027, #203a43);
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 3px solid rgba(233,196,106,0.3);
+    }
+    .footer-inner {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: #e9c46a;
+      margin-bottom: 8px;
+    }
+    .footer-sub {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+    .footer-link-label {
+      color: rgba(255,255,255,0.8);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .footer-link {
+      display: inline-block;
+      background: linear-gradient(135deg, #e9c46a, #f4a261);
+      color: #1a1a2e;
+      text-decoration: none;
+      padding: 12px 32px;
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(233,196,106,0.3);
+      margin-top: 6px;
+    }
+    .footer-link:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(233,196,106,0.45);
+    }
+    .footer-credit {
+      margin-top: 24px;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.82rem;
+    }
+    .footer-credit strong {
+      color: #e9c46a;
+      font-size: 0.95rem;
+    }
+
+    /* ===== SCROLL TO TOP ===== */
+    #scrollTop {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #2a9d8f, #1a6b5a);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(26,107,90,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+      z-index: 999;
+    }
+    #scrollTop:hover { transform: scale(1.1); }
+    #scrollTop.visible { display: flex; }
+
+    /* ===== PROGRESS BAR ===== */
+    #progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #e9c46a, #f4a261, #2a9d8f);
+      width: 0%;
+      z-index: 1000;
+      transition: width 0.1s;
+    }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .accordion-card {
+      animation: fadeInUp 0.5s ease both;
+    }
+    .accordion-card:nth-child(1) { animation-delay: 0.05s; }
+    .accordion-card:nth-child(2) { animation-delay: 0.1s; }
+    .accordion-card:nth-child(3) { animation-delay: 0.15s; }
+    .accordion-card:nth-child(4) { animation-delay: 0.2s; }
+    .accordion-card:nth-child(5) { animation-delay: 0.25s; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .accordion-header { padding: 18px 18px; }
+      .accordion-inner { padding: 0 18px 22px; }
+      .header-icon { width: 44px; height: 44px; font-size: 1.3rem; }
+      .header-text h3 { font-size: 1rem; }
+    }
+
+    /* ===== MINI BADGE ===== */
+    .mini-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+    .mb-green { background: #dcfce7; color: #15803d; }
+    .mb-blue { background: #dbeafe; color: #1d4ed8; }
+    .mb-orange { background: #ffedd5; color: #c2410c; }
+
+    /* ===== NUMBERED STEPS ===== */
+    .steps-list {
+      counter-reset: step-counter;
+      list-style: none;
+      padding: 0;
+    }
+    .steps-list li {
+      counter-increment: step-counter;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 12px 16px;
+      background: var(--gray-light);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      font-size: 0.97rem;
+      line-height: 1.8;
+      transition: background 0.2s;
+    }
+    .steps-list li:hover { background: var(--gray); }
+    .steps-list li::before {
+      content: counter(step-counter);
+      min-width: 30px;
+      height: 30px;
+      background: linear-gradient(135deg, #1a6b5a, #2a9d8f);
+      color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="hero-badge">✦ سلسلة تعليمية متكاملة ✦</div>
+  <h1>تجويد <span>أسئلة الاختبار</span></h1>
+  <p>دليل شامل لأنواع الأسئلة ومواصفات الاختبار الجيد — مستخرج من دليل الاختبارات الأسس الفنية والعمليات الإجرائية 2025</p>
+  <div class="hero-divider"></div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<main class="container">
+
+  <div class="section-label">
+    <h2>📚 محتويات السلسلة</h2>
+    <p>اضغط على أي بطاقة لعرض تفاصيلها الكاملة</p>
+  </div>
+
+  <!-- ===== CARD 1: الأسئلة المقالية ===== -->
+  <div class="accordion-card theme-green" id="card1">
+    <div class="accordion-header" onclick="toggleCard('card1')">
+      <div class="header-left">
+        <div class="header-icon">✍️</div>
+        <div class="header-text">
+          <h3>أ. الأسئلة المقالية</h3>
+          <div class="subtitle">أسئلة تقيس التعبير والتحليل والتفكير العميق</div>
+        </div>
+      </div>
+      <div class="accordion-arrow">▼</div>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="divider"></div>
+
+        <div class="definition-box">
+          أسئلة تعرض أفكارًا أو مشكلات محددة، وتتفاوت إجابة الطالب عنها من سطر واحد إلى عدة صفحات تبعًا لمعطيات السؤال وحجم الإجابة.
+        </div>
+
+        <div class="sec-heading"><span class="dot dot-green"></span> مميزات هذا النوع</div>
+        <ul class="items-list">
+          <li>
+            <span class="bullet bullet-green">أ</span>
+            <span>تُستخدم لقياس قدرة الطالب على التعبير وتنظيم الأفكار وربطها بأسلوبه الخاص، والتعرف على اكتسابه لمستويات معرفية عليا مثل: الوصف والتحليل والتفسير والنقد. تبدأ أسئلتها بكلمات مثل: <strong>صف، اذكر، اشرح، علل، قارن، وضح، ناقش.</strong></span>
+          </li>
+          <li>
+            <span class="bullet bullet-green">ب</span>
+            <span>تقلل من احتمال إمكانية الغش في الاختبار، ولا تسمح بالتخمين في الإجابة.</span>
+          </li>
+        </ul>
+
+        <div class="sec-heading"><span class="dot dot-green"></span> وتصاغ بطريقتين</div>
+        <div class="two-col">
+          <div class="col-card green-card">
+            <h4>📖 أ- إجابة مستفيضة أو حرة (غير محددة)</h4>
+            <p style="font-size:0.9rem;line-height:1.8;color:#166534;">تُعطي للطالب حرية تحديد طبيعة إجابته ومداها مما يتيح له الفرصة لإظهار مهاراته في الشرح والتحليل والتقويم.</p>
+          </div>
+          <div class="col-card blue-card">
+            <h4>✏️ ب- إجابة محددة (قصيرة)</h4>
+            <p style="font-size:0.9rem;line-height:1.8;color:#1e40af;">تضع قيودًا على الإجابات المطلوبة وتعتمد على تحديد مضمون السؤال في أضيق الحدود، مثل: (حدد إجابتك في خمسة أسطر، عدد، عرف، علل).</p>
+          </div>
+        </div>
+
+        <div class="sec-heading"><span class="dot dot-green"></span> ويراعى عند صياغة الأسئلة المقالية الآتي</div>
+        <ol class="steps-list">
+          <li>تحديد الأهداف التي يُراد قياسها.</li>
+          <li>عدم كتابة أسئلة تتناول موضوعات عدة في سؤال واحد.</li>
+          <li>تحديد نوع العمليات العقلية المراد من الطالب استخدامها في الإجابة قبل البدء في كتابة السؤال.</li>
+          <li>كتابة السؤال بصيغة محددة؛ بحيث يبدأ بكلمات محددة مثل: <strong>(وازن، وضّح، ميز، بين، ...)</strong>.</li>
+          <li>توضيح حدود الاختبار؛ وذلك بتوضيح طول الإجابة المرغوبة والدرجة المستحقة لها والنقاط التي تشتمل عليها.</li>
+        </ol>
+
+        <div class="ref-bar"><span>📚</span> المرجع: دليل الاختبارات الأسس الفنية والعمليات الإجرائية 2025 — ص 33</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 2: الأسئلة الموضوعية - نظرة عامة ===== -->
+  <div class="accordion-card theme-blue" id="card2">
+    <div class="accordion-header" onclick="toggleCard('card2')">
+      <div class="header-left">
+        <div class="header-icon">🎯</div>
+        <div class="header-text">
+          <h3>ب. الأسئلة الموضوعية (ذات إجابة منتقاة)</h3>
+          <div class="subtitle">نظرة عامة على الأنواع الأربعة</div>
+        </div>
+      </div>
+      <div class="accordion-arrow">▼</div>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="divider"></div>
+
+        <div class="definition-box blue">
+          تسمى الأسئلة ذات الإجابة المنتقاة، الاستجابة لها قصيرة وإجاباتها محددة؛ يختار الطالب الإجابة الصحيحة من بدائل أو يكمل جملة أو عبارة ناقصة.
+        </div>
+
+        <div class="sec-heading"><span class="dot dot-blue"></span> أنواع الأسئلة الموضوعية</div>
+        <div class="types-grid">
+          <div class="type-card tc-1">
+            <div class="type-icon">✅</div>
+            <h4>أسئلة الصواب والخطأ</h4>
+            <p>الإجابة بإحدى إجابتين: صواب أو خطأ</p>
+          </div>
+          <div class="type-card tc-2">
+            <div class="type-icon">📝</div>
+            <h4>أسئلة إكمال الفراغ</h4>
+            <p>إضافة كلمة أو أكثر لإكمال المعنى</p>
+          </div>
+          <div class="type-card tc-3">
+            <div class="type-icon">🔤</div>
+            <h4>أسئلة الاختيار من متعدد</h4>
+            <p>اختيار الإجابة الصحيحة من بدائل</p>
+          </div>
+          <div class="type-card tc-4">
+            <div class="type-icon">🔗</div>
+            <h4>أسئلة الربط (المزاوجة)</h4>
+            <p>ربط العناصر بما يناسبها</p>
+          </div>
+        </div>
+
+        <div class="ref-bar"><span>📚</span> المرجع: دليل الاختبارات الأسس الفنية والعمليات الإجرائية 2025 — ص 33</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 3: أسئلة الصواب والخطأ ===== -->
+  <div class="accordion-card theme-teal" id="card3">
+    <div class="accordion-header" onclick="toggleCard('card3')">
+      <div class="header-left">
+        <div class="header-icon">✅</div>
+        <div class="header-text">
+          <h3>1. أسئلة الصواب والخطأ</h3>
+          <div class="subtitle">معايير الإعداد والمميزات</div>
+        </div>
+      </div>
+      <div class="accordion-arrow">▼</div>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="divider"></div>
+
+        <div class="definition-box teal">
+          عبارات تقريرية تتألف من جملة أو أكثر، يطلب من الطالب الإجابة بإحدى إجابتين فقط: <strong>صواب أو خطأ.</strong>
+        </div>
+
+        <div class="two-col">
+          <div class="col-card teal-card">
+            <h4>⚙️ معايير الإعداد</h4>
+            <ul class="items-list" style="margin-top:0;">
+              <li><span class="bullet bullet-teal">أ</span><span>فكرة واحدة في العبارة.</span></li>
+              <li><span class="bullet bullet-teal">ب</span><span>صياغة محكمة (صحيحة تمامًا أو خاطئة تمامًا).</span></li>
+              <li><span class="bullet bullet-teal">ج</span><span>تجنب النفي، وإبرازه إذا لزم.</span></li>
+              <li><span class="bullet bullet-teal">د</span><span>عدم تمييز العبارات الصحيحة بالطول والعكس.</span></li>
+              <li><span class="bullet bullet-teal">هـ</span><span>عدد الأسئلة الصحيحة مقارب للخاطئة دون مطابقة.</span></li>
+              <li><span class="bullet bullet-teal">و</span><span>ترتيب العبارات الصحيحة والخاطئة بشكل عشوائي.</span></li>
+              <li><span class="bullet bullet-teal">ز</span><span>الخطأ مبني على معلومة لا ألفاظ لغوية.</span></li>
+              <li><span class="bullet bullet-teal">ح</span><span>تجنب التعميم (كل، جميع، لا أحد...).</span></li>
+              <li><span class="bullet bullet-teal">ط</span><span>تجنب كلمات الكم (كثيرًا، غالبًا...).</span></li>
+            </ul>
+          </div>
+          <div class="col-card green-card">
+            <h4>👍 معايير المميزات</h4>
+            <ul class="items-list" style="margin-top:0;">
+              <li><span class="bullet bullet-green">أ</span><span>تقيس التمييز بين الحقائق والآراء، والمسلمات والفرضيات.</span></li>
+              <li><span class="bullet bullet-green">ب</span><span>قياس التعرف والحفظ والتذكر.</span></li>
+              <li><span class="bullet bullet-green">ج</span><span>سهولة التصحيح.</span></li>
+              <li><span class="bullet bullet-green">د</span><span>موضوعية التقييم.</span></li>
+              <li><span class="bullet bullet-green">هـ</span><span>الشمولية النسبية (تغطي المنهج).</span></li>
+              <li><span class="bullet bullet-green">و</span><span>سهولة الصياغة.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ref-bar"><span>📚</span> المرجع: دليل الاختبارات الأسس الفنية والعمليات الإجرائية 2025 — ص 33</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 4: أسئلة إكمال الفراغ ===== -->
+  <div class="accordion-card theme-orange" id="card4">
+    <div class="accordion-header" onclick="toggleCard('card4')">
+      <div class="header-left">
+        <div class="header-icon">📝</div>
+        <div class="header-text">
+          <h3>2. أسئلة إكمال الفراغ</h3>
+          <div class="subtitle">المميزات ومعايير الصياغة</div>
+        </div>
+      </div>
+      <div class="accordion-arrow">▼</div>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="divider"></div>
+
+        <div class="definition-box orange">
+          أسئلة أو عبارات ناقصة تتطلب إضافة كلمة أو أكثر لإكمال المعنى، وقد تكون الكلمة مختارة من مجموعة معطاة أو من الذاكرة.
+        </div>
+
+        <div class="sec-heading"><span class="dot dot-orange"></span> المميزات</div>
+        <ul class="items-list">
+          <li><span class="bullet bullet-orange">أ</span><span>تقلل من أثر التخمين في الإجابة.</span></li>
+          <li><span class="bullet bullet-orange">ب</span><span>يقيس هذا النوع من الأسئلة مخرجات التعلم في المستوى المعرفي المرتبط بالتذكر والفهم.</span></li>
+        </ul>
+
+        <div class="sec-heading"><span class="dot dot-orange"></span> معايير الصياغة</div>
+        <ol class="steps-list">
+          <li>صياغة العبارة الناقصة والسؤال بإحكام؛ بحيث لا يمكن الإجابة عنها إلا بالكلمة المطلوبة لملء الفراغ.</li>
+          <li>عدم احتواء العبارة على عدد كبير من الفراغات التي قد تؤدي إلى غموض السؤال وبالتالي تنوع الإجابات.</li>
+          <li>عند حذف الكلمات الرئيسة من العبارة ينبغي الإبقاء على ما يحدد المطلوب فيها.</li>
+          <li>يكون الفراغ قرب نهاية العبارة؛ لتوضيح المطلوب في ذهن الطالب.</li>
+        </ol>
+
+        <div class="ref-bar"><span>📚</span> المرجع: دليل الاختبارات الأسس الفنية والعمليات الإجرائية 2025 — ص 33</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 5: أسئلة الاختيار من متعدد ===== -->
+  <div class="accordion-card theme-purple" id="card5">
+    <div class="accordion-header" onclick="toggleCard('card5')">
+      <div class="header-left">
+        <div class="header-icon">🔤</div>
+        <div class="header-text">
+          <h3>3. أسئلة الاختيار من متعدد</h3>
+          <div class="subtitle">معايير الجذر والبدائل</div>
+        </div>
+      </div>
+      <div class="accordion-arrow">▼</div>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="divider"></div>
+
+        <div class="definition-box purple">
+          تتكون من <strong>جذر السؤال (مشكلة)</strong> وبدائل إجابة (حلول)، إحداها صحيحة والباقي مشتتات، أو العكس.
+        </div>
+
+        <div class="two-col">
+          <div class="col-card orange-card">
+            <h4>❓ معايير جذر السؤال (المتن)</h4>
+            <ul class="items-list" style="margin-top:0;">
+              <li><span class="bullet bullet-orange">١</span><span>أن تكون البدائل قصيرة، والجذر يحتوي على الجزء الأكبر.</span></li>
+              <li><span class="bullet bullet-orange">٢</span><span>تجنب نقل النص الحرفي من المقرر.</span></li>
+              <li><span class="bullet bullet-orange">٣</span><span>الجذر يحتوي على مشكلة محددة وواضحة تمامًا.</span></li>
+              <li><span class="bullet bullet-orange">٤</span><span>وضع الكلمات المشتركة في جذر السؤال.</span></li>
+              <li><span class="bullet bullet-orange">٥</span><span>تجنب صيغة النفي، أو إبرازها بوضوح إذا لزمت.</span></li>
+              <li><span class="bullet bullet-orange">٦</span><span>وضع المصطلح في الجذر عند تعريفه.</span></li>
+              <li><span class="bullet bullet-orange">٧</span><span>الفصل بين الجذر والبدائل بمسافة مناسبة.</span></li>
+            </ul>
+          </div>
+          <div class="col-card green-card">
+            <h4>🔡 معايير البدائل (الإجابات)</h4>
+            <ul class="items-list" style="margin-top:0;">
+              <li><span class="bullet bullet-green">١</span><span>متجانسة في المحتوى ومرتبطة بالمشكلة.</span></li>
+              <li><span class="bullet bullet-green">٢</span><span>مبنية على الأخطاء الشائعة ونقص المعلومات (ليست تلاعبًا).</span></li>
+              <li><span class="bullet bullet-green">٣</span><span>لغة سهلة وواضحة، ومصطلحات معروفة.</span></li>
+              <li><span class="bullet bullet-green">٤</span><span>مناسبة لغويًا للجذر، وتجنب الارتباطات اللفظية.</span></li>
+              <li><span class="bullet bullet-green">٥</span><span>طول الإجابة الصحيحة ليس ثابتًا (الأطول/الأقصر).</span></li>
+              <li><span class="bullet bullet-green">٦</span><span>تجنب العلامات التي تكشف الإجابة.</span></li>
+              <li><span class="bullet bullet-green">٧</span><span>التقليل من استخدام "جميع/لا شيء مما سبق".</span></li>
+              <li><span class="bullet bullet-green">٨</span><span>توزيع الإجابة الصحيحة عشوائيًا بين المواقع.</span></li>
+              <li><span class="bullet bullet-green">٩</span><span>بديل واحد فقط صحيح.</span></li>
+              <li><span class="bullet bullet-green">١٠</span><span>جاذبة وتستثير قدرات الطالب.</span></li>
+              <li><span class="bullet bullet-green">١١</span><span>رقم السؤال (حسابي)، البدائل (أبجدية).</span></li>
+              <li><span class="bullet bullet-green">١٢</span><span>لا يقل عدد البدائل عن أربعة.</span></li>
+              <li><span class="bullet bullet-green">١٣</span><span>يفضل ترتيبها عموديًا.</span></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="ref-bar"><span>📚</span> المرجع: دليل الاختبارات الأسس الفنية والعمليات الإجرائية 2025 — ص 37</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 6: مواصفات الاختبار الجيد ===== -->
+  <div class="accordion-card theme-green" id="card6">
+    <div class="accordion-header" onclick="toggleCard('card6')">
+      <div class="header-left">
+        <div class="header-icon">🏆</div>
+        <div class="header-text">
+          <h3>مواصفات الاختبار الجيد</h3>
+          <div class="subtitle">المواصفات العامة والخاصة لبناء اختبار متميز</div>
+        </div>
+      </div>
+      <div class="accordion-arrow">▼</div>
+    </div>
+    <div class="accordion-body">
+      <div class="accordion-inner">
+        <div class="divider"></div>
+
+        <div class="sec-heading"><span class="dot dot-green"></span> أولاً: المواصفات العامة</div>
+        <div class="mawasafat-grid">
+          <div class="mawasafat-item">
+            <div class="m-icon">🎯</div>
+            <p>الوضوح والدقة في صياغة الأسئلة</p>
+          </div>
+          <div class="mawasafat-item">
+            <div class="m-icon">⚖️</div>
+            <p>العدالة والموضوعية في التعامل مع الطلاب</p>
+          </div>
+          <div class="mawasafat-item">
+            <div class="m-icon">🌐</div>
+            <p>يغطي كافة الموضوعات ويقيس الفهم بشكل شامل</p>
+          </div>
+          <div class="mawasafat-item">
+            <div class="m-icon">🧠</div>
+            <p>يشجع على التفكير النقدي والاستجابة البناءة</p>
+          </div>
+          <div class="mawasafat-item">
+            <div class="m-icon">📊</div>
+            <p>مناسب لمستوى الطلاب، ويلتزم بتصنيف بلوم (من الفهم إلى التقويم)</p>
+          </div>
+        </div>
+
+        <div class="sec-heading"><span class="dot dot-green"></span> ثانياً: المواصفات الخاصة</div>
+
+        <!-- 1. تحديد الأهداف -->
+        <div class="highlight-box">
+          <strong>١- تحديد الأهداف:</strong> قياس تحصيل الطالب بعد الانتهاء من دراسة جزء محدد من المنهج الدراسي أو الانتهاء من وحدة دراسية معينة، أو قياس مستويات معرفية مرتبطة بالتذكر، أو الفهم، أو التطبيق، أو التحليل، أو التركيب. فإذا لم يحدد المعلم أهدافه بوضوح لن يحقق الاختبار النتائج التي وضع من أجلها.
+        </div>
+
+        <!-- 2. صياغة الأهداف -->
+        <div class="sec-heading"><span class="dot dot-green"></span> ٢- صياغة الأهداف التعليمية بصورة سلوكية إجرائية</div>
+        <div class="definition-box">
+          يعرف الهدف السلوكي بأنه التغيير المرغوب فيه والمتوقع حدوثه في سلوك الطالب، والذي يمكن تقويمه بعد مرور الطالب بخبرة تعليمية معينة، ويتم تحديد نواتج التعلم من خلال صياغة تلك الأهداف صياغة إجرائية محددة بعيدة عن الغموض والتعميم بطريقة يسهل ملاحظتها وقياسها.
+        </div>
+        <p style="font-size:0.93rem;color:#374151;margin-bottom:12px;font-weight:600;">ولتحقيق هذا الغرض لابدّ من توفر الخصائص التالية في الأهداف:</p>
+        <ul class="items-list">
+          <li><span class="bullet bullet-green">أ</span><span>يجب أن تصف عبارة الهدف سلوك الطالب وأداءه الذي يُستدل منه على تحقيق الهدف.</span></li>
+          <li><span class="bullet bullet-green">ب</span><span>أن تصف نواتج التعلم لا النشاطات التعليمية.</span></li>
+          <li><span class="bullet bullet-green">ج</span><span>أن تكون عبارة الهدف واضحة الصياغة لا تقبل إلا تفسيرًا واحدًا.</span></li>
+          <li><span class="bullet bullet-green">د</span><span>أن يصف أداءً قابلًا للملاحظة والقياس.</span></li>
+          <li><span class="bullet bullet-green">هـ</span><span>أن يشتمل على الحد الأدنى للأداء المقبول "المعيار الكمي والكيفي".</span></li>
+          <li><span class="bullet bullet-green">و</span><span>أن يكون الهدف بسيطًا "غير مركب" بمعنى أن كل عبارة منه تتعلق بعملية واحدة فقط.</span></li>
+          <li><span class="bullet bullet-green">ز</span><span>أن تكون الأهداف واقعية قابلة للتحقيق.</span></li>
+        </ul>
+
+        <div class="ref-bar"><span>📚</span> المرجع: دليل الاختبارات الأسس الفنية والعمليات الإجرائية 2025 — ص 33</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-logo">✦ تجويد أسئلة الاختبار ✦</div>
+    <div class="footer-sub">سلسلة تعليمية متكاملة — مع تحيات أعضاء قروب التميز في التقويم والتعليم</div>
+    <div class="footer-link-label">تفضل للمزيد</div>
+    <a class="footer-link" href="https://llt.me/TAqhjT3MFVE1Yzk0" target="_blank">🔗 https://llt.me/TAqhjT3MFVE1Yzk0</a>
+    <div class="footer-credit">
+      <strong>تصميم د/فواز</strong>
+    </div>
+  </div>
+</footer>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">▲</button>
+
+<script>
+  // Toggle accordion
+  function toggleCard(id) {
+    const card = document.getElementById(id);
+    const isOpen = card.classList.contains('open');
+    // Close all
+    document.querySelectorAll('.accordion-card').forEach(c => c.classList.remove('open'));
+    // Open clicked if it was closed
+    if (!isOpen) card.classList.add('open');
+  }
+
+  // Open first card by default
+  document.getElementById('card1').classList.add('open');
+
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrollTop / docHeight) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+
+    // Scroll to top button
+    const btn = document.getElementById('scrollTop');
+    if (scrollTop > 300) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+</script>
+</body>
+</html>

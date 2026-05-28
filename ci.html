@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بنود تقييم المدير والوكيل — شرح وتصميم د/فواز</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f0f4ff;
+      --card: #ffffff;
+      --text: #1a1a2e;
+      --muted: #546e7a;
+      --radius: 18px;
+      --shadow: 0 8px 32px rgba(26,35,126,0.12);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #0d1b6e 0%, #1a237e 35%, #1565c0 70%, #0288d1 100%);
+      padding: 60px 20px 50px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-pattern {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .hero-glow {
+      position: absolute;
+      top: -100px; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(249,168,37,0.15) 0%, transparent 70%);
+    }
+    .hero-icon {
+      width: 100px; height: 100px;
+      background: linear-gradient(135deg, #f9a825, #ff8f00);
+      border-radius: 28px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3em;
+      margin: 0 auto 24px;
+      box-shadow: 0 10px 40px rgba(249,168,37,0.45);
+      position: relative; z-index: 1;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      color: #fff;
+      padding: 6px 22px;
+      border-radius: 50px;
+      font-size: 0.9em;
+      font-weight: 600;
+      margin-bottom: 16px;
+      position: relative; z-index: 1;
+    }
+    .hero h1 {
+      color: #fff;
+      font-size: 2.8em;
+      font-weight: 900;
+      margin-bottom: 12px;
+      text-shadow: 0 3px 15px rgba(0,0,0,0.3);
+      position: relative; z-index: 1;
+      line-height: 1.3;
+    }
+    .hero p {
+      color: rgba(255,255,255,0.8);
+      font-size: 1.1em;
+      position: relative; z-index: 1;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* ===== STATS ===== */
+    .stats-wrap {
+      background: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    .stats-bar {
+      max-width: 960px; margin: 0 auto;
+      display: flex; flex-wrap: wrap;
+    }
+    .stat-box {
+      flex: 1; min-width: 130px;
+      padding: 24px 16px; text-align: center;
+      border-left: 1px solid #e8eaf6;
+    }
+    .stat-box:last-child { border-left: none; }
+    .stat-box .s-num {
+      font-size: 2.6em; font-weight: 900;
+      background: linear-gradient(135deg, #1a237e, #1565c0);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .stat-box .s-label { font-size: 0.83em; color: var(--muted); margin-top: 6px; }
+
+    /* ===== NAV PILLS ===== */
+    .nav-wrap {
+      max-width: 960px; margin: 30px auto 0;
+      padding: 0 16px;
+      display: flex; flex-wrap: wrap; gap: 10px;
+      justify-content: center;
+    }
+    .nav-pill {
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 0.88em;
+      font-weight: 700;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.25s;
+      text-decoration: none;
+      color: #fff;
+    }
+    .nav-pill:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.2); }
+
+    /* ===== MAIN ===== */
+    .main {
+      max-width: 960px;
+      margin: 30px auto 0;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    /* ===== SECTION CARD ===== */
+    .section-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      border: 1px solid #e8eaf6;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .section-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(26,35,126,0.16);
+    }
+
+    /* Card top banner */
+    .card-banner {
+      padding: 26px 28px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: -30px;
+      width: 120px; height: 120px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50%;
+    }
+    .banner-num {
+      display: inline-flex;
+      align-items: center; justify-content: center;
+      width: 44px; height: 44px;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 12px;
+      font-size: 1.3em;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+    .banner-title {
+      font-size: 1.5em;
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.35;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .banner-desc {
+      font-size: 0.95em;
+      color: rgba(255,255,255,0.85);
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    /* Card body */
+    .card-body { padding: 24px 28px; }
+
+    /* Sub-section */
+    .sub-section { margin-bottom: 22px; }
+    .sub-section:last-child { margin-bottom: 0; }
+
+    .sub-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.05em;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .sub-title .icon-box {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1em;
+      flex-shrink: 0;
+    }
+
+    /* Items list */
+    .items-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .item-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+    .item-row:hover { filter: brightness(0.97); }
+    .item-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+    .item-text {
+      font-size: 0.96em;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    /* 3-column grid for page 1 */
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 700px) {
+      .three-col { grid-template-columns: 1fr; }
+    }
+    .col-card {
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .col-header {
+      padding: 16px 16px 12px;
+      text-align: center;
+    }
+    .col-header .col-icon { font-size: 2em; margin-bottom: 6px; }
+    .col-header .col-title { font-size: 1em; font-weight: 800; color: #fff; }
+    .col-header .col-sub { font-size: 0.8em; color: rgba(255,255,255,0.8); margin-top: 3px; }
+    .col-body { padding: 14px 14px; }
+    .col-item {
+      display: flex; align-items: flex-start; gap: 9px;
+      padding: 8px 10px;
+      border-radius: 9px;
+      margin-bottom: 6px;
+      font-size: 0.9em;
+      line-height: 1.55;
+    }
+    .col-item:last-child { margin-bottom: 0; }
+    .col-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    /* Summary box */
+    .summary-box {
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-top: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .summary-icon {
+      font-size: 1.6em;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .summary-text {
+      font-size: 0.97em;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+    .summary-text strong { font-weight: 800; }
+
+    /* Numbered items (page 7) */
+    .num-items { display: flex; flex-direction: column; gap: 9px; }
+    .num-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+    .num-item:hover { filter: brightness(0.97); }
+    .num-badge {
+      min-width: 34px; height: 34px;
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95em;
+      font-weight: 900;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .num-text { font-size: 0.95em; line-height: 1.65; color: var(--text); }
+
+    /* ===== COLOR THEMES ===== */
+    /* Teal-Green (page 1) */
+    .t-teal .card-banner { background: linear-gradient(135deg, #004d40, #00796b, #26a69a); }
+    .t-teal .sub-title { color: #00695c; }
+    .t-teal .icon-box { background: #e0f2f1; color: #00695c; }
+    .t-teal .item-row { background: #e0f2f1; }
+    .t-teal .item-dot { background: #00796b; }
+    .t-teal .summary-box { background: #e0f2f1; border-right: 4px solid #00796b; }
+    /* col headers */
+    .col-safety .col-header { background: linear-gradient(135deg, #1565c0, #1976d2); }
+    .col-safety .col-body { background: #e3f2fd; }
+    .col-safety .col-item { background: #bbdefb; }
+    .col-safety .col-dot { background: #1565c0; }
+    .col-motiv .col-header { background: linear-gradient(135deg, #00695c, #00897b); }
+    .col-motiv .col-body { background: #e0f2f1; }
+    .col-motiv .col-item { background: #b2dfdb; }
+    .col-motiv .col-dot { background: #00695c; }
+    .col-result .col-header { background: linear-gradient(135deg, #6a1b9a, #8e24aa); }
+    .col-result .col-body { background: #f3e5f5; }
+    .col-result .col-item { background: #e1bee7; }
+    .col-result .col-dot { background: #6a1b9a; }
+
+    /* Blue (page 2) */
+    .t-blue .card-banner { background: linear-gradient(135deg, #0d47a1, #1565c0, #1976d2); }
+    .t-blue .sub-title { color: #0d47a1; }
+    .t-blue .icon-box { background: #e3f2fd; color: #0d47a1; }
+    .t-blue .item-row { background: #e3f2fd; }
+    .t-blue .item-dot { background: #1565c0; }
+    .t-blue .summary-box { background: #e3f2fd; border-right: 4px solid #1565c0; }
+
+    /* Green (page 3) */
+    .t-green .card-banner { background: linear-gradient(135deg, #1b5e20, #2e7d32, #43a047); }
+    .t-green .sub-title { color: #1b5e20; }
+    .t-green .icon-box { background: #e8f5e9; color: #1b5e20; }
+    .t-green .item-row { background: #e8f5e9; }
+    .t-green .item-dot { background: #2e7d32; }
+    .t-green .summary-box { background: #e8f5e9; border-right: 4px solid #2e7d32; }
+
+    /* Dark Blue (page 4) */
+    .t-darkblue .card-banner { background: linear-gradient(135deg, #1a237e, #283593, #3949ab); }
+    .t-darkblue .sub-title { color: #1a237e; }
+    .t-darkblue .icon-box { background: #e8eaf6; color: #1a237e; }
+    .t-darkblue .item-row { background: #e8eaf6; }
+    .t-darkblue .item-dot { background: #3949ab; }
+    .t-darkblue .summary-box { background: #e8eaf6; border-right: 4px solid #3949ab; }
+
+    /* Gold/Navy (page 5) */
+    .t-navy .card-banner { background: linear-gradient(135deg, #0d1b5e, #1a237e, #283593); }
+    .t-navy .card-banner::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0; bottom: 0; left: 0;
+      background: linear-gradient(90deg, transparent 60%, rgba(249,168,37,0.2));
+    }
+    .t-navy .sub-title { color: #0d1b5e; }
+    .t-navy .icon-box { background: #fff8e1; color: #f57f17; }
+    .t-navy .item-row { background: #f5f7ff; }
+    .t-navy .item-dot { background: #1a237e; }
+    .t-navy .summary-box { background: linear-gradient(135deg, #fff8e1, #fff3e0); border-right: 4px solid #f9a825; }
+
+    /* Purple (page 6) */
+    .t-purple .card-banner { background: linear-gradient(135deg, #4a148c, #6a1b9a, #8e24aa); }
+    .t-purple .sub-title { color: #4a148c; }
+    .t-purple .icon-box { background: #f3e5f5; color: #4a148c; }
+    .t-purple .item-row { background: #f3e5f5; }
+    .t-purple .item-dot { background: #6a1b9a; }
+    .t-purple .summary-box { background: #f3e5f5; border-right: 4px solid #6a1b9a; }
+
+    /* Blue-Wave (page 7) */
+    .t-wave .card-banner { background: linear-gradient(135deg, #0d47a1, #1565c0, #0288d1); }
+    .t-wave .sub-title { color: #0d47a1; }
+    .t-wave .icon-box { background: #e1f5fe; color: #0277bd; }
+    .t-wave .item-row { background: #e1f5fe; }
+    .t-wave .item-dot { background: #0288d1; }
+    .t-wave .num-item { background: #e1f5fe; }
+    .t-wave .num-badge { background: linear-gradient(135deg, #0d47a1, #0288d1); }
+    .t-wave .summary-box { background: #e1f5fe; border-right: 4px solid #0288d1; }
+
+    /* ===== DIVIDER ===== */
+    .sec-divider {
+      text-align: center; position: relative;
+      margin: 5px 0;
+    }
+    .sec-divider::before {
+      content: ''; position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #c5cae9, transparent);
+    }
+    .sec-divider span {
+      background: var(--bg); padding: 0 18px;
+      font-size: 0.82em; font-weight: 700;
+      color: var(--muted); position: relative;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer-wrap {
+      max-width: 960px;
+      margin: 40px auto 0;
+      padding: 0 16px 40px;
+      text-align: center;
+    }
+    .footer-link-btn {
+      display: inline-flex;
+      align-items: center; gap: 12px;
+      background: linear-gradient(135deg, #1a237e, #3949ab);
+      color: #fff;
+      text-decoration: none;
+      padding: 15px 36px;
+      border-radius: 14px;
+      font-size: 1em;
+      font-weight: 800;
+      box-shadow: 0 6px 24px rgba(26,35,126,0.38);
+      transition: all 0.3s;
+      border: 2px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+    }
+    .footer-link-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 36px rgba(26,35,126,0.48);
+      background: linear-gradient(135deg, #283593, #5c6bc0);
+    }
+    .footer-link-btn .btn-icon {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1em;
+    }
+    .footer-note { margin-top: 12px; font-size: 0.8em; color: var(--muted); }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 1.9em; }
+      .stats-bar { flex-wrap: wrap; }
+      .stat-box { min-width: 50%; border-left: none; border-bottom: 1px solid #e8eaf6; }
+      .card-banner { padding: 20px 18px; }
+      .card-body { padding: 18px 18px; }
+      .banner-title { font-size: 1.2em; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-pattern"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-icon">🏫</div>
+  <div class="hero-tag">تصميم وشرح د/فواز</div>
+  <h1>بنود تقييم المدير والوكيل</h1>
+  <p>شرح تفصيلي لجميع بنود الأداء الوظيفي للقيادة المدرسية مع الأمثلة والتوضيحات</p>
+</div>
+
+<!-- ===== STATS ===== -->
+<div class="stats-wrap">
+  <div class="stats-bar">
+    <div class="stat-box">
+      <div class="s-num">6</div>
+      <div class="s-label">بنود رئيسية</div>
+    </div>
+    <div class="stat-box">
+      <div class="s-num">7</div>
+      <div class="s-label">تصاميم توضيحية</div>
+    </div>
+    <div class="stat-box">
+      <div class="s-num">14</div>
+      <div class="s-label">محاور فرعية</div>
+    </div>
+    <div class="stat-box">
+      <div class="s-num">60+</div>
+      <div class="s-label">عنصراً تفصيلياً</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NAV PILLS ===== -->
+<div class="nav-wrap">
+  <a href="#s1" class="nav-pill" style="background:linear-gradient(135deg,#004d40,#00796b);">🏫 البيئة الآمنة</a>
+  <a href="#s2" class="nav-pill" style="background:linear-gradient(135deg,#0d47a1,#1976d2);">📋 الخطط المدرسية</a>
+  <a href="#s3" class="nav-pill" style="background:linear-gradient(135deg,#1b5e20,#43a047);">📊 قيادة التعليم</a>
+  <a href="#s4" class="nav-pill" style="background:linear-gradient(135deg,#1a237e,#3949ab);">👥 تقويم المنسوبين</a>
+  <a href="#s5" class="nav-pill" style="background:linear-gradient(135deg,#0d1b5e,#283593);">🔄 التغذية الراجعة</a>
+  <a href="#s6" class="nav-pill" style="background:linear-gradient(135deg,#4a148c,#8e24aa);">📈 التطوير المهني</a>
+  <a href="#s7" class="nav-pill" style="background:linear-gradient(135deg,#0d47a1,#0288d1);">💡 المبادرات النوعية</a>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+
+  <!-- ===== CARD 1: البيئة الآمنة ===== -->
+  <div class="section-card t-teal" id="s1">
+    <div class="card-banner">
+      <div class="banner-num">1</div>
+      <div class="banner-title">تهيئة بيئة مدرسية آمنة ومحفزة</div>
+      <div class="banner-desc">يركز الدور على توفير بيئة مدرسية آمنة، صحية، ومحفزة، تساعد جميع أفراد المجتمع المدرسي على التعلم بفاعلية وتحقيق نتائج تعليمية عالية.</div>
+    </div>
+    <div class="card-body">
+      <div class="three-col">
+        <!-- العمود 1 -->
+        <div class="col-card col-safety">
+          <div class="col-header">
+            <div class="col-icon">🛡️</div>
+            <div class="col-title">الأمن والسلامة</div>
+            <div class="col-sub">(البيئة الفيزيائية)</div>
+          </div>
+          <div class="col-body">
+            <div class="col-item"><div class="col-dot"></div><span>تطبيق إجراءات السلامة في المباني والمرافق.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>متابعة جاهزية معدات الطوارئ والإخلاء.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>تعزيز ثقافة الوقاية لدى الجميع.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>توفير مساحات آمنة وملائمة للتعلم.</span></div>
+          </div>
+        </div>
+        <!-- العمود 2 -->
+        <div class="col-card col-motiv">
+          <div class="col-header">
+            <div class="col-icon">💡</div>
+            <div class="col-title">التحفيز والتعليم</div>
+            <div class="col-sub">(البيئة التربوية)</div>
+          </div>
+          <div class="col-body">
+            <div class="col-item"><div class="col-dot"></div><span>تشجيع المعلمين على أساليب تدريس مبتكرة.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>تعزيز التفكير الإبداعي لدى الطلاب.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>تهيئة أدوات تقنية ومنصات رقمية فعالة.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>دعم تطوير المهارات (علمية، اجتماعية، سلوكية).</span></div>
+          </div>
+        </div>
+        <!-- العمود 3 -->
+        <div class="col-card col-result">
+          <div class="col-header">
+            <div class="col-icon">🏆</div>
+            <div class="col-title">النتائج والأثر</div>
+            <div class="col-sub">(البيئة المتكاملة)</div>
+          </div>
+          <div class="col-body">
+            <div class="col-item"><div class="col-dot"></div><span>تمكين المدرسة من تحقيق الأهداف.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>تعزيز قدرة الطلاب على التعلم بانضباط.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>ربط جودة البيئة بتحقيق نواتج تعلم مرتفعة.</span></div>
+            <div class="col-item"><div class="col-dot"></div><span>تقييم مستمر لتحسين البيئة لتصبح محفزة أكثر.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="summary-box">
+        <div class="summary-icon">📌</div>
+        <div class="summary-text"><strong>باختصار:</strong> هذا البند يقيس قدرة المدير/الوكيل على تهيئة بيئة مدرسية آمنة ومحفزة، تدعم تعلم الطلاب وتساعد على تحقيق أعلى نواتج التعلم.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 2: الخطط المدرسية ===== -->
+  <div class="section-card t-blue" id="s2">
+    <div class="card-banner">
+      <div class="banner-num">2</div>
+      <div class="banner-title">الخطط المدرسية</div>
+      <div class="banner-desc">دور القائد التربوي (مدير/وكيل) في إعداد وتنفيذ الخطط المدرسية لتحسين التعليم والتعلم.</div>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">📝</div>
+          <span>التخطيط والإعداد</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">المشاركة في إعداد الخطط المدرسية الشاملة.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تحديد الأولويات (تحصيل، فاقد تعليمي).</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">توزيع الأدوار واستثمار الموارد (بشرية، مادية، تقنية).</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">🎯</div>
+          <span>الأنشطة والموارد</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تفعيل الأنشطة الصفية وغير الصفية.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مواءمة الأنشطة مع رؤية الوزارة (قيم، مهارات القرن 21).</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">🧭</div>
+          <span>التوجه الاستراتيجي</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">إشراك الطلاب في اتخاذ القرار (مجالس طلابية).</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">💻</div>
+          <span>التحول الرقمي</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">توظيف المنصات الرقمية (مدرستي، عين) في دعم العمل المدرسي.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">📊</div>
+          <span>المتابعة والقياس</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">قياس أثر الخطط على التحصيل الدراسي.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">متابعة نتائج التنفيذ وتطوير الممارسات.</div></div>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-icon">💎</div>
+        <div class="summary-text"><strong>باختصار:</strong> هذا البند يقيس مدى قدرة المدير/الوكيل على إعداد خطط متكاملة، توظيف المنصات، وتوجيه العمل المدرسي لتحقيق رؤية الوزارة وجودة التعليم.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 3: قيادة التعليم والتعلم ===== -->
+  <div class="section-card t-green" id="s3">
+    <div class="card-banner">
+      <div class="banner-num">3</div>
+      <div class="banner-title">قيادة عمليات التعليم والتعلم</div>
+      <div class="banner-desc">بناءً على البيانات والتشخيص العلمي — الهدف: رفع مستوى التحصيل وتحقيق نواتج تعلم عالية الجودة.</div>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">🔬</div>
+          <span>1. المنهجية والتشخيص</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">عملية منهجية علمية تعتمد على بيانات موثوقة (اختبارات، ملاحظات، سجلات).</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تشخيص أداء المتعلمين وتصنيف مستوياتهم بدقة (متميز، متوسط، يحتاج دعم).</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مقارنة الأداء السابق باللاحق لقياس التقدم الفعلي.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">📈</div>
+          <span>2. المتابعة والتحسين</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">رصد نمو المتعلمين ومتابعة تقدمهم عبر اللجان المتخصصة.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">توجيه المعلمين لتوظيف استراتيجيات التعلم النشط والتركيز على المهارات الأساسية (القراءة، الكتابة، الحساب).</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">دعم الأنشطة التي تنمي التفكير الناقد والابتكار وتوفير بيئة صفية جاذبة.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">⚙️</div>
+          <span>3. المعالجة واتخاذ القرار</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تفسير النتائج لاتخاذ القرار التربوي المناسب.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">للضعف الجماعي: توجيه لطرق تدريس بديلة وتعزيز المهارة.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">للضعف الفردي: تصميم خطة علاجية فردية ومتابعتها.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">وضع خطط إثرائية للمتفوقين لتطوير مهاراتهم.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">👨‍👩‍👧</div>
+          <span>4. الشراكة مع الأسرة</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">التواصل الدوري وإطلاعهم على مستوى وتقدم أبنائهم.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">إشراكهم في وضع وتنفيذ الخطط العلاجية والمتابعة.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تعزيز دور الأسرة في الدعم التعليمي والسلوكي.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 4: تقويم المنسوبين ===== -->
+  <div class="section-card t-darkblue" id="s4">
+    <div class="card-banner">
+      <div class="banner-num">4</div>
+      <div class="banner-title">تقييم المدير والوكيل — تقويم أداء منسوبي المدرسة</div>
+      <div class="banner-desc">تقويم مهني ومنهجي يعتمد على أدوات وأساليب علمية ومعايير موضوعية، وليس الملاحظة العشوائية.</div>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">📚</div>
+          <span>المفهوم والمنهجية</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تقويم علمي ومصادر متنوعة (مؤشرات الأداء، نواتج التحصيل، السجلات).</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">أدوات القياس والفترة الزمنية (الملاحظات الصفية، تقارير الإنجاز، ملفات الإنجاز، خطة زمنية).</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">🎓</div>
+          <span>المتطلبات والمهارات القيادية</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">معرفة المعايير، تحليل النتائج، تقديم التغذية الراجعة، توظيف النتائج للتطوير.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مثال تطبيقي: وضع خطة علاجية بناءً على نتائج التقويم.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">🔍</div>
+          <span>إجراءات المتابعة الميدانية</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">الملاحظة المباشرة ومتابعة التخطيط والتنفيذ والتقويم.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تشجيع التقويم الذاتي لدى المنسوبين.</div></div>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-icon">📋</div>
+        <div class="summary-text"><strong>باختصار:</strong> عملية إدارية - تعليمية متكاملة تهدف إلى قياس الأداء، دعمه وتطويره بما ينعكس إيجاباً على نواتج التعلم.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 5: التغذية الراجعة ===== -->
+  <div class="section-card t-navy" id="s5">
+    <div class="card-banner">
+      <div class="banner-num">5</div>
+      <div class="banner-title">يقدم التغذية الراجعة ويتابع تحقق مؤشرات الأداء الوظيفي</div>
+      <div class="banner-desc">مراجعة أداء الفترة السابقة وقياس نسبة التقدم في متابعة الأداء الوظيفي لشاغلي الوظائف التعليمية والإدارية، وتحليل مدى التقدم المحرز مقارنة بالأهداف المحددة مسبقاً.</div>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">📂</div>
+          <span>شرح عناصر البند</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مراجعة أداء الفترة السابقة وتفعيل مراحل الأداء الوظيفي كالتخطيط والمراجعة النصفية.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تحليل تقارير الأداء السابقة للموظف (المعلم/الإداري).</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تحديد ما تم إنجازه، وما لم يتحقق بعد.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">عقد جلسات مراجعة دورية مع الموظف لمناقشة نتائجه السابقة.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">قياس نسبة التقدم المحقق.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مقارنة الأداء الحالي بالخطط والأهداف الموضوعة مسبقاً تبعاً لبنود أداء المعلم.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">إعطاء ملاحظات بنّاءة تساعد الموظف على معرفة نقاط قوته لتعزيزها.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">لفت انتباهه لجوانب القصور مع اقتراح حلول عملية لمعالجتها.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مناقشة التحديات وإزالة المعوقات التي تحول دون تحقيق الأهداف.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مساعدة الموظف في إيجاد حلول بديلة أو توفير الدعم اللازم.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تعزيز السلوكيات الفعّالة والممارسات الناجحة.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تشجيع الموظف على تكرار الممارسات الناجحة (مثل استراتيجيات تدريس فعّالة، مبادرات ناجحة، أو التزام وظيفي عالي).</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مكافأة التميز أو إبرازه كنموذج لبقية الزملاء.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">متابعة مدى التزام الموظف بمؤشرات الأداء المعتمدة من وزارة التعليم.</div></div>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-icon">🎯</div>
+        <div class="summary-text"><strong>الهدف النهائي:</strong> أن تكون عملية المراجعة والتقييم أداة تطوير وتحفيز، وليست مجرد محاسبة، بحيث تساعد الموظف على رفع كفاءته وتحسين أدائه بما ينعكس مباشرة على جودة العملية التعليمية.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 6: التطوير المهني ===== -->
+  <div class="section-card t-purple" id="s6">
+    <div class="card-banner">
+      <div class="banner-num">6</div>
+      <div class="banner-title">بند تقييم المدير والوكيل — التطوير المهني</div>
+      <div class="banner-desc">يقصد به الدور القيادي للمدير والوكيل في دعم وتطوير النمو المهني للمعلمين والإداريين مستمر، من خلال التخطيط، والتقييم، والمتابعة، وتوفير البرامج التدريبية، بما يسهم في رفع جودة الأداء وتحقيق أهداف التعليم.</div>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">🚀</div>
+          <span>دعم وتنفيذ برامج التطوير المهني</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">الإشراف على البرامج التدريبية الموجهة للمعلمين والإداريين.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">متابعة تنفيذها والتأكد من توافقها مع احتياجات الميدان التعليمي.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">توجيه المعلمين لصياغة أهداف واضحة مرتبطة بمعايير الرخصة المهنية.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مساعدة المعلمين على وضع خطط فردية للتطوير المهني المستمر.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">🔄</div>
+          <span>التطوير الذاتي للمدير/الوكيل</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تحليل مخرجات تقييم الأداء للمعلمين.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">دراسة نتائج تقارير الأداء المهني للمعلمين.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تحديد نقاط القوة لتعزيزها، وجوانب القصور لمعالجتها بخطط تدريبية مناسبة.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">العمل مع المعلمين، المشرفين، وأولياء الأمور (عند الحاجة) في وضع خطط تطويرية عملية.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">ضمان أن تكون الخطط قابلة للتطبيق والمتابعة.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">📋</div>
+          <span>ترشيح المعلمين للبرامج التدريبية</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">التنسيق مع الجهات المختصة لترشيح المعلمين للبرامج التدريبية المحلية والدولية.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">مراعاة أن تتناسب البرامج مع احتياجات كل معلم.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">💬</div>
+          <span>تقديم تغذية راجعة بنّاءة</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">إمداد المعلمين بملاحظات واضحة تساعدهم على تحسين أدائهم.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">تسهيل تطبيق ما تعلموه في برامج التطوير داخل بيئة الصف.</div></div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">📊</div>
+          <span>تقييم البرامج التدريبية وقياس أثرها</span>
+        </div>
+        <div class="items-grid">
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">متابعة فاعلية البرامج من خلال ملاحظة تطبيق المعلمين لما تعلموه.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">قياس أثر التدريب على نواتج التعلم والتحصيل الدراسي.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">متابعة إعداد ملفات الإنجاز (ورقية أو إلكترونية) الخاصة بالمعلمين.</div></div>
+          <div class="item-row"><div class="item-dot"></div><div class="item-text">توظيف هذه الملفات كأداة لرصد تقدم الأداء المهني.</div></div>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-icon">🌟</div>
+        <div class="summary-text"><strong>الخلاصة:</strong> أن يكون المدير والوكيل قادة تطوير مهني يضمنون استمرار نمو المعلمين والإداريين، مما ينعكس بشكل مباشر على جودة التعليم ونواتج التعلم في المدرسة.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== CARD 7: المبادرات النوعية ===== -->
+  <div class="section-card t-wave" id="s7">
+    <div class="card-banner">
+      <div class="banner-num">7</div>
+      <div class="banner-title">بند تقييم المدير والوكيل — المبادرات النوعية</div>
+      <div class="banner-desc">يقصد به قدرة القيادات المدرسية (المدير/الوكيل) على ابتكار ودعم مبادرات تعليمية وتربوية ترفع من مستوى الأداء المدرسي، وتساهم في تحقيق مستهدفات وزارة التعليم الاستراتيجية، بما يحقق التغيير الإيجابي والتطوير المستمر في الميدان التربوي.</div>
+    </div>
+    <div class="card-body">
+
+      <div class="sub-section">
+        <div class="sub-title">
+          <div class="icon-box">💡</div>
+          <span>شرح عناصر البند</span>
+        </div>
+        <div class="num-items">
+          <div class="num-item"><div class="num-badge">1</div><div class="num-text">دعم والمشاركة في التجارب والمشروعات التربوية.</div></div>
+          <div class="num-item"><div class="num-badge">2</div><div class="num-text">تشجيع المعلمين والطلاب على تبني مبادرات نوعية.</div></div>
+          <div class="num-item"><div class="num-badge">3</div><div class="num-text">المشاركة الفعلية في المشاريع المرتبطة بتخصصه الإشرافي أو بمهام القيادة المدرسية.</div></div>
+          <div class="num-item"><div class="num-badge">4</div><div class="num-text">تقييم التجارب والمشروعات الواردة من المدارس.</div></div>
+          <div class="num-item"><div class="num-badge">5</div><div class="num-text">تحليل المبادرات المطروحة وفق معايير محددة (الأثر — الجدوى — الاستدامة).</div></div>
+          <div class="num-item"><div class="num-badge">6</div><div class="num-text">تحديد نقاط القوة والقصور واقتراح سبل التحسين.</div></div>
+          <div class="num-item"><div class="num-badge">7</div><div class="num-text">إعداد تقارير حول المبادرات القابلة للتطبيق.</div></div>
+          <div class="num-item"><div class="num-badge">8</div><div class="num-text">رفعها للجهات الإشرافية أو مكاتب التعليم لاعتمادها أو تطويرها.</div></div>
+          <div class="num-item"><div class="num-badge">9</div><div class="num-text">نشر التجارب والمشروعات المتميزة.</div></div>
+          <div class="num-item"><div class="num-badge">10</div><div class="num-text">إبراز المبادرات الناجحة عبر منصات المدرسة، أو إدارات التعليم.</div></div>
+          <div class="num-item"><div class="num-badge">11</div><div class="num-text">تبادل الخبرات بين المدارس ليستفيد الجميع من النماذج الرائدة.</div></div>
+          <div class="num-item"><div class="num-badge">12</div><div class="num-text">توظيف التقنية في المتابعة والتواصل.</div></div>
+          <div class="num-item"><div class="num-badge">13</div><div class="num-text">ضمان أن تكون المبادرات قابلة للتنفيذ ومحققة للأثر المطلوب.</div></div>
+          <div class="num-item"><div class="num-badge">14</div><div class="num-text">طرح مبادرات نوعية قائمة على البيانات، البحث، والتجارب الميدانية وأن تركز هذه الحلول على معالجة التحديات التي تواجه المدرسة أو الميدان التربوي (مثل: ضعف التحصيل الدراسي، الغياب، إدارة الوقت، دمج التقنية).</div></div>
+        </div>
+      </div>
+
+      <div class="summary-box">
+        <div class="summary-icon">📌</div>
+        <div class="summary-text"><strong>الهدف النهائي:</strong> أن يصبح المدير والوكيل قادة تغيير إيجابي، لا يكتفون بالإدارة الروتينية، بل يبادرون بتجارب نوعية تعزز الجودة التعليمية، وترفع نواتج التعلم، وتحقق أهداف وزارة التعليم الاستراتيجية.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ===== FOOTER ===== -->
+<div class="footer-wrap">
+  <a class="footer-link-btn" href="https://t.me/fawaz_supervisor" target="_blank">
+    <div class="btn-icon">🔗</div>
+    <span>تصميم د/فواز &nbsp;—&nbsp; انقر هنا للمزيد</span>
+  </a>
+  <div class="footer-note">تصميم وشرح د/فواز — بنود تقييم المدير والوكيل</div>
+</div>
+
+</body>
+</html>

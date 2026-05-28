@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تجميعات نافس في العلوم</title>
+<style>
+:root {
+  --bg:#061617; --card:#0d2427; --card2:#113237; --text:#f8fafc; --muted:#b7d4d1;
+  --gold:#f5c84c; --green:#22c55e; --red:#ef4444; --cyan:#4dd7c8; --line:rgba(255,255,255,.14);
+}
+*{box-sizing:border-box}
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+body{
+  margin:0; font-family:Tahoma, Arial, sans-serif; color:var(--text); min-height:100vh;
+  background:
+    radial-gradient(circle at top right, rgba(77,215,200,.22), transparent 32%),
+    radial-gradient(circle at bottom left, rgba(245,200,76,.18), transparent 34%),
+    linear-gradient(135deg,#061617,#0b1729 55%,#031010);
+}
+.app{max-width:1180px;margin:auto;padding:22px}
+.hero{
+  position:relative; overflow:hidden; border:1px solid var(--line); border-radius:30px; padding:30px;
+  background:linear-gradient(135deg,rgba(77,215,200,.18),rgba(245,200,76,.10),rgba(255,255,255,.05));
+  box-shadow:0 24px 80px rgba(0,0,0,.30);
+}
+.hero:before{content:"🧪";position:absolute;left:22px;top:10px;font-size:74px;opacity:.16;transform:rotate(-12deg)}
+.hero:after{content:"🌍";position:absolute;left:105px;bottom:14px;font-size:58px;opacity:.14}
+.badge{display:inline-flex;align-items:center;gap:8px;background:rgba(245,200,76,.15);border:1px solid rgba(245,200,76,.38);color:#ffe8a3;padding:8px 14px;border-radius:999px;font-weight:900}
+h1{margin:14px 0 8px;font-size:clamp(32px,6vw,58px);line-height:1.12}
+.subtitle{color:var(--muted);font-size:18px;line-height:1.9;max-width:850px}
+.credit{margin-top:12px;color:#ffe8a3;font-weight:900;background:rgba(245,200,76,.10);border:1px solid rgba(245,200,76,.22);display:inline-block;padding:10px 14px;border-radius:16px}
+.grid{display:grid;grid-template-columns:320px 1fr;gap:18px;margin-top:18px}
+.grid>*{min-width:0}
+.panel,.quiz{background:rgba(13,36,39,.88);border:1px solid var(--line);border-radius:24px;box-shadow:0 18px 50px rgba(0,0,0,.24)}
+.panel{padding:18px;position:sticky;top:12px;height:max-content}
+.quiz{padding:22px;min-height:560px}
+.stat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.stat>div{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:18px;padding:14px;text-align:center}
+.big{font-size:26px;font-weight:900;color:var(--gold)}
+.label{font-size:12px;color:var(--muted);margin-top:4px}
+select,input,button{font-family:inherit}
+select,input[type=number]{width:100%;background:#07191c;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0 12px;font-size:16px}
+button{border:0;border-radius:16px;padding:12px 16px;font-weight:900;cursor:pointer;color:#06201f;background:linear-gradient(135deg,var(--gold),#fff0a8);box-shadow:0 8px 22px rgba(245,200,76,.18)}
+button.secondary{background:rgba(255,255,255,.08);color:var(--text);border:1px solid var(--line);box-shadow:none}
+button.danger{background:rgba(239,68,68,.16);color:#fecaca;border:1px solid rgba(239,68,68,.35);box-shadow:none}
+.buttons{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.progress{height:13px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;border:1px solid var(--line);margin:14px 0}
+.bar{height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--gold));transition:.4s}
+.qtop{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--muted);font-weight:700;margin-bottom:14px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);border-radius:999px;padding:7px 12px;background:rgba(255,255,255,.06)}
+.question{font-size:clamp(20px,4vw,25px);line-height:1.85;font-weight:900;margin:12px 0 18px;overflow-wrap:anywhere}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.option{text-align:right;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:18px;padding:16px;min-height:64px;color:var(--text);box-shadow:none;transition:.18s;display:flex;gap:12px;align-items:flex-start;width:100%}
+.option:hover{transform:translateY(-2px);border-color:rgba(245,200,76,.55)}
+.option span:last-child{flex:1;min-width:0;overflow-wrap:anywhere;word-break:break-word;line-height:1.8}
+.option .letter{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:rgba(245,200,76,.18);color:var(--gold);font-weight:900;flex:0 0 auto}
+.option.correct{background:rgba(34,197,94,.16);border-color:rgba(34,197,94,.8)}
+.option.wrong{background:rgba(239,68,68,.14);border-color:rgba(239,68,68,.75)}
+.feedback{display:none;margin:18px 0;padding:18px;border-radius:22px;border:1px solid var(--line);font-size:clamp(18px,4vw,24px);font-weight:900;text-align:center}
+.feedback.good{display:block;background:rgba(34,197,94,.14);color:#bbf7d0}
+.feedback.bad{display:block;background:rgba(239,68,68,.13);color:#fecaca}
+.explain{margin-top:8px;color:var(--muted);font-size:14px;line-height:1.8;font-weight:500;overflow-wrap:anywhere}
+.result{display:none;text-align:center;padding:24px}
+.scoreCircle{width:170px;height:170px;border-radius:50%;display:grid;place-items:center;margin:20px auto;background:conic-gradient(var(--gold) var(--deg),rgba(255,255,255,.08) 0);border:1px solid var(--line)}
+.scoreCircle span{background:#092426;border-radius:50%;width:128px;height:128px;display:grid;place-items:center;font-size:34px;font-weight:900;color:var(--gold)}
+.review{margin-top:18px;display:grid;gap:10px}
+.reviewItem{background:rgba(255,255,255,.05);border:1px solid var(--line);padding:14px;border-radius:16px;line-height:1.7;overflow-wrap:anywhere;text-align:right}
+.ok{color:#86efac;font-weight:900}
+.no{color:#fca5a5;font-weight:900}
+.footer{margin-top:16px;padding:14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--muted);font-size:14px;line-height:1.8;overflow-wrap:anywhere}
+.footer a{color:#8ee8df;text-decoration:none;font-weight:900}
+.spark{position:fixed;pointer-events:none;font-size:28px;animation:pop 900ms ease forwards;z-index:99}
+@keyframes pop{0%{transform:translateY(0) scale(.7);opacity:0}20%{opacity:1}100%{transform:translateY(-80px) scale(1.5);opacity:0}}
+@media(max-width:880px){.app{padding:14px}.grid{grid-template-columns:1fr}.panel{position:static}.quiz{min-height:auto}}
+@media(max-width:680px){.app{padding:10px}.hero{padding:18px;border-radius:22px}.subtitle{font-size:15px;line-height:1.9}.panel,.quiz{padding:14px;border-radius:20px}.options{grid-template-columns:1fr}.buttons{flex-direction:column}.buttons button{width:100%}.qtop{flex-direction:column;align-items:stretch}.chip{text-align:center}.question{font-size:20px;margin:10px 0 14px}.option{padding:14px;min-height:auto}.feedback{padding:14px}.reviewItem{font-size:14px}.scoreCircle{width:140px;height:140px}.scoreCircle span{width:104px;height:104px;font-size:28px}}
+@media(max-width:430px){h1{font-size:33px}.badge{font-size:13px;padding:7px 12px}.stat{grid-template-columns:1fr}.big{font-size:24px}.label{font-size:13px}.panel,.quiz{padding:12px}.scoreCircle{width:124px;height:124px}.scoreCircle span{width:90px;height:90px;font-size:24px}}
+@media print{body{background:white;color:#111}.panel,.buttons,.footer,.hero .subtitle,.credit{display:none}.grid{display:block}.quiz,.hero{box-shadow:none;border:1px solid #ddd;background:white;color:#111}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section class="hero">
+    <span class="badge">🔬 منصة اختبارات تفاعلية</span>
+    <h1>تجميعات نافس في العلوم</h1>
+    <p class="subtitle">أسئلة مختارة من ملفات نافس في العلوم: العلوم الفيزيائية والكيميائية، علوم الأرض والفضاء، وعلوم الحياة.</p>
+    <div class="credit">إعداد المعلمات المبدعات فاطمة صديق ومريم علي</div>
+  </section>
+
+  <div class="grid">
+    <aside class="panel">
+      <h2>الإعدادات</h2>
+      <label>المجال</label>
+      <select id="category"></select>
+      <label>عدد الأسئلة</label>
+      <input id="count" type="number" min="5" value="20">
+      <div class="stat">
+        <div><div class="big" id="visits">0</div><div class="label">زوار الصفحة</div></div>
+        <div><div class="big" id="starts">0</div><div class="label">بدأوا الاختبار</div></div>
+        <div><div class="big" id="totalQ">0</div><div class="label">بنك الأسئلة</div></div>
+        <div><div class="big" id="doneQ">0</div><div class="label">أجبت</div></div>
+      </div>
+      <div class="buttons">
+        <button onclick="startQuiz()">ابدأ الاختبار</button>
+        <button class="secondary" onclick="startQuiz()">خلط الأسئلة</button>
+        <button class="danger" onclick="resetStats()">تصفير عداد هذا الجهاز</button>
+      </div>
+      <div class="footer">
+        <strong>تصميم د/فواز</strong><br>
+        <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">تفضل للمزيد هنا</a>
+      </div>
+    </aside>
+
+    <main class="quiz">
+      <div id="quizBox">
+        <div class="qtop"><span class="chip" id="qNum">السؤال 1</span><span class="chip" id="catChip">المجال</span></div>
+        <div class="progress"><div class="bar" id="bar"></div></div>
+        <div class="question" id="question">اضغط ابدأ الاختبار من الإعدادات.</div>
+        <div class="options" id="options"></div>
+        <div class="feedback" id="feedback"></div>
+        <div class="buttons"><button class="secondary" id="nextBtn" onclick="nextQuestion()" disabled>السؤال التالي</button></div>
+      </div>
+      <div class="result" id="resultBox">
+        <h2>انتهى الاختبار</h2>
+        <div class="scoreCircle" id="scoreCircle"><span id="scoreText">0%</span></div>
+        <p id="resultMsg"></p>
+        <div class="buttons" style="justify-content:center"><button onclick="startQuiz()">إعادة الاختبار</button><button class="secondary" onclick="window.print()">طباعة النتيجة</button></div>
+        <div class="review" id="review"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [{"q": "أي مما يلي يمثل القوة التي تساعد الطائرة على التوقف عند هبوطها على المدرج؟", "options": {"أ": "الجاذبية", "ب": "الاحتكاك", "ج": "الاتزان", "د": "الدفع"}, "answer": "ب", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما نوع الطاقة المخزنة في بطارية السيارة الكهربائية؟", "options": {"أ": "ضوئية", "ب": "كيميائية", "ج": "حركية", "د": "حرارية"}, "answer": "ب", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "أي مخلوط يُعد محلولًا إذا كان أحد مكونيه قد ذاب في الآخر؟", "options": {"أ": "مخلوط ينتج عنه مواد جديدة", "ب": "مخلوط من مادتين لا تذوبان في بعضهما", "ج": "مخلوط ذاب أحد مكونيه في الآخر", "د": "مخلوط يمكن تمييز مكوناته"}, "answer": "ج", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما السبب الأقرب لتحرك سيارة ببطء شديد على سطح منحدر خشن؟", "options": {"أ": "سطح المنحدر خشن جدًا", "ب": "الجاذبية الأرضية تمنع حركتها", "ج": "المنحدر ليس مائلًا بشكل كبير", "د": "قوة الرياح تدفعها إلى أعلى"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "تسمى المسافة بين نقطتين متماثلتين متتاليتين في الموجة:", "options": {"أ": "قصر الموجة", "ب": "طول الموجة", "ج": "سرعة الموجة", "د": "تردد الموجة"}, "answer": "ب", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "عند خلط الطباشير بالخل وتصاعد الغازات، يدل ذلك على حدوث:", "options": {"أ": "تغير فيزيائي", "ب": "تفاعل كيميائي", "ج": "ذوبان فقط", "د": "تبخر"}, "answer": "ب", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "أي الحالات التالية يحدث فيها شغل؟", "options": {"أ": "الاحتفاظ بالأثقال مرفوعة", "ب": "دفع سيارة واقفة دون تحريكها", "ج": "مسك الكرة باليد فترة طويلة", "د": "تحريك عربة التسوق إلى الأمام"}, "answer": "د", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "الصوت الحاد يتميز غالبًا بأنه صوت ذو:", "options": {"أ": "تردد عال", "ب": "تردد منخفض", "ج": "طول موجي كبير دائمًا", "د": "سرعة أقل من الصوت الغليظ"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "عند سحب ورقة بسرعة من تحت قطعة نقدية فوق كأس، تسقط القطعة داخل الكأس بسبب:", "options": {"أ": "القصور الذاتي", "ب": "المغناطيسية", "ج": "الجاذبية الأرضية فقط", "د": "الاحتكاك"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "يستخدم الرفع المغناطيسي في بعض القطارات لأنه يقلل بدرجة كبيرة من:", "options": {"أ": "الاحتكاك", "ب": "الجاذبية", "ج": "الكتلة", "د": "الطاقة الكيميائية"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "أي جزء في الدائرة الكهربائية يمثل المقاومة غالبًا في دائرة بسيطة تحتوي بطارية وأسلاكًا وقاطعًا ومصباحًا؟", "options": {"أ": "البطارية", "ب": "الأسلاك", "ج": "المصباح", "د": "القاطع"}, "answer": "ج", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما العملية التي تنتقل بها الطاقة الحرارية من الشمس إلى الأرض؟", "options": {"أ": "التوصيل", "ب": "الحمل", "ج": "الإشعاع", "د": "التمغنط"}, "answer": "ج", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "أي أداة تستخدم لقياس حجم سائل أو جسم صغير غير منتظم بطريقة الإزاحة؟", "options": {"أ": "المخبار المدرج", "ب": "الميزان النابضي", "ج": "المسطرة فقط", "د": "الترمومتر"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما وحدة قياس التيار الكهربائي؟", "options": {"أ": "الأمبير", "ب": "الأوم", "ج": "الفولت", "د": "الجول"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما وحدة قياس المقاومة الكهربائية؟", "options": {"أ": "الأمبير", "ب": "الأوم", "ج": "الفولت", "د": "الواط"}, "answer": "ب", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما وحدة قياس الجهد الكهربائي؟", "options": {"أ": "الجول", "ب": "الأوم", "ج": "الفولت", "د": "الكيلو جرام"}, "answer": "ج", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما القانون الصحيح للكثافة؟", "options": {"أ": "الكثافة = الكتلة ÷ الحجم", "ب": "الكثافة = الحجم ÷ الكتلة", "ج": "الكثافة = القوة × المسافة", "د": "الكثافة = المسافة ÷ الزمن"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما القانون الصحيح للسرعة؟", "options": {"أ": "السرعة = المسافة ÷ الزمن", "ب": "السرعة = الزمن ÷ المسافة", "ج": "السرعة = الكتلة ÷ الحجم", "د": "السرعة = القوة × المسافة"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "ما القانون الصحيح للشغل؟", "options": {"أ": "الشغل = القوة × المسافة", "ب": "الشغل = الكتلة ÷ الحجم", "ج": "الشغل = المسافة ÷ الزمن", "د": "الشغل = التيار × المقاومة"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "إذا كانت كثافة الجسم أقل من كثافة السائل فإنه:", "options": {"أ": "يطفو", "ب": "ينغمر دائمًا", "ج": "يتبخر", "د": "ينصهر"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "القوى المتزنة تجعل الجسم:", "options": {"أ": "يبقى ساكنًا أو يتحرك بسرعة ثابتة", "ب": "يتسارع دائمًا", "ج": "يتوقف عن امتلاك كتلة", "د": "ينجذب للمغناطيس فقط"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "القوى غير المتزنة تؤدي غالبًا إلى:", "options": {"أ": "تغير حركة الجسم", "ب": "ثبات الجسم دائمًا", "ج": "اختفاء الاحتكاك", "د": "ثبات السرعة والاتجاه دائمًا"}, "answer": "أ", "category": "العلوم الفيزيائية والكيميائية"}, {"q": "جسم صخري أو فلزي صغير يدخل الغلاف الجوي للأرض ويحترق قبل وصوله إلى سطح الأرض ويظهر كخط لامع في السماء يسمى:", "options": {"أ": "النيزك", "ب": "المذنب", "ج": "الكويكب", "د": "الشهاب"}, "answer": "د", "category": "علوم الأرض والفضاء"}, {"q": "تدور الكواكب حول الشمس بسبب قوة الجذب، وتزداد هذه القوة كلما:", "options": {"أ": "زادت كتلة الكوكب وابتعد عن الشمس", "ب": "نقصت كتلة الكوكب واقترب من الشمس", "ج": "زادت كتلة الكوكب واقترب من الشمس", "د": "نقصت كتلة الكوكب وابتعد عن الشمس"}, "answer": "ج", "category": "علوم الأرض والفضاء"}, {"q": "ما شكل مجرة درب التبانة التي تقع فيها مجموعتنا الشمسية؟", "options": {"أ": "لولبي", "ب": "إهليلجي", "ج": "بيضاوي", "د": "غير منتظم"}, "answer": "أ", "category": "علوم الأرض والفضاء"}, {"q": "بركان تتدفق منه اللابة أو يحتمل ثورانه يسمى بركانًا:", "options": {"أ": "نشطًا", "ب": "هامدًا", "ج": "ساكنًا", "د": "هادئًا دائمًا"}, "answer": "أ", "category": "علوم الأرض والفضاء"}, {"q": "ما الأداة/المقياس المستخدم لقياس قوة زلزال أحدث آثارًا تدميرية؟", "options": {"أ": "ميزان نابضي", "ب": "مقياس ريختر", "ج": "السيزمومتر فقط", "د": "ميزان زنبركي"}, "answer": "ب", "category": "علوم الأرض والفضاء"}, {"q": "أي طور يظهر القمر فيه عندما يكون بين الشمس والأرض؟", "options": {"أ": "المحاق", "ب": "البدر", "ج": "الأحدب", "د": "التربيع الأخير"}, "answer": "أ", "category": "علوم الأرض والفضاء"}, {"q": "معرفة أوقات الصلاة المرتبطة بالزوال تعتمد أساسًا على:", "options": {"أ": "التوقيت المعياري", "ب": "حركة الشمس", "ج": "أطوار القمر", "د": "المجموعة النجمية"}, "answer": "ب", "category": "علوم الأرض والفضاء"}, {"q": "تحدث معظم تغيرات الطقس في طبقة:", "options": {"أ": "الميزوسفير", "ب": "التروبوسفير", "ج": "الستراتوسفير", "د": "الثيرموسفير"}, "answer": "ب", "category": "علوم الأرض والفضاء"}, {"q": "يسمى موقع حدوث الزلزال تحت سطح الأرض:", "options": {"أ": "بؤرة الزلزال", "ب": "المركز السطحي", "ج": "الصدع", "د": "عين الزلزال"}, "answer": "أ", "category": "علوم الأرض والفضاء"}, {"q": "بقايا مخلوقات حية قديمة محفوظة في الصخور تسمى:", "options": {"أ": "الأحافير", "ب": "الأصداف", "ج": "القواقع", "د": "الرسوبيات"}, "answer": "أ", "category": "علوم الأرض والفضاء"}, {"q": "ما الترتيب الصحيح لطبقات الأرض الرئيسة من الخارج إلى الداخل؟", "options": {"أ": "القشرة الأرضية - الستار - اللب", "ب": "القشرة الأرضية - اللب - الستار", "ج": "اللب - القشرة الأرضية - الستار", "د": "الستار - اللب - القشرة الأرضية"}, "answer": "أ", "category": "علوم الأرض والفضاء"}, {"q": "العامل الرئيس المحرك لدورة الماء في الطبيعة هو:", "options": {"أ": "البحار", "ب": "الشمس", "ج": "الغيوم", "د": "الرياح فقط"}, "answer": "ب", "category": "علوم الأرض والفضاء"}, {"q": "قلة الأمطار وارتفاع درجات الحرارة قد تؤدي إلى:", "options": {"أ": "ثوران البراكين مباشرة", "ب": "هجرة بعض الحيوانات", "ج": "حدوث الزلازل مباشرة", "د": "زيادة تنوع الحيوانات دائمًا"}, "answer": "ب", "category": "علوم الأرض والفضاء"}, {"q": "عندما يمر القمر في ظل الأرض تحدث ظاهرة:", "options": {"أ": "خسوف القمر", "ب": "كسوف الشمس", "ج": "المد والجزر", "د": "الشفق القطبي"}, "answer": "أ", "category": "علوم الأرض والفضاء"}, {"q": "عندما يقع القمر بين الشمس والأرض ويحجب ضوء الشمس عن جزء من الأرض تحدث ظاهرة:", "options": {"أ": "خسوف القمر", "ب": "كسوف الشمس", "ج": "الاحتباس الحراري", "د": "دوران الأرض"}, "answer": "ب", "category": "علوم الأرض والفضاء"}, {"q": "الصفة الوراثية التي تمنع صفة أخرى من الظهور تسمى صفة:", "options": {"أ": "متنحية", "ب": "سائدة", "ج": "موروثة", "د": "مكتسبة"}, "answer": "ب", "category": "علوم الحياة"}, {"q": "أي مما يلي يكمل دورة حياة نبات الصنوبر: مخروط ذكري ← ____ ← مخاريط ملقحة ← بذور صنوبر ← بادرة؟", "options": {"أ": "مخروط أنثوي", "ب": "مخاريط غير ملقحة", "ج": "بذرة", "د": "أبواغ"}, "answer": "أ", "category": "علوم الحياة"}, {"q": "تعد صفة الطيران لدى العصافير من الصفات:", "options": {"أ": "المكتسبة", "ب": "الموروثة", "ج": "السائدة", "د": "المتنحية"}, "answer": "ب", "category": "علوم الحياة"}, {"q": "يتشابه الجهاز الهيكلي في الجمل مع الهيكل الخارجي في المفصليات في أن كليهما:", "options": {"أ": "يتكونان من العظام", "ب": "يوفران الحماية والمساعدة على الحركة", "ج": "يوجدان خارج الجسم", "د": "يتركبان من قشور متماسكة فقط"}, "answer": "ب", "category": "علوم الحياة"}, {"q": "ثمرة على شكل مخروط تنتمي غالبًا إلى نباتات:", "options": {"أ": "اللاوعائية", "ب": "اللابطذرية", "ج": "مغطاة البذور", "د": "معراة البذور"}, "answer": "د", "category": "علوم الحياة"}, {"q": "أي أجزاء الزهرة ينتج حبوب اللقاح؟", "options": {"أ": "المبيض", "ب": "القلم", "ج": "الميسم", "د": "المتك"}, "answer": "د", "category": "علوم الحياة"}, {"q": "علاقة الدودة الشريطية التي تعيش في الجهاز الهضمي وتسبب مشكلات هضمية تعد علاقة:", "options": {"أ": "تبادل منفعة", "ب": "تطفل", "ج": "تكافل", "د": "تعايش"}, "answer": "ب", "category": "علوم الحياة"}, {"q": "أي المخلوقات التالية يعد وحيد الخلية؟", "options": {"أ": "البكتيريا", "ب": "الجمل", "ج": "شجرة التفاح", "د": "النسر"}, "answer": "أ", "category": "علوم الحياة"}, {"q": "الضفدع ينتمي إلى مجموعة:", "options": {"أ": "الأسماك", "ب": "البرمائيات", "ج": "الثدييات", "د": "الزواحف"}, "answer": "ب", "category": "علوم الحياة"}, {"q": "الأرنب من الحيوانات التي تتكاثر عن طريق:", "options": {"أ": "البيض", "ب": "الولادة", "ج": "الأبواغ", "د": "الانقسام الثنائي"}, "answer": "ب", "category": "علوم الحياة"}, {"q": "تدريب بعض الفيلة على اللعب بالكرة يدل على أن هذه الصفة:", "options": {"أ": "متنحية", "ب": "غريزية", "ج": "مكتسبة", "د": "وراثية"}, "answer": "ج", "category": "علوم الحياة"}, {"q": "من أمثلة التكيفات السلوكية للمخلوقات الحية:", "options": {"أ": "لون الفرو في الأرانب", "ب": "الأسنان القوية في سمك القرش", "ج": "انتقال الذئاب في مجموعات", "د": "الجذور الكثيفة في نبات الصبار"}, "answer": "ج", "category": "علوم الحياة"}, {"q": "أي تركيب يوجد في الخلية النباتية ولا يوجد في الخلية الحيوانية؟", "options": {"أ": "الغشاء الخلوي", "ب": "السيتوبلازم", "ج": "البلاستيدات الخضراء", "د": "النواة"}, "answer": "ج", "category": "علوم الحياة"}, {"q": "أي مما يلي يساعد النبات على صنع غذائه؟", "options": {"أ": "البلاستيدات الخضراء", "ب": "الجدار الخلوي فقط", "ج": "الغشاء الخلوي فقط", "د": "الفجوة فقط"}, "answer": "أ", "category": "علوم الحياة"}, {"q": "صفة تنتقل من الآباء إلى الأبناء تسمى:", "options": {"أ": "صفة مكتسبة", "ب": "صفة وراثية", "ج": "صفة سلوكية فقط", "د": "صفة بيئية فقط"}, "answer": "ب", "category": "علوم الحياة"}, {"q": "النباتات الزهرية تتكاثر غالبًا بواسطة:", "options": {"أ": "الأزهار والبذور", "ب": "الانشطار", "ج": "الأبواغ فقط", "د": "التبرعم فقط"}, "answer": "أ", "category": "علوم الحياة"}, {"q": "الخميرة تُعد من:", "options": {"أ": "الفطريات", "ب": "النباتات الوعائية", "ج": "الفقاريات", "د": "الزواحف"}, "answer": "أ", "category": "علوم الحياة"}, {"q": "البراميسيوم مثال على مخلوق:", "options": {"أ": "وحيد الخلية", "ب": "عديد الخلايا", "ج": "فقاري", "د": "نبات زهري"}, "answer": "أ", "category": "علوم الحياة"}, {"q": "الصفة المتنحية تظهر عادة عندما:", "options": {"أ": "تجتمع نسختان متنحيتان", "ب": "توجد نسخة سائدة", "ج": "تختفي الجينات", "د": "يحدث تكيف سلوكي"}, "answer": "أ", "category": "علوم الحياة"}, {"q": "الكتلة هي مقدار ما في الجسم من:", "options": {"أ": "مادة", "ب": "جذب أرضي", "ج": "حرارة", "د": "سرعة"}, "answer": "أ", "category": "القوانين والمقارنات"}, {"q": "الوزن هو مقدار:", "options": {"أ": "ما في الجسم من مادة", "ب": "جذب الأرض للجسم", "ج": "الحيز الذي يشغله الجسم", "د": "تغير الموقع فقط"}, "answer": "ب", "category": "القوانين والمقارنات"}, {"q": "وحدة قياس الوزن هي:", "options": {"أ": "نيوتن", "ب": "جرام", "ج": "لتر", "د": "سم²"}, "answer": "أ", "category": "القوانين والمقارنات"}, {"q": "الأداة المناسبة لقياس الوزن هي:", "options": {"أ": "الميزان النابضي", "ب": "المخبار المدرج", "ج": "المسطرة", "د": "الساعة"}, "answer": "أ", "category": "القوانين والمقارنات"}, {"q": "الحجم هو:", "options": {"أ": "الحيز الذي يشغله الجسم", "ب": "قوة جذب الأرض", "ج": "مقدار الكتلة في حجم معين", "د": "الطاقة المستهلكة"}, "answer": "أ", "category": "القوانين والمقارنات"}, {"q": "قانون مساحة المستطيل هو:", "options": {"أ": "الطول × العرض", "ب": "الكتلة ÷ الحجم", "ج": "القوة × المسافة", "د": "المسافة ÷ الزمن"}, "answer": "أ", "category": "القوانين والمقارنات"}, {"q": "القدرة الكهربائية تقاس بوحدة:", "options": {"أ": "الواط", "ب": "الأمبير", "ج": "الأوم", "د": "النيوتن"}, "answer": "أ", "category": "القوانين والمقارنات"}, {"q": "الطاقة الكهربائية تقاس بوحدة:", "options": {"أ": "الجول", "ب": "الفولت", "ج": "الأوم", "د": "الأمبير"}, "answer": "أ", "category": "القوانين والمقارنات"}];
+const STORAGE_KEY='fawaz_nafis_science_counts_v1';
+let quiz=[], current=0, score=0, answered=false, userAnswers=[];
+function readCounts(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||{visits:0,starts:0}}catch(e){return {visits:0,starts:0}}}
+function writeCounts(c){localStorage.setItem(STORAGE_KEY,JSON.stringify(c));}
+let counts=readCounts(); counts.visits=(counts.visits||0)+1; writeCounts(counts);
+function updateCounts(){document.getElementById('visits').textContent=counts.visits||0;document.getElementById('starts').textContent=counts.starts||0;}
+function resetStats(){counts={visits:1,starts:0};writeCounts(counts);updateCounts();}
+function uniqueCats(){return ['الكل',...Array.from(new Set(QUESTIONS.map(q=>q.category)))];}
+function initCats(){let s=document.getElementById('category');s.innerHTML=uniqueCats().map(c=>`<option value="${c}">${c}</option>`).join('');document.getElementById('totalQ').textContent=QUESTIONS.length;updateCounts();}
+function shuffle(a){let arr=[...a];for(let i=arr.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}return arr;}
+function filtered(){let c=document.getElementById('category').value;return c==='الكل'?QUESTIONS:QUESTIONS.filter(q=>q.category===c);}
+function startQuiz(){let pool=shuffle(filtered());let n=parseInt(document.getElementById('count').value||20);n=Math.max(5,Math.min(n,pool.length));quiz=pool.slice(0,n);current=0;score=0;answered=false;userAnswers=[];counts.starts=(counts.starts||0)+1;writeCounts(counts);updateCounts();document.getElementById('resultBox').style.display='none';document.getElementById('quizBox').style.display='block';renderQuestion();}
+function renderQuestion(){answered=false;document.getElementById('nextBtn').disabled=true;document.getElementById('doneQ').textContent=current;let q=quiz[current];document.getElementById('qNum').textContent=`السؤال ${current+1} من ${quiz.length}`;document.getElementById('catChip').textContent=q.category;document.getElementById('bar').style.width=((current)/quiz.length*100)+'%';document.getElementById('question').textContent=q.q;let labels=['أ','ب','ج','د'];document.getElementById('options').innerHTML=labels.map(l=>`<button class="option" onclick="choose('${l}',this)"><span class="letter">${l}</span><span>${q.options[l]}</span></button>`).join('');let fb=document.getElementById('feedback');fb.className='feedback';fb.innerHTML='';}
+function choose(letter,btn){if(answered)return;answered=true;let q=quiz[current];let good=letter===q.answer;if(good)score++;userAnswers.push({q,choice:letter,good});document.querySelectorAll('.option').forEach(b=>{let l=b.querySelector('.letter').textContent;if(l===q.answer)b.classList.add('correct');if(l===letter&&!good)b.classList.add('wrong');b.disabled=true;});let fb=document.getElementById('feedback');if(good){fb.className='feedback good';fb.innerHTML='يا سلام! برافو عليك 🎉<div class="explain">إجابة صحيحة. عالم علوم صغير قدامنا!</div>';tone(true);spark('✨')}else{fb.className='feedback bad';fb.innerHTML=`حظ أوفر 🌟<div class="explain">الإجابة الصحيحة: <b>${q.answer}</b> - ${q.options[q.answer]}</div>`;tone(false);spark('💡')}document.getElementById('nextBtn').disabled=false;document.getElementById('doneQ').textContent=current+1;}
+function tone(ok){try{let ac=new (window.AudioContext||window.webkitAudioContext)();let o=ac.createOscillator(),g=ac.createGain();o.connect(g);g.connect(ac.destination);o.type=ok?'triangle':'sine';o.frequency.value=ok?760:330;g.gain.setValueAtTime(.0001,ac.currentTime);g.gain.exponentialRampToValueAtTime(.08,ac.currentTime+.03);g.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+(ok?.22:.18));o.start();o.stop(ac.currentTime+(ok?.24:.2));if(ok){setTimeout(()=>{let o2=ac.createOscillator(),g2=ac.createGain();o2.connect(g2);g2.connect(ac.destination);o2.type='triangle';o2.frequency.value=990;g2.gain.setValueAtTime(.0001,ac.currentTime);g2.gain.exponentialRampToValueAtTime(.07,ac.currentTime+.03);g2.gain.exponentialRampToValueAtTime(.0001,ac.currentTime+.2);o2.start();o2.stop(ac.currentTime+.22);},120)}}catch(e){}}
+function spark(ch){let el=document.createElement('div');el.className='spark';el.textContent=ch;el.style.left=(50+Math.random()*30-15)+'vw';el.style.top=(55+Math.random()*20-10)+'vh';document.body.appendChild(el);setTimeout(()=>el.remove(),900);}
+function nextQuestion(){if(current<quiz.length-1){current++;renderQuestion();}else{finish();}}
+function finish(){document.getElementById('quizBox').style.display='none';let pct=Math.round((score/quiz.length)*100);let circle=document.getElementById('scoreCircle');circle.style.setProperty('--deg',pct+'%');document.getElementById('scoreText').textContent=pct+'%';document.getElementById('resultMsg').textContent=`درجتك: ${score} من ${quiz.length}. ${pct>=85?'ممتاز جدًا، علومك تفتح النفس!':pct>=60?'جيد، باقي مراجعة بسيطة.':'تحتاج جولة ثانية، نافس يحب المراجعة.'}`;let review=document.getElementById('review');review.innerHTML=userAnswers.map((a,i)=>`<div class="reviewItem"><b>${i+1}. ${a.q.q}</b><br><span class="${a.good?'ok':'no'}">إجابتك: ${a.choice} - ${a.q.options[a.choice]||''}</span><br><span class="ok">الصحيح: ${a.q.answer} - ${a.q.options[a.q.answer]}</span></div>`).join('');document.getElementById('resultBox').style.display='block';document.getElementById('bar').style.width='100%';}
+initCats();
+</script>
+</body>
+</html>

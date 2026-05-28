@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>استمارة دراسة أسئلة الاختبار</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0F1E2D;--ink2:#1B3048;--ink3:#243B55;
+  --gold:#C8A84B;--gold2:#F5E6BD;--gold3:#7D6420;
+  --teal:#0D6E6E;--teal2:#0F8585;--teal3:#C2EBEB;--teal4:#E8F8F8;
+  --sky:#1565C0;--sky2:#1976D2;--sky3:#BBDEFB;--sky4:#E3F2FD;
+  --green:#1B5E20;--green2:#2E7D32;--green3:#C8E6C9;--green4:#E8F5E9;
+  --amber:#BF360C;--amber2:#E64A19;--amber3:#FFCCBC;--amber4:#FBE9E7;
+  --purple:#4A148C;--purple2:#6A1B9A;--purple3:#E1BEE7;--purple4:#F3E5F5;
+  --red:#B71C1C;--red2:#C62828;
+  --white:#FFFFFF;--g1:#F7F9FC;--g2:#EEF2F7;--g3:#DDE3EB;--g4:#B0BEC5;--g5:#607D8B;
+  --radius:16px;--radius-sm:10px;--radius-xs:6px;
+  --shadow:0 2px 12px rgba(15,30,45,.07);--shadow-md:0 4px 24px rgba(15,30,45,.12);
+}
+body{font-family:'Tajawal',sans-serif;background:var(--g1);color:var(--ink);direction:rtl;min-height:100vh;}
+
+/* ── SCREEN LAYOUT ── */
+.screen-wrap{max-width:960px;margin:0 auto;padding:0 0 60px;}
+
+/* ── HERO HEADER ── */
+.hero{
+  background:linear-gradient(150deg,var(--ink) 0%,var(--ink2) 55%,var(--teal) 100%);
+  padding:40px 32px 56px;position:relative;overflow:hidden;
+  border-radius:0 0 var(--radius) var(--radius);
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 30% 0%,rgba(200,168,75,.2) 0%,transparent 60%);
+}
+.hero::after{
+  content:'';position:absolute;bottom:-1px;left:0;right:0;height:40px;
+  background:var(--g1);border-radius:50% 50% 0 0 / 100% 100% 0 0;
+}
+.gov-line{display:flex;align-items:center;gap:14px;margin-bottom:22px;flex-wrap:wrap;}
+.gov-badge{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.8);font-size:11px;font-weight:600;letter-spacing:.5px;
+  padding:4px 14px;border-radius:99px;
+}
+.hero h1{font-family:'Cairo',sans-serif;font-size:clamp(20px,4vw,32px);font-weight:900;color:#fff;margin-bottom:8px;position:relative;}
+.hero h1 span{color:var(--gold);}
+.hero p{font-size:13px;color:rgba(255,255,255,.55);font-weight:300;position:relative;}
+
+/* ── STEP PROGRESS ── */
+.step-bar{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;padding:24px 16px 8px;flex-wrap:wrap;row-gap:8px;
+}
+.step-item{display:flex;flex-direction:column;align-items:center;gap:4px;position:relative;}
+.step-item::after{
+  content:'';position:absolute;top:14px;right:-40px;width:80px;height:2px;
+  background:var(--g3);z-index:0;
+}
+.step-item:last-child::after{display:none;}
+.step-dot{
+  width:28px;height:28px;border-radius:50%;border:2px solid var(--g3);
+  background:var(--white);display:flex;align-items:center;justify-content:center;
+  font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;color:var(--g4);
+  position:relative;z-index:1;transition:all .3s;cursor:pointer;
+}
+.step-dot.done{background:var(--teal2);border-color:var(--teal2);color:#fff;}
+.step-dot.active{background:var(--gold);border-color:var(--gold);color:var(--ink);box-shadow:0 0 0 4px rgba(200,168,75,.2);}
+.step-label{font-size:10px;color:var(--g4);font-weight:600;text-align:center;max-width:70px;line-height:1.3;}
+.step-label.active{color:var(--gold3);}
+.step-label.done{color:var(--teal2);}
+
+/* ── FORM CARD ── */
+.form-card{
+  background:var(--white);border-radius:var(--radius);
+  box-shadow:var(--shadow-md);margin:16px 16px 0;overflow:hidden;
+}
+.form-section{display:none;}
+.form-section.active{display:block;}
+
+/* ── SECTION HEADER ── */
+.sec-hd{
+  padding:18px 24px;display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid var(--g2);
+}
+.sec-hd-icon{
+  width:40px;height:40px;border-radius:var(--radius-xs);
+  display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;
+}
+.sec-hd-text h2{font-family:'Cairo',sans-serif;font-size:16px;font-weight:700;color:var(--ink);}
+.sec-hd-text p{font-size:12px;color:var(--g5);margin-top:2px;}
+.hd-teal .sec-hd-icon{background:var(--teal4);}
+.hd-sky .sec-hd-icon{background:var(--sky4);}
+.hd-green .sec-hd-icon{background:var(--green4);}
+.hd-amber .sec-hd-icon{background:var(--amber4);}
+.hd-purple .sec-hd-icon{background:var(--purple4);}
+.hd-gold .sec-hd-icon{background:var(--gold2);}
+
+/* ── FIELDS ── */
+.fields{padding:20px 24px;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.field-row.three{grid-template-columns:1fr 1fr 1fr;}
+.field-row.one{grid-template-columns:1fr;}
+@media(max-width:580px){.field-row,.field-row.three{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:5px;}
+.field label{font-size:12px;font-weight:700;color:var(--g5);letter-spacing:.2px;}
+.field input,.field select,.field textarea{
+  width:100%;border:1.5px solid var(--g3);border-radius:var(--radius-xs);
+  font-family:'Tajawal',sans-serif;font-size:13px;color:var(--ink);
+  background:var(--g1);outline:none;transition:all .2s;padding:9px 12px;
+  direction:rtl;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--teal2);background:#fff;box-shadow:0 0 0 3px rgba(13,110,110,.1);
+}
+.field textarea{resize:vertical;min-height:80px;}
+.field select{cursor:pointer;appearance:none;}
+
+/* ── EVAL TABLE ── */
+.eval-table-wrap{padding:0 24px 20px;overflow-x:auto;}
+.eval-table{width:100%;border-collapse:collapse;font-size:12px;min-width:560px;}
+.eval-table th{
+  padding:10px 12px;text-align:center;font-weight:700;font-size:11px;
+  letter-spacing:.3px;border-bottom:2px solid var(--g3);
+}
+.eval-table th.th-criteria{text-align:right;min-width:240px;}
+.eval-table td{
+  padding:9px 12px;border-bottom:1px solid var(--g2);vertical-align:middle;
+}
+.eval-table td.td-criteria{font-size:12px;color:var(--ink2);line-height:1.5;}
+.eval-table tr:nth-child(even) td{background:var(--g1);}
+.eval-table tr:hover td{background:var(--teal4);}
+.radio-cell{text-align:center;}
+.radio-wrap{display:flex;justify-content:center;}
+.radio-wrap input[type=radio]{
+  width:16px;height:16px;accent-color:var(--teal2);cursor:pointer;
+}
+.section-title-row td{
+  background:linear-gradient(90deg,var(--teal4),var(--white));
+  font-family:'Cairo',sans-serif;font-weight:700;font-size:12px;
+  color:var(--teal);padding:8px 12px;border-bottom:1px solid var(--teal3);
+}
+.th-avail{background:var(--green4);color:var(--green2);}
+.th-partial{background:var(--sky4);color:var(--sky);}
+.th-na{background:var(--amber4);color:var(--amber2);}
+.th-domain{background:var(--g2);color:var(--ink);}
+
+/* ── AI SUGGESTION BOX ── */
+.ai-box{
+  margin:0 24px 16px;background:linear-gradient(135deg,var(--sky4),var(--teal4));
+  border:1px solid var(--teal3);border-radius:var(--radius-sm);padding:14px 18px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.ai-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+.ai-text{font-size:12px;color:var(--teal);line-height:1.7;}
+.ai-text strong{font-weight:700;display:block;margin-bottom:3px;font-size:13px;}
+.ai-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+.chip{
+  background:var(--teal2);color:#fff;font-size:11px;font-weight:600;
+  padding:3px 10px;border-radius:99px;cursor:pointer;transition:all .2s;
+  border:none;font-family:'Tajawal',sans-serif;
+}
+.chip:hover{background:var(--teal);transform:translateY(-1px);}
+.chip.gold{background:var(--gold3);}
+.chip.sky{background:var(--sky);}
+
+/* ── RECOMMENDATIONS ── */
+.reco-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:0 24px 20px;}
+@media(max-width:640px){.reco-grid{grid-template-columns:1fr;}}
+.reco-card{
+  border-radius:var(--radius-sm);padding:16px;border:1px solid var(--g3);
+  background:var(--g1);
+}
+.reco-num{
+  width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;
+  color:#fff;margin-bottom:10px;
+}
+.reco-card.r1 .reco-num{background:var(--teal2);}
+.reco-card.r2 .reco-num{background:var(--sky);}
+.reco-card.r3 .reco-num{background:var(--amber2);}
+.reco-card label{font-size:12px;font-weight:700;color:var(--g5);display:block;margin-bottom:6px;}
+.reco-card textarea{
+  width:100%;border:1.5px solid var(--g3);border-radius:var(--radius-xs);
+  font-family:'Tajawal',sans-serif;font-size:12px;background:var(--white);
+  padding:8px 10px;resize:vertical;min-height:90px;outline:none;direction:rtl;
+}
+.reco-card textarea:focus{border-color:var(--teal2);box-shadow:0 0 0 3px rgba(13,110,110,.1);}
+
+/* ── NAV BUTTONS ── */
+.nav-btns{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 24px;background:var(--g1);border-top:1px solid var(--g2);
+}
+.btn{
+  padding:10px 24px;border-radius:var(--radius-xs);border:none;cursor:pointer;
+  font-family:'Tajawal',sans-serif;font-size:13px;font-weight:700;
+  transition:all .2s;display:flex;align-items:center;gap:6px;
+}
+.btn-prev{background:var(--white);color:var(--g5);border:1.5px solid var(--g3);}
+.btn-prev:hover{border-color:var(--g4);color:var(--ink);}
+.btn-next{background:var(--teal2);color:#fff;box-shadow:0 3px 12px rgba(13,110,110,.3);}
+.btn-next:hover{background:var(--teal);transform:translateY(-1px);}
+.btn-print{background:var(--gold3);color:#fff;box-shadow:0 3px 12px rgba(125,100,32,.3);}
+.btn-print:hover{background:var(--gold);transform:translateY(-1px);}
+.btn-pdf{background:var(--red2);color:#fff;box-shadow:0 3px 12px rgba(198,40,40,.3);}
+.btn-pdf:hover{background:var(--red);transform:translateY(-1px);}
+.btn-submit{background:var(--green2);color:#fff;box-shadow:0 3px 12px rgba(46,125,50,.3);}
+.btn-submit:hover{background:var(--green);transform:translateY(-1px);}
+
+/* ── SUMMARY / RESULT ── */
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:20px 24px 0;}
+@media(max-width:560px){.summary-grid{grid-template-columns:1fr 1fr;}}
+.stat-card{
+  background:var(--g1);border:1px solid var(--g3);border-radius:var(--radius-sm);
+  padding:14px;text-align:center;
+}
+.stat-card.avail{border-color:var(--green3);background:var(--green4);}
+.stat-card.partial{border-color:var(--sky3);background:var(--sky4);}
+.stat-card.na{border-color:var(--amber3);background:var(--amber4);}
+.stat-lbl{font-size:11px;font-weight:700;color:var(--g5);margin-bottom:4px;}
+.stat-val{font-family:'Cairo',sans-serif;font-size:26px;font-weight:900;}
+.stat-card.avail .stat-val{color:var(--green2);}
+.stat-card.partial .stat-val{color:var(--sky);}
+.stat-card.na .stat-val{color:var(--amber2);}
+.result-bar{padding:16px 24px;}
+.bar-lbl{display:flex;justify-content:space-between;margin-bottom:5px;}
+.bar-title{font-size:12px;font-weight:700;color:var(--g5);}
+.bar-pct{font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;}
+.bar-bg{height:10px;background:var(--g3);border-radius:99px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.bar-fill.green{background:linear-gradient(90deg,var(--green3),var(--green2));}
+.bar-fill.sky{background:linear-gradient(90deg,var(--sky3),var(--sky));}
+.bar-fill.amber{background:linear-gradient(90deg,var(--amber3),var(--amber2));}
+
+/* ── PRINT STYLES ── */
+@media print{
+  body{background:#fff;font-size:11px;}
+  .screen-wrap{max-width:100%;padding:0;}
+  .hero{padding:20px 24px 30px;border-radius:0;print-color-adjust:exact;-webkit-print-color-adjust:exact;}
+  .step-bar,.nav-btns,.ai-box,.no-print{display:none!important;}
+  .form-card{box-shadow:none;border-radius:0;margin:0;}
+  .form-section{display:block!important;}
+  .eval-table{font-size:9px;}
+  .eval-table th,.eval-table td{padding:5px 7px;}
+  .fields{padding:12px 16px;}
+  .field input,.field select,.field textarea{
+    border:1px solid #ccc;background:#fff;font-size:11px;padding:5px 8px;
+  }
+  .field textarea{min-height:40px;}
+  .sec-hd{padding:10px 16px;}
+  .sec-hd-text h2{font-size:13px;}
+  .reco-grid{grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 16px 12px;}
+  .reco-card textarea{min-height:60px;font-size:10px;}
+  .summary-grid{grid-template-columns:repeat(3,1fr);}
+  .site-footer{display:none;}
+  h1{font-size:18px!important;}
+  .print-section-break{page-break-before:always;}
+}
+
+/* ── FOOTER ── */
+.site-footer{text-align:center;padding:28px 20px;}
+.tg-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#0088cc,#006aaa);
+  color:#fff;text-decoration:none;padding:12px 30px;border-radius:50px;
+  font-family:'Tajawal',sans-serif;font-size:14px;font-weight:700;
+  margin-bottom:12px;transition:opacity .15s;
+}
+.tg-btn:hover{opacity:.88;}
+.tg-icon{width:18px;height:18px;}
+.footer-credit{font-size:13px;color:var(--g5);}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--g2);margin:0 24px 16px;}
+
+/* ── INFO BADGE ── */
+.info-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--sky4);border:1px solid var(--sky3);
+  color:var(--sky);font-size:11px;font-weight:600;padding:4px 12px;border-radius:99px;
+  margin:0 24px 12px;
+}
+
+/* ── TIME TABLE ── */
+.time-table-wrap{padding:0 24px 16px;}
+.time-table{width:100%;border-collapse:collapse;font-size:12px;}
+.time-table th{
+  background:var(--teal4);color:var(--teal);padding:9px 14px;
+  text-align:center;font-weight:700;border:1px solid var(--teal3);
+}
+.time-table td{
+  padding:9px 14px;border:1px solid var(--g3);text-align:center;
+}
+.time-table tr:nth-child(even) td{background:var(--g1);}
+
+/* Animate on load */
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.form-section.active{animation:slideUp .3s ease forwards;}
+</style>
+</head>
+<body>
+<div class="screen-wrap">
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="gov-line">
+    <span class="gov-badge">المملكة العربية السعودية</span>
+    <span class="gov-badge">وزارة التربية والتعليم</span>
+    <span class="gov-badge">الإشراف التربوي</span>
+  </div>
+  <h1>استمارة <span>دراسة ونقد</span> أسئلة الاختبار</h1>
+  <p>منصة تفاعلية ذكية لتقييم جودة الاختبارات وفق معايير وزارة التربية والتعليم</p>
+</div>
+
+<!-- ══ STEP BAR ══ -->
+<div class="step-bar" id="stepBar">
+  <div class="step-item"><div class="step-dot active" onclick="goStep(1)">1</div><div class="step-label active">البيانات الأساسية</div></div>
+  <div class="step-item"><div class="step-dot" onclick="goStep(2)">2</div><div class="step-label">إخراج ورقة الأسئلة</div></div>
+  <div class="step-item"><div class="step-dot" onclick="goStep(3)">3</div><div class="step-label">مواصفات الأسئلة</div></div>
+  <div class="step-item"><div class="step-dot" onclick="goStep(4)">4</div><div class="step-label">الأسئلة الموضوعية</div></div>
+  <div class="step-item"><div class="step-dot" onclick="goStep(5)">5</div><div class="step-label">التوصيات</div></div>
+  <div class="step-item"><div class="step-dot" onclick="goStep(6)">6</div><div class="step-label">الملخص والنتائج</div></div>
+</div>
+
+<div class="form-card">
+
+<!-- ══════════════════════════════════════════
+     STEP 1 — البيانات الأساسية
+══════════════════════════════════════════ -->
+<div class="form-section active" id="sec1">
+  <div class="sec-hd hd-teal">
+    <div class="sec-hd-icon">🏫</div>
+    <div class="sec-hd-text">
+      <h2>البيانات الأساسية للاستمارة</h2>
+      <p>أدخل معلومات الاختبار والمادة الدراسية</p>
+    </div>
+  </div>
+
+  <div class="ai-box">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text">
+      <strong>مساعد الذكاء الاصطناعي — تعبئة سريعة</strong>
+      اختر من القوالب الجاهزة لتعبئة البيانات تلقائياً، أو أدخل البيانات يدوياً
+      <div class="ai-chips">
+        <button class="chip" onclick="fillTemplate('math')">رياضيات</button>
+        <button class="chip" onclick="fillTemplate('arabic')">اللغة العربية</button>
+        <button class="chip" onclick="fillTemplate('science')">العلوم</button>
+        <button class="chip gold" onclick="fillTemplate('english')">اللغة الإنجليزية</button>
+        <button class="chip sky" onclick="fillTemplate('islamic')">التربية الإسلامية</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="fields">
+    <div class="field-row">
+      <div class="field">
+        <label>المادة الدراسية</label>
+        <input type="text" id="f-subject" placeholder="مثال: الرياضيات">
+      </div>
+      <div class="field">
+        <label>الصف الدراسي</label>
+        <select id="f-grade">
+          <option value="">-- اختر الصف --</option>
+          <optgroup label="المرحلة المتوسطة">
+            <option>الأول متوسط</option><option>الثاني متوسط</option><option>الثالث متوسط</option>
+          </optgroup>
+          <optgroup label="المرحلة الثانوية">
+            <option>الأول ثانوي</option><option>الثاني ثانوي</option><option>الثالث ثانوي</option>
+          </optgroup>
+        </select>
+      </div>
+    </div>
+    <div class="field-row three">
+      <div class="field">
+        <label>الفصل الدراسي</label>
+        <select id="f-semester">
+          <option value="">-- اختر --</option>
+          <option>الفصل الأول</option><option>الفصل الثاني</option><option>الفصل الثالث</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>العام الدراسي</label>
+        <input type="text" id="f-year" placeholder="١٤٤٧ - ١٤٤٨ هـ">
+      </div>
+      <div class="field">
+        <label>القسم / الشعبة</label>
+        <input type="text" id="f-section" placeholder="أ / ب / ...">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>نوع الاختبار</label>
+        <select id="f-testtype">
+          <option value="">-- اختر --</option>
+          <option>اختبار نهاية الفصل</option>
+          <option>اختبار منتصف الفصل</option>
+          <option>اختبار تكويني</option>
+          <option>اختبار تشخيصي</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>الزمن المخصص</label>
+        <select id="f-time">
+          <option value="">-- اختر --</option>
+          <option>ساعة ونصف</option>
+          <option>ساعتان</option>
+          <option>ساعتان ونصف</option>
+        </select>
+      </div>
+    </div>
+    <div class="field-row one">
+      <div class="field">
+        <label>ملاحظات عامة (اختياري)</label>
+        <textarea id="f-notes" placeholder="أي ملاحظات إضافية حول الاختبار..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time reference table -->
+  <div class="info-badge">⏱️ الجدول الزمني المرجعي للاختبارات التحريرية</div>
+  <div class="time-table-wrap">
+    <table class="time-table">
+      <thead><tr><th>المرحلة</th><th>عدد الحصص (1-2)</th><th>عدد الحصص (3-4)</th><th>عدد الحصص (5 فأكثر)</th></tr></thead>
+      <tbody>
+        <tr><td>المتوسطة</td><td>ساعة ونصف</td><td>ساعتان</td><td>ساعتان ونصف</td></tr>
+        <tr><td>الثانوية</td><td>ساعة ونصف</td><td>ساعتان</td><td>ساعتان ونصف</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="nav-btns">
+    <div></div>
+    <button class="btn btn-next" onclick="goStep(2)">التالي &#8592;</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 2 — إخراج ورقة الأسئلة
+══════════════════════════════════════════ -->
+<div class="form-section" id="sec2">
+  <div class="sec-hd hd-sky">
+    <div class="sec-hd-icon">📄</div>
+    <div class="sec-hd-text">
+      <h2>معايير إخراج ورقة الأسئلة</h2>
+      <p>تقييم جودة إخراج الورقة وشكلها العام</p>
+    </div>
+  </div>
+
+  <div class="eval-table-wrap">
+    <table class="eval-table">
+      <thead>
+        <tr>
+          <th class="th-criteria th-domain">المجال والمعيار</th>
+          <th class="th-avail">متوفرة</th>
+          <th class="th-partial">متوفرة بحد ما</th>
+          <th class="th-na">غير متوفرة</th>
+        </tr>
+      </thead>
+      <tbody id="tbl-output">
+        <tr class="section-title-row"><td colspan="4">📋 استكمال البيانات الأساسية في رأس الورقة</td></tr>
+        <tr><td class="td-criteria">اشتمال الورقة على اسم المملكة ووزارة التربية والتعليم والإدارة</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o1" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o1" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o1" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">كتابة اسم المدرسة والمادة والصف الدراسي والقسم والفصل الدراسي</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o2" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o2" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o2" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">اشتمال الورقة على الدور والعام الدراسي والزمن واسم الطالب</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o3" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o3" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o3" value="1"></div></td>
+        </tr>
+        <tr class="section-title-row"><td colspan="4">📝 المتطلبات الشكلية للورقة</td></tr>
+        <tr><td class="td-criteria">تدوين بعض العبارات الإرشادية في أسفل الصفحة مثل (يتبع — تمت الأسئلة)</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o4" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o4" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o4" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">كتابة اسم معد الأسئلة وتوقيعه في آخر الورقة</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o5" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o5" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o5" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">عدم احتواء الورقة على ما لا يخص المادة (كالدعايات وغيرها)</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o6" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o6" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o6" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">كتابة الأسئلة بالحاسب الآلي بخط لا يقل عن (16) ونوعه المهند</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o7" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o7" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o7" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">الالتزام بالجدول الزمني المعتمد لاختبارات المرحلتين المتوسطة والثانوية</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o8" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o8" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="o8" value="1"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goStep(1)">&#8594; السابق</button>
+    <button class="btn btn-next" onclick="goStep(3)">التالي &#8592;</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 3 — المواصفات العامة للأسئلة
+══════════════════════════════════════════ -->
+<div class="form-section" id="sec3">
+  <div class="sec-hd hd-green">
+    <div class="sec-hd-icon">✅</div>
+    <div class="sec-hd-text">
+      <h2>المواصفات العامة للأسئلة</h2>
+      <p>التحقق من الجودة اللغوية والتربوية للأسئلة</p>
+    </div>
+  </div>
+  <div class="eval-table-wrap">
+    <table class="eval-table">
+      <thead>
+        <tr>
+          <th class="th-criteria th-domain">المعيار</th>
+          <th class="th-avail">متوفرة</th>
+          <th class="th-partial">متوفرة بحد ما</th>
+          <th class="th-na">غير متوفرة</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="section-title-row"><td colspan="4">🔤 الجودة اللغوية</td></tr>
+        <tr><td class="td-criteria">صياغة الأسئلة بلغة سليمة واضحة خالية من الأخطاء الإملائية واللغوية</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g1" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g1" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g1" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تتوافق لغة الأسئلة مع النضج اللغوي للطلاب</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g2" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g2" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g2" value="1"></div></td>
+        </tr>
+        <tr class="section-title-row"><td colspan="4">📚 الشمولية والتوازن</td></tr>
+        <tr><td class="td-criteria">كتابة تعليمات عامة في أول الورقة (كيفية الإجابة، عدد الأسئلة، استخدام الحاسبة)</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g3" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g3" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g3" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تطبيق جدول المواصفات والنماذج الإرشادية المعتمدة</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g4" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g4" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g4" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">أن يشمل الاختبار جميع وحدات المقرر الدراسي بشكل متوازن</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g5" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g5" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g5" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">التنوع بين الأسئلة المقالية والموضوعية</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g6" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g6" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g6" value="1"></div></td>
+        </tr>
+        <tr class="section-title-row"><td colspan="4">🎯 مستويات التفكير وجودة الأسئلة</td></tr>
+        <tr><td class="td-criteria">تدرج الأسئلة من السهل إلى الصعب</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g7" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g7" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g7" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">البعد عن الأسئلة المركبة تركيباً تراكمياً معقداً</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g8" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g8" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g8" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">البعد عن التأويل أو التخمين لئلا يلتبس المقصود من السؤال على الطلاب</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g9" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g9" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g9" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تناسب الدرجة المخصصة لكل سؤال مع أهميته ووزنه النسبي وفق جدول المواصفات</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g10" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g10" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g10" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">قياس الأسئلة لمستويات التفكير العليا (فهم وتطبيق وتحليل وتركيب وتقويم) لا الحفظ فحسب</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g11" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g11" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g11" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">رسم الأشكال المطلوبة في الأسئلة بحبر أسود على ورق ناصع البياض بدقة واتقان</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g12" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g12" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="g12" value="1"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goStep(2)">&#8594; السابق</button>
+    <button class="btn btn-next" onclick="goStep(4)">التالي &#8592;</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 4 — الأسئلة الموضوعية والمقالية
+══════════════════════════════════════════ -->
+<div class="form-section" id="sec4">
+  <div class="sec-hd hd-amber">
+    <div class="sec-hd-icon">📝</div>
+    <div class="sec-hd-text">
+      <h2>مواصفات الأسئلة الموضوعية والمقالية</h2>
+      <p>التحقق من جودة أنواع الأسئلة المختلفة</p>
+    </div>
+  </div>
+  <div class="eval-table-wrap">
+    <table class="eval-table">
+      <thead>
+        <tr>
+          <th class="th-criteria th-domain">المجال والمعيار</th>
+          <th class="th-avail">متوفرة</th>
+          <th class="th-partial">متوفرة بحد ما</th>
+          <th class="th-na">غير متوفرة</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="section-title-row"><td colspan="4">📖 مواصفات الأسئلة المقالية</td></tr>
+        <tr><td class="td-criteria">تحدد فقرات الأسئلة المقالية مسار الإجابة المطلوبة</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m1" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m1" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m1" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تقيس بعض الأسئلة المقالية القدرة على إبداء الرأي وحل المشكلات</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m2" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m2" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m2" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تقيس بعض الأسئلة المقالية مهارات التنظيم والتأليف والتركيب والتقويم الشامل للمادة (لماذا، صف، وضح، لماذا، حل، قوم...)</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m3" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m3" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="m3" value="1"></div></td>
+        </tr>
+        <tr class="section-title-row"><td colspan="4">☑️ مواصفات أسئلة الصواب والخطأ</td></tr>
+        <tr><td class="td-criteria">احتواء أسئلة الصواب والخطأ على عبارات صحيحة وأخرى خاطئة</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx1" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx1" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx1" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تكون عبارة الصواب والخطأ صحيحة بالكامل أو خاطئة بالكامل (لا تحتوي على جزء صحيح وآخر خاطئ)</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx2" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx2" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx2" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">ترتيب العبارات الصحيحة والخاطئة في أسئلة الصواب والخطأ بشكل عشوائي</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx3" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx3" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="sx3" value="1"></div></td>
+        </tr>
+        <tr class="section-title-row"><td colspan="4">🔗 مواصفات أسئلة المقابلة</td></tr>
+        <tr><td class="td-criteria">تزيد عدد بنود الاستجابات عن عدد بنود المعطيات</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq1" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq1" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq1" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تكون فقرات المعطيات من نوع واحد</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq2" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq2" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq2" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تكون مجموعة الفقرات قصيرة نسبياً</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq3" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq3" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="mq3" value="1"></div></td>
+        </tr>
+        <tr class="section-title-row"><td colspan="4">✏️ مواصفات أسئلة الإكمال</td></tr>
+        <tr><td class="td-criteria">لا تتضمن عبارة الإكمال أكثر من فراغين</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik1" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik1" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik1" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">موقع الفراغ يكون قرب أو عند نهاية العبارة وليس في أولها</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik2" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik2" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik2" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">الأسئلة في شكل سؤال محدد وإجابة محددة</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik3" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik3" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ik3" value="1"></div></td>
+        </tr>
+        <tr class="section-title-row"><td colspan="4">🔘 مواصفات أسئلة الاختيار من متعدد</td></tr>
+        <tr><td class="td-criteria">تتساوى جميع الأسئلة في عدد البدائل (الاختيارات)</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch1" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch1" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch1" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">يتراوح عدد البدائل بين أربعة أو خمسة</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch2" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch2" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch2" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">توزيع الإجابات الصحيحة على مواقع البدائل بطريقة عشوائية</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch3" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch3" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch3" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">يراعى التقارب الدقيق بين بدائل السؤال</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch4" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch4" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch4" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تجنب استخدام الإيحاءات والإشارات إلى الإجابة الصحيحة</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch5" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch5" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="ch5" value="1"></div></td>
+        </tr>
+        <tr class="section-title-row"><td colspan="4">🎨 مواصفات أسئلة الرسم</td></tr>
+        <tr><td class="td-criteria">تُصاغ بحيث تتطلب بيانات على الرسم</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs1" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs1" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs1" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تُصاغ بحيث يحدد المطلوب رسمه بدقة ووضوح خالياً من الأخطاء والغموض والتعقيد</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs2" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs2" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs2" value="1"></div></td>
+        </tr>
+        <tr><td class="td-criteria">تُصاغ بحيث يتم إكمال الرسم الناقص واستكمال البيانات</td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs3" value="3"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs3" value="2"></div></td>
+          <td class="radio-cell"><div class="radio-wrap"><input type="radio" name="rs3" value="1"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goStep(3)">&#8594; السابق</button>
+    <button class="btn btn-next" onclick="goStep(5)">التالي &#8592;</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 5 — التوصيات
+══════════════════════════════════════════ -->
+<div class="form-section" id="sec5">
+  <div class="sec-hd hd-purple">
+    <div class="sec-hd-icon">💡</div>
+    <div class="sec-hd-text">
+      <h2>التوصيات والإجراءات المقترحة</h2>
+      <p>بناءً على نتائج التقييم — حُدِّدت هذه التوصيات تلقائياً</p>
+    </div>
+  </div>
+
+  <div class="ai-box" style="margin-top:16px;">
+    <div class="ai-icon">🤖</div>
+    <div class="ai-text">
+      <strong>الذكاء الاصطناعي — توليد التوصيات تلقائياً</strong>
+      بناءً على بيانات التقييم المُدخلة، يمكن إضافة التوصيات يدوياً أو اختيار من المقترحات أدناه
+      <div class="ai-chips">
+        <button class="chip" onclick="addReco(1,'إعداد نشرة تربوية عن أوجه القصور التي ظهرت في أسئلة الاختبارات وتوزيعها على المعلمين بالمدارس')">📄 نشرة تربوية</button>
+        <button class="chip sky" onclick="addReco(2,'الاجتماع مع بعض المعلمين الذين ظهرت لديهم أخطاء واضحة وتطبيق الأنظمة واللوائح والتعليمات الواردة ببلائح تقويم الطالب')">👥 اجتماع المعلمين</button>
+        <button class="chip gold" onclick="addReco(3,'عمل ورشة تربوية بعنوان بناء الاختبار الجيد بهدف تدريب المعلمين على بناء الاختبار الجيد في المادة')">🎓 ورشة تدريبية</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="reco-grid">
+    <div class="reco-card r1">
+      <div class="reco-num">1</div>
+      <label>التوصية الأولى</label>
+      <textarea id="reco1" placeholder="أدخل التوصية الأولى أو اختر من المقترحات أعلاه..."></textarea>
+    </div>
+    <div class="reco-card r2">
+      <div class="reco-num">2</div>
+      <label>التوصية الثانية</label>
+      <textarea id="reco2" placeholder="أدخل التوصية الثانية..."></textarea>
+    </div>
+    <div class="reco-card r3">
+      <div class="reco-num">3</div>
+      <label>التوصية الثالثة</label>
+      <textarea id="reco3" placeholder="أدخل التوصية الثالثة..."></textarea>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <div class="fields">
+    <div class="field-row one">
+      <div class="field">
+        <label>ملاحظات إضافية وتقييم شامل</label>
+        <textarea id="final-notes" style="min-height:100px" placeholder="أي ملاحظات ختامية حول جودة الاختبار بشكل عام..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goStep(4)">&#8594; السابق</button>
+    <button class="btn btn-next" onclick="goStep(6);calcResults()">عرض النتائج &#8592;</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     STEP 6 — الملخص والنتائج
+══════════════════════════════════════════ -->
+<div class="form-section" id="sec6">
+  <div class="sec-hd hd-gold">
+    <div class="sec-hd-icon">📊</div>
+    <div class="sec-hd-text">
+      <h2>ملخص التقييم والنتائج</h2>
+      <p>نتائج الاستمارة جاهزة للطباعة والنشر</p>
+    </div>
+  </div>
+
+  <!-- Summary data header -->
+  <div class="fields" id="summary-header" style="background:var(--g1);border-bottom:1px solid var(--g2);padding:16px 24px;">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;font-size:12px;">
+      <div><span style="color:var(--g5);font-weight:700;">المادة: </span><span id="sum-subject" style="font-weight:600;color:var(--ink)">—</span></div>
+      <div><span style="color:var(--g5);font-weight:700;">الصف: </span><span id="sum-grade" style="font-weight:600;color:var(--ink)">—</span></div>
+      <div><span style="color:var(--g5);font-weight:700;">الفصل: </span><span id="sum-semester" style="font-weight:600;color:var(--ink)">—</span></div>
+      <div><span style="color:var(--g5);font-weight:700;">العام: </span><span id="sum-year" style="font-weight:600;color:var(--ink)">—</span></div>
+      <div><span style="color:var(--g5);font-weight:700;">نوع الاختبار: </span><span id="sum-type" style="font-weight:600;color:var(--ink)">—</span></div>
+      <div><span style="color:var(--g5);font-weight:700;">الزمن: </span><span id="sum-time" style="font-weight:600;color:var(--ink)">—</span></div>
+    </div>
+  </div>
+
+  <div class="summary-grid">
+    <div class="stat-card avail"><div class="stat-lbl">✅ متوفرة</div><div class="stat-val" id="stat-avail">0</div></div>
+    <div class="stat-card partial"><div class="stat-lbl">🔵 متوفرة بحد ما</div><div class="stat-val" id="stat-partial">0</div></div>
+    <div class="stat-card na"><div class="stat-lbl">❌ غير متوفرة</div><div class="stat-val" id="stat-na">0</div></div>
+  </div>
+
+  <div class="result-bar">
+    <div class="bar-lbl"><span class="bar-title">نسبة المعايير المتوفرة</span><span class="bar-pct" id="pct-avail" style="color:var(--green2)">0%</span></div>
+    <div class="bar-bg"><div class="bar-fill green" id="bar-avail" style="width:0%"></div></div>
+  </div>
+  <div class="result-bar" style="padding-top:0;">
+    <div class="bar-lbl"><span class="bar-title">نسبة المعايير المتوفرة بحد ما</span><span class="bar-pct" id="pct-partial" style="color:var(--sky)">0%</span></div>
+    <div class="bar-bg"><div class="bar-fill sky" id="bar-partial" style="width:0%"></div></div>
+  </div>
+  <div class="result-bar" style="padding-top:0;padding-bottom:16px;">
+    <div class="bar-lbl"><span class="bar-title">نسبة المعايير غير المتوفرة</span><span class="bar-pct" id="pct-na" style="color:var(--amber2)">0%</span></div>
+    <div class="bar-bg"><div class="bar-fill amber" id="bar-na" style="width:0%"></div></div>
+  </div>
+
+  <!-- Verdict -->
+  <div id="verdict-box" style="margin:0 24px 20px;padding:16px 20px;border-radius:var(--radius-sm);border:1.5px solid var(--g3);font-size:13px;"></div>
+
+  <div class="nav-btns">
+    <button class="btn btn-prev" onclick="goStep(5)">&#8594; السابق</button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-print no-print" onclick="window.print()">🖨️ طباعة</button>
+      <button class="btn btn-pdf no-print" onclick="printPDF()">📄 حفظ PDF</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /.form-card -->
+
+<!-- ══ FOOTER ══ -->
+<div class="site-footer no-print">
+  <div style="font-size:13px;color:var(--g5);margin-bottom:14px;">منصة تقييم الاختبارات التربوية — 2026</div>
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="tg-btn">
+    <svg class="tg-icon" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.248-2.04 9.61c-.152.67-.548.835-1.11.52l-3.06-2.254-1.476 1.42c-.163.163-.3.3-.615.3l.22-3.11 5.662-5.114c.246-.22-.054-.34-.382-.12L7.26 14.4l-3.02-.944c-.657-.205-.67-.657.137-.973l11.79-4.546c.547-.198 1.026.133.395.31z"/></svg>
+    تفضل للمزيد
+  </a>
+  <div class="footer-credit">تصميم د/ فواز</div>
+</div>
+
+</div><!-- /.screen-wrap -->
+
+<script>
+let currentStep = 1;
+const totalSteps = 6;
+
+function goStep(n) {
+  document.querySelectorAll('.form-section').forEach(s => s.classList.remove('active'));
+  document.getElementById('sec' + n).classList.add('active');
+
+  const dots   = document.querySelectorAll('.step-dot');
+  const labels = document.querySelectorAll('.step-label');
+  dots.forEach((d, i) => {
+    d.className = 'step-dot';
+    labels[i].className = 'step-label';
+    if (i + 1 < n)  { d.classList.add('done');   labels[i].classList.add('done');   }
+    if (i + 1 === n){ d.classList.add('active'); labels[i].classList.add('active'); }
+  });
+  currentStep = n;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// AI template fill
+const templates = {
+  math:    { subject:'الرياضيات',          grade:'الثاني متوسط',   semester:'الفصل الأول',  year:'١٤٤٧ - ١٤٤٨ هـ', type:'اختبار نهاية الفصل', time:'ساعتان' },
+  arabic:  { subject:'اللغة العربية',       grade:'الأول متوسط',    semester:'الفصل الثاني', year:'١٤٤٧ - ١٤٤٨ هـ', type:'اختبار نهاية الفصل', time:'ساعتان ونصف' },
+  science: { subject:'العلوم',              grade:'الثالث متوسط',   semester:'الفصل الأول',  year:'١٤٤٧ - ١٤٤٨ هـ', type:'اختبار نهاية الفصل', time:'ساعتان' },
+  english: { subject:'اللغة الإنجليزية',    grade:'الأول ثانوي',    semester:'الفصل الأول',  year:'١٤٤٧ - ١٤٤٨ هـ', type:'اختبار نهاية الفصل', time:'ساعة ونصف' },
+  islamic: { subject:'التربية الإسلامية',   grade:'الثاني ثانوي',   semester:'الفصل الثاني', year:'١٤٤٧ - ١٤٤٨ هـ', type:'اختبار نهاية الفصل', time:'ساعة ونصف' },
+};
+
+function fillTemplate(key) {
+  const t = templates[key];
+  document.getElementById('f-subject').value = t.subject;
+  document.getElementById('f-year').value    = t.year;
+  // Set selects
+  ['f-grade','f-semester','f-testtype','f-time'].forEach(id => {
+    const sel = document.getElementById(id);
+    const map = { 'f-grade': t.grade, 'f-semester': t.semester, 'f-testtype': t.type, 'f-time': t.time };
+    for(let opt of sel.options){
+      if(opt.text === map[id]){ sel.value = opt.value; break; }
+    }
+  });
+  // Animate
+  document.getElementById('f-subject').style.background='#FFFDE7';
+  setTimeout(()=>{ document.getElementById('f-subject').style.background=''; }, 800);
+}
+
+function addReco(n, text) {
+  document.getElementById('reco'+n).value = text;
+  document.getElementById('reco'+n).style.background='#E8F5E9';
+  setTimeout(()=>{ document.getElementById('reco'+n).style.background=''; }, 800);
+}
+
+function calcResults() {
+  // Collect all radio values
+  const allRadios = document.querySelectorAll('input[type=radio]:checked');
+  let avail=0, partial=0, na=0, total=0;
+  // Count by name (one per question)
+  const seen = new Set();
+  allRadios.forEach(r => {
+    if(!seen.has(r.name)){
+      seen.add(r.name);
+      const v = parseInt(r.value);
+      if(v===3) avail++;
+      else if(v===2) partial++;
+      else if(v===1) na++;
+      total++;
+    }
+  });
+  // Count total questions (all radio groups)
+  const allNames = new Set();
+  document.querySelectorAll('input[type=radio]').forEach(r => allNames.add(r.name));
+  const totalQ = allNames.size;
+  const unanswered = totalQ - total;
+
+  document.getElementById('stat-avail').textContent   = avail;
+  document.getElementById('stat-partial').textContent = partial;
+  document.getElementById('stat-na').textContent      = na + unanswered;
+
+  const pA = total? Math.round(avail/totalQ*100): 0;
+  const pP = total? Math.round(partial/totalQ*100): 0;
+  const pN = total? Math.round((na+unanswered)/totalQ*100): 0;
+
+  document.getElementById('pct-avail').textContent   = pA+'%';
+  document.getElementById('pct-partial').textContent = pP+'%';
+  document.getElementById('pct-na').textContent      = pN+'%';
+
+  setTimeout(()=>{
+    document.getElementById('bar-avail').style.width   = pA+'%';
+    document.getElementById('bar-partial').style.width = pP+'%';
+    document.getElementById('bar-na').style.width      = pN+'%';
+  }, 100);
+
+  // Verdict
+  const vb = document.getElementById('verdict-box');
+  let grade, color, bg, msg;
+  if(pA >= 75){
+    grade='ممتاز';color='var(--green)';bg='var(--green4)';
+    msg='الاختبار يستوفي معظم المعايير المطلوبة ويُعدّ اختباراً جيداً يمكن الاعتماد عليه.';
+  } else if(pA >= 50){
+    grade='جيد';color='var(--sky)';bg='var(--sky4)';
+    msg='الاختبار يستوفي قدراً معقولاً من المعايير ويحتاج إلى بعض التحسينات في الجوانب المشار إليها.';
+  } else if(pA >= 25){
+    grade='مقبول';color='var(--amber2)';bg='var(--amber4)';
+    msg='الاختبار يحتاج إلى مراجعة جوهرية وتحسين ملحوظ في عدة جوانب.';
+  } else {
+    grade='يحتاج مراجعة';color='var(--red2)';bg='var(--red3)';
+    msg='الاختبار يفتقر إلى كثير من المعايير ويحتاج إلى إعادة النظر بشكل شامل.';
+  }
+
+  vb.style.background  = bg;
+  vb.style.borderColor = color;
+  vb.innerHTML = `<div style="display:flex;align-items:center;gap:12px;">
+    <div style="font-family:'Cairo',sans-serif;font-size:22px;font-weight:900;color:${color};min-width:80px;">${grade}</div>
+    <div style="font-size:12px;color:var(--ink2);line-height:1.7;">${msg}</div>
+  </div>`;
+
+  // Update summary header
+  document.getElementById('sum-subject').textContent  = document.getElementById('f-subject').value || '—';
+  document.getElementById('sum-grade').textContent    = document.getElementById('f-grade').value   || '—';
+  document.getElementById('sum-semester').textContent = document.getElementById('f-semester').value|| '—';
+  document.getElementById('sum-year').textContent     = document.getElementById('f-year').value    || '—';
+  document.getElementById('sum-type').textContent     = document.getElementById('f-testtype').value|| '—';
+  document.getElementById('sum-time').textContent     = document.getElementById('f-time').value    || '—';
+}
+
+function printPDF() {
+  window.print();
+}
+</script>
+</body>
+</html>

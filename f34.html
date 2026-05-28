@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>اختبر نفسك بالرخصة المهنية التربوية</title>
+<style>
+:root {
+  --bg:#071225; --panel:#0d1b36; --panel2:#102449; --text:#f8fbff; --muted:#b8c8e6;
+  --gold:#f6c453; --cyan:#49d1ff; --green:#22c55e; --red:#ef4444; --purple:#a78bfa;
+  --line:rgba(255,255,255,.13); --shadow:0 24px 70px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; font-family: "Tahoma","Arial",sans-serif; color:var(--text);
+  background:
+    radial-gradient(circle at 10% 10%, rgba(73,209,255,.22), transparent 30%),
+    radial-gradient(circle at 85% 18%, rgba(246,196,83,.18), transparent 33%),
+    radial-gradient(circle at 50% 100%, rgba(167,139,250,.24), transparent 35%),
+    linear-gradient(135deg,#06101f,#0a1934 48%,#071225);
+  overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; pointer-events:none; opacity:.45;
+  background-image: radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px);
+  background-size: 26px 26px;
+  mask-image:linear-gradient(to bottom, #000, transparent 82%);
+}
+.app{width:min(1180px,94vw); margin:0 auto; padding:24px 0 36px; position:relative}
+.hero{
+  display:grid; grid-template-columns: 1.1fr .9fr; gap:18px; align-items:stretch; margin-bottom:18px;
+}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.11), rgba(255,255,255,.055));
+  border:1px solid var(--line); border-radius:28px; box-shadow:var(--shadow); backdrop-filter: blur(12px);
+}
+.header{padding:28px; position:relative; overflow:hidden}
+.header::after{
+  content:""; position:absolute; width:290px; height:290px; border-radius:50%; left:-90px; top:-110px;
+  background:radial-gradient(circle, rgba(246,196,83,.28), transparent 65%);
+}
+.badge{display:inline-flex; align-items:center; gap:8px; padding:8px 14px; border:1px solid rgba(246,196,83,.45); color:#ffe8a3; border-radius:999px; background:rgba(246,196,83,.1); font-weight:700}
+h1{font-size:clamp(30px,5vw,58px); line-height:1.08; margin:18px 0 12px; letter-spacing:-1px}
+.subtitle{font-size:18px; color:var(--muted); line-height:1.9; max-width:820px}
+.stats{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; padding:16px}
+.stat{padding:18px; border-radius:22px; background:rgba(255,255,255,.07); border:1px solid var(--line); text-align:center}
+.stat strong{display:block; font-size:28px; color:#fff}
+.stat span{color:var(--muted); font-size:13px}
+.controls{display:flex; flex-wrap:wrap; gap:10px; margin-top:18px}
+button,.btn{
+  border:0; cursor:pointer; color:var(--text); border-radius:17px; padding:13px 18px; font-size:15px; font-weight:800;
+  background:linear-gradient(135deg, rgba(73,209,255,.95), rgba(167,139,250,.95));
+  box-shadow:0 10px 26px rgba(73,209,255,.16); transition:.2s transform,.2s filter,.2s background;
+}
+button:hover{transform:translateY(-2px); filter:saturate(1.15)}
+button.secondary{background:rgba(255,255,255,.09); border:1px solid var(--line); box-shadow:none}
+button.gold{background:linear-gradient(135deg,#f6c453,#f59e0b); color:#1b1300}
+button.danger{background:rgba(239,68,68,.16); border:1px solid rgba(239,68,68,.35); box-shadow:none}
+.layout{display:grid; grid-template-columns: 330px 1fr; gap:18px; align-items:start}
+.sidebar{padding:18px; position:sticky; top:14px}
+.side-title{font-size:18px; font-weight:900; margin:4px 0 12px}
+.progress-ring{
+  width:190px; height:190px; margin:12px auto; border-radius:50%;
+  background: conic-gradient(var(--gold) calc(var(--p)*1%), rgba(255,255,255,.1) 0);
+  display:grid; place-items:center; box-shadow:inset 0 0 0 14px rgba(0,0,0,.12);
+}
+.progress-ring > div{width:142px;height:142px;border-radius:50%;background:linear-gradient(160deg,#0d1b36,#08152b);display:grid;place-items:center;text-align:center;border:1px solid var(--line)}
+.progress-ring b{font-size:34px;color:#fff}
+.progress-ring small{display:block;color:var(--muted); margin-top:4px}
+.mini-list{display:grid; gap:9px; margin-top:12px}
+.mini{display:flex; justify-content:space-between; gap:8px; color:var(--muted); padding:10px 12px; background:rgba(255,255,255,.055); border:1px solid var(--line); border-radius:15px}
+.settings{margin-top:14px; padding-top:14px; border-top:1px solid var(--line)}
+.settings label{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:10px 0; color:var(--muted)}
+select,input[type="checkbox"]{accent-color:#f6c453}
+select{background:#091a34;color:white;border:1px solid var(--line);border-radius:12px;padding:8px}
+.credit{
+  margin-top:14px; padding:12px; border-radius:16px; background:rgba(246,196,83,.09); border:1px dashed rgba(246,196,83,.45);
+  color:#ffe8a3; line-height:1.8; font-size:14px
+}
+.credit a{color:#fff; text-decoration:none; border-bottom:1px dotted #fff}
+.quiz{padding:22px; min-height:580px; position:relative; overflow:hidden}
+.topbar{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:14px}
+.pills{display:flex; flex-wrap:wrap; gap:8px}
+.pill{padding:8px 12px; border-radius:999px; background:rgba(255,255,255,.08); color:var(--muted); border:1px solid var(--line); font-size:13px}
+.question-card{padding:26px; border-radius:26px; background:linear-gradient(180deg, rgba(16,36,73,.88), rgba(8,21,43,.88)); border:1px solid var(--line); position:relative}
+.qnum{color:var(--gold); font-weight:900; margin-bottom:10px}
+.question{font-size:clamp(22px,3.4vw,34px); line-height:1.75; font-weight:900; margin:8px 0 18px}
+.options{display:grid; gap:12px}
+.option{
+  display:flex; align-items:center; gap:12px; width:100%; text-align:right; padding:16px 18px; border-radius:20px;
+  background:rgba(255,255,255,.075); border:1px solid var(--line); color:#fff; font-weight:800; line-height:1.7;
+}
+.option .letter{flex:0 0 38px; height:38px; display:grid; place-items:center; border-radius:14px; background:rgba(255,255,255,.1); color:#fff}
+.option.correct{background:rgba(34,197,94,.17); border-color:rgba(34,197,94,.65)}
+.option.wrong{background:rgba(239,68,68,.17); border-color:rgba(239,68,68,.65)}
+.option.disabled{pointer-events:none; opacity:.86}
+.feedback{
+  margin-top:16px; padding:16px; min-height:80px; border-radius:20px; border:1px solid var(--line); display:none;
+  background:rgba(255,255,255,.07); font-size:18px; line-height:1.8
+}
+.feedback.show{display:block; animation:pop .35s ease both}
+.feedback.good{border-color:rgba(34,197,94,.6); background:rgba(34,197,94,.13)}
+.feedback.bad{border-color:rgba(239,68,68,.55); background:rgba(239,68,68,.12)}
+.feedback strong{font-size:25px}
+.actions{display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; margin-top:18px}
+.nav-buttons{display:flex; gap:10px; flex-wrap:wrap}
+.grid{display:grid; grid-template-columns:repeat(10,1fr); gap:7px; margin-top:12px}
+.dot{height:34px;border-radius:12px;background:rgba(255,255,255,.08);border:1px solid var(--line);color:var(--muted);font-weight:900}
+.dot.active{outline:2px solid var(--gold); color:#fff}
+.dot.ok{background:rgba(34,197,94,.2); color:#d7ffe5; border-color:rgba(34,197,94,.45)}
+.dot.no{background:rgba(239,68,68,.18); color:#ffd8d8; border-color:rgba(239,68,68,.45)}
+.result{display:none; padding:26px; text-align:center}
+.result.show{display:block}
+.result h2{font-size:42px; margin:10px 0}
+.big-score{font-size:82px; font-weight:1000; color:var(--gold); line-height:1}
+.review{margin-top:18px; display:grid; gap:10px; text-align:right}
+.review-item{padding:14px; border:1px solid var(--line); border-radius:16px; background:rgba(255,255,255,.06)}
+.toast{
+  position:fixed; top:20px; left:50%; transform:translateX(-50%) scale(.9); opacity:0; z-index:50;
+  background:#fff; color:#061225; border-radius:999px; padding:14px 22px; font-weight:1000; box-shadow:0 18px 60px rgba(0,0,0,.35);
+  transition:.25s;
+}
+.toast.show{opacity:1; transform:translateX(-50%) scale(1)}
+.confetti{position:fixed; inset:0; pointer-events:none; overflow:hidden; z-index:40}
+.confetti i{position:absolute; width:10px; height:16px; border-radius:3px; animation:fall 1.4s linear forwards}
+@keyframes fall{from{transform:translateY(-40px) rotate(0)}to{transform:translateY(110vh) rotate(680deg); opacity:.2}}
+@keyframes pop{from{transform:scale(.96); opacity:.2}to{transform:scale(1); opacity:1}}
+@media (max-width:900px){
+  .hero,.layout{grid-template-columns:1fr}
+  .sidebar{position:relative; top:0}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .grid{grid-template-columns:repeat(5,1fr)}
+}
+@media print{
+  body{background:white;color:#111}
+  .controls,.sidebar,.actions,.toast,.confetti{display:none!important}
+  .app{width:100%; padding:0}
+  .hero{display:block}
+  .header,.quiz,.question-card{box-shadow:none;border:1px solid #ddd;background:white;color:#111}
+  .subtitle,.pill{color:#333}
+  .credit{display:none}
+}
+</style>
+</head>
+<body>
+<div class="toast" id="toast">يا سلام 👏</div>
+<div class="confetti" id="confetti"></div>
+<main class="app">
+  <section class="hero">
+    <div class="card header">
+      <div class="badge">🎯 منصة مسابقات تدريبية</div>
+      <h1>اختبر نفسك بالرخصة المهنية التربوية</h1>
+      <div class="subtitle">تحدٍّ تفاعلي سريع بأسئلة اختيار من متعدد، تغذية راجعة فورية، مؤثرات تشجيعية، ولوحة تقدم. لا توجد أسماء شخصية داخل الأسئلة؛ كله تدريب محترم بلا إحراج ولا “فضايح اختبارية”.</div>
+      <div class="controls">
+        <button class="gold" onclick="startQuiz(true)">ابدأ التحدي الآن</button>
+        <button class="secondary" onclick="shuffleQuestions()">خلط الأسئلة</button>
+        <button class="secondary" onclick="toggleReview()">استعراض الإجابات</button>
+        <button class="danger" onclick="resetAll()">تفريغ النتائج</button>
+      </div>
+    </div>
+    <div class="card stats">
+      <div class="stat"><strong id="totalCount">50</strong><span>سؤال</span></div>
+      <div class="stat"><strong id="scoreTop">0</strong><span>إجابة صحيحة</span></div>
+      <div class="stat"><strong id="bestTop">0%</strong><span>أفضل نتيجة</span></div>
+    </div>
+  </section>
+
+  <section class="layout">
+    <aside class="card sidebar">
+      <div class="side-title">لوحة التحكم</div>
+      <div class="progress-ring" id="ring" style="--p:0"><div><div><b id="percent">0%</b><small>نسبة الإنجاز</small></div></div></div>
+      <div class="mini-list">
+        <div class="mini"><span>السؤال الحالي</span><b id="currentMini">1 / 50</b></div>
+        <div class="mini"><span>الصحيح</span><b id="rightMini">0</b></div>
+        <div class="mini"><span>الخاطئ</span><b id="wrongMini">0</b></div>
+        <div class="mini"><span>المتبقي</span><b id="leftMini">50</b></div>
+      </div>
+      <div class="settings">
+        <div class="side-title">الإعدادات</div>
+        <label>إظهار الشرح بعد الإجابة <input id="showExplain" type="checkbox" checked></label>
+        <label>المؤثرات الصوتية <input id="soundToggle" type="checkbox" checked></label>
+        <label>نمط اللعب
+          <select id="mode" onchange="applyMode()">
+            <option value="normal">تدريب كامل</option>
+            <option value="quick10">تحدي 10 أسئلة</option>
+            <option value="quick20">تحدي 20 سؤالًا</option>
+          </select>
+        </label>
+        <div class="credit">
+          تصميم د/فواز<br>
+          <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">تفضل للمزيد هنا</a>
+        </div>
+      </div>
+    </aside>
+
+    <section class="card quiz">
+      <div id="quizView">
+        <div class="topbar">
+          <div class="pills">
+            <span class="pill" id="categoryPill">القسم العام</span>
+            <span class="pill" id="answeredPill">0 مجاب</span>
+          </div>
+          <button class="secondary" onclick="print()">طباعة</button>
+        </div>
+
+        <div class="question-card">
+          <div class="qnum" id="qnum">السؤال 1</div>
+          <div class="question" id="questionText"></div>
+          <div class="options" id="options"></div>
+          <div class="feedback" id="feedback"></div>
+          <div class="actions">
+            <div class="nav-buttons">
+              <button class="secondary" onclick="prevQuestion()">السابق</button>
+              <button class="gold" onclick="nextQuestion()">التالي</button>
+            </div>
+            <button onclick="finishQuiz()">إنهاء وعرض النتيجة</button>
+          </div>
+        </div>
+
+        <div class="grid" id="questionGrid"></div>
+      </div>
+
+      <div class="result" id="resultView">
+        <div class="badge">🏆 نتيجة التحدي</div>
+        <h2 id="resultTitle">أداء جميل</h2>
+        <div class="big-score" id="finalScore">0%</div>
+        <p class="subtitle" id="resultMsg" style="margin:auto;max-width:760px"></p>
+        <div class="controls" style="justify-content:center">
+          <button class="gold" onclick="startQuiz(true)">إعادة المحاولة</button>
+          <button class="secondary" onclick="showQuiz()">العودة للأسئلة</button>
+        </div>
+        <div class="review" id="reviewBox"></div>
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+const ALL_QUESTIONS = [{"q": "اشترت معلمة 180 علمًا و120 وشاحًا لتوزيعها بالتساوي على طالباتها. ما أكبر عدد يمكن توزيعها عليه دون بقايا؟", "options": ["20", "40", "60", "80"], "answer": 2, "explain": "نحسب القاسم المشترك الأكبر بين 180 و120، فيكون 60."}, {"q": "شخص يختم المصحف عندما يقرأ 5 ساعات يوميًا في 3 أيام. كم ساعة يقرأ يوميًا ليختم في يومين؟", "options": ["6.5", "7.5", "8.5", "9"], "answer": 1, "explain": "إجمالي الساعات 5×3 = 15 ساعة، وعند تقسيمها على يومين = 7.5 ساعة يوميًا."}, {"q": "أكمل العبارة: تنخفض الأسعار ........ تزداد السلع.", "options": ["عندما", "لكن", "ربما", "مهم"], "answer": 0, "explain": "العلاقة سببية: تنخفض الأسعار عندما يزداد المعروض من السلع."}, {"q": "أي الكلمات الآتية كُتبت فيها الهمزة بصورة صحيحة؟", "options": ["المروأة", "المروئة", "المروءة", "المروؤة"], "answer": 2, "explain": "الصواب: المروءة."}, {"q": "جهاز سعره 2500 ريال، عليه خصم 20%. كم يكون سعره بعد الخصم؟", "options": ["2000", "1850", "2250", "2300"], "answer": 0, "explain": "قيمة الخصم 500 ريال، والسعر بعد الخصم 2000 ريال."}, {"q": "أي مما يأتي لا يُعد من خصائص الكتابة الوظيفية؟", "options": ["الإبداع", "الإيجاز", "التخطيط", "التنظيم"], "answer": 0, "explain": "الكتابة الوظيفية تقوم على الوضوح والإيجاز والتنظيم أكثر من الإبداع الأدبي."}, {"q": "إذا كان معامل صعوبة الاختبار يساوي 0 تقريبًا، فهذا يدل على أنه:", "options": ["صعب جدًا", "سهل جدًا", "مرتفع التمييز", "منخفض التمييز"], "answer": 0, "explain": "كلما اقترب معامل الصعوبة من الصفر دل على أن عددًا قليلًا أجاب إجابة صحيحة."}, {"q": "رفع المعلم فيديو مسجلًا للدرس وطلب من الطلاب مشاهدته في أي وقت ثم حل واجب إلكتروني قبل موعد محدد. نوع التعلم هنا:", "options": ["متزامن", "غير متزامن", "موجه", "مدمج"], "answer": 1, "explain": "لأن الطالب يتعلم في وقت غير موحد، فهو تعلم غير متزامن."}, {"q": "إذا كان عدد الطلاب 20، وحصل 5 منهم على تقدير جيد، فما النسبة؟", "options": ["20%", "25%", "50%", "75%"], "answer": 1, "explain": "5 ÷ 20 = 0.25 أي 25%."}, {"q": "من أسباب ضعف التواصل اللفظي بين المعلم والطالب:", "options": ["قلة عدد الطلاب", "اختلاف اللهجة", "ضعف المستوى التعليمي", "ضعف المستوى الدراسي"], "answer": 1, "explain": "اختلاف اللهجة قد يؤدي إلى سوء فهم الرسالة اللفظية."}, {"q": "التعلم الذي يعتمد بصورة كبيرة على جهد المتعلم وتنظيمه الذاتي هو:", "options": ["المدمج", "المبرمج", "المتمزج", "الاستقبال"], "answer": 1, "explain": "التعلم المبرمج يتيح للمتعلم السير وفق خطوات منظمة مع تغذية راجعة."}, {"q": "اختر العبارة الصحيحة نحويًا:", "options": ["أوصى الخطيب بالاحترام المتبادل بين المسلمون ليفلحوا في حياتهم", "أوصى الخطيب بالاحترام المتبادل بين المسلمون ليفلحون في حياتهم", "أوصى الخطيب بالاحترام المتبادل بين المسلمين ليفلحوا في حياتهم", "أوصى الخطيب بالاحترام المتبادل بين المسلمين ليفلحون في حياتهم"], "answer": 2, "explain": "بعد «بين» تأتي الكلمة مجرورة: المسلمين، وبعد لام التعليل: يفلحوا."}, {"q": "اختلف شخصان حول أثر زيادة عدد السكان على الموارد؛ أحدهما يرى أن زيادة السكان تؤدي إلى شح الموارد. هذا الرأي يُعد:", "options": ["هزليًا", "فلسفيًا", "منطقيًا", "جدليًا"], "answer": 2, "explain": "الرأي مبني على علاقة سبب ونتيجة؛ لذا يُعد منطقيًا في سياقه."}, {"q": "أفضل وسيلة لجذب انتباه الطلاب والمحافظة عليه أثناء الشرح:", "options": ["تركيز النظر بحدة", "استعمال إيماءات اليدين", "رفع الصوت", "التنقل المستمر في ممرات الفصل"], "answer": 1, "explain": "الإيماءات المناسبة تدعم التواصل وتزيد الانتباه دون توتر أو إزعاج."}, {"q": "نجاح الشراكة بين المدرسة والأسرة والمجتمع يعتمد على أطراف متعددة والاحترام المتبادل وتقدير الجهود. هذا يشير إلى:", "options": ["مقومات الشراكة بين المدرسة والأسرة والمجتمع", "خصائص الشراكة المجتمعية بين الأسرة والمدرسة", "المسؤولية المجتمعية وعلاقتها بالشراكة", "متطلبات تفصيل الشراكة بين المدرسة والأسرة والمجتمع"], "answer": 0, "explain": "النص يذكر عناصر ومقومات نجاح الشراكة."}, {"q": "التقويم الذي يمكن أن يشارك فيه المعلم مع ولي الأمر هو:", "options": ["تجميعي", "ملف الإنجاز", "الاختبار الشهري", "التقويم المقارن"], "answer": 1, "explain": "ملف الإنجاز يسمح بمتابعة تطور أداء الطالب ومشاركة الأسرة في الاطلاع والدعم."}, {"q": "طلب المعلم من الطلاب تخيل العيش فوق سطح القمر وكتابة احتياجاتهم هناك. نوع التفكير المستهدف:", "options": ["ناقد", "منطقي", "إبداعي", "فوق معرفي"], "answer": 2, "explain": "الموقف يقوم على التخيل وإنتاج أفكار جديدة."}, {"q": "أي الاختبارات الآتية لا ترتبط غالبًا بالمنحنى الطبيعي لتوزيع الدرجات؟", "options": ["المقننة", "معيارية المرجع", "التشخيصية", "الذكاء"], "answer": 2, "explain": "الاختبارات التشخيصية تهدف لتحديد جوانب القوة والضعف، لا لترتيب الأفراد وفق منحنى طبيعي."}, {"q": "النموذج التعليمي الذي يتكون من: التحليل، التصميم، التطوير، التنفيذ، التقويم هو:", "options": ["آشور", "تيباك", "آدي ADDIE", "كولب"], "answer": 2, "explain": "هذه مراحل نموذج ADDIE."}, {"q": "معلم يكتب مقالات مرتبة زمنيًا أو موضوعيًا، ويحث الطلاب على المشاركة والتعليق الإيجابي. البرنامج الأنسب:", "options": ["ويكي", "مدونات", "منتديات", "مستندات جوجل"], "answer": 1, "explain": "المدونات مناسبة لنشر المقالات والتعليقات."}, {"q": "طالبة في المرحلة الابتدائية تلعب بدميتها كأنها طفل حقيقي. وفق بياجيه تصنف غالبًا في مرحلة:", "options": ["ما قبل العمليات", "العمليات المادية", "الحسية الحركية", "العمليات المجردة"], "answer": 0, "explain": "اللعب الرمزي من خصائص مرحلة ما قبل العمليات."}, {"q": "قام معلم بحرمان طالب كثير الإزعاج من المشاركة في رحلة مدرسية بسبب سلوكه. ما نوع الإجراء السلوكي؟", "options": ["تعزيز إيجابي", "تعزيز سلبي", "عقاب إيجابي", "عقاب سلبي"], "answer": 3, "explain": "تم سحب مثير مرغوب؛ لذلك هو عقاب سلبي."}, {"q": "كلف المعلم الطلاب بالبحث في مواقع وصفحات الويب وجمع المعلومات لإعداد تقرير. الاستراتيجية هي:", "options": ["التعلم التعاوني", "الرحلات المعرفية", "العصف الذهني", "التعلم بالاكتشاف"], "answer": 1, "explain": "البحث المنظم عبر الويب يسمى الرحلات المعرفية WebQuest."}, {"q": "ما الذي يميز القراءة الجهرية عن القراءة الصامتة؟", "options": ["الابتعاد عن القراءة المتقطعة", "سرعة القراءة", "الثراء اللغوي", "تقويم النص المقروء"], "answer": 0, "explain": "القراءة الجهرية يظهر فيها الأداء الصوتي والطلاقة وعدم التقطع."}, {"q": "في أبيات يغلب عليها خطاب الله وطلب العفو، الفكرة الرئيسة هي:", "options": ["الأمل", "المناجاة", "المعاناة", "الثناء"], "answer": 1, "explain": "المضمون يتجه إلى مناجاة الله وطلب عفوه."}, {"q": "تعرض طالب للتوبيخ في مادة معينة فأصبح يكره المادة. رد الفعل هنا أقرب إلى استجابة:", "options": ["أدائية", "شرطية", "طبيعية", "إجرائية"], "answer": 1, "explain": "ارتبطت المادة بمثير مزعج فتكونت استجابة شرطية."}, {"q": "اتفق المعلم مع الطلاب على تقويمهم بأداة فيها تدرج في مستوى الأداء. الأداة هي:", "options": ["سلالم التقدير", "ملف الإنجاز", "قائمة شطب", "اختبار تحصيلي"], "answer": 0, "explain": "سلالم التقدير تعرض مستويات أداء متدرجة."}, {"q": "حصول الطالب على الدرجة نفسها عند تصحيح الاختبار من أكثر من مصحح يدل على:", "options": ["الموضوعية", "الثبات", "الصدق", "الشمول"], "answer": 0, "explain": "الموضوعية تعني تقليل أثر ذاتية المصحح."}, {"q": "معلم جديد يشعر بالخجل والتردد عند دخول الفصل. الإجراء الأكثر مساعدة له:", "options": ["زيارة معلم متمكن في حصة مشابهة للتعلم من إدارته للصف", "الاكتفاء بالاطلاع على الكتب والمجلات", "دخول معلم آخر بدلًا عنه", "الحديث فقط عن مشاعره وأسبابها"], "answer": 0, "explain": "الملاحظة الصفية لنموذج ناجح تعطيه خبرة مباشرة وعملية."}, {"q": "طالبة أصبحت تخاف من معلمة معينة ثم امتد خوفها إلى معلمات أخريات. هذا مثال على قانون:", "options": ["الانطفاء", "الكف", "التعميم", "التمييز"], "answer": 2, "explain": "انتقال الاستجابة من مثير محدد إلى مثيرات مشابهة يسمى التعميم."}, {"q": "أن يعرف المعلم قيمة مهنته وأنها من الواجبات الوطنية؛ هذه العبارة من أهداف:", "options": ["ميثاق أخلاقيات مهنة التعليم", "سياسة وزارة التعليم", "لائحة الوظائف التعليمية", "الدليل الإجرائي"], "answer": 0, "explain": "ترتبط العبارة بالبعد الأخلاقي والمهني لمهنة التعليم."}, {"q": "استخدم المعلم الخرائط الذهنية والرسوم البيانية ثم طلب كتابة مقال. المدخل الأقرب:", "options": ["إنساني", "سلوكي", "اجتماعي", "معرفي"], "answer": 3, "explain": "الخرائط والرسوم وتنظيم المعرفة ترتبط بالمدخل المعرفي."}, {"q": "يقدم المعلم نشاطًا ملائمًا لاهتمامات الطلاب وحاجاتهم، ويراعي معالجة المعلومات وفق ترتيب منطقي. المدخلان هما:", "options": ["إنساني، معرفي", "منطقي، تشخيصي", "استكشافي، تأملي", "تكاملي، تأملي"], "answer": 0, "explain": "مراعاة الاهتمامات والحاجات إنساني، وتنظيم معالجة المعلومات معرفي."}, {"q": "قبل إجراء تجربة علمية وضع أحد الطلاب خطة للتجربة. أي عادات العقل تظهر هنا؟", "options": ["التحكم بالتهور", "التفكير الإبداعي", "التفكير النقدي", "الاستقرائي والاستنباطي"], "answer": 0, "explain": "وضع الخطة قبل التنفيذ يدل على التروي والتحكم بالاندفاع."}, {"q": "تحكيم الاستبانات، والتحقق من أداء المعلمين، وتقديم التغذية الراجعة للزملاء يكون في مرحلة:", "options": ["التخطيط", "التطبيق", "التقويم", "التنظيم"], "answer": 2, "explain": "هذه إجراءات حكم على الأداء وتغذية راجعة؛ فهي من التقويم."}, {"q": "طالب من ذوي الاحتياجات الخاصة يتعرض للتنمر عند مشاركته. الحل الأنسب:", "options": ["طرد الطلاب المتنمرين خارج الفصل", "منعه من المشاركة", "إعطاؤه نشاطًا يتوافق مع إمكاناته ومهاراته", "تكليفه بواجبات منزلية مكثفة"], "answer": 2, "explain": "الأفضل دمجه بنشاط مناسب لقدراته مع معالجة سلوك التنمر تربويًا."}, {"q": "طالبة في المرحلة الابتدائية تقضم أظافرها، واستنتجت المعلمة أن السبب الأقرب:", "options": ["إهمال الوالدين", "عنف معنوي", "تقليد صديقاتها", "بسبب نموها الجسمي"], "answer": 2, "explain": "في هذه السن قد تظهر بعض السلوكيات بالمحاكاة والتقليد، مع ضرورة التحقق تربويًا."}, {"q": "يعد كل ما يلي من التعليم المتزامن ما عدا:", "options": ["اللوح التشاركي", "منتديات المناقشة", "المحادثة الفورية", "مؤتمرات الفيديو"], "answer": 1, "explain": "المنتديات غالبًا غير متزامنة؛ يشارك الطالب في أوقات مختلفة."}, {"q": "طفل ما قبل المدرسة يرى القمر وكأنه يطارده. هذا يدل على:", "options": ["إحساس أن الجمادات لها مشاعر", "الخيال الواسع", "التمركز حول الذات", "تقدير الذات"], "answer": 2, "explain": "يفسر الطفل الظواهر من منظور ذاته؛ وهذا من التمركز حول الذات."}, {"q": "في البحث الإجرائي، بعد صياغة أسئلة البحث تأتي مرحلة:", "options": ["فرض الفرضيات", "التعبير عن المشكلة", "تحليل البيانات", "عرض النتائج"], "answer": 0, "explain": "بعد تحديد الأسئلة يمكن صياغة الفرضيات أو التوقعات الإجرائية."}, {"q": "في البحث الإجرائي، تعد صياغة أسئلة البحث جزءًا من أي مرحلة؟", "options": ["فرض الفرضيات", "التعبير عن المشكلة", "تحليل البيانات", "عرض النتائج"], "answer": 1, "explain": "صياغة الأسئلة تأتي ضمن تحديد المشكلة والتعبير عنها."}, {"q": "عند وجود إقصاء أو عنصرية بين طلاب المرحلة المتوسطة، يوظف المعلم قيمة:", "options": ["احترام الأنظمة والقوانين", "الثقافة المتنوعة", "التعايش والتنوع الثقافي", "الاعتزاز بالهوية الوطنية"], "answer": 2, "explain": "الموقف يحتاج تعزيز التعايش وقبول التنوع."}, {"q": "في بداية الحصة يركز المعلم على:", "options": ["انتباه الطلاب ومدى جاهزيتهم", "أهداف التعلم", "تنوع العرض", "ضبط الطلاب"], "answer": 0, "explain": "التهيئة تبدأ بجذب الانتباه والتحقق من الجاهزية."}, {"q": "أداة قد يظهر فيها عدم الجدية من الطلاب مما يؤدي إلى فاقد في البيانات هي:", "options": ["ملاحظة", "مقابلة", "استبانة", "اختبار"], "answer": 2, "explain": "الاستبانة تعتمد على جدية المستجيب، وقد تتأثر بعدم الاهتمام."}, {"q": "لاحظ المعلم أن طلاب المرحلة الثانوية يفهمون باستخدام الجوال أكثر من الكتب والدفاتر. الاختيار الأمثل:", "options": ["تقييد استخدام الجوال في غرفة الصف", "توظيف الجوال في تعليمهم لتحقيق أهداف التعلم", "إرشادهم لاستخدام الجهاز الذكي فقط", "توبيخهم لأن فيه مضيعة للوقت"], "answer": 1, "explain": "الأفضل توجيه التقنية لخدمة أهداف التعلم بدل منعها مطلقًا."}, {"q": "كل ما يلي من أمثلة ميثاق المعلم مع الطالب ما عدا:", "options": ["العدل بينهم", "حسن الظن بهم", "الحرص على نفعهم", "توعيتهم بمشاكل المجتمع"], "answer": 3, "explain": "الأولويات المباشرة في علاقة المعلم بالطالب هي العدل وحسن الظن والنفع."}, {"q": "من الأهداف الأساسية للمعايير المهنية للمعلمين:", "options": ["تنمية المعلمين في تخصصاتهم لتسهيل إكمال الدراسات العليا", "رفع جودة أداء المعلمين وتحسين قدراتهم ومهاراتهم", "إيجاد نظرة إيجابية لمهنة التدريس لدى المجتمع", "إعداد جيل من الطلاب يرغب بممارسة مهنة التدريس"], "answer": 1, "explain": "المعايير المهنية تستهدف تحسين جودة الأداء المهني للمعلم."}, {"q": "أنسب موقف لتعزيز قيمة الأمانة لدى طلاب المرحلة الابتدائية:", "options": ["مسرحية يؤديها الطلاب بلعب أدوار عن الأمانة", "إعداد مطويات تعليمية عن الأمانة", "شرح المعلم عن الأمانة في الدرس", "رسم لوحة صفية عن مواقف الأمانة"], "answer": 0, "explain": "لعب الأدوار مناسب للمرحلة الابتدائية لأنه يجعل القيمة ممارسة حية."}, {"q": "نص يتحدث عن شرب الماء قبل الوجبة ودوره في الشعور بالشبع والتقليل من الأكل. الفكرة الرئيسة:", "options": ["العلاقة بين الماء والدهون", "أهمية الماء في حياة الإنسان", "قدرة الماء على حفظ توازن الجسم", "شرب كوبين من الماء قبل الوجبة"], "answer": 0, "explain": "الفكرة تدور حول علاقة الماء بالدهون وتقليل تناول الطعام."}, {"q": "أي مما يأتي يساعد على تعزيز التواصل الإيجابي مع أولياء الأمور؟", "options": ["إطلاعهم على خبرات المعلم العالية", "استشارتهم في أهدافهم الخاصة لتعلم أبنائهم", "تمكينهم من المشاركة في تحديد أهداف التعلم", "عقد علاقات اجتماعية قوية معهم خارج المدرسة"], "answer": 2, "explain": "الشراكة الفاعلة تعني إشراك ولي الأمر في أهداف التعلم ومتابعتها."}];
+let questions = [...ALL_QUESTIONS];
+let current = 0;
+let answers = Array(questions.length).fill(null);
+let locked = Array(questions.length).fill(false);
+const letters = ["أ","ب","ج","د"];
+const praise = ["يا سلام 👏","برافو عليك 🌟","إجابة ترفع الرأس 🚀","كفو والله!","أنت داخل الاختبار برجلك اليمين"];
+const miss = ["حظ أوفر 🌧️","قريبة.. بس خانتك اللمسة الأخيرة","لا توقف، الجواب الصحيح قدامك","غلطة وتعدي.. كمل","شد حيلك يا بطل"];
+function $(id){return document.getElementById(id)}
+function save(){localStorage.setItem("eduLicenseQuizState", JSON.stringify({answers,locked,current,questions}));}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem("eduLicenseQuizState")||"null");
+    if(s && Array.isArray(s.questions) && s.questions.length){questions=s.questions; answers=s.answers; locked=s.locked; current=s.current||0;}
+  }catch(e){}
+}
+function startQuiz(fresh=false){
+  if(fresh){answers=Array(questions.length).fill(null); locked=Array(questions.length).fill(false); current=0;}
+  $("quizView").style.display="block"; $("resultView").classList.remove("show");
+  render(); save();
+}
+function applyMode(){
+  const mode=$("mode").value;
+  let pool=[...ALL_QUESTIONS];
+  if(mode==="quick10") pool = pick(pool,10);
+  if(mode==="quick20") pool = pick(pool,20);
+  questions=pool; answers=Array(questions.length).fill(null); locked=Array(questions.length).fill(false); current=0;
+  startQuiz(false);
+}
+function pick(arr,n){return arr.map(x=>[Math.random(),x]).sort((a,b)=>a[0]-b[0]).slice(0,n).map(x=>x[1]);}
+function shuffleQuestions(){
+  questions = pick([...questions], questions.length);
+  answers=Array(questions.length).fill(null); locked=Array(questions.length).fill(false); current=0; startQuiz(false);
+}
+function render(){
+  const q=questions[current];
+  $("totalCount").textContent=questions.length;
+  $("qnum").textContent = "السؤال " + (current+1);
+  $("questionText").textContent = q.q;
+  $("currentMini").textContent = (current+1)+" / "+questions.length;
+  $("categoryPill").textContent = inferCategory(q.q);
+  $("options").innerHTML="";
+  q.options.forEach((op,i)=>{
+    const b=document.createElement("button");
+    b.className="option";
+    b.innerHTML=`<span class="letter">${letters[i]}</span><span>${op}</span>`;
+    b.onclick=()=>choose(i);
+    if(locked[current]){
+      b.classList.add("disabled");
+      if(i===q.answer) b.classList.add("correct");
+      if(i===answers[current] && i!==q.answer) b.classList.add("wrong");
+    }
+    $("options").appendChild(b);
+  });
+  renderFeedback();
+  renderGrid();
+  updateStats();
+}
+function inferCategory(t){
+  if(/تقويم|اختبار|صعوبة|استبانة|موضوعية|سلالم/.test(t)) return "القياس والتقويم";
+  if(/تعلم|مدونات|الجوال|منصة|فيديو|الويب/.test(t)) return "تقنيات وتعليم إلكتروني";
+  if(/بياجيه|سلوكي|شرطية|تعميم|مرحلة|طفل/.test(t)) return "نمو وتعلم";
+  if(/شراكة|أولياء|ميثاق|أمانة|تنوع/.test(t)) return "قيم ومهنية";
+  if(/همزة|قراءة|عبارة|الفكرة/.test(t)) return "كفايات لغوية";
+  return "الرخصة التربوية";
+}
+function choose(i){
+  if(locked[current]) return;
+  answers[current]=i; locked[current]=true;
+  const ok=i===questions[current].answer;
+  toast(ok ? praise[Math.floor(Math.random()*praise.length)] : miss[Math.floor(Math.random()*miss.length)]);
+  beep(ok); if(ok) confetti();
+  render(); save();
+}
+function renderFeedback(){
+  const f=$("feedback"), q=questions[current];
+  f.className="feedback";
+  if(!locked[current]){ f.innerHTML=""; return; }
+  const ok=answers[current]===q.answer;
+  const title= ok ? "يا سلام.. برافو عليك ✅" : "حظ أوفر.. الإجابة تحتاج مراجعة ❌";
+  const correct = `الإجابة الصحيحة: <b>${letters[q.answer]} - ${q.options[q.answer]}</b>`;
+  const exp = $("showExplain").checked ? `<br><span style="color:var(--muted)">${q.explain}</span>` : "";
+  f.innerHTML = `<strong>${title}</strong><br>${correct}${exp}`;
+  f.classList.add("show", ok?"good":"bad");
+}
+function renderGrid(){
+  const g=$("questionGrid"); g.innerHTML="";
+  questions.forEach((q,i)=>{
+    const b=document.createElement("button");
+    b.className="dot"+(i===current?" active":"");
+    if(locked[i]) b.classList.add(answers[i]===q.answer?"ok":"no");
+    b.textContent=i+1; b.onclick=()=>{current=i; render(); save();};
+    g.appendChild(b);
+  });
+}
+function updateStats(){
+  const answered=locked.filter(Boolean).length;
+  const right=questions.filter((q,i)=>locked[i] && answers[i]===q.answer).length;
+  const wrong=answered-right;
+  const pct = questions.length ? Math.round(answered/questions.length*100) : 0;
+  $("ring").style.setProperty("--p", pct);
+  $("percent").textContent=pct+"%";
+  $("answeredPill").textContent=answered+" مجاب";
+  $("scoreTop").textContent=right;
+  $("rightMini").textContent=right;
+  $("wrongMini").textContent=wrong;
+  $("leftMini").textContent=questions.length-answered;
+  const best=localStorage.getItem("eduLicenseQuizBest")||"0";
+  $("bestTop").textContent=best+"%";
+}
+function nextQuestion(){ if(current<questions.length-1) current++; else current=0; render(); save(); }
+function prevQuestion(){ if(current>0) current--; else current=questions.length-1; render(); save(); }
+function finishQuiz(){
+  const right=questions.filter((q,i)=>locked[i] && answers[i]===q.answer).length;
+  const pct=Math.round(right/questions.length*100);
+  const best=Math.max(Number(localStorage.getItem("eduLicenseQuizBest")||0), pct);
+  localStorage.setItem("eduLicenseQuizBest", best);
+  $("quizView").style.display="none"; $("resultView").classList.add("show");
+  $("finalScore").textContent=pct+"%";
+  $("resultTitle").textContent = pct>=85 ? "ممتاز.. جاهز للميدان" : pct>=70 ? "جيد جدًا.. باقي رتوش" : pct>=50 ? "بداية طيبة وتحتاج مراجعة" : "نحتاج خطة إنقاذ لطيفة";
+  $("resultMsg").textContent = `أجبت إجابة صحيحة عن ${right} من أصل ${questions.length} سؤال. لا تجعل السؤال الذي أخطأت فيه ينتصر عليك؛ ارجع له وخله يعرف مقامه.`;
+  const box=$("reviewBox"); box.innerHTML="";
+  questions.forEach((q,i)=>{
+    if(!locked[i] || answers[i]!==q.answer){
+      const div=document.createElement("div");
+      div.className="review-item";
+      div.innerHTML=`<b>س${i+1}:</b> ${q.q}<br><span style="color:var(--gold)">الصحيح: ${letters[q.answer]} - ${q.options[q.answer]}</span><br><small style="color:var(--muted)">${q.explain}</small>`;
+      box.appendChild(div);
+    }
+  });
+  updateStats(); save();
+}
+function showQuiz(){ $("resultView").classList.remove("show"); $("quizView").style.display="block"; render(); }
+function toggleReview(){
+  answers = questions.map(q=>q.answer); locked = questions.map(()=>true); current=0; startQuiz(false);
+}
+function resetAll(){
+  if(confirm("هل تريد تفريغ جميع النتائج والبدء من جديد؟")){
+    localStorage.removeItem("eduLicenseQuizState");
+    answers=Array(questions.length).fill(null); locked=Array(questions.length).fill(false); current=0; startQuiz(false);
+  }
+}
+function toast(msg){
+  const t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1150);
+}
+function beep(ok){
+  if(!$("soundToggle").checked) return;
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(), g=ctx.createGain();
+    o.type=ok?"triangle":"sawtooth"; o.frequency.value=ok?660:180; g.gain.value=.05;
+    o.connect(g); g.connect(ctx.destination); o.start();
+    setTimeout(()=>{o.frequency.value=ok?880:120},110);
+    setTimeout(()=>{o.stop();ctx.close();},230);
+  }catch(e){}
+}
+function confetti(){
+  const c=$("confetti");
+  for(let i=0;i<34;i++){
+    const p=document.createElement("i");
+    p.style.left=Math.random()*100+"vw"; p.style.background=["#f6c453","#49d1ff","#22c55e","#a78bfa","#fff"][Math.floor(Math.random()*5)];
+    p.style.animationDelay=(Math.random()*.25)+"s"; p.style.transform=`rotate(${Math.random()*360}deg)`;
+    c.appendChild(p); setTimeout(()=>p.remove(),1600);
+  }
+}
+load(); startQuiz(false);
+</script>
+</body>
+</html>

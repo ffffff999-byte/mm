@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة توزيع درجات المواد الدراسية 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007A53;
+            --primary-dark: #005c3e;
+            --secondary-color: #C5A059;
+            --bg-color: #f4f7f5;
+            --card-bg: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --accent-green: #e6f4ea;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            border: 1px solid rgba(0, 122, 83, 0.1);
+        }
+
+        /* الهيدر الإبداعي */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        /* نظام قائمة الإعدادات والتبويب التفاعلي */
+        .tabs-nav {
+            display: flex;
+            justify-content: center;
+            background: #f8fafc;
+            border-bottom: 2px solid #edf2f7;
+            padding: 10px 10px 0 10px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+            background: rgba(0, 122, 83, 0.05);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+            background: var(--card-bg);
+            border: 2px solid #edf2f7;
+            border-bottom-color: transparent;
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--secondary-color);
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* محتوى المنصة */
+        .tab-content {
+            padding: 40px 30px;
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: var(--primary-color);
+            font-size: 22px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: var(--secondary-color);
+            border-radius: 2px;
+        }
+
+        /* تبسيط وتصميم جداول المواد */
+        .subjects-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+            background: var(--accent-green);
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px dashed var(--primary-color);
+        }
+
+        .tag {
+            background: white;
+            color: var(--primary-dark);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-right: 4px solid var(--secondary-color);
+        }
+
+        /* جدول الدرجات الرئيسي */
+        .grades-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+
+        .grades-table th {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 18px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .grades-table td {
+            padding: 16px;
+            text-align: center;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 15px;
+        }
+
+        .grades-table tr:nth-child(even) {
+            background-color: #fcfdfd;
+        }
+
+        .grades-table tr:hover {
+            background-color: #f1f7f4;
+            transition: background 0.2s ease;
+        }
+
+        .total-badge {
+            background: linear-gradient(135deg, var(--secondary-color), #b08c46);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        /* الملاحظات والتنبيهات */
+        .notes-card {
+            background: #fafafa;
+            border-right: 5px solid var(--primary-color);
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+
+        .notes-card h4 {
+            color: var(--primary-dark);
+            margin-bottom: 12px;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notes-card ul {
+            list-style-type: none;
+            padding-right: 10px;
+        }
+
+        .notes-card li {
+            position: relative;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #4a5568;
+            padding-right: 15px;
+        }
+
+        .notes-card li::before {
+            content: "•";
+            color: var(--secondary-color);
+            font-weight: bold;
+            font-size: 18px;
+            position: absolute;
+            right: 0;
+            top: -2px;
+        }
+
+        /* تذييل المطور أسفل قائمة الإعدادات والمحتوى مباشرة */
+        footer {
+            text-align: center;
+            padding: 25px;
+            background: #1a202c;
+            color: #e2e8f0;
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        footer .dev-brand {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        footer .dev-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #0088cc, #0077b5);
+            color: white;
+            text-decoration: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 136, 204, 0.3);
+        }
+
+        footer .dev-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 136, 204, 0.4);
+            background: linear-gradient(135deg, #0099e6, #0088cc);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- هيدر المنصة -->
+    <header>
+        <h1>دليل توزيع درجات المواد الدراسية — لعام 2025م</h1>
+        <p>منصة عرض وتبسيط ذكية للنماذج الرسمية الصادرة عن وزارة التعليم</p>
+    </header>
+
+    <!-- قائمة الإعدادات والتبويب -->
+    <div class="tabs-nav">
+        <button class="tab-btn active" onclick="openTab(event, 'model2')">نموذج رقم (2)</button>
+        <button class="tab-btn" onclick="openTab(event, 'model3')">نموذج رقم (3)</button>
+        <button class="tab-btn" onclick="openTab(event, 'model7')">نموذج رقم (7)</button>
+    </div>
+
+    <!-- محتوى شريحة نموذج رقم 2 -->
+    <div id="model2" class="tab-content active">
+        <div class="section-title">نموذج رقم (2) - "تقويم ختامي"</div>
+        
+        <div class="subjects-tags">
+            <span class="tag">الرياضيات (الابتدائية والمتوسطة)</span>
+            <span class="tag">العلوم (الابتدائية والمتوسطة والثانوية)</span>
+        </div>
+
+        <table class="grades-table">
+            <thead>
+                <tr>
+                    <th colspan="3">أدوات تقويم تكويني</th>
+                    <th rowspan="2">اختبار نهاية الفترة</th>
+                    <th rowspan="2">المجموع</th>
+                </tr>
+                <tr>
+                    <th>المهام الأدائية والمشاركة والتفاعل</th>
+                    <th>تقويمات تحريرية</th>
+                    <th>تطبيقات عملية</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>40 درجة</td>
+                    <td>20 درجة</td>
+                    <td>-</td>
+                    <td>40 درجة</td>
+                    <td><span class="total-badge">100 درجة</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="notes-card">
+            <h4>📌 ضوابط وآلية التقييم (نموذج 2):</h4>
+            <ul>
+                <li>يتم إجراء التقويمات التحريرية خلال الفترة الدراسية بعد كل وحدة دراسية أو مجموعة من الدروس، ويتم احتساب الدرجة المخصصة لتلك التقويمات بجمع درجات ما تحصل عليه الطالب ورصدها في النظام الإلكتروني بما لا يقل عن مرتين خلال الفترة الدراسية الواحدة.</li>
+                <li>عند إخفاق الطالب في المادة ودخوله الدور الثاني يحتفظ بـ (40) درجة؛ تمثل ما تحصل عليه في (المهام الأدائية والمشاركة والتفاعل) ويختبر الدور الثاني من (60) درجة؛ يخصص منها (20) درجة تطبيقات عملية، و(40) درجة اختبار تحريري.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- محتوى شريحة نموذج رقم 3 -->
+    <div id="model3" class="tab-content">
+        <div class="section-title">نموذج رقم (3) - "تقويم ختامي"</div>
+        
+        <div class="subjects-tags">
+            <span class="tag">اللغة العربية (الابتدائية والمتوسطة)</span>
+            <span class="tag">الكفايات اللغوية (الثانوية)</span>
+            <span class="tag">الدراسات اللغوية (الثانوية)</span>
+            <span class="tag">النحو والصرف (الثانوية)</span>
+            <span class="tag">اللغة الصينية (المتوسطة والثانوية)</span>
+            <span class="tag">اللغة الإنجليزية (الابتدائية والمتوسطة والثانوية)</span>
+            <span class="tag">المهارات اللغوية (الثانوية)</span>
+        </div>
+
+        <table class="grades-table">
+            <thead>
+                <tr>
+                    <th colspan="3">أدوات تقويم تكويني</th>
+                    <th rowspan="2">اختبار نهاية الفترة</th>
+                    <th rowspan="2">المجموع</th>
+                </tr>
+                <tr>
+                    <th>المهام الأدائية والمشاركة والتفاعل</th>
+                    <th>تقويمات شفهية وتحريرية</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>40 درجة</td>
+                    <td>20 درجة</td>
+                    <td>-</td>
+                    <td>40 degree</td>
+                    <td><span class="total-badge">100 درجة</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="notes-card">
+            <h4>📌 ضوابط وآلية التقييم (نموذج 3):</h4>
+            <ul>
+                <li>يتم إجراء التقويمات الشفهية والتحريرية خلال الفترة الدراسية بعد كل وحدة دراسية أو مجموعة من الدروس، ويتم احتساب الدرجة المخصصة لتلك التقويمات بجمع درجات ما تحصل عليه الطالب ورصدها في النظام الإلكتروني بما لا يقل عن مرتين خلال الفترة الدراسية الواحدة.</li>
+                <li>عند إخفاق الطالب في المادة ودخوله الدور الثاني يحتفظ بـ (40) درجة؛ تمثل ما تحصل عليه في (المهام الأدائية والمشاركة والتفاعل) ويختبر الدور الثاني من (60) درجة؛ يخصص منها (30) درجة تقويمات شفهية و(30) درجة اختبار تحريري.</li>
+                <li>يكون التركيز على مهاراتي القراءة والكتابة في تقويم مادة اللغة العربية للصفين الأول والثاني الابتدائي وذلك في التقويم التكويني والختامي.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- محتوى شريحة نموذج رقم 7 -->
+    <div id="model7" class="tab-content">
+        <div class="section-title">نموذج رقم (7) - "تقويم ختامي"</div>
+        
+        <div class="subjects-tags">
+            <span class="tag">مبادي العلوم الصحية (الثانوية)</span>
+            <span class="tag">الأحياء (الثانوية)</span>
+            <span class="tag">علم البيئة (الثانوية)</span>
+            <span class="tag">علوم الأرض والفضاء (الثانوية)</span>
+            <span class="tag">الفيزياء (الثانوية)</span>
+            <span class="tag">الهندسة (الثانوية)</span>
+            <span class="tag">أنظمة جسم الإنسان (الثانوية)</span>
+            <span class="tag">الكيمياء (الثانوية)</span>
+            <span class="tag">الرعاية الصحية (الثانوية)</span>
+        </div>
+
+        <table class="grades-table">
+            <thead>
+                <tr>
+                    <th colspan="3">أدوات تقويم تكويني</th>
+                    <th rowspan="2">اختبار نهاية الفترة</th>
+                    <th rowspan="2">المجموع</th>
+                </tr>
+                <tr>
+                    <th>المهام الأدائية والمشاركة والتفاعل</th>
+                    <th>تقويمات تحريرية وتطبيقات عملية</th>
+                    <th>-</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>40 درجة</td>
+                    <td>20 درجة</td>
+                    <td>-</td>
+                    <td>40 درجة</td>
+                    <td><span class="total-badge">100 درجة</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="notes-card">
+            <h4>📌 ضوابط وآلية التقييم (نموذج 7):</h4>
+            <ul>
+                <li>يتم إجراء التقويمات التحريرية خلال الفترة الدراسية بعد كل وحدة دراسية ، أو مجموعة من الدروس، ويتم احتساب الدرجة المخصصة لتلك التقويمات بجمع درجات ما تحصل عليه الطالب ورصدها في النظام الإلكتروني بما لا يقل عن مرتين خلال الفترة الدراسية الواحدة.</li>
+                <li>عند إخفاق الطالب في المادة ودخوله الدور الثاني يحتفظ بـ (40) درجة؛ تمثل ما تحصل عليه في (المهام الأدائية والمشاركة والتفاعل) ويختبر الدور الثاني من (60) درجة؛ يخصص منها (20) درجة تطبيقات عملية، و(40) درجة اختبار تحريري.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- التذييل المخصص المطلوب أسفل قائمة الإعدادات والمحتوى مباشرة -->
+    <footer>
+        <div class="dev-brand">تصميم د/فواز</div>
+        <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="dev-link">تفضل للمزيد هنا</a>
+    </footer>
+</div>
+
+<script>
+    function openTab(evt, modelName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
+        }
+        document.getElementById(modelName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+    }
+</script>
+
+</body>
+</html>

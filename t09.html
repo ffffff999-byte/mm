@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة دليل لجنة التحصيل الدراسي</title>
+<style>
+:root{
+  --navy:#102a43;
+  --navy2:#163b5c;
+  --gold:#c89b3c;
+  --teal:#0f766e;
+  --blue:#2563eb;
+  --red:#b91c1c;
+  --green:#15803d;
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --muted:#64748b;
+  --line:#dbe3ef;
+  --shadow:0 14px 34px rgba(16,42,67,.12);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at top right, rgba(200,155,60,.16), transparent 32%),
+    linear-gradient(180deg,#f7fafc 0%,#eef4fb 100%);
+  color:#1f2937;
+  font-family: "Tahoma","Arial",sans-serif;
+}
+button,input,select,textarea{font-family:inherit}
+.app{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:300px 1fr;
+}
+.sidebar{
+  background:linear-gradient(180deg,var(--navy),#0b1f33);
+  color:#fff;
+  padding:22px 18px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:auto;
+  box-shadow:-8px 0 28px rgba(15,23,42,.25);
+}
+.brand{
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.08);
+  border-radius:24px;
+  padding:18px;
+  margin-bottom:18px;
+}
+.logo{
+  width:58px;height:58px;border-radius:18px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--gold),#f5d483);
+  color:#102a43;
+  font-size:30px;font-weight:900;
+  margin-bottom:10px;
+  box-shadow:0 12px 24px rgba(0,0,0,.18);
+}
+.brand h1{font-size:20px;margin:0 0 6px;line-height:1.5}
+.brand p{font-size:13px;margin:0;color:#cbd5e1;line-height:1.8}
+.nav button{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#dbeafe;
+  padding:12px 12px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  cursor:pointer;
+  text-align:right;
+  margin:5px 0;
+  font-size:14px;
+}
+.nav button:hover,.nav button.active{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+.side-footer{
+  margin-top:24px;
+  border-top:1px solid rgba(255,255,255,.14);
+  padding-top:16px;
+  font-size:12px;
+  line-height:1.9;
+  color:#e2e8f0;
+}
+.side-footer a{color:#fde68a;text-decoration:none;word-break:break-all}
+.main{
+  padding:26px;
+  max-width:1250px;
+  width:100%;
+  margin:auto;
+}
+.header{
+  background:linear-gradient(135deg,#fff,#f7fbff);
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:22px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+.header:before{
+  content:"";
+  position:absolute;
+  inset:auto -70px -90px auto;
+  width:220px;height:220px;border-radius:50%;
+  background:rgba(200,155,60,.15);
+}
+.school-head{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  align-items:center;
+}
+.kicker{color:var(--gold);font-weight:800;font-size:14px}
+.header h2{margin:8px 0 8px;font-size:28px;color:var(--navy);line-height:1.45}
+.header p{margin:0;color:var(--muted);line-height:1.9}
+.quick-actions{
+  display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;
+}
+.btn{
+  border:0;
+  padding:11px 15px;
+  border-radius:15px;
+  cursor:pointer;
+  background:var(--navy);
+  color:#fff;
+  font-weight:700;
+  box-shadow:0 8px 18px rgba(16,42,67,.15);
+}
+.btn.gold{background:var(--gold);color:#172033}
+.btn.teal{background:var(--teal)}
+.btn.red{background:var(--red)}
+.btn.light{background:#eef2f7;color:#102a43;box-shadow:none;border:1px solid var(--line)}
+.grid{
+  display:grid;
+  gap:18px;
+  margin-top:20px;
+}
+.stats{grid-template-columns:repeat(4,minmax(160px,1fr))}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+.stat{
+  position:relative;
+  overflow:hidden;
+}
+.stat .icon{font-size:26px}
+.stat .num{font-size:29px;font-weight:900;color:var(--navy);margin:8px 0}
+.stat .lbl{color:var(--muted);font-size:13px;line-height:1.7}
+.section{display:none}
+.section.active{display:block}
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin:24px 0 12px;
+}
+.section-title h3{margin:0;color:var(--navy);font-size:24px}
+.section-title span{color:var(--muted);font-size:13px}
+.two{grid-template-columns:1fr 1fr}
+.three{grid-template-columns:repeat(3,1fr)}
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.field{display:flex;flex-direction:column;gap:7px}
+label{font-size:13px;font-weight:800;color:#334155}
+input,select,textarea{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:11px 12px;
+  background:#fff;
+  color:#1f2937;
+  outline:none;
+}
+textarea{min-height:95px;resize:vertical;line-height:1.8}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(200,155,60,.13)}
+.full{grid-column:1/-1}
+table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  overflow:hidden;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:#fff;
+}
+th,td{
+  padding:11px;
+  border-bottom:1px solid var(--line);
+  text-align:right;
+  vertical-align:top;
+  font-size:13px;
+  line-height:1.7;
+}
+th{background:#edf4fb;color:var(--navy);font-weight:900}
+tr:last-child td{border-bottom:0}
+td[contenteditable="true"]{background:#fffdf5}
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  background:#edf2f7;
+  color:#334155;
+}
+.badge.green{background:#dcfce7;color:#166534}
+.badge.blue{background:#dbeafe;color:#1e40af}
+.badge.gold{background:#fef3c7;color:#92400e}
+.badge.red{background:#fee2e2;color:#991b1b}
+.timeline{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+.phase{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:18px;
+  padding:15px;
+  position:relative;
+}
+.phase b{display:block;color:var(--navy);margin-bottom:7px}
+.phase p{margin:0;color:var(--muted);line-height:1.8;font-size:13px}
+.phase .n{
+  width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;
+  background:var(--gold);color:#102a43;font-weight:900;
+  margin-bottom:8px;
+}
+.checklist{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+}
+.check{
+  display:flex;
+  gap:9px;
+  align-items:flex-start;
+  background:#f8fafc;
+  border:1px dashed #cbd5e1;
+  padding:12px;
+  border-radius:15px;
+}
+.check input{margin-top:5px}
+.alert{
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#7c2d12;
+  border-radius:18px;
+  padding:14px;
+  line-height:1.9;
+}
+.result-box{
+  background:linear-gradient(135deg,#eff6ff,#fff);
+  border:1px solid #bfdbfe;
+  border-radius:22px;
+  padding:18px;
+  line-height:2;
+}
+.report{
+  background:#fff;
+  color:#111827;
+  border-radius:18px;
+  padding:22px;
+  border:1px solid var(--line);
+}
+.report-head{
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:10px;
+  align-items:center;
+  border-bottom:3px solid var(--navy);
+  padding-bottom:12px;
+  margin-bottom:16px;
+}
+.report-head .center{text-align:center}
+.report-head h2{margin:4px 0;color:var(--navy);font-size:21px}
+.muted{color:var(--muted)}
+.print-only{display:none}
+.toast{
+  position:fixed;
+  bottom:18px;
+  left:18px;
+  background:#102a43;
+  color:#fff;
+  padding:13px 16px;
+  border-radius:16px;
+  box-shadow:var(--shadow);
+  display:none;
+  z-index:50;
+}
+@media(max-width:960px){
+  .app{grid-template-columns:1fr}
+  .sidebar{position:relative;height:auto}
+  .main{padding:16px}
+  .stats,.two,.three,.form-grid,.timeline,.checklist{grid-template-columns:1fr}
+  .school-head{grid-template-columns:1fr}
+  .report-head{grid-template-columns:1fr;text-align:center}
+}
+@media print{
+  @page{size:A4 portrait;margin:10mm}
+  body{background:#fff}
+  .sidebar,.quick-actions,.nav,.btn,.no-print,.toast{display:none!important}
+  .app{display:block}
+  .main{padding:0;max-width:none}
+  .header,.card,.report{box-shadow:none;border-color:#b7c4d5}
+  .section{display:none!important}
+  .section.print-area{display:block!important}
+  .print-only{display:block}
+  .report,.card,table,tr{page-break-inside:avoid;break-inside:avoid}
+  input,textarea,select{border:0;padding:0;background:transparent}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar no-print">
+    <div class="brand">
+      <div class="logo">✓</div>
+      <h1>دليل لجنة التحصيل الدراسي</h1>
+      <p>منصة إرشادية لتنظيم الاختبارات النهائية والمركزية من التخطيط إلى التوثيق.</p>
+    </div>
+    <div class="nav" id="nav">
+      <button class="active" data-target="home">🏠 لوحة البداية</button>
+      <button data-target="before">🗂 قبل الاختبارات</button>
+      <button data-target="during">📝 أثناء الاختبارات</button>
+      <button data-target="after">📊 بعد الاختبارات</button>
+      <button data-target="central">🏛 الاختبارات المركزية</button>
+      <button data-target="meeting">🤝 نموذج الاجتماع</button>
+      <button data-target="evidence">📎 الشواهد والمتابعة</button>
+      <button data-target="reportSec">🖨 التقرير النهائي</button>
+      <button data-target="settings">⚙ الإعدادات</button>
+    </div>
+    <div class="side-footer">
+      <strong>تصميم د/فواز</strong><br>
+      تفضل للمزيد هنا:<br>
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="header">
+      <div class="school-head">
+        <div>
+          <div class="kicker">منصة رقمية إرشادية قابلة للطباعة</div>
+          <h2>تنظيم أعمال لجنة التحصيل الدراسي في الاختبارات النهائية والمركزية</h2>
+          <p>تساعد المدرسة على توزيع المهام، متابعة الجاهزية، توثيق الشواهد، وإخراج تقرير منظم دون ضياع التفاصيل.</p>
+        </div>
+        <div class="badge gold">جاهزية الاختبارات تبدأ من التنظيم</div>
+      </div>
+      <div class="quick-actions no-print">
+        <button class="btn gold" onclick="saveAll()">حفظ البيانات</button>
+        <button class="btn teal" onclick="loadDemo()">تعبئة نموذج مقترح</button>
+        <button class="btn light" onclick="window.print()">طباعة التقرير</button>
+        <button class="btn red" onclick="clearAll()">مسح البيانات</button>
+      </div>
+    </header>
+
+    <section id="home" class="section active">
+      <div class="grid stats">
+        <div class="card stat"><div class="icon">✅</div><div class="num" id="statBefore">0%</div><div class="lbl">اكتمال مهام ما قبل الاختبارات</div></div>
+        <div class="card stat"><div class="icon">📝</div><div class="num" id="statDuring">0%</div><div class="lbl">اكتمال مهام أثناء الاختبارات</div></div>
+        <div class="card stat"><div class="icon">📊</div><div class="num" id="statAfter">0%</div><div class="lbl">اكتمال مهام ما بعد الاختبارات</div></div>
+        <div class="card stat"><div class="icon">📎</div><div class="num" id="statEvidence">0</div><div class="lbl">عدد الشواهد المسجلة</div></div>
+      </div>
+
+      <div class="section-title"><h3>خريطة العمل</h3><span>من بداية الاستعداد حتى رفع التقرير</span></div>
+      <div class="timeline">
+        <div class="phase"><div class="n">1</div><b>الاستعداد والتنظيم</b><p>تشكيل اللجان، اعتماد الجداول، تجهيز الكشوف، وتأمين الأسئلة والوثائق.</p></div>
+        <div class="phase"><div class="n">2</div><b>التطبيق والمتابعة</b><p>الإشراف على القاعات، التعامل مع الحالات الطارئة، ومتابعة التصحيح والرصد.</p></div>
+        <div class="phase"><div class="n">3</div><b>الإغلاق والتحسين</b><p>توثيق التقارير، تحليل الملاحظات، رفع المقترحات، وحفظ الشواهد.</p></div>
+      </div>
+
+      <div class="grid two">
+        <div class="card">
+          <h3>رسالة إرشادية</h3>
+          <p class="muted" style="line-height:2">الاختبار المنظم ليس مجرد جدول وقاعات؛ بل منظومة مسؤوليات وشواهد ومتابعة دقيقة. كل إجراء غير موثق يصبح عند الحاجة مثل قلم ضائع في قاعة اختبار: الكل يبحث عنه ولا أحد يعترف أنه أخذه.</p>
+        </div>
+        <div class="card">
+          <h3>مؤشر الجاهزية العام</h3>
+          <div id="readiness" class="result-box">ابدأ بتحديد المهام المكتملة في الأقسام، وسيظهر هنا مستوى الجاهزية.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="before" class="section">
+      <div class="section-title"><h3>مرحلة ما قبل الاختبارات</h3><span>تنظيم وتوزيع وتجهيز</span></div>
+      <div class="card">
+        <div class="checklist" data-group="before">
+          <label class="check"><input type="checkbox" data-task="تشكيل فرق العمل واللجان الفرعية وتحديد المسؤوليات."><span>تشكيل فرق العمل واللجان الفرعية وتحديد مسؤولية كل عضو.</span></label>
+          <label class="check"><input type="checkbox" data-task="إعداد جداول الاختبارات والسجلات والملفات."><span>إعداد جداول الاختبارات والسجلات والملفات المرتبطة بها.</span></label>
+          <label class="check"><input type="checkbox" data-task="استلام مظاريف الأسئلة والإجابات وحفظها في مكان آمن."><span>استلام مظاريف الأسئلة والإجابات وحفظها في مكان آمن.</span></label>
+          <label class="check"><input type="checkbox" data-task="إعداد كشوف الطلاب وأرقام الجلوس وتسليمها للفرق المختصة."><span>إعداد كشوف الطلاب وأرقام الجلوس وتسليمها للفرق المختصة.</span></label>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <h3>إرشادات تنفيذية</h3>
+          <ul style="line-height:2">
+            <li>لا تعتمد الجداول إلا بعد مراجعة التعارضات والمواد والزمن.</li>
+            <li>احفظ الوثائق الحساسة في مكان محدد وبمسؤولية واضحة.</li>
+            <li>وقّع محاضر الاستلام والتسليم؛ الذاكرة وحدها ليست شاهدًا إداريًا.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>مخرجات المرحلة</h3>
+          <table>
+            <tr><th>المخرج</th><th>الشاهد المقترح</th></tr>
+            <tr><td>تشكيل اللجان</td><td>قرار تشكيل، توقيعات، توزيع مهام</td></tr>
+            <tr><td>تنظيم الجداول</td><td>جداول معتمدة، سجلات الاختبارات</td></tr>
+            <tr><td>تأمين الأسئلة</td><td>محاضر استلام وحفظ</td></tr>
+            <tr><td>أرقام الجلوس</td><td>كشوف الطلاب ومحاضر التسليم</td></tr>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="during" class="section">
+      <div class="section-title"><h3>مرحلة أثناء الاختبارات</h3><span>إشراف ومعالجة ودقة</span></div>
+      <div class="card">
+        <div class="checklist" data-group="during">
+          <label class="check"><input type="checkbox" data-task="توضيح آلية التعامل مع الحالات الطارئة والمخالفات."><span>توضيح آلية التعامل مع الحالات الطارئة والمخالفات.</span></label>
+          <label class="check"><input type="checkbox" data-task="الإشراف على سير الاختبارات ومتابعة البرامج التنفيذية."><span>الإشراف على سير الاختبارات ومتابعة البرامج التنفيذية.</span></label>
+          <label class="check"><input type="checkbox" data-task="متابعة التصحيح والمراجعة وتدقيق النتائج والرصد."><span>متابعة التصحيح والمراجعة وتدقيق النتائج والرصد.</span></label>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <h3>الحالات الطارئة</h3>
+          <textarea id="emergencyPlan" placeholder="اكتب هنا خطة التعامل مع الحالات المرضية، مخالفة التعليمات، الأعطال التقنية، أو أي ظرف طارئ..."></textarea>
+        </div>
+        <div class="card">
+          <h3>متابعة سير اللجان</h3>
+          <textarea id="dailyFollow" placeholder="اكتب ملخصًا يوميًا مختصرًا عن سير الاختبارات، الغياب، الملاحظات، والإجراءات المتخذة..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section id="after" class="section">
+      <div class="section-title"><h3>مرحلة ما بعد الاختبارات</h3><span>إغلاق وتحسين مستمر</span></div>
+      <div class="card">
+        <div class="checklist" data-group="after">
+          <label class="check"><input type="checkbox" data-task="تقديم مقترحات تطويرية لآلية الاختبار ومتابعة التعديلات."><span>تقديم مقترحات تطويرية لآلية الاختبار ومتابعة التعديلات.</span></label>
+          <label class="check"><input type="checkbox" data-task="إعداد تقارير دورية عن أعمال اللجنة والمعوقات ورفعها."><span>إعداد تقارير دورية عن أعمال اللجنة والمعوقات ورفعها.</span></label>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <h3>المعوقات المرصودة</h3>
+          <textarea id="obstacles" placeholder="اكتب أبرز المعوقات التي ظهرت أثناء فترة الاختبارات..."></textarea>
+        </div>
+        <div class="card">
+          <h3>مقترحات التحسين</h3>
+          <textarea id="improvements" placeholder="اكتب المقترحات التطويرية القابلة للتنفيذ في الاختبارات القادمة..."></textarea>
+        </div>
+      </div>
+    </section>
+
+    <section id="central" class="section">
+      <div class="section-title"><h3>مهام الاختبارات المركزية</h3><span>ضبط وتهيئة وسرية</span></div>
+      <div class="card">
+        <table id="centralTable">
+          <thead><tr><th>المهمة</th><th>المسؤول المقترح</th><th>الشاهد</th><th>الحالة</th></tr></thead>
+          <tbody>
+            <tr><td contenteditable="true">تجهيز قاعات الاختبار وتهيئة الظروف المناسبة للتطبيق.</td><td contenteditable="true">فريق الأمن والسلامة</td><td contenteditable="true">قوائم تحقق وتقارير جولات</td><td><select><option>غير منجز</option><option>قيد التنفيذ</option><option>منجز</option></select></td></tr>
+            <tr><td contenteditable="true">تطبيق ضوابط تنظيم أعمال الاختبارات والتزام المدرسة بها.</td><td contenteditable="true">لجنة التحصيل الدراسي</td><td contenteditable="true">خطة الاختبارات وسجلات المتابعة</td><td><select><option>غير منجز</option><option>قيد التنفيذ</option><option>منجز</option></select></td></tr>
+            <tr><td contenteditable="true">طباعة وحفظ نماذج الأسئلة من نظام اختبار بعد اعتمادها.</td><td contenteditable="true">مدير المدرسة ووكيل الشؤون التعليمية</td><td contenteditable="true">سجلات الطباعة والحفظ</td><td><select><option>غير منجز</option><option>قيد التنفيذ</option><option>منجز</option></select></td></tr>
+            <tr><td contenteditable="true">تشكيل فرق التصحيح والمراجعة والرصد.</td><td contenteditable="true">لجنة التحصيل الدراسي</td><td contenteditable="true">قرار التشكيل وكشوف الرصد</td><td><select><option>غير منجز</option><option>قيد التنفيذ</option><option>منجز</option></select></td></tr>
+            <tr><td contenteditable="true">حفظ أوراق الإجابات وقوائم الرصد وتسليمها عند الحاجة.</td><td contenteditable="true">لجنة التحكم والضبط</td><td contenteditable="true">محاضر الاستلام والتسليم</td><td><select><option>غير منجز</option><option>قيد التنفيذ</option><option>منجز</option></select></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="meeting" class="section">
+      <div class="section-title"><h3>نموذج اجتماع اللجنة</h3><span>قابل للتعديل والطباعة</span></div>
+      <div class="card">
+        <div class="form-grid">
+          <div class="field"><label>الإدارة التعليمية</label><input id="eduDept" placeholder="إدارة التعليم بمنطقة..."></div>
+          <div class="field"><label>اسم المدرسة</label><input id="schoolName" placeholder="اسم المدرسة"></div>
+          <div class="field"><label>الفصل الدراسي</label><input id="semester" placeholder="الأول / الثاني / الثالث"></div>
+          <div class="field"><label>رئيس الاجتماع</label><input id="chair" placeholder="مدير المدرسة"></div>
+          <div class="field"><label>مقرر الاجتماع</label><input id="rapporteur" placeholder="الموجه الطلابي"></div>
+          <div class="field"><label>التاريخ</label><input id="date" type="date"></div>
+          <div class="field full"><label>عنوان الاجتماع</label><input id="meetingTitle" value="الاستعداد للاختبارات النهائية والمركزية"></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>أهداف الاجتماع ومؤشرات التحقق</h3>
+        <table id="goalsTable">
+          <thead><tr><th>الهدف</th><th>مؤشر تحقق الهدف</th></tr></thead>
+          <tbody>
+            <tr><td contenteditable="true">وضوح توزيع مهام اللجان وتنظيم العمل.</td><td contenteditable="true">اكتمال اعتماد وتوقيع اللجان الفرعية وتوزيع المهام بنسبة 100%.</td></tr>
+            <tr><td contenteditable="true">رفع جاهزية المدرسة لتنفيذ الاختبارات.</td><td contenteditable="true">اكتمال تجهيز القاعات والنماذج والسجلات قبل بداية الاختبارات.</td></tr>
+            <tr><td contenteditable="true">ضمان جودة المتابعة وسرعة معالجة الملاحظات.</td><td contenteditable="true">معالجة الملاحظات التشغيلية فور رصدها دون التأثير على سير العمل.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <h3>تشكيل اللجنة</h3>
+        <table id="membersTable">
+          <thead><tr><th>الاسم</th><th>الصفة الوظيفية</th><th>العمل المكلف به</th><th>التوقيع</th></tr></thead>
+          <tbody>
+            <tr><td contenteditable="true"></td><td contenteditable="true">مدير المدرسة</td><td contenteditable="true">رئيس اللجنة</td><td contenteditable="true"></td></tr>
+            <tr><td contenteditable="true"></td><td contenteditable="true">وكيل الشؤون التعليمية</td><td contenteditable="true">نائب الرئيس</td><td contenteditable="true"></td></tr>
+            <tr><td contenteditable="true"></td><td contenteditable="true">وكيل شؤون الطلاب</td><td contenteditable="true">عضو</td><td contenteditable="true"></td></tr>
+            <tr><td contenteditable="true"></td><td contenteditable="true">الموجه الطلابي</td><td contenteditable="true">عضو ومقرر</td><td contenteditable="true"></td></tr>
+            <tr><td contenteditable="true"></td><td contenteditable="true">رائد النشاط</td><td contenteditable="true">عضو</td><td contenteditable="true"></td></tr>
+            <tr><td contenteditable="true"></td><td contenteditable="true">ثلاثة معلمين</td><td contenteditable="true">أعضاء</td><td contenteditable="true"></td></tr>
+          </tbody>
+        </table>
+        <div class="quick-actions no-print">
+          <button class="btn light" onclick="addMember()">إضافة عضو</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="evidence" class="section">
+      <div class="section-title"><h3>الشواهد والمتابعة</h3><span>إضافة وحذف وحفظ محلي</span></div>
+      <div class="card">
+        <div class="form-grid">
+          <div class="field"><label>نوع الشاهد</label><select id="evType"><option>قبل الاختبارات</option><option>أثناء الاختبارات</option><option>بعد الاختبارات</option><option>اختبارات مركزية</option></select></div>
+          <div class="field"><label>اسم الملف أو الشاهد</label><input id="evFile" placeholder="مثال: قرار تشكيل اللجان.pdf"></div>
+          <div class="field"><label>التاريخ</label><input id="evDate" type="date"></div>
+          <div class="field full"><label>وصف الشاهد</label><textarea id="evDesc" placeholder="اكتب وصفًا مختصرًا للشاهد..."></textarea></div>
+        </div>
+        <div class="quick-actions no-print">
+          <button class="btn teal" onclick="addEvidence()">إضافة شاهد</button>
+        </div>
+      </div>
+      <div class="card">
+        <table id="evidenceTable">
+          <thead><tr><th>#</th><th>النوع</th><th>الوصف</th><th>اسم الملف</th><th>التاريخ</th><th class="no-print">إجراء</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="settings" class="section">
+      <div class="section-title"><h3>الإعدادات</h3><span>تظهر على الشاشة ولا تظهر في الطباعة</span></div>
+      <div class="card">
+        <div class="form-grid">
+          <div class="field"><label>اسم مدير/ة المدرسة</label><input id="principal" placeholder="اسم المدير/ة"></div>
+          <div class="field"><label>اسم وكيل/ة الشؤون التعليمية</label><input id="vice" placeholder="اسم الوكيل/ة"></div>
+          <div class="field"><label>اسم الموجه/ة الطلابي</label><input id="counselor" placeholder="اسم الموجه/ة"></div>
+          <div class="field full"><label>ملاحظات عامة</label><textarea id="generalNotes" placeholder="أي ملاحظات ترغب في ظهورها داخل التقرير..."></textarea></div>
+        </div>
+      </div>
+      <div class="alert no-print">
+        <strong>تصميم د/فواز</strong><br>
+        تفضل للمزيد هنا:
+        <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+      </div>
+    </section>
+
+    <section id="reportSec" class="section print-area">
+      <div class="section-title no-print"><h3>التقرير النهائي</h3><span>يُحدّث تلقائيًا من بيانات المنصة</span></div>
+      <div class="report" id="report">
+        <div class="report-head">
+          <div>
+            <b>المملكة العربية السعودية</b><br>
+            وزارة التعليم<br>
+            الإدارة التعليمية: <span id="rEdu">................</span>
+          </div>
+          <div class="center">
+            <h2>تقرير لجنة التحصيل الدراسي</h2>
+            <div>الاختبارات النهائية والمركزية</div>
+          </div>
+          <div>
+            اسم المدرسة: <span id="rSchool">................</span><br>
+            التاريخ: <span id="rDate">................</span><br>
+            الفصل الدراسي: <span id="rSem">................</span>
+          </div>
+        </div>
+
+        <h3>أولًا: ملخص الجاهزية</h3>
+        <table>
+          <tr><th>المرحلة</th><th>نسبة الإنجاز</th><th>ملاحظات</th></tr>
+          <tr><td>قبل الاختبارات</td><td id="rBefore">0%</td><td>تشكيل وتنظيم وتجهيز الوثائق.</td></tr>
+          <tr><td>أثناء الاختبارات</td><td id="rDuring">0%</td><td>إشراف ومتابعة ومعالجة الحالات.</td></tr>
+          <tr><td>بعد الاختبارات</td><td id="rAfter">0%</td><td>تقارير وتحسين وتوثيق.</td></tr>
+        </table>
+
+        <h3>ثانيًا: أبرز الإجراءات المنفذة</h3>
+        <div id="rTasks" class="result-box">لم يتم تحديد مهام منجزة بعد.</div>
+
+        <h3>ثالثًا: مهام الاختبارات المركزية</h3>
+        <div id="rCentral"></div>
+
+        <h3>رابعًا: الشواهد الموثقة</h3>
+        <div id="rEvidence"></div>
+
+        <h3>خامسًا: الملاحظات والمعالجات</h3>
+        <table>
+          <tr><th>خطة الطوارئ</th><td id="rEmergency">—</td></tr>
+          <tr><th>متابعة يومية</th><td id="rDaily">—</td></tr>
+          <tr><th>المعوقات</th><td id="rObstacles">—</td></tr>
+          <tr><th>مقترحات التحسين</th><td id="rImprove">—</td></tr>
+          <tr><th>ملاحظات عامة</th><td id="rNotes">—</td></tr>
+        </table>
+
+        <h3>سادسًا: الاعتماد</h3>
+        <table>
+          <tr><th>مدير/ة المدرسة</th><th>وكيل/ة الشؤون التعليمية</th><th>الموجه/ة الطلابي</th></tr>
+          <tr><td id="rPrincipal">................</td><td id="rVice">................</td><td id="rCounselor">................</td></tr>
+          <tr><td style="height:42px">التوقيع:</td><td>التوقيع:</td><td>التوقيع:</td></tr>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast">تم</div>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+let evidences = [];
+
+function toast(msg){
+  const t=$("#toast");
+  t.textContent=msg;
+  t.style.display="block";
+  setTimeout(()=>t.style.display="none",2200);
+}
+
+function showSection(id){
+  $$(".section").forEach(s=>s.classList.remove("active"));
+  $("#"+id).classList.add("active");
+  $$("#nav button").forEach(b=>b.classList.toggle("active",b.dataset.target===id));
+  updateAll();
+}
+$$("#nav button").forEach(b=>b.addEventListener("click",()=>showSection(b.dataset.target)));
+
+function pct(group){
+  const boxes = $$(`[data-group="${group}"] input[type="checkbox"]`);
+  if(!boxes.length) return 0;
+  const checked = boxes.filter(b=>b.checked).length;
+  return Math.round((checked/boxes.length)*100);
+}
+
+function readinessText(avg){
+  if(avg>=85) return '<span class="badge green">جاهزية مرتفعة</span><br>الوضع مطمئن، مع أهمية استمرار التوثيق والمتابعة اليومية.';
+  if(avg>=60) return '<span class="badge blue">جاهزية جيدة</span><br>توجد إجراءات منجزة، وتحتاج بعض المهام إلى استكمال قبل موعد الاختبارات.';
+  if(avg>=35) return '<span class="badge gold">جاهزية متوسطة</span><br>المؤشر يحتاج متابعة عاجلة حتى لا تتحول التفاصيل الصغيرة إلى مشكلة كبيرة.';
+  return '<span class="badge red">تحتاج مراجعة عاجلة</span><br>ابدأ باستكمال اللجان والجداول والشواهد الأساسية فورًا.';
+}
+
+function addMember(){
+  $("#membersTable tbody").insertAdjacentHTML("beforeend",'<tr><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true">عضو</td><td contenteditable="true"></td></tr>');
+  toast("تمت إضافة عضو");
+}
+
+function addEvidence(){
+  const type=$("#evType").value, file=$("#evFile").value.trim(), desc=$("#evDesc").value.trim(), date=$("#evDate").value;
+  if(!file && !desc){toast("أدخل اسم الشاهد أو وصفه");return;}
+  evidences.push({type,file,desc,date});
+  $("#evFile").value=""; $("#evDesc").value="";
+  renderEvidence();
+  updateAll();
+  toast("تمت إضافة الشاهد");
+}
+
+function deleteEvidence(i){
+  evidences.splice(i,1);
+  renderEvidence();
+  updateAll();
+  toast("تم حذف الشاهد");
+}
+
+function renderEvidence(){
+  const body=$("#evidenceTable tbody");
+  body.innerHTML = evidences.map((e,i)=>`
+    <tr>
+      <td>${i+1}</td><td>${e.type||""}</td><td>${e.desc||""}</td><td>${e.file||""}</td><td>${e.date||""}</td>
+      <td class="no-print"><button class="btn red" onclick="deleteEvidence(${i})">حذف</button></td>
+    </tr>`).join("") || '<tr><td colspan="6">لا توجد شواهد مضافة بعد.</td></tr>';
+}
+
+function tableCloneHTML(id){
+  const clone=$(id).cloneNode(true);
+  clone.querySelectorAll("select").forEach(sel=>{
+    const td=sel.parentElement;
+    td.textContent=sel.value;
+  });
+  clone.querySelectorAll(".no-print").forEach(x=>x.remove());
+  return clone.outerHTML;
+}
+
+function updateReport(){
+  $("#rEdu").textContent=$("#eduDept").value||"................";
+  $("#rSchool").textContent=$("#schoolName").value||"................";
+  $("#rDate").textContent=$("#date").value||new Date().toLocaleDateString("ar-SA");
+  $("#rSem").textContent=$("#semester").value||"................";
+  $("#rBefore").textContent=pct("before")+"%";
+  $("#rDuring").textContent=pct("during")+"%";
+  $("#rAfter").textContent=pct("after")+"%";
+  $("#rEmergency").textContent=$("#emergencyPlan").value||"—";
+  $("#rDaily").textContent=$("#dailyFollow").value||"—";
+  $("#rObstacles").textContent=$("#obstacles").value||"—";
+  $("#rImprove").textContent=$("#improvements").value||"—";
+  $("#rNotes").textContent=$("#generalNotes").value||"—";
+  $("#rPrincipal").textContent=$("#principal").value||"................";
+  $("#rVice").textContent=$("#vice").value||"................";
+  $("#rCounselor").textContent=$("#counselor").value||"................";
+
+  const doneTasks = $$('input[type="checkbox"]:checked').map(b=>b.dataset.task);
+  $("#rTasks").innerHTML = doneTasks.length ? "<ul>"+doneTasks.map(t=>`<li>${t}</li>`).join("")+"</ul>" : "لم يتم تحديد مهام منجزة بعد.";
+  $("#rCentral").innerHTML = tableCloneHTML("#centralTable");
+  $("#rEvidence").innerHTML = evidences.length ? `
+    <table><tr><th>#</th><th>النوع</th><th>الوصف</th><th>اسم الملف</th><th>التاريخ</th></tr>
+    ${evidences.map((e,i)=>`<tr><td>${i+1}</td><td>${e.type}</td><td>${e.desc}</td><td>${e.file}</td><td>${e.date}</td></tr>`).join("")}</table>` : "لم يتم إضافة شواهد.";
+}
+
+function updateAll(){
+  const b=pct("before"), d=pct("during"), a=pct("after");
+  $("#statBefore").textContent=b+"%";
+  $("#statDuring").textContent=d+"%";
+  $("#statAfter").textContent=a+"%";
+  $("#statEvidence").textContent=evidences.length;
+  const avg=Math.round((b+d+a)/3);
+  $("#readiness").innerHTML=readinessText(avg);
+  updateReport();
+}
+
+function getData(){
+  const data = {evidences, fields:{}, checks:[], central:[]};
+  $$("input, textarea, select").forEach((el,i)=>{
+    if(el.id) data.fields[el.id]=el.value;
+  });
+  $$('input[type="checkbox"]').forEach((el,i)=>data.checks.push(el.checked));
+  $$("#centralTable tbody tr").forEach(row=>{
+    data.central.push(Array.from(row.children).map(td=>{
+      const sel=td.querySelector("select");
+      return sel?sel.value:td.innerText;
+    }));
+  });
+  data.goals = Array.from($("#goalsTable tbody").rows).map(r=>Array.from(r.cells).map(c=>c.innerText));
+  data.members = Array.from($("#membersTable tbody").rows).map(r=>Array.from(r.cells).map(c=>c.innerText));
+  return data;
+}
+
+function saveAll(){
+  localStorage.setItem("achievementCommitteeGuide", JSON.stringify(getData()));
+  updateAll();
+  toast("تم حفظ البيانات داخل المتصفح");
+}
+
+function loadAll(){
+  try{
+    const data=JSON.parse(localStorage.getItem("achievementCommitteeGuide")||"{}");
+    if(data.fields) Object.entries(data.fields).forEach(([id,val])=>{ if($("#"+id)) $("#"+id).value=val; });
+    if(data.checks) $$('input[type="checkbox"]').forEach((el,i)=>el.checked=!!data.checks[i]);
+    if(data.evidences) evidences=data.evidences;
+    if(data.central){
+      const rows=$$("#centralTable tbody tr");
+      data.central.forEach((r,i)=>{
+        if(rows[i]) Array.from(rows[i].children).forEach((td,j)=>{
+          const sel=td.querySelector("select");
+          if(sel) sel.value=r[j]||sel.value; else td.innerText=r[j]||"";
+        });
+      });
+    }
+    if(data.goals){
+      $("#goalsTable tbody").innerHTML=data.goals.map(r=>`<tr><td contenteditable="true">${r[0]||""}</td><td contenteditable="true">${r[1]||""}</td></tr>`).join("");
+    }
+    if(data.members){
+      $("#membersTable tbody").innerHTML=data.members.map(r=>`<tr><td contenteditable="true">${r[0]||""}</td><td contenteditable="true">${r[1]||""}</td><td contenteditable="true">${r[2]||""}</td><td contenteditable="true">${r[3]||""}</td></tr>`).join("");
+    }
+    renderEvidence();
+    updateAll();
+  }catch(e){console.warn(e)}
+}
+
+function clearAll(){
+  if(confirm("سيتم مسح البيانات المحفوظة. هل أنت متأكد؟")){
+    localStorage.removeItem("achievementCommitteeGuide");
+    location.reload();
+  }
+}
+
+function loadDemo(){
+  $("#eduDept").value="إدارة التعليم بمنطقة ................";
+  $("#schoolName").value="مدرسة ................";
+  $("#semester").value="الثاني";
+  $("#chair").value="مدير المدرسة";
+  $("#rapporteur").value="الموجه الطلابي";
+  $("#meetingTitle").value="الاستعداد للاختبارات النهائية والمركزية";
+  $("#emergencyPlan").value="تحديد غرفة مناسبة للحالات الطارئة، وتجهيز أدوات الإسعاف الأولي، وتكليف لجنة مختصة بمتابعة الحالات المرضية والمخالفات وفق التعليمات.";
+  $("#dailyFollow").value="متابعة انتظام الطلاب والملاحظين، رصد الغياب، معالجة الملاحظات التشغيلية، وتوثيق كل إجراء بمحضر مختصر.";
+  $("#obstacles").value="تأخر بعض النماذج، حاجة بعض القاعات إلى تجهيز إضافي، والحاجة إلى توحيد آلية تسليم الشواهد.";
+  $("#improvements").value="إعداد قائمة تحقق موحدة، عقد اجتماع مبكر للجان، وتجهيز ملف إلكتروني للشواهد قبل بداية الاختبارات.";
+  $$('input[type="checkbox"]').forEach(c=>c.checked=true);
+  evidences=[
+    {type:"قبل الاختبارات",desc:"قرار تشكيل اللجان وتوزيع المهام",file:"قرار تشكيل اللجان.pdf",date:new Date().toISOString().slice(0,10)},
+    {type:"أثناء الاختبارات",desc:"محاضر متابعة سير الاختبارات",file:"محاضر المتابعة.pdf",date:new Date().toISOString().slice(0,10)}
+  ];
+  renderEvidence();
+  updateAll();
+  toast("تمت تعبئة نموذج مقترح");
+}
+
+document.addEventListener("input", updateAll);
+document.addEventListener("change", updateAll);
+loadAll();
+</script>
+</body>
+</html>

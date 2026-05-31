@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>إجراءات التعامل مع الطلبة المتغيبين</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gd: #1a5c2e;
+  --gm: #2d8a4e;
+  --gl: #3cb371;
+  --gp: #e8f5ee;
+  --gold: #c9a84c;
+  --goldf: #f0d080;
+  --bg: #f4f9f5;
+  --shadow: rgba(26,92,46,0.15);
+  --r3: #27ae60; --r5: #e67e22; --r10: #c0392b;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:var(--bg);
+  min-height:100vh;
+  direction:rtl;
+  overflow-x:hidden;
+  font-size:16px;
+}
+
+/* BG */
+.bg-layer{position:fixed;inset:0;z-index:0;
+  background:radial-gradient(ellipse at 10% 20%,rgba(45,138,78,.09) 0%,transparent 55%),
+             radial-gradient(ellipse at 90% 85%,rgba(201,168,76,.07) 0%,transparent 50%),
+             linear-gradient(155deg,#f0f9f3,#e8f5ee 50%,#f5faf7);
+  pointer-events:none;}
+.bg-dots{position:fixed;inset:0;z-index:0;
+  background-image:radial-gradient(circle,rgba(45,138,78,.07) 1px,transparent 1px);
+  background-size:26px 26px;pointer-events:none;}
+
+/* ===== HEADER ===== */
+header{position:relative;z-index:10;
+  background:linear-gradient(135deg,var(--gd) 0%,var(--gm) 65%,var(--gl) 100%);
+  overflow:hidden;}
+header::before{content:'';position:absolute;top:-50px;left:-50px;
+  width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,168,76,.2) 0%,transparent 70%);pointer-events:none;}
+header::after{content:'';position:absolute;bottom:-40px;right:-40px;
+  width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.09) 0%,transparent 70%);pointer-events:none;}
+
+.header-inner{
+  max-width:1100px;margin:0 auto;
+  padding:clamp(16px,4vw,36px) clamp(14px,4vw,32px) clamp(14px,3vw,28px);
+  display:flex;align-items:center;gap:clamp(12px,2.5vw,22px);
+  position:relative;z-index:2;flex-wrap:wrap;}
+
+.header-icon{
+  width:clamp(48px,8vw,68px);height:clamp(48px,8vw,68px);
+  background:rgba(255,255,255,.15);border:2px solid rgba(201,168,76,.45);
+  border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(1.4rem,4vw,2.1rem);backdrop-filter:blur(6px);
+  flex-shrink:0;box-shadow:0 4px 18px rgba(0,0,0,.14);}
+
+.header-text{flex:1;min-width:0;}
+.header-text h1{
+  font-family:'Amiri',serif;
+  font-size:clamp(1rem,3.5vw,1.8rem);
+  font-weight:700;color:#fff;line-height:1.45;
+  text-shadow:0 2px 8px rgba(0,0,0,.2);}
+.header-text .sub{
+  margin-top:4px;font-size:clamp(.75rem,2vw,.92rem);
+  color:rgba(255,255,255,.72);font-weight:400;}
+
+.header-badge{
+  background:linear-gradient(135deg,var(--gold),var(--goldf));
+  color:var(--gd);font-size:clamp(.72rem,1.8vw,.82rem);font-weight:800;
+  padding:5px 14px;border-radius:30px;
+  box-shadow:0 2px 10px rgba(201,168,76,.38);white-space:nowrap;flex-shrink:0;}
+
+/* ===== MAIN WRAP ===== */
+.wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto;
+  padding:clamp(18px,4vw,40px) clamp(10px,3vw,20px) 10px;}
+
+/* ===== TABS ===== */
+.tabs-bar{
+  display:flex;gap:8px;margin-bottom:clamp(18px,4vw,34px);
+  background:#fff;border-radius:16px;padding:7px;
+  box-shadow:0 4px 22px var(--shadow);
+  border:1px solid rgba(45,138,78,.09);}
+
+.tab-btn{
+  flex:1;padding:clamp(10px,2.5vw,14px) clamp(6px,2vw,16px);
+  border:none;border-radius:10px;
+  font-family:'Tajawal',sans-serif;font-size:clamp(.8rem,2vw,1rem);
+  font-weight:700;cursor:pointer;
+  transition:all .28s cubic-bezier(.4,0,.2,1);
+  background:transparent;color:var(--gm);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  line-height:1.2;}
+
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--gd),var(--gm));
+  color:#fff;box-shadow:0 4px 16px rgba(26,92,46,.28);transform:translateY(-1px);}
+.tab-btn:not(.active):hover{background:var(--gp);}
+
+.tab-num{
+  width:24px;height:24px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:900;flex-shrink:0;
+  background:rgba(255,255,255,.22);}
+.tab-btn:not(.active) .tab-num{background:rgba(45,138,78,.13);color:var(--gd);}
+
+/* ===== PANELS ===== */
+.tab-panel{display:none;animation:fadeUp .35s ease;}
+.tab-panel.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== ARTICLE HEADER ===== */
+.art-hdr{
+  background:linear-gradient(135deg,var(--gd),var(--gm));
+  border-radius:18px 18px 0 0;
+  padding:clamp(16px,3vw,24px) clamp(16px,4vw,30px);
+  color:#fff;display:flex;align-items:flex-start;gap:14px;}
+
+.art-num{
+  width:clamp(46px,8vw,56px);height:clamp(46px,8vw,56px);
+  background:linear-gradient(135deg,var(--gold),var(--goldf));
+  border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-family:'Amiri',serif;font-size:clamp(1rem,3vw,1.25rem);
+  font-weight:700;color:var(--gd);
+  box-shadow:0 3px 12px rgba(201,168,76,.4);flex-shrink:0;}
+
+.art-title{font-family:'Amiri',serif;
+  font-size:clamp(.95rem,3vw,1.35rem);font-weight:700;line-height:1.5;}
+.art-title span{
+  display:block;font-family:'Tajawal',sans-serif;
+  font-size:clamp(.75rem,1.8vw,.83rem);font-weight:400;
+  color:rgba(255,255,255,.72);margin-top:3px;}
+
+/* ===== CONTACT BANNER ===== */
+.contact-banner{
+  background:linear-gradient(90deg,#fff8e1,#fffde7);
+  border:2px solid var(--goldf);border-top:none;
+  padding:clamp(10px,2.5vw,14px) clamp(14px,3vw,26px);
+  display:flex;align-items:flex-start;gap:10px;
+  color:#7c5c00;font-weight:600;font-size:clamp(.82rem,2vw,.92rem);line-height:1.65;}
+.contact-banner .ci{font-size:1.2rem;flex-shrink:0;margin-top:2px;}
+
+/* ===== TABLE CARD ===== */
+.tcard{background:#fff;border-radius:0 0 18px 18px;
+  overflow:hidden;box-shadow:0 8px 36px var(--shadow);margin-bottom:28px;}
+
+/* Desktop grid header */
+.t-head{display:grid;background:var(--gm);color:#fff;font-weight:700;
+  font-size:clamp(.82rem,2vw,.97rem);}
+.t-head.c2{grid-template-columns:90px 1fr;}
+.t-head.c3{grid-template-columns:90px 1fr 150px;}
+.th{padding:clamp(10px,2vw,13px) clamp(12px,2.5vw,20px);
+  border-left:1px solid rgba(255,255,255,.14);
+  display:flex;align-items:center;gap:6px;}
+.th:last-child{border-left:none;}
+
+/* Desktop grid row */
+.t-row{display:grid;border-bottom:1px solid rgba(45,138,78,.07);transition:background .18s;}
+.t-row:last-child{border-bottom:none;}
+.t-row:hover{background:rgba(45,138,78,.025);}
+.t-row.c2{grid-template-columns:90px 1fr;}
+.t-row.c3{grid-template-columns:90px 1fr 150px;}
+.td{padding:clamp(14px,2.5vw,20px) clamp(12px,2.5vw,20px);
+  border-left:1px solid rgba(45,138,78,.07);
+  font-size:clamp(.82rem,1.9vw,.93rem);line-height:1.8;color:#1a2f1f;}
+.td:last-child{border-left:none;}
+
+/* ===== DAYS CELL ===== */
+.days-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;height:100%;}
+.days-bubble{
+  width:clamp(44px,7vw,52px);height:clamp(44px,7vw,52px);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-family:'Amiri',serif;font-size:clamp(1.1rem,3vw,1.4rem);
+  font-weight:700;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.14);}
+.d3{background:linear-gradient(135deg,#2ecc71,#27ae60);}
+.d5{background:linear-gradient(135deg,#f39c12,#e67e22);}
+.d10{background:linear-gradient(135deg,#e74c3c,#c0392b);}
+.days-lbl{font-size:.68rem;color:#aaa;font-weight:500;}
+
+/* ===== BULLETS ===== */
+.blist{list-style:none;display:flex;flex-direction:column;gap:8px;}
+.blist li{display:flex;align-items:flex-start;gap:9px;}
+.blist li::before{content:'◆';color:var(--gm);font-size:.62rem;margin-top:7px;flex-shrink:0;}
+.slist{margin-top:5px;margin-right:14px;list-style:none;
+  display:flex;flex-direction:column;gap:4px;}
+.slist li{display:flex;align-items:flex-start;gap:7px;
+  font-size:.88em;color:#555;}
+.slist li::before{content:'–';color:var(--gold);font-weight:700;flex-shrink:0;margin-top:2px;}
+
+/* ===== NOTE BOX ===== */
+.note-box{
+  background:linear-gradient(135deg,#fff8e1,#fffde7);
+  border:1.5px solid var(--goldf);border-radius:11px;
+  padding:12px 14px;font-size:clamp(.78rem,1.8vw,.87rem);
+  color:#7c5c00;line-height:1.7;
+  display:flex;align-items:flex-start;gap:8px;}
+.note-box .ni{font-size:1rem;flex-shrink:0;margin-top:2px;}
+
+/* ===== FOOTER BANNER ===== */
+.foot-banner{
+  background:linear-gradient(135deg,var(--gd),var(--gm));
+  color:#fff;text-align:center;
+  padding:clamp(12px,2.5vw,16px) 20px;
+  font-weight:700;font-size:clamp(.85rem,2vw,.98rem);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  border-radius:0 0 18px 18px;}
+
+/* ===== MOBILE CARD VIEW ===== */
+@media(max-width:600px){
+  /* Hide desktop grid heads */
+  .t-head{display:none!important;}
+  /* Stack grid rows as cards */
+  .t-row{display:block!important;
+    border-bottom:none!important;
+    margin:0 0 1px;}
+  .t-row:last-child{margin-bottom:0;}
+  .td{display:block!important;border-left:none!important;
+    padding:12px 14px!important;}
+
+  /* Days badge becomes inline header */
+  .td:first-child{
+    background:var(--gp);
+    padding:10px 14px!important;
+    display:flex!important;align-items:center;gap:10px;}
+  .days-cell{flex-direction:row!important;height:auto!important;}
+  .days-bubble{width:38px!important;height:38px!important;font-size:1rem!important;}
+  .days-lbl{font-size:.72rem;color:var(--gd);font-weight:700;}
+
+  /* Note box full width under content */
+  .td.note-td{border-top:1px dashed rgba(201,168,76,.35);}
+
+  /* Separator lines between rows */
+  .t-row{border-bottom:3px solid var(--gp)!important;}
+
+  .blist li{font-size:.87rem;}
+  .slist li{font-size:.82rem;}
+}
+
+/* ===== SETTINGS ===== */
+.sett-sec{
+  background:#fff;border-radius:18px;
+  padding:clamp(18px,3vw,26px) clamp(16px,3.5vw,28px);
+  box-shadow:0 4px 22px var(--shadow);
+  border:1px solid rgba(45,138,78,.09);margin-bottom:20px;}
+.sett-ttl{
+  font-size:clamp(.9rem,2vw,1.02rem);font-weight:800;
+  color:var(--gd);margin-bottom:16px;
+  display:flex;align-items:center;gap:8px;
+  padding-bottom:11px;border-bottom:2px solid var(--gp);}
+
+.sett-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.sett-grid{grid-template-columns:1fr;}}
+
+.s-item{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 14px;border-radius:11px;
+  background:var(--gp);cursor:pointer;transition:all .2s;
+  border:1.5px solid transparent;user-select:none;}
+.s-item:hover{border-color:var(--gm);background:#d4edd9;}
+.s-item input{display:none;}
+.chk{
+  width:22px;height:22px;border-radius:6px;
+  border:2px solid var(--gm);background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;font-size:.82rem;color:transparent;}
+.s-item.checked .chk{background:var(--gm);border-color:var(--gm);color:#fff;}
+.s-lbl{font-size:clamp(.8rem,2vw,.88rem);font-weight:600;color:var(--gm);}
+
+.sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:500px){.sum-grid{grid-template-columns:1fr;}}
+
+/* ===== BUTTONS ===== */
+.btn-wrap{text-align:center;margin-bottom:28px;
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;}
+.btn{
+  background:linear-gradient(135deg,var(--gd),var(--gm));
+  color:#fff;border:none;border-radius:13px;
+  padding:clamp(11px,2.5vw,14px) clamp(20px,4vw,30px);
+  font-family:'Tajawal',sans-serif;font-size:clamp(.88rem,2vw,1rem);
+  font-weight:700;cursor:pointer;
+  display:inline-flex;align-items:center;gap:9px;
+  transition:all .3s;box-shadow:0 4px 16px rgba(26,92,46,.26);}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(26,92,46,.32);}
+.btn.red{background:linear-gradient(135deg,#c0392b,#e74c3c);}
+
+/* ===== CREDIT ===== */
+.credit-footer{
+  text-align:center;
+  padding:clamp(18px,4vw,28px) 16px clamp(28px,6vw,40px);
+  position:relative;z-index:2;}
+.credit-inner{
+  display:inline-flex;flex-direction:column;
+  align-items:center;gap:10px;background:#fff;
+  border-radius:18px;padding:clamp(16px,3vw,22px) clamp(24px,5vw,40px);
+  box-shadow:0 4px 20px var(--shadow);
+  border:1px solid rgba(45,138,78,.10);}
+.c-name{font-weight:700;font-size:clamp(.92rem,2.5vw,1rem);
+  color:var(--gd);display:flex;align-items:center;gap:6px;}
+.c-link{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--gd),var(--gm));
+  color:#fff;text-decoration:none;
+  padding:clamp(8px,2vw,10px) clamp(18px,4vw,24px);
+  border-radius:30px;font-size:clamp(.82rem,2vw,.9rem);font-weight:700;
+  transition:all .3s;box-shadow:0 3px 13px rgba(26,92,46,.24);}
+.c-link:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(26,92,46,.34);}
+
+/* ===== PRINT ===== */
+@media print{
+  .tabs-bar,.btn-wrap,.sett-sec,.credit-footer,.bg-layer,.bg-dots{display:none!important;}
+  .tab-panel{display:block!important;}
+  body{background:#fff;}
+  .art-hdr,.t-head,.foot-banner{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+}
+</style>
+</head>
+<body>
+<div class="bg-layer"></div>
+<div class="bg-dots"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="header-icon">📋</div>
+    <div class="header-text">
+      <h1>إجراءات التعامل مع الطلبة المتغيبين</h1>
+      <div class="sub">وزارة التعليم – اللوائح التنظيمية للغياب خلال العام الدراسي</div>
+    </div>
+    <div class="header-badge">⚖️ المواد 33 – 34</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn active" onclick="sw(1)">
+      <span class="tab-num">33</span>
+      <span>بعذر</span>
+    </button>
+    <button class="tab-btn" onclick="sw(2)">
+      <span class="tab-num">34</span>
+      <span>بدون عذر</span>
+    </button>
+    <button class="tab-btn" onclick="sw(3)">
+      <span class="tab-num">⚙</span>
+      <span>الإعدادات</span>
+    </button>
+  </div>
+
+  <!-- ===== PANEL 1: ARTICLE 33 ===== -->
+  <div class="tab-panel active" id="p1">
+    <div class="art-hdr">
+      <div class="art-num">33</div>
+      <div class="art-title">
+        إجراءات التعامل مع الطلبة المتغيبين بعذر خلال العام الدراسي
+        <span>يتم التعامل مع الطالب الذي يتكرر غيابه بعذر مقبول (سواء متصلة أو منفصلة) وفق الإجراءات التالية</span>
+      </div>
+    </div>
+    <div class="contact-banner">
+      <span class="ci">📱</span>
+      التواصل مع ولي الأمر في نفس اليوم الذي يتغيب فيه الطالب من خلال الرسالة النصية أو المكالمة الهاتفية للاستفسار عن سبب الغياب
+    </div>
+    <div class="tcard">
+      <div class="t-head c2">
+        <div class="th">📅 أيام الغياب</div>
+        <div class="th">⚡ الإجراءات المتخذة</div>
+      </div>
+
+      <div class="t-row c2">
+        <div class="td">
+          <div class="days-cell">
+            <div class="days-bubble d3">3</div>
+            <div class="days-lbl">أيام</div>
+          </div>
+        </div>
+        <div class="td">
+          <ul class="blist">
+            <li>تحويل الطالب للموجه الطلابي لتقديم الدعم والخدمات التربوية المناسبة له (خطة التعلم في أيام الغياب)، ودراسة الحالة إذا احتاج الأمر.</li>
+            <li>استدعاء ولي الأمر، وعقد اجتماع حضوري معه يتضمن ما يلي:
+              <ul class="slist">
+                <li>إبلاغه بالإجراءات المترتبة على غياب ابنه.</li>
+                <li>تقييم الخدمات التربوية والخطة العلاجية المقدمة للطالب، وتحديثها بما يلزم وفق الحالة.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="t-row c2">
+        <div class="td">
+          <div class="days-cell">
+            <div class="days-bubble d5">5</div>
+            <div class="days-lbl">أيام</div>
+          </div>
+        </div>
+        <div class="td">
+          <ul class="blist">
+            <li>في حال عدم التزام ولي الأمر بالخطة التربوية (خطة التعلم في أيام الغياب)، يُحال الطالب إلى لجنة التوجيه الطلابي، ويتم تنظيم جلسة توعوية مع ولي الأمر للتأكيد على أهمية اتباع الخطط التربوية والعلاجية.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="t-row c2">
+        <div class="td">
+          <div class="days-cell">
+            <div class="days-bubble d10">10</div>
+            <div class="days-lbl">أيام</div>
+          </div>
+        </div>
+        <div class="td">
+          <ul class="blist">
+            <li>في حال الاشتباه بتعرض الطالب للإهمال تخاطب المدرسة الجهات ذات الاختصاص حيال تطبيق ما ورد في نظام حماية الطفل ونظام الحماية من الإيذاء ولائحتهما التنفيذية، وإشعار إدارة التعليم بذلك.</li>
+            <li>تتخذ المدرسة الإجراءات النظامية المطلوبة مع الجهات ذات الاختصاص المذكورة في الفقرة السابقة حيال ما تم من إجراءات للحالات المحالة لهم.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="foot-banner">✅ استمرارية تقديم الخدمات التعليمية وعدم التسبب في انقطاعها</div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL 2: ARTICLE 34 ===== -->
+  <div class="tab-panel" id="p2">
+    <div class="art-hdr">
+      <div class="art-num">34</div>
+      <div class="art-title">
+        إجراءات التعامل مع الطلبة المتغيبين بدون عذر خلال العام الدراسي
+        <span>إجراءات الغياب غير المبرر وفق أيام الغياب</span>
+      </div>
+    </div>
+    <div class="contact-banner">
+      <span class="ci">📱</span>
+      التواصل مع ولي الأمر في نفس اليوم الذي يتغيب فيه الطالب من خلال الرسالة النصية أو المكالمة الهاتفية للاستفسار عن سبب الغياب
+    </div>
+    <div class="tcard">
+      <div class="t-head c3">
+        <div class="th">📅 أيام الغياب</div>
+        <div class="th">⚡ الإجراءات المتخذة</div>
+        <div class="th">📝 ملاحظات</div>
+      </div>
+
+      <!-- 3 days -->
+      <div class="t-row c3">
+        <div class="td">
+          <div class="days-cell">
+            <div class="days-bubble d3">3</div>
+            <div class="days-lbl">أيام</div>
+          </div>
+        </div>
+        <div class="td">
+          <ul class="blist">
+            <li>تحويل الطالب للموجه الطلابي لدراسة الحالة وتقديم الخدمات التربوية المناسبة له.</li>
+            <li>عند استمرار الغياب يستدعى ولي الأمر، ويعقد اجتماع حضوري معه يتضمن ما يلي:
+              <ul class="slist">
+                <li>إبلاغه بالإجراءات المترتبة على غياب ابنه.</li>
+                <li>تقييم الخدمات التربوية والخطة العلاجية المقدمة للطالب، وتحديثها بما يلزم وفق الحالة.</li>
+                <li>أخذ التعهد الخطي من الطالب وولي الأمر بالالتزام بالخطة المقدمة.</li>
+              </ul>
+            </li>
+            <li>استمرار تقديم الخدمات التربوية للطالب ومتابعة حالته.</li>
+          </ul>
+        </div>
+        <div class="td note-td"></div>
+      </div>
+
+      <!-- 5 days -->
+      <div class="t-row c3">
+        <div class="td">
+          <div class="days-cell">
+            <div class="days-bubble d5">5</div>
+            <div class="days-lbl">أيام</div>
+          </div>
+        </div>
+        <div class="td">
+          <ul class="blist">
+            <li>استدعاء ولي الأمر لمناقشة أسباب الغياب.</li>
+            <li>إحالة الطالب للجنة التوجيه الطلابي، وعقد اجتماع لمراجعة الخطة التربوية والعلاجية المقدمة للطالب وتحديثها بما يلزم وفق الحالة.</li>
+            <li>استمرار تقديم الخدمات التربوية للطالب ومتابعة حالته.</li>
+            <li>تنبيه ولي الأمر بالإجراءات المترتبة على استمرار غياب ابنه.</li>
+          </ul>
+        </div>
+        <div class="td note-td">
+          <div class="note-box">
+            <span class="ni">⚠️</span>
+            في حال كانت أيام الغياب متصلة (3 أيام أو أكثر) تخاطب المدرسة الجهات ذات الاختصاص حيال تطبيق ما ورد في نظام حماية الطفل ونظام الحماية من الإيذاء ولائحتهما التنفيذية.
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 days -->
+      <div class="t-row c3">
+        <div class="td">
+          <div class="days-cell">
+            <div class="days-bubble d10">10</div>
+            <div class="days-lbl">أيام</div>
+          </div>
+        </div>
+        <div class="td">
+          <ul class="blist">
+            <li>مخاطبة الجهات ذات الاختصاص من قبل المدرسة حيال تطبيق ما ورد في نظام حماية الطفل ونظام الحماية من الإيذاء ولائحتهما التنفيذية، مع إشعار إدارة التعليم بذلك.</li>
+            <li>متابعة الإجراءات والتنسيق من قبل المدرسة بعد اتخاذ الإجراءات النظامية المطلوبة مع الجهات ذات الاختصاص المذكورة في الفقرة السابقة، حيال ما تم من إجراءات للحالات المحالة لهم.</li>
+          </ul>
+        </div>
+        <div class="td note-td"></div>
+      </div>
+
+      <div class="foot-banner">✅ استمرار تقديم الخدمات التعليمية وعدم التسبب في انقطاعها</div>
+    </div>
+  </div>
+
+  <!-- ===== PANEL 3: SETTINGS ===== -->
+  <div class="tab-panel" id="p3">
+
+    <div class="sett-sec">
+      <div class="sett-ttl">⚙️ إعدادات العرض</div>
+      <div class="sett-grid">
+        <label class="s-item checked" onclick="tog(this)">
+          <input type="checkbox" checked>
+          <div class="chk">✓</div>
+          <span class="s-lbl">🟢 إظهار المادة 33 (بعذر)</span>
+        </label>
+        <label class="s-item checked" onclick="tog(this)">
+          <input type="checkbox" checked>
+          <div class="chk">✓</div>
+          <span class="s-lbl">🔴 إظهار المادة 34 (بدون عذر)</span>
+        </label>
+        <label class="s-item checked" onclick="tog(this)">
+          <input type="checkbox" checked>
+          <div class="chk">✓</div>
+          <span class="s-lbl">💬 بانر التواصل مع ولي الأمر</span>
+        </label>
+        <label class="s-item checked" onclick="tog(this)">
+          <input type="checkbox" checked>
+          <div class="chk">✓</div>
+          <span class="s-lbl">📝 خانة الملاحظات</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="sett-sec">
+      <div class="sett-ttl">📊 ملخص المحتوى</div>
+      <div class="sum-grid">
+        <div style="background:var(--gp);border-radius:13px;padding:16px;border:1.5px solid rgba(45,138,78,.15)">
+          <div style="font-weight:800;color:var(--gd);margin-bottom:9px;font-size:.93rem">📌 المادة 33 – بعذر</div>
+          <div style="font-size:.84rem;color:#444;line-height:1.85">
+            <div>✅ 3 أيام: تحويل للموجه + اجتماع</div>
+            <div>✅ 5 أيام: لجنة التوجيه + جلسة توعوية</div>
+            <div>✅ 10 أيام: مخاطبة جهات الحماية</div>
+          </div>
+        </div>
+        <div style="background:#fff5f5;border-radius:13px;padding:16px;border:1.5px solid rgba(231,76,60,.14)">
+          <div style="font-weight:800;color:#c0392b;margin-bottom:9px;font-size:.93rem">📌 المادة 34 – بدون عذر</div>
+          <div style="font-size:.84rem;color:#444;line-height:1.85">
+            <div>🔴 3 أيام: دراسة الحالة + تعهد خطي</div>
+            <div>🔴 5 أيام: لجنة التوجيه + تنبيه رسمي</div>
+            <div>🔴 10 أيام: مخاطبة الجهات الرسمية</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-wrap">
+      <button class="btn" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+      <button class="btn red" onclick="sw(1)">📋 عرض المواد</button>
+    </div>
+
+    <!-- Credit inside settings -->
+    <div style="text-align:center;margin-bottom:8px">
+      <div class="credit-inner">
+        <div class="c-name">✏️ تصميم د/فواز</div>
+        <div style="color:#bbb;font-size:.8rem">تفضل للمزيد هنا</div>
+        <a class="c-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">✈️ قناة التيليجرام</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- CREDIT FOOTER -->
+<footer class="credit-footer">
+  <div class="credit-inner">
+    <div class="c-name">✏️ تصميم د/فواز</div>
+    <div style="color:#bbb;font-size:.8rem">تفضل للمزيد هنا</div>
+    <a class="c-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">✈️ تفضل للمزيد هنا</a>
+  </div>
+</footer>
+
+<script>
+function sw(n){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i+1===n));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i+1===n));
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function tog(el){
+  el.classList.toggle('checked');
+  el.querySelector('.chk').textContent=el.classList.contains('checked')?'✓':'';
+}
+</script>
+</body>
+</html>

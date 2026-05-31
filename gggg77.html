@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام كشف تضخم الدرجات - مدارس الصالحية الأهلية للبنات</title>
+<title>نظام كشف تضخم الدرجات</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
@@ -344,7 +344,7 @@
     <div class="header-logo">📊</div>
     <div>
       <div class="header-title">نظام كشف تضخم الدرجات</div>
-      <div class="header-subtitle">مدارس الصالحية الأهلية للبنات</div>
+      <div class="header-subtitle" id="headerSchoolName"></div>
     </div>
   </div>
   <div class="header-actions">
@@ -396,20 +396,24 @@
         </div>
         <div class="field-group">
           <label class="field-label">نوع التقويم</label>
-          <select class="field-input" id="s_exam" onchange="saveSettings()">
-            <option>اختبار نهائي</option>
-            <option>اختبار منتصف الفصل</option>
-            <option>واجب / مشروع</option>
-            <option>تقويم مستمر</option>
-          </select>
+          <input class="field-input" id="s_exam" value="اختبار نهائي" list="examOptions" placeholder="اكتب نوع التقويم" oninput="saveSettings()">
+          <datalist id="examOptions">
+            <option value="اختبار نهائي">
+            <option value="اختبار منتصف الفصل">
+            <option value="واجب / مشروع">
+            <option value="تقويم مستمر">
+            <option value="اختبار قصير">
+            <option value="أعمال السنة">
+            <option value="مشروع أدائي">
+          </datalist>
         </div>
         <div class="field-group">
           <label class="field-label">الدرجة القصوى</label>
           <input class="field-input" id="s_max" type="number" value="100" min="1" max="200" oninput="saveSettings();recalcAll()">
         </div>
         <div class="field-group">
-          <label class="field-label">المعلمة</label>
-          <input class="field-input" id="s_teacher" value="" placeholder="اسم المعلمة" oninput="saveSettings()">
+          <label class="field-label">المعلم/ة</label>
+          <input class="field-input" id="s_teacher" value="" placeholder="اسم المعلم/ة" oninput="saveSettings()">
         </div>
         <div class="field-group">
           <label class="field-label">التاريخ</label>
@@ -657,11 +661,22 @@ let students = [];    // [{name, id, score}]
 let stats = {};       // computed statistics
 let histChartObj=null, pieChartObj=null, lineChartObj=null, radarChartObj=null;
 
+function updateSchoolDisplay(){
+  const schoolInput = document.getElementById('s_school');
+  const school = schoolInput ? schoolInput.value.trim() : '';
+  const subtitle = document.getElementById('headerSchoolName');
+  if(subtitle) subtitle.textContent = school;
+  document.title = school ? `نظام كشف تضخم الدرجات - ${school}` : 'نظام كشف تضخم الدرجات';
+}
+
+window.addEventListener('beforeprint', updateSchoolDisplay);
+
 // ===================== INIT =====================
 document.addEventListener('DOMContentLoaded', () => {
   // Set today
   document.getElementById('s_date').value = new Date().toISOString().split('T')[0];
   loadData();
+  updateSchoolDisplay();
   if(students.length===0) loadSampleData();
   recalcAll();
 });
@@ -989,7 +1004,7 @@ function updateKPIs(){
     desc=`المتوسط ${mean.toFixed(1)} (${pct.toFixed(1)}% من السقف) — ${(above90*100).toFixed(1)}% حصلن على 90%+ — الانحراف ${std.toFixed(1)} — يُوصى بمراجعة معايير التصحيح وأسئلة الاختبار`;
   } else if(above90>0.20 || pct>85 || std<10){
     cls='verdict-orange'; icon='🟡'; title='تضخم متوسط — الدرجات مرتفعة';
-    desc=`المتوسط ${mean.toFixed(1)} (${pct.toFixed(1)}%) — نسبة الممتازات ${(above90*100).toFixed(1)}% — الانحراف ${std.toFixed(1)} — يُنصح بتضمين أسئلة تطبيقية (مستويات بلوم العليا)`;
+    desc=`المتوسط ${mean.toFixed(1)} (${pct.toFixed(1)}%) — نسبة الممتازون ${(above90*100).toFixed(1)}% — الانحراف ${std.toFixed(1)} — يُنصح بتضمين أسئلة تطبيقية (مستويات بلوم العليا)`;
   } else if(pct>=70){
     cls='verdict-green'; icon='🟢'; title='الدرجات في المستوى الطبيعي';
     desc=`المتوسط ${mean.toFixed(1)} (${pct.toFixed(1)}%) — التوزيع مقبول إحصائياً — الانحراف المعياري ${std.toFixed(1)}`;
@@ -1118,7 +1133,7 @@ function updateCriteria(){
       pass: inflationIdx<30,
       severity: inflationIdx>=60?'خطر':inflationIdx>=30?'مقلق':'طبيعي',
       rec: inflationIdx>=60?'يُوصى بمراجعة شاملة لأسلوب التقييم وأسئلة الاختبار':
-           inflationIdx>=30?'يُنصح بمتابعة المؤشرات ومقارنة النتائج بالاختبارات المعيارية كنافس':'الدرجات طبيعية ✓'
+           inflationIdx>=30?'يُنصح بمتابعة المؤشرات ومقارنة النتائج بالاختبارات الدولية أو الخارجية':'الدرجات طبيعية ✓'
     }
   ];
   tbody.innerHTML=criteria.map(c=>`
@@ -1276,7 +1291,7 @@ function drawRadar(){
     inflationIdx
   ];
   radarChartObj=new Chart(ctx,{type:'radar',data:{
-    labels:['المتوسط%','نسبة الممتازات%','تضخم الراسبين','استقرار التوزيع','الالتواء','مؤشر التضخم'],
+    labels:['المتوسط%','نسبة الممتازون%','تضخم الراسبين','استقرار التوزيع','الالتواء','مؤشر التضخم'],
     datasets:[{
       label:'القيم الفعلية',data:radarData,
       backgroundColor:'rgba(198,40,40,0.15)',borderColor:'#C62828',
@@ -1315,12 +1330,12 @@ function buildReport(){
         ${school?`<div style="font-size:11px;color:#90A4AE;font-weight:700;margin-bottom:8px">${school}</div>`:''}
         <h2 style="font-size:20px;color:var(--navy);font-weight:900;margin-bottom:6px">تقرير تحليل تضخم الدرجات</h2>
         <div style="font-size:13px;color:#546E7A">${exam} — ${subject} — ${cls} — الفصل ${semester} — ${date}</div>
-        ${teacher?`<div style="font-size:12px;color:#90A4AE;margin-top:4px">المعلمة: ${teacher}</div>`:''}
+        ${teacher?`<div style="font-size:12px;color:#90A4AE;margin-top:4px">المعلم/ة: ${teacher}</div>`:''}
       </div>
       
       <div style="margin:20px 0;padding:16px;border-radius:10px;${verdictColor}">
         <div style="font-size:16px;font-weight:900;margin-bottom:6px">${verdictIcon} حكم: ${verdict}</div>
-        <div style="font-size:13px">المتوسط العام ${mean.toFixed(1)} درجة (${pct.toFixed(1)}% من الدرجة القصوى ${mx}) — الانحراف المعياري ${std.toFixed(1)} — نسبة الممتازات ${(above90*100).toFixed(1)}%</div>
+        <div style="font-size:13px">المتوسط العام ${mean.toFixed(1)} درجة (${pct.toFixed(1)}% من الدرجة القصوى ${mx}) — الانحراف المعياري ${std.toFixed(1)} — نسبة الممتازون ${(above90*100).toFixed(1)}%</div>
       </div>
       
       <h3 style="color:var(--royal);font-size:15px;margin:20px 0 12px">أولاً: الإحصاءات الوصفية</h3>
@@ -1342,7 +1357,7 @@ function buildReport(){
           ${[
             ['متوسط الدرجات',pct.toFixed(1)+'%','70-85% طبيعي | فوق 85% مرتفع',pct<=85],
             ['الانحراف المعياري',std.toFixed(1)+' درجة','10-20 طبيعي | أقل من 5 خطر',std>=10&&std<=20],
-            ['نسبة الممتازات ≥90%',(above90*100).toFixed(1)+'%','أقل من 30%',above90<0.3],
+            ['نسبة الممتازون ≥90%',(above90*100).toFixed(1)+'%','أقل من 30%',above90<0.3],
             ['نسبة الجيد جداً ≥80%',(above80*100).toFixed(1)+'%','أقل من 60%',above80<0.6],
             ['نسبة الراسبين <60%',(below60*100).toFixed(1)+'%','5%-15%',below60>=0.05&&below60<=0.15],
             ['معامل الالتواء',skew.toFixed(3),'بين -0.5 و 0.5',Math.abs(skew)<0.5],
@@ -1380,7 +1395,7 @@ function buildReport(){
           ${above90>0.30?`<li style="display:flex;gap:10px"><span>🔴</span><span>نسبة الحاصلين على 90%+ تبلغ ${(above90*100).toFixed(1)}% — تتجاوز الحد المرجعي 30% — مراجعة معايير التقييم</span></li>`:''}
           ${skew<-0.5?`<li style="display:flex;gap:10px"><span>📊</span><span>الالتواء السالب (${skew.toFixed(2)}) يؤكد أن الدرجات منحازة نحو الأعلى (Ceiling Effect) — دليل إحصائي على التضخم</span></li>`:''}
           ${below60<0.05?`<li style="display:flex;gap:10px"><span>🔵</span><span>نسبة الطلاب الراسبين ${(below60*100).toFixed(1)}% أقل من الحد الطبيعي (5%) — قد يشير لتسهيل مفرط في التصحيح</span></li>`:''}
-          <li style="display:flex;gap:10px"><span>✅</span><span>يُنصح بمقارنة النتائج باختبارات نافس والاختبارات المركزية — إذا كانت درجات المدرسة مرتفعة لكن نتائج الاختبارات الخارجية منخفضة، فهذه علامة قوية على تضخم الدرجات</span></li>
+          <li style="display:flex;gap:10px"><span>✅</span><span>يُنصح بمقارنة النتائج بالاختبارات الدولية أو الخارجية والاختبارات المركزية — إذا كانت درجات المدرسة مرتفعة لكن نتائج الاختبارات الدولية أو الخارجية منخفضة، فهذه علامة قوية على تضخم الدرجات</span></li>
         </ul>
       </div>
       
@@ -1424,7 +1439,7 @@ function exportExcelNow(){
       ['معامل الالتواء',+s.skew.toFixed(3)],
       ['Q1',+s.q1.toFixed(2)],['Q3',+s.q3.toFixed(2)],
       ['المئين 90',+s.p90.toFixed(2)],['المئين 95',+s.p95.toFixed(2)],
-      ['نسبة الممتازات ≥90%',(s.above90*100).toFixed(1)+'%'],
+      ['نسبة الممتازون ≥90%',(s.above90*100).toFixed(1)+'%'],
       ['نسبة الراسبين <60%',(s.below60*100).toFixed(1)+'%'],
       ['مؤشر التضخم',+s.inflationIdx.toFixed(1)],
     ];
@@ -1473,7 +1488,7 @@ function loadData(){
     }
   } catch(e){}
 }
-function saveSettings(){ saveData(); }
+function saveSettings(){ saveData(); updateSchoolDisplay(); buildReport(); }
 function clearAll(){
   if(confirm('هل تريد مسح جميع البيانات؟ لا يمكن التراجع عن هذه العملية.')){
     students=[];
@@ -1486,6 +1501,7 @@ function clearAll(){
 
 // ===================== SAVE PDF =====================
 function savePDF(){
+  updateSchoolDisplay();
   // Hide no-print elements, trigger browser print-to-PDF
   document.querySelectorAll('.no-print').forEach(el => el.style.setProperty('display','none','important'));
   const style = document.createElement('style');

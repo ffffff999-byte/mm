@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة إنجاز | تقييم أداء معلمة رياض الأطفال</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f8fafc; }
+        
+        /* إعدادات الطباعة الصارمة والاحترافية */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            html, body {
+                width: 210mm !important; height: 297mm !important;
+                margin: 0 !important; padding: 0 !important;
+                background-color: white !important;
+                overflow: hidden !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                box-sizing: border-box !important;
+            }
+            .no-print, header, #evaluation-form-container, #calc-modal, footer, nav { display: none !important; }
+            a[href]:after { content: none !important; }
+            #view-teacher-profile { 
+                display: flex !important; flex-direction: column !important;
+                width: 210mm !important; height: 297mm !important; 
+                padding: 12mm 15mm !important; box-sizing: border-box !important;
+                gap: 8px !important;
+            }
+            .print-header-card { padding: 10px 15px !important; margin-bottom: 0 !important; flex-shrink: 0 !important; border: 1px solid #e2e8f0 !important; box-shadow: none !important; }
+            .print-table-container { flex-grow: 1 !important; display: flex !important; flex-direction: column !important; overflow: hidden !important; border: 1px solid #e2e8f0 !important; box-shadow: none !important; margin-bottom: 0 !important; }
+            .print-table-wrapper { flex-grow: 1 !important; overflow: hidden !important; }
+            table { width: 100% !important; table-layout: fixed; }
+            th, td { padding: 6px 8px !important; font-size: 11px !important; line-height: 1.3 !important; word-wrap: break-word; }
+            th { font-size: 12px !important; padding: 8px !important; }
+            h2 { font-size: 16px !important; margin: 0 !important;}
+            h3 { font-size: 14px !important; }
+            p, span { font-size: 11px !important; }
+            .text-2xl { font-size: 18px !important; }
+            .text-lg { font-size: 16px !important; }
+            .text-xs { font-size: 10px !important; }
+            .print-push-bottom { margin-top: auto !important; padding-top: 15px !important; flex-shrink: 0 !important; border-top: 2px solid #cbd5e1 !important; }
+            .avoid-break { page-break-inside: avoid !important; }
+        }
+
+        .rating-radio:checked + label {
+            background-color: #ec4899; 
+            color: white; border-color: #ec4899;
+            transform: scale(1.15); box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.4);
+        }
+        .auto-filled-pulse { animation: pulse-pink 1s ease-out; }
+        @keyframes pulse-pink {
+            0% { background-color: #fce7f3; border-color: #ec4899; transform: scale(1.02); }
+            100% { background-color: #f8fafc; border-color: #e2e8f0; transform: scale(1); }
+        }
+        .page-view { display: none; animation: fadeIn 0.4s ease; }
+        .page-view.active { display: block; flex-grow: 1; display: flex; flex-direction: column; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #fdf2f8; rounded: 10px; }
+        ::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f472b6; }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col relative">
+
+    <!-- الهيدر -->
+    <header class="bg-gradient-to-r from-pink-600 to-rose-700 text-white shadow-md sticky top-0 z-40 no-print">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-white/10 p-2 rounded-lg backdrop-blur-md">
+                    <svg class="w-8 h-8 text-pink-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-wide cursor-pointer hover:text-pink-200 transition-colors" onclick="showMainDashboard()">منصة إنجاز الرقمية</h1>
+                    <p class="text-xs text-pink-100">نظام المتابعة والتغذية الراجعة (رياض الأطفال)</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-sm bg-black/10 px-4 py-2 rounded-full border border-white/10">
+                <span class="font-bold text-pink-50">منصة المديرة لمتابعة الأداء الوظيفي</span>
+                <span class="text-pink-300">|</span>
+                <span id="current-date" class="text-xs font-semibold"></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 lg:p-6 flex flex-col">
+
+        <!-- ========================================== -->
+        <!-- الصفحة الأولى: لوحة التحكم الرئيسية (الرصد) -->
+        <!-- ========================================== -->
+        <div id="view-dashboard" class="page-view active space-y-6">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div><p class="text-sm font-semibold text-slate-500">عمليات الرصد المنجزة</p><h3 id="stat-total-evals" class="text-2xl font-bold text-slate-800 mt-1">0</h3></div>
+                    <div class="p-3 bg-pink-50 text-pink-600 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div><p class="text-sm font-semibold text-slate-500">متوسط أداء الروضة</p><h3 id="stat-avg-performance" class="text-2xl font-bold text-emerald-600 mt-1">0%</h3></div>
+                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg></div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div><p class="text-sm font-semibold text-slate-500">يحتجن دعم وتطوير</p><h3 id="stat-needs-dev" class="text-2xl font-bold text-amber-600 mt-1">0</h3></div>
+                    <div class="p-3 bg-amber-50 text-amber-500 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4v2m0-6V4"></path></svg></div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-between">
+                    <div><p class="text-sm font-semibold text-slate-500">إجمالي المعلمات</p><h3 id="stat-total-teachers" class="text-2xl font-bold text-pink-600 mt-1">0</h3></div>
+                    <div class="p-3 bg-pink-50 text-pink-600 rounded-xl"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg></div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- استمارة الرصد المدعومة آلياً -->
+                <div id="evaluation-form-container" class="lg:col-span-1 space-y-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden">
+                        <div class="flex items-center gap-2 mb-4 border-b border-slate-100 pb-3">
+                            <span class="p-1.5 bg-pink-50 text-pink-600 rounded-lg"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012 2"></path></svg></span>
+                            <h2 class="text-lg font-bold text-slate-800">تقييم أداء معلمة رياض الأطفال</h2>
+                        </div>
+
+                        <form id="evaluation-form" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">المستهدفة بالتقييم (اختر أو اكتب اسماً)</label>
+                                <input type="text" id="teacher-input" list="teachers-datalist" required placeholder="ابحث أو اكتب اسم المعلمة..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-pink-500 transition-all">
+                                <datalist id="teachers-datalist"></datalist>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1 flex justify-between">
+                                    <span>التقدير العام للأداء (من 100)</span>
+                                    <span class="text-[10px] text-emerald-500 font-bold hidden" id="auto-fill-badge">تم التشخيص آلياً ✓</span>
+                                </label>
+                                <div class="flex gap-2">
+                                    <input type="number" id="visit-score" min="0" max="100" step="0.1" required placeholder="مثال: 95" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold focus:ring-2 focus:ring-pink-500">
+                                    <button type="button" onclick="openCalculator()" class="bg-pink-600 hover:bg-pink-700 text-white px-4 rounded-xl flex items-center justify-center shadow-md group shrink-0" title="افتح الحاسبة للتشخيص الآلي">
+                                        <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">أبرز نقطة قوة</label>
+                                <select id="strength-point" required class="w-full px-3 py-2 bg-emerald-50/50 border border-emerald-100 rounded-xl text-sm font-bold text-emerald-700 focus:outline-none appearance-none cursor-not-allowed" disabled>
+                                    <option value="" disabled selected>يتم الاستنتاج آلياً من الحاسبة...</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">الاحتياجات المهنية (العناصر أقل من 3)</label>
+                                <input type="text" id="weakness-point" required readonly placeholder="تحدد آلياً لجميع العناصر الضعيفة..." class="w-full px-3 py-2 bg-rose-50/50 border border-rose-100 rounded-xl text-sm font-bold text-rose-700 focus:outline-none">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">الملاحظات التشخيصية والتغذية الراجعة</label>
+                                <textarea id="evaluator-note" rows="4" required placeholder="استخدم الحاسبة لتوليد الملاحظات من الأدلة المعيارية..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs leading-relaxed focus:ring-2 focus:ring-pink-500"></textarea>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">توصيات أخرى (اختياري - من مديرة الروضة)</label>
+                                <textarea id="other-recommendations" rows="2" placeholder="أضف أي توصيات إضافية غير ملزمة..." class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs leading-relaxed focus:ring-2 focus:ring-pink-500"></textarea>
+                            </div>
+
+                            <!-- أزرار الإجراءات -->
+                            <div class="flex gap-2 mt-2">
+                                <button type="submit" class="flex-grow py-3 bg-pink-600 hover:bg-pink-700 text-white font-semibold rounded-xl text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                                    حفظ واعتماد الملف
+                                </button>
+                                <button type="button" onclick="clearForm()" class="py-3 px-4 bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 font-semibold rounded-xl transition-all flex items-center justify-center shrink-0" title="مسح وتفريغ الحقول">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- جدول القائمة -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div id="recommendation-box" class="bg-slate-800 text-white p-5 rounded-2xl shadow-md border border-slate-700 transition-all duration-500 relative overflow-hidden hidden">
+                        <div class="relative z-10">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="px-2.5 py-1 bg-pink-500/20 text-pink-300 rounded-full text-xs font-bold border border-pink-500/30">إشعار التغذية الراجعة</span>
+                            </div>
+                            <h3 id="rec-title" class="text-sm font-bold text-pink-400"></h3>
+                            <p id="rec-text" class="text-xs text-slate-300 mt-2 leading-relaxed"></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden avoid-break flex flex-col h-full">
+                        <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center shrink-0">
+                            <h2 class="text-base font-bold text-slate-800">ملفات معلمات رياض الأطفال (Portfolios)</h2>
+                            <button onclick="resetPlatform()" class="no-print px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border border-rose-100">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                مسح بيانات المنصة
+                            </button>
+                        </div>
+                        <div class="overflow-x-auto flex-grow">
+                            <table class="w-full text-right border-collapse text-sm">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-500 text-xs uppercase font-bold border-b border-slate-200">
+                                        <th class="p-4">المعلمة والتخصص</th>
+                                        <th class="p-4 text-center">متوسط الأداء</th>
+                                        <th class="p-4 text-center">عدد التقييمات</th>
+                                        <th class="p-4 text-center">الإجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="main-teachers-list" class="divide-y divide-slate-100">
+                                    <tr><td colspan="4" class="p-6 text-center text-slate-400 text-xs">لا توجد ملفات مسجلة بعد. استخدمي الحاسبة للتشخيص والرصد.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- الصفحة الثانية: الملف الشخصي المستقل (مخصصة للطباعة A4) -->
+        <!-- ========================================== -->
+        <div id="view-teacher-profile" class="page-view space-y-6 flex flex-col">
+            
+            <button onclick="showMainDashboard()" class="no-print mb-2 flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-pink-600 transition-colors shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                العودة للوحة الرئيسية
+            </button>
+
+            <!-- ترويسة الملف -->
+            <div class="print-header-card bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-pink-100 to-rose-100 rounded-full flex items-center justify-center border-4 border-white shadow-sm">
+                        <svg class="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    </div>
+                    <div>
+                        <h2 id="profile-name" class="text-2xl font-black text-slate-800">اسم المستهدفة</h2>
+                        <p id="profile-specialty" class="text-sm font-semibold text-slate-500 mt-1">التخصص</p>
+                    </div>
+                </div>
+                <div class="flex gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                    <div class="text-center px-4 border-l border-slate-200">
+                        <span class="block text-[10px] font-bold text-slate-400">سجل التقييمات</span>
+                        <span id="profile-visits" class="text-lg font-black text-slate-700">0</span>
+                    </div>
+                    <div class="text-center px-4">
+                        <span class="block text-[10px] font-bold text-slate-400">متوسط الأداء</span>
+                        <span id="profile-avg" class="text-lg font-black text-pink-600">0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="print-table-container bg-white rounded-2xl shadow-sm border border-slate-100 flex flex-col">
+                <div class="p-4 border-b border-slate-100 bg-slate-50 flex justify-between items-center shrink-0">
+                    <h2 class="text-base font-bold text-slate-800">السجل التاريخي والتشخيصات الآلية</h2>
+                    <button onclick="window.print()" class="no-print px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 shadow-md">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        حفظ وطباعة PDF
+                    </button>
+                </div>
+                <div class="print-table-wrapper overflow-x-auto">
+                    <table class="w-full text-right border-collapse text-sm">
+                        <thead>
+                            <tr class="bg-slate-100 text-slate-500 text-xs uppercase font-bold border-b border-slate-200">
+                                <th class="p-3 w-20">التاريخ</th>
+                                <th class="p-3 text-center w-16">الدرجة</th>
+                                <th class="p-3 w-40">نقطة القوة</th>
+                                <th class="p-3">التشخيص، التوجيه، والتوصيات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="profile-history-list" class="divide-y divide-slate-100">
+                            <!-- السجل هنا -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- منطقة التواقيع الثنائية (تبقى دائماً في الأسفل عند الطباعة) -->
+            <div class="print-push-bottom mt-6 pt-6 border-t border-slate-200 flex justify-around items-end text-center avoid-break gap-8">
+                <div class="flex flex-col items-center gap-4 w-2/5">
+                    <span contenteditable="true" class="font-bold text-sm text-slate-800 bg-transparent outline-none hover:bg-slate-100 px-2 py-1 rounded transition-colors border-b border-transparent focus:border-pink-500">توقيع معلمة الروضة</span>
+                    <span contenteditable="true" class="text-sm font-semibold text-slate-400 bg-transparent outline-none hover:bg-slate-100 px-4 py-1 border-b-2 border-dashed border-slate-300 w-full focus:border-pink-500 transition-colors">الاسم والتوقيع...</span>
+                </div>
+                
+                <div class="flex flex-col items-center gap-4 w-2/5">
+                    <span contenteditable="true" class="font-bold text-sm text-slate-800 bg-transparent outline-none hover:bg-slate-100 px-2 py-1 rounded transition-colors border-b border-transparent focus:border-pink-500">توقيع مديرة الروضة</span>
+                    <span contenteditable="true" class="text-sm font-semibold text-slate-400 bg-transparent outline-none hover:bg-slate-100 px-4 py-1 border-b-2 border-dashed border-slate-300 w-full focus:border-pink-500 transition-colors">الاسم والتوقيع...</span>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Modal: نافذة الحاسبة الذكية -->
+    <div id="calc-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex justify-center items-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-slate-800 text-white p-4 flex justify-between items-center shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="p-2 bg-pink-500/20 rounded-lg">
+                        <svg class="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h3 class="font-bold">الحاسبة الذكية (نموذج رياض الأطفال)</h3>
+                        <p class="text-[10px] text-slate-300">17 بنداً معتمداً. التقييم بأقل من 3 يعتبر احتياجاً مهنياً ويولد ملاحظات مخصصة.</p>
+                    </div>
+                </div>
+                <button onclick="closeCalculator()" class="text-slate-400 hover:text-rose-400 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <!-- جسم الحاسبة قابل للتمرير -->
+            <div class="p-4 overflow-y-auto bg-slate-50 border-b border-slate-200" id="calc-items"></div>
+            
+            <div class="p-4 bg-white shrink-0 flex flex-col gap-4">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                    <div class="text-center sm:text-right">
+                        <span class="text-xs text-slate-500 font-bold block mb-1">النسبة الموزونة للتقييم:</span>
+                        <span id="live-calc-score" class="text-3xl font-black text-pink-600 tracking-tight">0%</span>
+                    </div>
+                    <div class="flex-grow flex flex-col sm:flex-row gap-3 border-t sm:border-t-0 sm:border-r border-slate-200 pt-3 sm:pt-0 sm:pr-4">
+                        <div class="flex-1 bg-emerald-50/50 p-2 rounded-lg border border-emerald-100">
+                            <span class="text-[10px] font-bold text-emerald-600">الاستنتاج الآلي للقوة:</span>
+                            <p id="live-strength" class="text-xs font-bold text-slate-700 mt-1 truncate">---</p>
+                        </div>
+                        <div class="flex-1 bg-rose-50/50 p-2 rounded-lg border border-rose-100">
+                            <span class="text-[10px] font-bold text-rose-600">الاحتياجات المرصودة (< 3):</span>
+                            <p id="live-weaknesses" class="text-xs font-bold text-slate-700 mt-1 truncate">---</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-2 sm:gap-3">
+                    <button onclick="clearCalculator()" class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-sm font-bold transition-all flex items-center gap-1" title="مسح الاختيارات">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                    <button onclick="closeCalculator()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm font-bold transition-all">إلغاء</button>
+                    <button onclick="applyCalculation()" class="px-6 py-2.5 bg-pink-600 hover:bg-pink-700 text-white rounded-xl text-sm font-bold transition-all shadow-md shadow-pink-200">تشخيص وتعبئة آلياً</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- الفوتر مع حقوق التصميم -->
+    <footer class="bg-white border-t border-slate-200 mt-auto py-6 text-center no-print shrink-0">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col gap-2">
+            <p class="text-xs text-slate-400">نظام المتابعة والتغذية الراجعه © ٢٠٢٦</p>
+            <p class="font-bold text-slate-700 text-sm flex items-center justify-center gap-2">
+                تصميم د/فواز 
+                <span class="text-slate-300">|</span> 
+                <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" class="text-pink-600 hover:text-pink-800 transition-colors inline-flex items-center gap-1 hover:underline">
+                    تفضل للمزيد هنا
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('ar-SA');
+
+        // ==========================================
+        // 1. قاعدة بيانات الطاقم المستهدف (رياض الأطفال)
+        // ==========================================
+        const teachersDatabase = [
+            { name: "فاطمة عبد الله الشهري", specialty: "معلمة رياض أطفال" },
+            { name: "نورة محمد القحطاني", specialty: "معلمة رياض أطفال" },
+            { name: "سارة أحمد الغامدي", specialty: "معلمة رياض أطفال" },
+            { name: "مريم صالح العتيبي", specialty: "معلمة رياض أطفال" },
+            { name: "هند فهد الدوسري", specialty: "معلمة رياض أطفال" }
+        ];
+
+        function updateTeacherDatalist() {
+            const datalist = document.getElementById('teachers-datalist');
+            datalist.innerHTML = '';
+            teachersDatabase.forEach(t => {
+                const option = document.createElement('option');
+                option.value = t.name;
+                datalist.appendChild(option);
+            });
+            document.getElementById('stat-total-teachers').innerText = teachersDatabase.length;
+        }
+        updateTeacherDatalist();
+
+        // ==========================================
+        // 2. محرك التوليد الآلي المستمد من أدلة "رياض الأطفال" (17 بند)
+        // ==========================================
+        const AI_ENGINE_DATA = {
+            "أداء الواجبات الوظيفية": { interpretation: "يطبق الأنظمة وقواعد السلوك الوظيفية وأخلاقيات بيئة التعلم، ويحافظ على خصوصية المعلومات." },
+            "التفاعل مع المجتمع المهني": { interpretation: "المشاركة الفعالة في مجتمعات وشبكات التعليم تسهم في تبادل المعرفة وتطوير المهارات المهنية." },
+            "التفاعل مع أولياء الأمور": { interpretation: "المساهمة في دعم وتحقيق بيئة تعليمية فعالة لتحسين التحصيل الدراسي وتعزيز تجربتهم." },
+            "إعداد خطة شاملة وتفصيلية للأنشطة": { interpretation: "ترتيب العملية التعليمية بشكل منهجي ومنظم، بناءً على نتائج تحليل احتياجات واهتمام المتعلمين، وتحديد أهداف التعلم." },
+            "تصميم خبرات تعلم مرنة ومبتكرة": { interpretation: "تصميم خبرات تعليمية ثرية وفق منهجية منظمة تتواءم مع اهتمامات المتعلمين وتعزز تعلمهم." },
+            "توظيف تقنيات ووسائل التعلم المناسبة": { interpretation: "توظيف واستثمار وسائل وتقنيات التعليم والتعلم المناسبة للفئة العمرية والداعمة لتطور مهارات المتعلمين." },
+            "التمكن من المادة العلمية": { interpretation: "الفهم الصحيح والعميق للمادة العلمية المستهدفة وعكسها على تصميم واعداد الخبرات التعليمية." },
+            "استخدام استراتيجيات تدريس فاعلة ومتنوعة": { interpretation: "الممارسات والتفاعلات التدريسية التي تخطط لها المعلمة لاستخدامها لدعم مسارات التعلم المختلفة." },
+            "إشراك الأسرة في خطط النمو والتعلم": { interpretation: "مجموعة من الممارسات المهنية التي تدعم إشراك الأسرة في التخطيط للأنشطة التعليمية في المدرسة." },
+            "تهيئ بيئة تعليمية آمنة ومعززة للتطور النمائي والتعلم": { interpretation: "القدرة على تنظيم وتجهيز البيئة بشكل آمن وفعال لدعم وتيسير عمليتي التعليم والتعلم." },
+            "توفير فرص متنوعة لدعم التفاعلات في بيئة التعلم": { interpretation: "توفير فرص للمتعلمين للمشاركة بفعالية في التفاعلات الآمنة بين المتعلم والبيئة المحيطة به، والأقران، والمعلمات." },
+            "تقوّم تعلم المتعلمين وتتابع تقدمهم بانتظام": { interpretation: "تتابع المعلمة تقدم المتعلمين نحو تحقيق الأهداف النمائية والتعليمية بانتظام، وتوثق تعلم كل متعلم." },
+            "تستثمر نتائج التقويم في تعزيز النمو والتعلم": { interpretation: "توظف المعلمة نتائج التقويم في التخطيط لخبرات وأنشطة تعليمية لاحقة تدعم تحقيق النمو والتعلم." },
+            "تشرك الأسرة في نتائج التقويم": { interpretation: "إشراك الأسرة بنتائج التقويم والقرارات المتعلقة بذلك بشكل دوري وتبادر بأفكار إبداعية لحل المشكلات." },
+            "تدعم تحقيق مستويات الأداء المستهدفة لكل متعلم": { interpretation: "تتابع المعلمة تقدم المتعلمين نحو الأهداف النمائية والتعليمية المستهدفة في التخطيط والتنفيذ." },
+            "تدعم مهارات المستقبل لدى المتعلمين": { interpretation: "تعزيز اكتساب المتعلمين لمهارات التعلم والابتكار والتقنية والمهارات الحياتية." },
+            "تدعم اكتساب المتعلمين القيم والمبادئ والاتجاهات": { interpretation: "تعزيز اكتساب المتعلمين للقيم والمبادئ والاتجاهات السليمة لتعزيز نمو الشخصية المتكاملة." }
+        };
+
+        const criteriaItems = [
+            { id: 'c1', name: 'أداء الواجبات الوظيفية', weight: 10 },
+            { id: 'c2', name: 'التفاعل مع المجتمع المهني', weight: 5 },
+            { id: 'c3', name: 'التفاعل مع أولياء الأمور', weight: 5 },
+            { id: 'c4', name: 'إعداد خطة شاملة وتفصيلية للأنشطة', weight: 5 },
+            { id: 'c5', name: 'تصميم خبرات تعلم مرنة ومبتكرة', weight: 5 },
+            { id: 'c6', name: 'توظيف تقنيات ووسائل التعلم المناسبة', weight: 5 },
+            { id: 'c7', name: 'التمكن من المادة العلمية', weight: 5 },
+            { id: 'c8', name: 'استخدام استراتيجيات تدريس فاعلة ومتنوعة', weight: 5 },
+            { id: 'c9', name: 'إشراك الأسرة في خطط النمو والتعلم', weight: 5 },
+            { id: 'c10', name: 'تهيئ بيئة تعليمية آمنة ومعززة للتطور النمائي والتعلم', weight: 15 },
+            { id: 'c11', name: 'توفير فرص متنوعة لدعم التفاعلات في بيئة التعلم', weight: 5 },
+            { id: 'c12', name: 'تقوّم تعلم المتعلمين وتتابع تقدمهم بانتظام', weight: 5 },
+            { id: 'c13', name: 'تستثمر نتائج التقويم في تعزيز النمو والتعلم', weight: 5 },
+            { id: 'c14', name: 'تشرك الأسرة في نتائج التقويم', weight: 5 },
+            { id: 'c15', name: 'تدعم تحقيق مستويات الأداء المستهدفة لكل متعلم', weight: 5 },
+            { id: 'c16', name: 'تدعم مهارات المستقبل لدى المتعلمين', weight: 5 },
+            { id: 'c17', name: 'تدعم اكتساب المتعلمين القيم والمبادئ والاتجاهات', weight: 5 }
+        ];
+
+        let evaluationsDB = [];
+
+        // توليد خيارات "أبرز قوة"
+        const strengthSelect = document.getElementById('strength-point');
+        criteriaItems.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.name; opt.text = item.name;
+            strengthSelect.appendChild(opt);
+        });
+
+        // بناء عناصر الحاسبة (17 بند)
+        const calcContainer = document.getElementById('calc-items');
+        criteriaItems.forEach((item, index) => {
+            let rowHTML = `
+                <div class="bg-white p-3 rounded-xl border border-slate-200 mb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:border-pink-300 transition-colors">
+                    <div class="flex-grow">
+                        <h4 class="text-[13px] font-bold text-slate-800 leading-tight">${index + 1}. ${item.name}</h4>
+                        <span class="text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded mt-1 inline-block">الوزن: ${item.weight}%</span>
+                    </div>
+                    <div class="flex gap-1 justify-end flex-row-reverse shrink-0" dir="ltr">`;
+            for (let i = 1; i <= 5; i++) {
+                rowHTML += `
+                        <div class="relative">
+                            <input type="radio" name="${item.id}" id="${item.id}_${i}" value="${i}" class="rating-radio sr-only" onchange="updateLiveScore()">
+                            <label for="${item.id}_${i}" class="w-8 h-8 flex items-center justify-center rounded-full border border-slate-300 bg-slate-50 text-slate-600 cursor-pointer text-sm font-bold transition-all hover:bg-slate-200">${i}</label>
+                        </div>`;
+            }
+            rowHTML += `</div></div>`;
+            calcContainer.innerHTML += rowHTML;
+        });
+
+        const calcModal = document.getElementById('calc-modal');
+        function openCalculator() { calcModal.classList.remove('hidden'); setTimeout(() => calcModal.classList.remove('opacity-0'), 10); }
+        function closeCalculator() { calcModal.classList.add('opacity-0'); setTimeout(() => calcModal.classList.add('hidden'), 300); }
+
+        function clearCalculator() {
+            document.querySelectorAll('.rating-radio').forEach(radio => radio.checked = false);
+            document.getElementById('live-calc-score').innerText = '0%';
+            document.getElementById('live-strength').innerText = '---';
+            document.getElementById('live-weaknesses').innerText = '---';
+        }
+
+        function updateLiveScore() {
+            let totalPercentage = 0;
+            let ratedItems = [];
+            
+            criteriaItems.forEach(item => {
+                const selected = document.querySelector(`input[name="${item.id}"]:checked`);
+                if (selected) {
+                    const rating = parseInt(selected.value);
+                    totalPercentage += (rating / 5) * item.weight;
+                    ratedItems.push({ name: item.name, score: rating });
+                }
+            });
+
+            document.getElementById('live-calc-score').innerText = totalPercentage.toFixed(1) + '%';
+            
+            if (ratedItems.length > 0) {
+                ratedItems.sort((a, b) => b.score - a.score);
+                const strengthItem = ratedItems[0].name;
+                
+                let weakItems = ratedItems.filter(i => i.score < 3);
+                if(weakItems.length === 0) weakItems = [ratedItems[ratedItems.length - 1]];
+                
+                const weaknessNames = weakItems.map(w => w.name).join('، ');
+
+                document.getElementById('live-strength').innerText = strengthItem;
+                document.getElementById('live-weaknesses').innerText = weaknessNames;
+                
+                return { totalPercentage, strengthItem, weakItems };
+            }
+            return null;
+        }
+
+        function applyCalculation() {
+            const allFilled = criteriaItems.every(item => document.querySelector(`input[name="${item.id}"]:checked`));
+            if (!allFilled) { alert("يرجى إكمال التقييم لجميع الـ 17 بنداً لتشخيص دقيق وتوليد سليم للتغذية الراجعة."); return; }
+            
+            const calcData = updateLiveScore();
+            
+            const scoreInput = document.getElementById('visit-score');
+            const strengthInput = document.getElementById('strength-point');
+            const weaknessInput = document.getElementById('weakness-point');
+            const evaluatorNote = document.getElementById('evaluator-note');
+            
+            scoreInput.value = calcData.totalPercentage.toFixed(1);
+            
+            strengthInput.disabled = false;
+            strengthInput.value = calcData.strengthItem;
+            strengthInput.disabled = true;
+            
+            const weaknessNames = calcData.weakItems.map(w => w.name).join('، ');
+            weaknessInput.value = weaknessNames;
+
+            let generatedNote = "التشخيص المولد آلياً والملاحظات:\nبناءً على التقييم واستناداً لأدلة التقويم، لوحظ وجود احتياج لتطوير الممارسات التالية:\n\n";
+            calcData.weakItems.forEach((w, index) => {
+                const aiExplanation = AI_ENGINE_DATA[w.name] ? AI_ENGINE_DATA[w.name].interpretation : "تطوير هذا البند وفق المؤشرات.";
+                generatedNote += `${index + 1}- ${w.name}: (${aiExplanation})\n`;
+            });
+            evaluatorNote.value = generatedNote.trim();
+
+            [scoreInput, strengthInput, weaknessInput, evaluatorNote].forEach(el => {
+                el.classList.add('auto-filled-pulse');
+                setTimeout(() => el.classList.remove('auto-filled-pulse'), 1000);
+            });
+            
+            document.getElementById('auto-fill-badge').classList.remove('hidden');
+            setTimeout(() => document.getElementById('auto-fill-badge').classList.add('hidden'), 3000);
+            closeCalculator();
+        }
+
+        function clearForm() {
+            document.getElementById('teacher-input').value = '';
+            document.getElementById('visit-score').value = '';
+            document.getElementById('strength-point').value = '';
+            document.getElementById('weakness-point').value = '';
+            document.getElementById('evaluator-note').value = '';
+            document.getElementById('other-recommendations').value = '';
+            clearCalculator();
+            document.getElementById('recommendation-box').classList.add('hidden');
+        }
+
+        function resetPlatform() {
+            if(confirm("هل أنت متأكد من رغبتك في مسح جميع التقييمات والملفات من المنصة؟ (لا يمكن التراجع عن هذا الإجراء)")) {
+                evaluationsDB = [];
+                renderMainDashboard();
+                clearForm();
+                alert("تم تفريغ بيانات المنصة بنجاح.");
+            }
+        }
+
+        document.getElementById('evaluation-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            let rawTeacherName = document.getElementById('teacher-input').value.trim();
+            if(!rawTeacherName) return;
+
+            let teacherSpecialty = "معلمة رياض أطفال";
+            const existingTeacher = teachersDatabase.find(t => t.name === rawTeacherName);
+            if (existingTeacher) {
+                teacherSpecialty = existingTeacher.specialty;
+            } else {
+                teachersDatabase.push({ name: rawTeacherName, specialty: teacherSpecialty });
+                updateTeacherDatalist(); 
+            }
+            
+            const visitScore = parseFloat(document.getElementById('visit-score').value);
+            const strengthPoint = document.getElementById('strength-point').value;
+            const weaknessPoint = document.getElementById('weakness-point').value; 
+            const note = document.getElementById('evaluator-note').value;
+            const otherRecs = document.getElementById('other-recommendations').value;
+            const dateStr = new Date().toLocaleDateString('ar-SA');
+
+            evaluationsDB.push({
+                name: rawTeacherName,
+                specialty: teacherSpecialty,
+                score: visitScore,
+                strength: strengthPoint,
+                weakness: weaknessPoint,
+                note: note,
+                otherRecs: otherRecs,
+                date: dateStr
+            });
+
+            const recBox = document.getElementById('recommendation-box');
+            recBox.classList.remove('hidden');
+            document.getElementById('rec-title').innerText = `تم التشخيص وحفظ ملف: ${rawTeacherName}`;
+            document.getElementById('rec-text').innerText = "تم حفظ التقييم. يمكنك فتح الملف من القائمة للاطلاع على مسارات المتابعة والتغذية الراجعة.";
+
+            renderMainDashboard();
+            clearForm();
+        });
+
+        function renderMainDashboard() {
+            const tableBody = document.getElementById('main-teachers-list');
+            tableBody.innerHTML = '';
+
+            const teacherMap = {};
+            let totalEvals = 0;
+            let sumEvals = 0;
+            let totalDevTeachers = 0;
+
+            evaluationsDB.forEach(ev => {
+                totalEvals++;
+                sumEvals += ev.score;
+                if(!teacherMap[ev.name]) {
+                    teacherMap[ev.name] = { name: ev.name, specialty: ev.specialty, count: 0, sum: 0 };
+                }
+                teacherMap[ev.name].count++;
+                teacherMap[ev.name].sum += ev.score;
+            });
+
+            const uniqueTeachers = Object.values(teacherMap);
+            
+            uniqueTeachers.forEach(t => { if((t.sum / t.count) < 90) totalDevTeachers++; });
+
+            document.getElementById('stat-total-evals').innerText = totalEvals;
+            document.getElementById('stat-avg-performance').innerText = totalEvals > 0 ? (sumEvals / totalEvals).toFixed(1) + '%' : '0%';
+            document.getElementById('stat-needs-dev').innerText = totalDevTeachers;
+
+            if(uniqueTeachers.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-slate-400 text-xs">لا توجد ملفات مسجلة بعد. استخدمي الحاسبة للتشخيص والرصد.</td></tr>';
+                return;
+            }
+
+            uniqueTeachers.forEach(t => {
+                const avg = (t.sum / t.count).toFixed(1);
+                const scoreColor = avg >= 90 ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700';
+                
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-all">
+                        <td class="p-4 font-semibold text-slate-800">${t.name}<div class="text-xs font-normal text-slate-400">${t.specialty}</div></td>
+                        <td class="p-4 text-center"><span class="px-2.5 py-1 ${scoreColor} rounded-full text-xs font-bold">${avg} / 100</span></td>
+                        <td class="p-4 text-center font-bold text-slate-600">${t.count}</td>
+                        <td class="p-4 text-center">
+                            <button onclick="openTeacherProfile('${t.name}')" class="px-3 py-1.5 bg-pink-100 hover:bg-pink-200 text-pink-700 rounded-lg text-xs font-bold transition-all">فتح الملف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function openTeacherProfile(teacherName) {
+            document.getElementById('view-dashboard').classList.remove('active');
+            document.getElementById('view-teacher-profile').classList.add('active');
+
+            const teacherEvals = evaluationsDB.filter(ev => ev.name === teacherName);
+            const specialty = teacherEvals[0].specialty;
+            const count = teacherEvals.length;
+            const avg = (teacherEvals.reduce((acc, curr) => acc + curr.score, 0) / count).toFixed(1);
+
+            document.getElementById('profile-name').innerText = teacherName;
+            document.getElementById('profile-specialty').innerText = specialty;
+            document.getElementById('profile-visits').innerText = count;
+            document.getElementById('profile-avg').innerText = avg + '%';
+
+            const historyBody = document.getElementById('profile-history-list');
+            historyBody.innerHTML = '';
+
+            [...teacherEvals].reverse().forEach(ev => {
+                const scoreColor = ev.score >= 90 ? 'text-emerald-600' : 'text-amber-600';
+                
+                let otherRecsHTML = '';
+                if(ev.otherRecs && ev.otherRecs.trim() !== '') {
+                    otherRecsHTML = `<span class="block text-xs text-slate-700 leading-relaxed whitespace-pre-line border-t border-slate-200 pt-2 mt-2"><b>توصيات إضافية (المديرة):</b>\n${ev.otherRecs}</span>`;
+                }
+
+                historyBody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition-all border-b border-slate-100">
+                        <td class="p-3 text-xs font-bold text-slate-500 whitespace-nowrap align-top">${ev.date}</td>
+                        <td class="p-3 text-center font-black ${scoreColor} align-top">${ev.score}</td>
+                        <td class="p-3 text-xs font-semibold text-slate-600 align-top">${ev.strength}</td>
+                        <td class="p-3 align-top">
+                            <div class="bg-slate-50 p-2 rounded-lg border border-slate-100">
+                                <span class="block text-[11px] text-slate-700 leading-relaxed whitespace-pre-line">${ev.note}</span>
+                                ${otherRecsHTML}
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function showMainDashboard() {
+            document.getElementById('view-teacher-profile').classList.remove('active');
+            document.getElementById('view-dashboard').classList.add('active');
+        }
+    </script>
+</body>
+</html>

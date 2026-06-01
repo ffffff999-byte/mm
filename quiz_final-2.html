@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسابقة تفاعلية - الصف السادس الابتدائي الفصل الثاني</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap');
+:root{--primary:#1a237e;--accent:#ffd600;--success:#00c853;--error:#d50000;--bg:#07091a;--card:#0f1230;--border:#1e2460;--text:#ffffff;--muted:#8899bb}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+/* Stars */
+#stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.star{position:absolute;background:#fff;border-radius:50%;animation:twinkle linear infinite}
+@keyframes twinkle{0%,100%{opacity:.15}50%{opacity:.9}}
+/* Layout */
+.wrap{position:relative;z-index:1;max-width:860px;margin:0 auto;padding:16px}
+/* Header */
+.hdr{text-align:center;padding:28px 20px 20px;background:linear-gradient(135deg,#0d1b6e,#1565c0,#0d47a1);border-radius:18px;margin-bottom:20px;box-shadow:0 8px 40px rgba(13,71,161,.7);border:1px solid rgba(255,214,0,.25);overflow:hidden;position:relative}
+.hdr::after{content:'';position:absolute;top:-60%;left:-60%;width:220%;height:220%;background:radial-gradient(circle,rgba(255,214,0,.04) 0%,transparent 65%);animation:spin 25s linear infinite;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hdr-icon{font-size:3em;display:block;animation:bob 2.2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.hdr h1{font-size:2em;font-weight:900;color:var(--accent);text-shadow:0 0 18px rgba(255,214,0,.45);margin-bottom:6px;position:relative}
+.hdr p{font-size:1em;color:#90caf9;position:relative}
+/* Subject grid */
+.subj-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.subj-btn{padding:18px 14px;border:2px solid var(--border);border-radius:14px;background:var(--card);color:var(--text);font-family:'Tajawal',sans-serif;font-size:1.05em;font-weight:700;cursor:pointer;transition:all .3s;text-align:center;position:relative;overflow:hidden}
+.subj-btn::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transition:left .5s}
+.subj-btn:hover::before{left:100%}
+.subj-btn:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(0,0,0,.45)}
+.subj-btn .ico{font-size:2em;display:block;margin-bottom:4px}
+.subj-btn small{font-size:.72em;opacity:.75}
+.subj-btn.s-ar{background:linear-gradient(135deg,#1b5e20,#2e7d32)}
+.subj-btn.s-ar:hover,.subj-btn.s-ar.active{border-color:#69f0ae;box-shadow:0 0 18px rgba(105,240,174,.3)}
+.subj-btn.s-ma{background:linear-gradient(135deg,#4a148c,#6a1b9a)}
+.subj-btn.s-ma:hover,.subj-btn.s-ma.active{border-color:#ea80fc;box-shadow:0 0 18px rgba(234,128,252,.3)}
+.subj-btn.s-sc{background:linear-gradient(135deg,#006064,#00838f)}
+.subj-btn.s-sc:hover,.subj-btn.s-sc.active{border-color:#84ffff;box-shadow:0 0 18px rgba(132,255,255,.3)}
+.subj-btn.s-en{background:linear-gradient(135deg,#b71c1c,#c62828)}
+.subj-btn.s-en:hover,.subj-btn.s-en.active{border-color:#ff8a80;box-shadow:0 0 18px rgba(255,138,128,.3)}
+/* Settings */
+.settings{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:20px}
+.settings h3{font-size:1em;font-weight:700;color:var(--accent);margin-bottom:14px}
+.srow{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.04)}
+.srow:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.slbl{font-size:.9em;color:var(--muted)}
+.tog{width:48px;height:25px;background:rgba(255,255,255,.1);border-radius:13px;position:relative;cursor:pointer;transition:background .3s;flex-shrink:0}
+.tog.on{background:var(--success)}
+.tog::after{content:'';position:absolute;width:19px;height:19px;background:#fff;border-radius:50%;top:3px;right:3px;transition:transform .3s}
+.tog.on::after{transform:translateX(-23px)}
+/* Home Button */
+.home-btn{position:fixed;top:14px;right:14px;z-index:999;background:linear-gradient(135deg,#ffd600,#ff6f00);border:none;border-radius:50%;width:48px;height:48px;font-size:1.4em;cursor:pointer;box-shadow:0 4px 16px rgba(255,214,0,.4);transition:all .3s;display:none;align-items:center;justify-content:center;text-decoration:none;color:#000}
+.home-btn:hover{transform:scale(1.15) rotate(-8deg);box-shadow:0 7px 24px rgba(255,214,0,.6)}
+.home-btn.show{display:flex}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:10px;text-align:center}
+.stat .val{font-size:1.7em;font-weight:900;color:var(--accent)}
+.stat .lbl{font-size:.75em;color:var(--muted);margin-top:2px}
+/* Progress */
+.prog-box{background:var(--card);border-radius:11px;padding:13px;margin-bottom:16px;border:1px solid var(--border)}
+.prog-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px;font-size:.88em;color:var(--muted)}
+.prog-bar{height:11px;background:rgba(255,255,255,.08);border-radius:6px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#ffd600,#ff6f00);border-radius:6px;transition:width .5s;position:relative;overflow:hidden}
+.prog-fill::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);animation:shim 2s infinite}
+@keyframes shim{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+/* Timer */
+.tmr{width:56px;height:56px;position:relative;display:inline-block}
+.tmr svg{transform:rotate(-90deg)}
+.tmr circle{fill:none;stroke-width:4;stroke-linecap:round}
+.tmr .bg{stroke:rgba(255,255,255,.1)}
+.tmr .pr{stroke:var(--accent);transition:stroke-dashoffset 1s linear}
+.tmr-txt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:.95em;font-weight:900;color:var(--accent)}
+/* Question card */
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:26px;margin-bottom:16px;box-shadow:0 4px 28px rgba(0,0,0,.3);animation:sIn .4s ease;position:relative;overflow:hidden}
+.qcard::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:linear-gradient(180deg,var(--accent),transparent);border-radius:0 18px 18px 0}
+@keyframes sIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.qbadge{background:linear-gradient(135deg,var(--accent),#ff6f00);color:#000;font-weight:900;padding:4px 14px;border-radius:18px;font-size:.88em}
+.stag{padding:3px 11px;border-radius:18px;font-size:.78em;font-weight:700}
+.stag.ar{background:rgba(27,94,32,.5);color:#69f0ae;border:1px solid #69f0ae}
+.stag.ma{background:rgba(74,20,140,.5);color:#ea80fc;border:1px solid #ea80fc}
+.stag.sc{background:rgba(0,96,100,.5);color:#84ffff;border:1px solid #84ffff}
+.stag.en{background:rgba(183,28,28,.5);color:#ff8a80;border:1px solid #ff8a80}
+.qtxt{font-size:1.15em;font-weight:700;line-height:1.75;margin-bottom:18px;color:#ddeeff}
+/* Options */
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.opt{padding:13px 16px;border:2px solid var(--border);border-radius:11px;background:rgba(255,255,255,.025);color:var(--text);font-family:'Tajawal',sans-serif;font-size:.97em;font-weight:500;cursor:pointer;transition:all .3s;text-align:right;display:flex;align-items:center;gap:9px;position:relative;overflow:hidden}
+.opt::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);transition:left .4s}
+.opt:hover:not(:disabled)::before{left:100%}
+.opt:hover:not(:disabled){border-color:var(--accent);background:rgba(255,214,0,.07);transform:scale(1.02);box-shadow:0 4px 18px rgba(255,214,0,.18)}
+.opt-ltr{width:30px;height:30px;background:rgba(255,255,255,.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:.88em;flex-shrink:0}
+.opt.ok{border-color:var(--success)!important;background:rgba(0,200,83,.14)!important;animation:okPulse .5s ease}
+.opt.ok .opt-ltr{background:var(--success);color:#000}
+.opt.no{border-color:var(--error)!important;background:rgba(213,0,0,.14)!important;animation:noShake .5s ease}
+.opt.no .opt-ltr{background:var(--error);color:#fff}
+.opt.show-ok{border-color:var(--success)!important;background:rgba(0,200,83,.09)!important}
+.opt:disabled{cursor:not-allowed}
+@keyframes okPulse{0%{transform:scale(1)}50%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes noShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+/* Feedback */
+.fb{margin-top:13px;padding:13px 18px;border-radius:11px;font-size:1em;font-weight:700;display:none;animation:fIn .3s ease;align-items:center;gap:9px;line-height:1.6}
+.fb.show{display:flex}
+.fb.ok-fb{background:rgba(0,200,83,.13);border:1px solid var(--success);color:#69f0ae}
+.fb.no-fb{background:rgba(213,0,0,.13);border:1px solid var(--error);color:#ff8a80}
+@keyframes fIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+/* Next btn */
+.nxt{width:100%;padding:15px;background:linear-gradient(135deg,#ffd600,#ff6f00);color:#000;border:none;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:1.15em;font-weight:900;cursor:pointer;margin-top:13px;display:none;transition:all .3s;box-shadow:0 4px 18px rgba(255,214,0,.28)}
+.nxt:hover{transform:translateY(-2px);box-shadow:0 7px 26px rgba(255,214,0,.45)}
+.nxt.show{display:block;animation:fIn .3s ease}
+/* Result */
+.result{display:none;text-align:center;padding:36px 20px;background:var(--card);border-radius:18px;border:1px solid var(--border);animation:sIn .5s ease}
+.result.show{display:block}
+.res-ico{font-size:4.5em;margin-bottom:16px;animation:bob 1s ease-in-out infinite}
+.res-title{font-size:2.2em;font-weight:900;color:var(--accent);margin-bottom:8px}
+.res-score{font-size:3.5em;font-weight:900;background:linear-gradient(135deg,#ffd600,#ff6f00);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:16px 0}
+.res-msg{font-size:1.2em;color:var(--muted);margin-bottom:24px}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:24px}
+.rs{background:rgba(255,255,255,.04);border-radius:11px;padding:13px}
+.rs .v{font-size:1.9em;font-weight:900}
+.rs .l{font-size:.82em;color:var(--muted)}
+.rbtn{padding:13px 36px;background:linear-gradient(135deg,#ffd600,#ff6f00);color:#000;border:none;border-radius:11px;font-family:'Tajawal',sans-serif;font-size:1.1em;font-weight:900;cursor:pointer;transition:all .3s;margin:5px;box-shadow:0 4px 16px rgba(255,214,0,.28)}
+.rbtn:hover{transform:translateY(-2px);box-shadow:0 7px 24px rgba(255,214,0,.4)}
+.rbtn.sec{background:transparent;border:2px solid var(--accent);color:var(--accent)}
+/* Confetti */
+.cf{position:fixed;width:9px;height:9px;top:-20px;animation:cfFall linear forwards;z-index:9999;border-radius:2px}
+@keyframes cfFall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+/* Score popup */
+.spop{position:fixed;font-size:1.8em;font-weight:900;pointer-events:none;z-index:9998;animation:spFloat 1.4s ease forwards}
+@keyframes spFloat{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-70px) scale(1.4)}}
+/* Footer */
+.footer{text-align:center;padding:18px;color:var(--muted);font-size:.9em;border-top:1px solid var(--border);margin-top:8px}
+.footer a{color:var(--accent);text-decoration:none;font-weight:700}
+.footer a:hover{text-decoration:underline}
+/* Responsive */
+@media(max-width:580px){.opts{grid-template-columns:1fr}.subj-grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:repeat(2,1fr)}.res-stats{grid-template-columns:1fr}.hdr h1{font-size:1.5em}.qtxt{font-size:1em}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="hdr">
+    <span class="hdr-icon">🏆</span>
+    <h1>مسابقة الاختبارات المركزية</h1>
+    <p>الصف السادس الابتدائي — الفصل الدراسي الثاني</p>
+  </div>
+
+  <!-- WELCOME -->
+  <div id="homeScreen">
+    <div style="text-align:center;padding:10px 0 20px">
+      <h2 style="font-size:1.6em;font-weight:900;color:var(--accent);margin-bottom:10px">🎯 اختر المادة وابدأ التحدي!</h2>
+      <p style="color:var(--muted);font-size:1em;line-height:1.8">أجب على جميع الأسئلة واحصل على تغذية راجعة فورية لكل إجابة</p>
+    </div>
+    <div class="subj-grid">
+      <button class="subj-btn s-ar" onclick="startQuiz('arabic')">
+        <span class="ico">📖</span>لغتي الجميلة<br><small>25 سؤالاً</small>
+      </button>
+      <button class="subj-btn s-ma" onclick="startQuiz('math')">
+        <span class="ico">🔢</span>الرياضيات<br><small>22 سؤالاً</small>
+      </button>
+      <button class="subj-btn s-sc" onclick="startQuiz('science')">
+        <span class="ico">🔬</span>العلوم<br><small>20 سؤالاً</small>
+      </button>
+      <button class="subj-btn s-en" onclick="startQuiz('english')">
+        <span class="ico">🌐</span>English<br><small>30 سؤالاً</small>
+      </button>
+    </div>
+    <div class="settings">
+      <h3>⚙️ الإعدادات</h3>
+      <div class="srow"><span class="slbl">🔀 خلط الأسئلة عشوائياً</span><div class="tog on" id="tShuffle" onclick="togSet('shuffle')"></div></div>
+      <div class="srow"><span class="slbl">⏱️ تفعيل المؤقت (30 ثانية لكل سؤال)</span><div class="tog on" id="tTimer" onclick="togSet('timer')"></div></div>
+      <div class="srow"><span class="slbl">🔊 تأثيرات صوتية</span><div class="tog on" id="tSound" onclick="togSet('sound')"></div></div>
+      <div class="srow"><span class="slbl">🎉 تأثيرات احتفالية عند الإجابة الصحيحة</span><div class="tog on" id="tConfetti" onclick="togSet('confetti')"></div></div>
+    </div>
+    <div class="footer">
+      تصميم د/فواز — تفضل للمزيد هنا
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </div>
+
+  <!-- HOME BACK BUTTON -->
+  <button class="home-btn" id="homeBackBtn" onclick="goHome()" title="الرجوع للصفحة الرئيسية">🏠</button>
+
+  <!-- QUIZ -->
+  <div id="quizScreen" style="display:none">
+    <div class="stats">
+      <div class="stat"><div class="val" id="sScore">0</div><div class="lbl">النقاط</div></div>
+      <div class="stat"><div class="val" id="sCorrect" style="color:#69f0ae">0</div><div class="lbl">صحيح</div></div>
+      <div class="stat"><div class="val" id="sWrong" style="color:#ff8a80">0</div><div class="lbl">خطأ</div></div>
+      <div class="stat"><div class="val" id="sStreak" style="color:#ffd600">0</div><div class="lbl">متتالية 🔥</div></div>
+    </div>
+    <div class="prog-box">
+      <div class="prog-hdr">
+        <span id="progTxt">السؤال 1 من 25</span>
+        <div class="tmr" id="tmrRing">
+          <svg width="56" height="56" viewBox="0 0 56 56">
+            <circle class="bg" cx="28" cy="28" r="24"/>
+            <circle class="pr" id="tmrCircle" cx="28" cy="28" r="24" stroke-dasharray="150.8" stroke-dashoffset="0"/>
+          </svg>
+          <div class="tmr-txt" id="tmrTxt">30</div>
+        </div>
+      </div>
+      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="qmeta">
+        <div class="qbadge" id="qBadge">سؤال 1</div>
+        <div class="stag ar" id="qTag">لغتي</div>
+      </div>
+      <div class="qtxt" id="qTxt"></div>
+      <div class="opts" id="optsGrid"></div>
+      <div class="fb" id="fb"></div>
+      <button class="nxt" id="nxtBtn" onclick="nextQ()">السؤال التالي ←</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="resultScreen" class="result">
+    <div class="res-ico" id="rIco">🏆</div>
+    <div class="res-title" id="rTitle">أحسنت!</div>
+    <div class="res-score" id="rScore">0/0</div>
+    <div class="res-msg" id="rMsg"></div>
+    <div class="res-stats">
+      <div class="rs"><div class="v" style="color:#69f0ae" id="rC">0</div><div class="l">إجابات صحيحة</div></div>
+      <div class="rs"><div class="v" style="color:#ff8a80" id="rW">0</div><div class="l">إجابات خاطئة</div></div>
+      <div class="rs"><div class="v" style="color:#ffd600" id="rP">0%</div><div class="l">النسبة المئوية</div></div>
+    </div>
+    <button class="rbtn" onclick="restartSame()">🔄 إعادة المحاولة</button>
+    <button class="rbtn sec" onclick="goHome()">🏠 الرئيسية</button>
+    <div class="footer" style="margin-top:18px">
+      تصميم د/فواز — تفضل للمزيد هنا
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ===================== QUESTIONS DATABASE =====================
+const DB = {
+arabic: [
+  {q:"الفكرة الرئيسية لنص (اهتم الإسلام بالنظافة اهتماماً عظيماً...):",opts:["اهتمام الإسلام بالنظافة","اهتمام الإسلام بالغذاء","اهتمام الإسلام بالشراب","اهتمام الإسلام بالمساجد"],ans:0},
+  {q:"وجّه الإسلام الإنسان إلى تنظيف فمه:",opts:["صباحاً فقط","مساءً فقط","صباحاً ومساءً","مرة بالأسبوع"],ans:2},
+  {q:"أمر الإسلام الإنسان بالمضمضة والسواك وتخليل الأسنان:",opts:["لإزالة التسوس","لزيادة جمال الأسنان","لإزالة الغبار عنها","لإزالة بقايا الغذاء"],ans:3},
+  {q:"معنى كلمة (عظيماً) في النص:",opts:["كبيراً","صغيراً","متواضعاً","قليلاً"],ans:0},
+  {q:"العلاقة بين الكلمتين (قبل وبعد) في جملة (يغسل يديه قبل الأكل وبعده):",opts:["ترادف","تضاد","جمع ومفرد","مؤنث ومذكر"],ans:1},
+  {q:"يجب على الإنسان الاهتمام بالنظافة في جميع أمور حياته وكل ما يحيط به:",opts:["صح","خطأ"],ans:0},
+  {q:"حروف الميزان الصرفي هي:",opts:["فعل","فاعل","مفعول","مفعال"],ans:0},
+  {q:"اسم من لفظ الفعل يدل على حدث مجرد من الزمن:",opts:["اسم الفاعل","اسم المفعول","المصدر","اسم الآلة"],ans:2},
+  {q:"(على الإنسان الابتعاد عن الأشياء الضارة) المصدر في الجملة:",opts:["الإنسان","الأشياء","الابتعاد","الضارة"],ans:2},
+  {q:"مصدر الفعل (خاط):",opts:["يخيط","مخاط","خاطه","خياطة"],ans:3},
+  {q:"(قرأ الطالب القصة ......... صحيحة) المصدر المناسب للفراغ:",opts:["قارئة","قارئ","قراءة","مقروءة"],ans:2},
+  {q:"الجملة التي اشتملت على أسلوب توكيد:",opts:["رسم أحمد اللوحة","اللوحة رسمها أحمد","رسم أحمد اللوحة كلها","كل اللوحة رسمها أحمد"],ans:2},
+  {q:"نوع الأسلوب في جملة (من يذكر الله يذكره):",opts:["أسلوب شرط","أسلوب توكيد","أسلوب استثناء","أسلوب تعجب"],ans:0},
+  {q:"تكتب الألف اللينة في الفعل الثلاثي قائمة (ا) إذا:",opts:["كان أصلها واو","كان أصلها ياء","سبقت بياء","لم تسبق بياء"],ans:0},
+  {q:"كتبت الألف اللينة في الاسم (مصطفى) على صورة الياء لأنها:",opts:["أصلها واو","أصلها ياء","فوق الثلاثي وسبقت بياء","فوق الثلاثي ولم تسبق بياء"],ans:3},
+  {q:"سبب عدم حذف ألف (ما) في: (لا تتدخل فيما لا يعنيك):",opts:["(ما) لا تعني الاستفهام","(ما) تعني الاستفهام","(ما) لم تتصل بحرف جر","لا تحذف ألف (ما) دائماً"],ans:2},
+  {q:"تحذف ألف (ما) الاستفهامية إذا سبقت بحرف جر، وتبقى الفتحة دليلاً على الألف:",opts:["صح","خطأ"],ans:0},
+  {q:"الأصل في الفعل المضارع أن يكون:",opts:["مرفوعاً","منصوباً","مجزوماً","مجروراً"],ans:0},
+  {q:"علامة رفع الأفعال الخمسة هي:",opts:["الضمة","الواو","ثبوت النون","حذف النون"],ans:2},
+  {q:"(الطفل الذي يتعرض لأشعة الشمس تنمو عظامه قوية) الفعل المضارع المعتل الآخر:",opts:["الطفل","يتعرض","الأشعة","تنمو"],ans:3},
+  {q:"علامة نصب الفعل المضارع تكون الفتحة المقدرة إذا كان:",opts:["معتل الآخر بالألف","معتل الآخر بالياء","معتدل الآخر","صحيح الآخر"],ans:0},
+  {q:"علامة رفع الفعل المضارع المعتل الآخر بالواو:",opts:["الضمة الظاهرة","الضمة المقدرة للثقل","الضمة المقدرة للتعذر","ثبوت النون"],ans:1},
+  {q:"الجملة التي بها أسلوب توكيد:",opts:["كل المؤمنين إخوة","جميع المؤمنين إخوة","المؤمنون كلهم إخوة","المؤمنون إخوة"],ans:2},
+  {q:"الكلمتان اللتان رسمت ألفهما اللينة صحيحاً:",opts:["ريما - شذى","حنا - استحيا","تقوى - قفى","عصا - رحى"],ans:3},
+  {q:"سبب كتابة الألف اللينة في كلمة (مستشفى) على صورة الياء لأنها اسم:",opts:["فوق الثلاثي لم تسبق بياء","فوق الثلاثي وسبقت بياء","ثلاثي أصلها واو","ثلاثي أصلها ياء"],ans:1}
+],
+math: [
+  {q:"معدل الوحدة لـ 42 كلم في سبع ساعات هو:",opts:["1 كلم / 6 ساعات","6 ساعات / 1 كلم","6 كلم / 1 ساعة","1 ساعة / 6 كلم"],ans:2},
+  {q:"نسبة 20 سيارة بيضاء من بين 64 سيارة في أبسط صورة:",opts:["20/64","5/16","16/5","64/16"],ans:1},
+  {q:"حل التناسب: 7/35 = □/10 هو:",opts:["1","2","3","4"],ans:1},
+  {q:"الكسر الاعتيادي 3/5 في صورة نسبة مئوية:",opts:["50%","60%","70%","80%"],ans:1},
+  {q:"سجادة على شكل متوازي أضلاع، طول قاعدتها 10½ م وارتفاعها 6 م، مساحتها تساوي:",opts:["16¾ م²","60.1 م²","63 م²","65¾ م²"],ans:2},
+  {q:"العدد الناقص في النمط: 63، 49، 42، 35، ......، 21 هو:",opts:["29","28","59","62"],ans:1},
+  {q:"أي من الأعداد الآتية لا يمكن أن يمثل احتمال حادثة ما؟",opts:["صفر","7/34","0.67","47.9"],ans:3},
+  {q:"في حفلة عائلية، إذا كانت نسبة الأطفال إلى الكبار 3:4، فأي مما يأتي يمكن أن يبين عدد الأطفال وعدد الكبار؟",opts:["30 طفلاً و44 كبيراً","27 طفلاً و36 كبيراً","22 طفلاً و28 كبيراً","36 طفلاً و50 كبيراً"],ans:1},
+  {q:"تكتب النسبة المئوية 180% في صورة كسر عشري:",opts:["18.0","1.8","0.18","0.018"],ans:1},
+  {q:"مثلث طول ارتفاعه 4 سم وطول قاعدته 4 سم، مساحته تساوي:",opts:["16 سم²","12 سم²","8 سم²","4 سم²"],ans:2},
+  {q:"يكتب الكسر العشري 0.01 على صورة نسبة مئوية:",opts:["10%","1%","0.1%","100%"],ans:1},
+  {q:"إذا كان قطر الدائرة يساوي 48 سم، فإن نصف قطرها:",opts:["48 سم","96 سم","24 سم","12 سم"],ans:2},
+  {q:"قيمة س° في مثلث قياسات زواياه 70°، 55°، س° هي:",opts:["55°","65°","70°","75°"],ans:1},
+  {q:"الطريقة الصحيحة لإيجاد محيط دائرة إذا عُرف قطرها:",opts:["قسمة القطر على ط","ضرب نصف القطر في 2 وفي ط","ضرب القطر في ط","ضرب القطر في 2"],ans:2},
+  {q:"يُصنف المثلث الذي يحتوي على زاوية منفرجة وضلعين متساويين بحسب زواياه وأضلاعه إلى:",opts:["حاد الزوايا، متطابق الأضلاع","قائم الزاوية، متطابق الأضلاع","منفرج الزاوية، متطابق الضلعين","منفرج الزاوية، متطابق الأضلاع"],ans:2},
+  {q:"إذا كان من بين 30 طالباً يفضلون فصل الربيع، فإن عدد الطلاب المتوقع أن يفضلوا فصل الربيع من بين 500 طالب هو:",opts:["100","105","115","120"],ans:0},
+  {q:"يُصنف الشكل الرباعي الذي أضلاعه المتقابلة متوازية ومتساوية على أنه:",opts:["مربع","مستطيل","معين","متوازي الأضلاع"],ans:3},
+  {q:"باستعمال قائمة ملابس (قمصان: أبيض، رمادي، أزرق - شماغ: أحمر، أبيض - جوارب: أسود، بني)، احتمال اختيار (قميص أبيض، شماغ أبيض، جورب بني) يساوي:",opts:["7/12","4/12","3/12","1/12"],ans:3},
+  {q:"في النمط التالي (الشكل 1: 2 مربعات، الشكل 2: 5 مربعات، الشكل 3: 10 مربعات)، عدد المربعات في الشكل الخامس:",opts:["11","14","17","20"],ans:1},
+  {q:"إذا أُدير مؤشر قرص مقسم إلى 8 أقسام متساوية مرة واحدة، احتمال الحصول على عدد زوجي:",opts:["1/4","1/2","3/4","1/8"],ans:1},
+  {q:"الزاوية المكملة لزاوية قياسها 35° هي:",opts:["35°","55°","145°","325°"],ans:2},
+  {q:"نسبة القصص العلمية (10 قصص) إلى العدد الكلي (20 قصة) في أبسط صورة:",opts:["10:20","5:10","2:1","1:2"],ans:3}
+],
+science: [
+  {q:"الكتلة الحجمية (الكثافة) للأجسام تُحسب بـ:",opts:["الكتلة × الحجم","الكتلة ÷ الحجم","الحجم ÷ الكتلة","الكتلة + الحجم"],ans:1},
+  {q:"جميع المخاليط التالية غير متجانسة ما عدا:",opts:["الملح والرمل الأبيض","الحليب","الدم","الفولاذ"],ans:3},
+  {q:"واحدة من بين الخواص التالية لا تمثل خاصية فيزيائية:",opts:["حجم الجسيمات","التوصيل الكهربائي","القابلية لتكوين مركبات","درجة الغليان"],ans:2},
+  {q:"القوة التي تجعل الذرات تترابط معاً تسمى:",opts:["الرابطة الفيزيائية","المعادلة الكيميائية","الرابطة الكيميائية","المغناطيسية"],ans:2},
+  {q:"أي المركبات التالية ينتج من تفاعل حمض وقاعدة:",opts:["كلوريد الصوديوم NaCl","هيدروكسيد الصوديوم NaOH","حمض الهيدروكلوريك HCl","حمض الكبريتيك H₂SO₄"],ans:0},
+  {q:"الرقم الهيدروجيني الذي يدل على محلول قاعدي:",opts:["5","6.5","7","7.5"],ans:3},
+  {q:"تغير موقع الجسم بمرور الزمن يمثل المصطلح التالي:",opts:["الإطار المرجعي","الحركة","السرعة المتجهة","التسارع"],ans:1},
+  {q:"التفاعل الكيميائي (2Fe + O₂ → 2FeO) يمثل تفاعل:",opts:["الفلور مع الهيدروجين","الحديد مع الماء","الحديد مع الأكسجين ينتج أكسيد الحديد","الفلور مع حمض الهيدروكلوريك"],ans:2},
+  {q:"عندما تضع سلكاً حديدياً داخل لفات عدة ومتصل بتيار كهربائي يتكون لديك:",opts:["مغناطيس كهربائي","محرك كهربائي","مولد كهربائي","مغناطيس دائم"],ans:0},
+  {q:"لكل قوة فعل قوة رد فعل مساوية لها في المقدار ومعاكسة لها في الاتجاه، هذا يعبر عن:",opts:["قانون السرعة المتجهة","قانون القوى المتزنة","قانون نيوتن الثاني","قانون نيوتن الثالث"],ans:3},
+  {q:"عندما تسير سيارة بسرعة ثابتة فأي العبارات التالية صحيحة:",opts:["قوة الاحتكاك أكبر من قوة دفع المحرك","قوة دفع المحرك أكبر من الاحتكاك","قوة دفع المحرك وقوة الاحتكاك متزنة","قوة مقاومة الهواء أكبر من قوة دفع المحرك"],ans:2},
+  {q:"تسلك الذرات سلوك المغناطيس بسبب:",opts:["قوة التجاذب الكبيرة بين الجسيمات","خصائص الإلكترونات وحركتها","خصائص البروتونات وحركتها","تشكل قطب مغناطيسي واحد في كل ذرة"],ans:1},
+  {q:"المصباح المعلق بخيط مشدود في السقف يخضع للقوى التالية:",opts:["قوة واحدة هي الجاذبية الأرضية","قوة واحدة هي قوة لأعلى","ثلاث قوى","قوتان: شد لأعلى وقوة الجاذبية الأرضية"],ans:3},
+  {q:"أحد أشكال التوصيل الكهربائي يجنبك انقطاع التيار إذا احترق أحد الأجهزة الموصلة:",opts:["التوصيل على التوالي","التوصيل على التوازي","التوصيل المختلط","لا يوجد فرق"],ans:1},
+  {q:"في أي الأجهزة الآتية يتم إنتاج الكهرباء من الحركة:",opts:["مصباح الدراجة","مضخة الماء","المروحة الكهربائية","الجرس الكهربائي"],ans:0},
+  {q:"الأداة التي تحول الطاقة الكهربائية إلى طاقة حركية:",opts:["المفتاح الكهربائي","المحرك الكهربائي","المغناطيس الكهربائي","المولد الكهربائي"],ans:1},
+  {q:"يطفو الجسم إذا كانت كثافته مقارنةً بالسائل الذي يوضع فيه:",opts:["أكبر من كثافة السائل","مساوية لكثافة السائل","أقل من كثافة السائل","لا علاقة للكثافة بالطفو"],ans:2},
+  {q:"الملح (كلوريد الصوديوم) مركب ناتج عن تفاعل:",opts:["حمضين","قاعدتين","حمض وقاعدة","معدنين"],ans:2},
+  {q:"يُقاس التيار الكهربائي بوحدة:",opts:["الأوم","الفولت","الأمبير","الواط"],ans:2},
+  {q:"الخصائص الكيميائية لمادة هي صفات:",opts:["يمكن ملاحظتها دون تغيير المادة","تصف مظهر المادة فقط","تصف قدرة المادة على التحول إلى مادة أخرى","تتعلق بحجم المادة وكتلتها"],ans:2}
+],
+english: [
+  {q:"Last week, we _______ to Najran.",opts:["go","went","goes","are going"],ans:1},
+  {q:"You should _______ a lot of water.",opts:["drink","drinks","drank","are drinking"],ans:0},
+  {q:"_______ students are there in your school?",opts:["How much","How long","How many","How old"],ans:2},
+  {q:"Last year, I _______ History.",opts:["have liked","like","likes","liked"],ans:3},
+  {q:"There _______ flowers in the garden now.",opts:["am","are","is","were"],ans:1},
+  {q:"I didn't _______ dinner this evening.",opts:["eat","ate","eats","am eating"],ans:0},
+  {q:"_______ you have lunch at your school every day?",opts:["Did","Do","Does","Doesn't"],ans:1},
+  {q:"There _______ a book on the table yesterday.",opts:["was","are","is","were"],ans:0},
+  {q:"We are going to _______ Abha in Asir.",opts:["visits","visit","visited","is visiting"],ans:1},
+  {q:"Why did she eat all the soup? _______ she was hungry.",opts:["Or","And","But","Because"],ans:3},
+  {q:"Riyadh is a _______ in Saudi Arabia.",opts:["country","continent","city","mountain"],ans:2},
+  {q:"Don't _______. Speak clearly.",opts:["draw","shout","write","skip"],ans:1},
+  {q:"She is good at _______ (Math subject).",opts:["Math","Social Studies","PE","Science"],ans:0},
+  {q:"A _______ is a store to sell pens and pencils.",opts:["DVD store","candy store","flower store","stationery"],ans:3},
+  {q:"August is a _______.",opts:["year","season","month","day"],ans:2},
+  {q:"You must come early to class. The opposite of 'early' is _______.",opts:["late","wealthy","right","happy"],ans:0},
+  {q:"The laptop has a big screen. The opposite of 'big' is _______.",opts:["strong","small","up","right"],ans:1},
+  {q:"It (was / is / are / were) cloudy yesterday.",opts:["is","are","was","were"],ans:2},
+  {q:"Rabbits are (cute / cuter / cutest) than parrots.",opts:["cute","cuter","cutest","more cute"],ans:1},
+  {q:"That is the cage (where / when / whose / who) panda lives.",opts:["when","where","whose","who"],ans:1},
+  {q:"It is not _______ to cross the street. (slow / safe / mask / pretty)",opts:["slow","safe","mask","pretty"],ans:1},
+  {q:"We wear a _______ in the hospital. (slow / safe / mask / pretty)",opts:["slow","safe","mask","pretty"],ans:2},
+  {q:"Where can you see animals?",opts:["In the hospital","In the zoo","In the school","In the market"],ans:1},
+  {q:"How many seasons are there in a year?",opts:["Two","Three","Four","Five"],ans:2},
+  {q:"What does a vet do?",opts:["He teaches students","He builds houses","He helps sick animals","He cooks food"],ans:2},
+  {q:"We see a _______ after it rains.",opts:["rainbow","sea","tree","umbrella"],ans:0},
+  {q:"I feel sad and tired. I'm not _______.",opts:["ill","all right","bad","sick"],ans:1},
+  {q:"There are many _______ in the zoo.",opts:["books","beds","dresses","animals"],ans:3},
+  {q:"The parrot can talk. It is very _______.",opts:["brave","slow","tall","smart"],ans:3},
+  {q:"It (was / is / are / were) rainy yesterday.",opts:["is","are","was","were"],ans:2}
+]
+};
+
+// ===================== SETTINGS =====================
+const S = {shuffle:true,timer:true,sound:true,confetti:true};
+function togSet(k){S[k]=!S[k];document.getElementById('t'+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle('on',S[k])}
+
+// ===================== STARS =====================
+(function(){const c=document.getElementById('stars');for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';const sz=Math.random()*2.5+.8;s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${Math.random()*3+2}s;animation-delay:${Math.random()*3}s`;c.appendChild(s)}})();
+
+// ===================== AUDIO =====================
+function playSound(t){
+  if(!S.sound)return;
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    if(t==='ok'){o.frequency.setValueAtTime(523,ctx.currentTime);o.frequency.setValueAtTime(659,ctx.currentTime+.1);o.frequency.setValueAtTime(784,ctx.currentTime+.2);g.gain.setValueAtTime(.25,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.5);o.start(ctx.currentTime);o.stop(ctx.currentTime+.5)}
+    else if(t==='no'){o.frequency.setValueAtTime(280,ctx.currentTime);o.frequency.setValueAtTime(180,ctx.currentTime+.15);g.gain.setValueAtTime(.25,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.4);o.start(ctx.currentTime);o.stop(ctx.currentTime+.4)}
+    else if(t==='win'){const ns=[523,659,784,1047];ns.forEach((f,i)=>{const oo=ctx.createOscillator(),gg=ctx.createGain();oo.connect(gg);gg.connect(ctx.destination);oo.frequency.value=f;gg.gain.setValueAtTime(.18,ctx.currentTime+i*.15);gg.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+i*.15+.3);oo.start(ctx.currentTime+i*.15);oo.stop(ctx.currentTime+i*.15+.3)})}
+  }catch(e){}
+}
+
+// ===================== CONFETTI =====================
+function confetti(){
+  if(!S.confetti)return;
+  const cols=['#ffd600','#ff6f00','#00c853','#2979ff','#e040fb','#ff1744','#00bcd4'];
+  for(let i=0;i<70;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div');p.className='cf';
+      p.style.cssText=`left:${Math.random()*100}vw;background:${cols[Math.floor(Math.random()*cols.length)]};width:${Math.random()*10+4}px;height:${Math.random()*10+4}px;animation-duration:${Math.random()*2+2}s;animation-delay:${Math.random()*0.4}s;border-radius:${Math.random()>.5?'50%':'0'}`;
+      document.body.appendChild(p);setTimeout(()=>p.remove(),4500);
+    },i*28);
+  }
+}
+
+// ===================== SCORE POPUP =====================
+function scorePopup(x,y,txt,col){
+  const p=document.createElement('div');p.className='spop';p.textContent=txt;
+  p.style.cssText=`left:${x}px;top:${y}px;color:${col}`;
+  document.body.appendChild(p);setTimeout(()=>p.remove(),1500);
+}
+
+// ===================== GAME STATE =====================
+let curSubj='',qs=[],idx=0,score=0,correct=0,wrong=0,streak=0,maxStreak=0,answered=false,tmrInt=null,tLeft=30;
+
+const subjectMeta={
+  arabic:{name:'لغتي',cls:'ar'},
+  math:{name:'رياضيات',cls:'ma'},
+  science:{name:'علوم',cls:'sc'},
+  english:{name:'English',cls:'en'}
+};
+
+// ===================== START QUIZ =====================
+function startQuiz(subj){
+  document.getElementById('homeBackBtn').classList.add('show');
+  curSubj=subj;
+  qs=[...DB[subj]];
+  if(S.shuffle)qs=qs.sort(()=>Math.random()-.5);
+  idx=0;score=0;correct=0;wrong=0;streak=0;maxStreak=0;
+  document.getElementById('homeScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  document.getElementById('resultScreen').classList.remove('show');
+  const m=subjectMeta[subj];
+  const tag=document.getElementById('qTag');
+  tag.className='stag '+m.cls;
+  tag.textContent=m.name;
+  showQ();
+}
+
+// ===================== TIMER =====================
+function startTimer(){
+  clearInterval(tmrInt);
+  if(!S.timer){document.getElementById('tmrRing').style.display='none';return}
+  document.getElementById('tmrRing').style.display='inline-block';
+  tLeft=30;updateTimer();
+  tmrInt=setInterval(()=>{tLeft--;updateTimer();if(tLeft<=0){clearInterval(tmrInt);if(!answered)timeUp()}},1000);
+}
+function updateTimer(){
+  const circ=150.8,off=circ*(1-tLeft/30);
+  document.getElementById('tmrCircle').style.strokeDashoffset=off;
+  document.getElementById('tmrTxt').textContent=tLeft;
+  const col=tLeft>15?'#ffd600':tLeft>8?'#ff6f00':'#d50000';
+  document.getElementById('tmrCircle').style.stroke=col;
+  document.getElementById('tmrTxt').style.color=col;
+}
+function timeUp(){
+  answered=true;wrong++;streak=0;updateStats();
+  const q=qs[idx];
+  document.querySelectorAll('.opt').forEach((b,i)=>{b.disabled=true;if(i===q.ans)b.classList.add('show-ok')});
+  const fb=document.getElementById('fb');
+  fb.className='fb no-fb show';
+  fb.innerHTML=`⏰ انتهى الوقت! الإجابة الصحيحة: <strong>${q.opts[q.ans]}</strong>`;
+  document.getElementById('nxtBtn').classList.add('show');
+}
+
+// ===================== SHOW QUESTION =====================
+function showQ(){
+  answered=false;clearInterval(tmrInt);
+  const q=qs[idx],tot=qs.length;
+  document.getElementById('qBadge').textContent=`سؤال ${idx+1}`;
+  document.getElementById('qTxt').textContent=q.q;
+  document.getElementById('progTxt').textContent=`السؤال ${idx+1} من ${tot}`;
+  document.getElementById('progFill').style.width=`${(idx/tot)*100}%`;
+  const ltrs=['أ','ب','ج','د'];
+  const grid=document.getElementById('optsGrid');
+  grid.innerHTML='';
+  q.opts.forEach((opt,i)=>{
+    const btn=document.createElement('button');
+    btn.className='opt';
+    btn.innerHTML=`<span class="opt-ltr">${ltrs[i]}</span>${opt}`;
+    btn.onclick=(e)=>selectAns(i,e);
+    grid.appendChild(btn);
+  });
+  document.getElementById('fb').className='fb';
+  document.getElementById('nxtBtn').className='nxt';
+  if(idx===qs.length-1)document.getElementById('nxtBtn').textContent='🏁 عرض النتيجة';
+  else document.getElementById('nxtBtn').textContent='السؤال التالي ←';
+  const card=document.getElementById('qcard');
+  card.style.animation='none';card.offsetHeight;card.style.animation='sIn .4s ease';
+  startTimer();
+}
+
+// ===================== SELECT ANSWER =====================
+function selectAns(i,e){
+  if(answered)return;
+  answered=true;clearInterval(tmrInt);
+  const q=qs[idx],isOk=i===q.ans;
+  document.querySelectorAll('.opt').forEach((b,j)=>{
+    b.disabled=true;
+    if(j===q.ans)b.classList.add('ok');
+    if(j===i&&!isOk)b.classList.add('no');
+  });
+  const fb=document.getElementById('fb');
+  if(isOk){
+    score+=10+(streak>=2?5:0);correct++;streak++;
+    if(streak>maxStreak)maxStreak=streak;
+    playSound('ok');
+    if(streak>=3)confetti();
+    const msgs=['🌟 ممتاز! إجابة صحيحة تماماً!','🎯 أحسنت! أنت رائع!','🏆 صحيح! استمر هكذا!','✨ بارك الله فيك! إجابة مثالية!','🚀 رائع جداً! أنت نجم!','💡 ذكاء! إجابة صحيحة!','⭐ عظيم! واصل التألق!','🎉 أحسنت! أنت متميز!'];
+    const msg=streak>=3?`🔥 سلسلة ${streak} إجابات صحيحة متتالية! ${msgs[Math.floor(Math.random()*msgs.length)]}`:msgs[Math.floor(Math.random()*msgs.length)];
+    fb.className='fb ok-fb show';fb.innerHTML=msg;
+    try{const r=e.target.getBoundingClientRect();scorePopup(r.left,r.top-30,`+${streak>=3?15:10}`,'#ffd600')}catch(ex){}
+  }else{
+    wrong++;streak=0;playSound('no');
+    const msgs=[`❌ للأسف! الإجابة الصحيحة هي: <strong>${q.opts[q.ans]}</strong>`,`💪 حاول مرة أخرى! الصحيح: <strong>${q.opts[q.ans]}</strong>`,`📚 تعلّم من الخطأ! الإجابة: <strong>${q.opts[q.ans]}</strong>`,`🎯 الإجابة الصحيحة كانت: <strong>${q.opts[q.ans]}</strong>`];
+    fb.className='fb no-fb show';fb.innerHTML=msgs[Math.floor(Math.random()*msgs.length)];
+  }
+  updateStats();
+  document.getElementById('nxtBtn').classList.add('show');
+}
+
+// ===================== STATS =====================
+function updateStats(){
+  document.getElementById('sScore').textContent=score;
+  document.getElementById('sCorrect').textContent=correct;
+  document.getElementById('sWrong').textContent=wrong;
+  document.getElementById('sStreak').textContent=streak+(streak>=3?'🔥':'');
+}
+
+// ===================== NEXT =====================
+function nextQ(){idx++;if(idx>=qs.length)showResult();else showQ()}
+
+// ===================== RESULT =====================
+function showResult(){
+  clearInterval(tmrInt);
+  document.getElementById('quizScreen').style.display='none';
+  const rs=document.getElementById('resultScreen');rs.classList.add('show');
+  const tot=qs.length,pct=Math.round((correct/tot)*100);
+  document.getElementById('rC').textContent=correct;
+  document.getElementById('rW').textContent=wrong;
+  document.getElementById('rP').textContent=pct+'%';
+  document.getElementById('rScore').textContent=`${correct}/${tot}`;
+  let ico,title,msg;
+  if(pct>=90){ico='🏆';title='ممتاز! أنت نجم!';msg='أداء رائع جداً! تفوقت على الجميع!';playSound('win');confetti();setTimeout(confetti,1200)}
+  else if(pct>=75){ico='🥇';title='أحسنت!';msg='نتيجة جيدة جداً! استمر في التحسن!';playSound('win');confetti()}
+  else if(pct>=60){ico='🥈';title='جيد!';msg='نتيجة جيدة! يمكنك تحسينها بالمراجعة.'}
+  else if(pct>=50){ico='🥉';title='مقبول';msg='تحتاج إلى مزيد من المراجعة والتدريب.'}
+  else{ico='📚';title='تحتاج مراجعة';msg='لا تيأس! راجع المادة وحاول مرة أخرى.'}
+  document.getElementById('rIco').textContent=ico;
+  document.getElementById('rTitle').textContent=title;
+  document.getElementById('rMsg').textContent=msg;
+}
+
+function restartSame(){document.getElementById('resultScreen').classList.remove('show');startQuiz(curSubj)}
+function goHome(){
+  document.getElementById('homeBackBtn').classList.remove('show');
+  clearInterval(tmrInt);
+  document.getElementById('resultScreen').classList.remove('show');
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('homeScreen').style.display='block';
+}
+</script>
+</body>
+</html>

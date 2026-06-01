@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة موهبة وشغف | إدارة الأنشطة والمهارات الطلابية</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #0d9488;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* القائمة الجانبية */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar h2 {
+            font-size: 1.4rem;
+            text-align: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 12px 15px;
+            text-align: right;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .menu-btn:hover, .menu-btn.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: white;
+            font-weight: bold;
+        }
+
+        /* منطقة المحتوى الرئيسية */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        header {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            color: var(--primary-color);
+            font-size: 1.6rem;
+        }
+
+        /* التبويبات والمحتوى */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* أدوات الفرز والبحث */
+        .filter-section {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .filter-section select, .filter-section input {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .filter-section select {
+            min-width: 150px;
+        }
+
+        .filter-section input {
+            flex: 1;
+        }
+
+        /* الجداول */
+        .table-container {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: right;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* الأزرار والشارات */
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            background-color: #e2e8f0;
+        }
+
+        .badge.skill { background-color: #ccfbf1; color: #0f766e; }
+        .badge.level { background-color: #fef9c3; color: #a16207; }
+
+        .action-btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+        }
+
+        .action-btn:hover {
+            background-color: #0f766e;
+        }
+
+        /* واجهة الطالب */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 25px;
+        }
+
+        .student-card {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .student-avatar {
+            width: 100px;
+            height: 100px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin: 0 auto 15px;
+        }
+
+        .student-details h3 {
+            margin-bottom: 5px;
+        }
+
+        .student-details p {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .skills-section {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .skill-progress {
+            margin-bottom: 15px;
+        }
+
+        .skill-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--secondary-color);
+            width: 0%;
+            transition: width 0.5s ease-in-out;
+        }
+
+        /* نافذة إسناد المهام التنبثقة */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-cancel {
+            background-color: #e2e8f0;
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>موهبة وشغف</h2>
+        <button class="menu-btn active" onclick="switchTab('admin-tab')">لوحة تحكم الإدارة</button>
+        <button class="menu-btn" onclick="switchTab('portfolio-tab')">السجل المهاري للطالب</button>
+    </div>
+
+    <div class="main-content">
+        <header>
+            <h1 class="page-title" id="page-header-title">لوحة تحكم الإدارة والفرز الذكي</h1>
+            <div style="font-weight: 500; color: #64748b;">العام الدراسي: 1447 هـ</div>
+        </header>
+
+        <div id="admin-tab" class="tab-content active">
+            <div class="filter-section">
+                <label for="skill-filter">تصفية حسب المهارة النوعية:</label>
+                <select id="skill-filter" onchange="filterStudents()">
+                    <option value="all">كل المهارات</option>
+                    <option value="خطابة وإلقاء">خطابة وإلقاء</option>
+                    <option value="برمجة وتقنية">برمجة وتقنية</option>
+                    <option value="رسم وفنون بصرية">رسم وفنون بصرية</option>
+                    <option value="ابتكار وعلم روبوت">ابتكار وعلم روبوت</option>
+                    <option value="رياضة ولياقة">رياضة ولياقة</option>
+                </select>
+                <input type="text" id="search-input" placeholder="ابحث عن اسم الطالب..." onkeyup="filterStudents()">
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>اسم الطالب</th>
+                            <th>الصف</th>
+                            <th>المهارة الرئيسية</th>
+                            <th>مستوى الإجادة</th>
+                            <th>المهام الحالية</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="portfolio-tab" class="tab-content">
+            <div class="filter-section">
+                <label for="student-selector">اختر الطالب لاستعراض ملفه:</label>
+                <select id="student-selector" onchange="loadStudentPortfolio()">
+                    </select>
+            </div>
+
+            <div class="portfolio-grid">
+                <div class="student-card">
+                    <div class="student-avatar" id="p-avatar">ط</div>
+                    <div class="student-details">
+                        <h3 id="p-name">اسم الطالب</h3>
+                        <p id="p-class">الصف</p>
+                        <hr style="border: none; border-top: 1px solid var(--border-color); margin: 15px 0;">
+                        <h4 style="margin-bottom: 10px; color: var(--primary-color);">الأوسمة والشارات</h4>
+                        <div id="p-badges" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
+                            </div>
+                    </div>
+                </div>
+
+                <div class="skills-section">
+                    <h3 style="color: var(--primary-color); margin-bottom: 20px;">مؤشر نمو المهارات التراكمي</h3>
+                    <div id="skills-progress-container">
+                        </div>
+
+                    <h3 style="color: var(--primary-color); margin: 30px 0 15px;">المهام القيادية المسندة والسجل التراكمي</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>المهمة / الفعالية</th>
+                                    <th>نوع المشاركة</th>
+                                    <th>الحالة</th>
+                                </tr>
+                            </thead>
+                            <tbody id="portfolio-tasks-body">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="task-modal" class="modal">
+        <div class="modal-content">
+            <h3 style="color: var(--primary-color);">إسناد مهمة قيادية جديدة</h3>
+            <p>الطالب: <span id="modal-student-name" style="font-weight: bold;"></span></p>
+            <div style="display: flex; flex-direction: column; gap: 5px;">
+                <label for="task-select">نوع المهمة المدرسية:</label>
+                <select id="task-select" style="padding: 8px; border-radius: 4px; border: 1px solid var(--border-color);">
+                    <option value="الإذاعة المدرسية">تقديم الإذاعة المدرسية</option>
+                    <option value="تنظيم الفعاليات">تنظيم وتحكيم الفعاليات</option>
+                    <option value="مجلس الطلاب">تمثيل المدرسة في مجلس الطلاب</option>
+                    <option value="الدعم التقني">إدارة المنصات والدعم التقني للمدرسة</option>
+                    <option value="المسابقات الوزارية">الترشح للمسابقات المحلية والوزارية</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">إلغاء</button>
+                <button class="action-btn" onclick="assignTaskSubmit()">تأكيد الإسناد</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // قاعدة البيانات التجريبية للطلاب ومواهبهم
+        let studentsData = [
+            { id: 1, name: "أحمد المولد", class: "الأول الثانوي", mainSkill: "خطابة وإلقاء", level: "متقدم", tasks: ["الإذاعة المدرسية"], skillsDetail: { "إلقاء الخطب": 90, "إعداد النصوص": 75, "الارتجال": 85 }, history: [{title: "تقديم حفل التخرج المفتوح", type: "داخلي", status: "مكتمل"}] },
+            { id: 2, name: "خالد الحربي", class: "الثاني الثانوي", mainSkill: "برمجة وتقنية", level: "خبير", tasks: [], skillsDetail: { "تطوير الويب": 95, "بناء قواعد البيانات": 80, "حل المشكلات": 90 }, history: [{title: "تطوير صفحة النادي العلمي", type: "داخلي", status: "مكتمل"}] },
+            { id: 3, name: "يوسف العتيبي", class: "الأول الثانوي", mainSkill: "رسم وفنون بصرية", level: "متوسط", tasks: ["تنظيم الفعاليات"], skillsDetail: { "رسم زيتي": 60, "تصميم رقمي": 75, "تنسيق معارض": 80 }, history: [{title: "تصميم الهوية البصرية للمعرض الفني", type: "داخلي", status: "مكتمل"}] },
+            { id: 4, name: "سلطان الشمراني", class: "الثالث الثانوي", mainSkill: "ابتكار وعلم روبوت", level: "متقدم", tasks: [], skillsDetail: { "تركيب الروبوت": 85, "البرمجة الحركية": 75, "التفكير الإبداعي": 90 }, history: [{title: "مسابقة الروبوت المحلية", type: "محلي", status: "ترشيح قائم"}] },
+            { id: 5, name: "فيصل القحطاني", class: "الثاني الثانوي", mainSkill: "رياضة ولياقة", level: "متقدم", tasks: ["مجلس الطلاب"], skillsDetail: { "لياقة بدنية": 90, "القيادة الميدانية": 85, "التخطيط التكتيكي": 70 }, history: [{title: "قيادة فريق المدرسة الرياضي", type: "داخلي", status: "مكتمل"}] }
+        ];
+
+        let selectedStudentIdForTask = null;
+
+        // دالة تحميل وإدراج الطلاب بجدول الإدارة
+        function loadStudentsTable(data = studentsData) {
+            const tbody = document.getElementById('students-table-body');
+            tbody.innerHTML = '';
+            
+            data.forEach(student => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: 500;">${student.name}</td>
+                    <td>${student.class}</td>
+                    <td><span class="badge skill">${student.mainSkill}</span></td>
+                    <td><span class="badge level">${student.level}</span></td>
+                    <td>${student.tasks.length > 0 ? student.tasks.join(', ') : '<span style="color:#aaa;">لا يوجد مهام حالية</span>'}</td>
+                    <td><button class="action-btn" onclick="openAssignModal(${student.id})">إسناد مهمة</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // دالة تعبئة قائمة منتقي الطلاب في شاشة التبويب الثاني
+        function loadStudentSelector() {
+            const selector = document.getElementById('student-selector');
+            selector.innerHTML = '';
+            studentsData.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.mainSkill})`;
+                selector.appendChild(option);
+            });
+        }
+
+        // دالة الفرز والتصفية الذكية
+        function filterStudents() {
+            const skillFilter = document.getElementById('skill-filter').value;
+            const searchInput = document.getElementById('search-input').value.trim();
+
+            let filtered = studentsData.filter(student => {
+                const matchSkill = (skillFilter === 'all' || student.mainSkill === skillFilter);
+                const matchName = student.name.includes(searchInput);
+                return matchSkill && matchName;
+            });
+
+            loadStudentsTable(filtered);
+        }
+
+        // دالة الانتقال بين تبويبات اللوحة
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+
+            const headerTitle = document.getElementById('page-header-title');
+            if(tabId === 'admin-tab') {
+                headerTitle.textContent = 'لوحة تحكم الإدارة والفرز الذكي';
+            } else {
+                headerTitle.textContent = 'السجل المهارى الرقمي للطالب';
+                loadStudentPortfolio();
+            }
+        }
+
+        // عرض السجل المهاري التراكمي للطالب المختار
+        function loadStudentPortfolio() {
+            const studentId = document.getElementById('student-selector').value;
+            const student = studentsData.find(s => s.id == studentId);
+            if (!student) return;
+
+            document.getElementById('p-name').textContent = student.name;
+            document.getElementById('p-class').textContent = student.class;
+            document.getElementById('p-avatar').textContent = student.name.charAt(0);
+
+            // الشارات المقترحة حسب المستوى والمهارة
+            const badgesContainer = document.getElementById('p-badges');
+            badgesContainer.innerHTML = `
+                <span class="badge skill">${student.mainSkill}</span>
+                <span class="badge level">${student.level}</span>
+                <span class="badge" style="background-color: #dbeafe; color: #1e40af;">شغوف 🌟</span>
+            `;
+
+            // أشرطة نمو المهارات
+            const progressContainer = document.getElementById('skills-progress-container');
+            progressContainer.innerHTML = '';
+            for (const [skillName, val] of Object.entries(student.skillsDetail)) {
+                const skillDiv = document.createElement('div');
+                skillDiv.className = 'skill-progress';
+                skillDiv.innerHTML = `
+                    <div class="skill-info">
+                        <span>${skillName}</span>
+                        <span style="font-weight: bold; color: var(--secondary-color);">${val}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${val}%"></div>
+                    </div>
+                `;
+                progressContainer.appendChild(skillDiv);
+            }
+
+            // سجل المهام والمشاركات
+            const historyBody = document.getElementById('portfolio-tasks-body');
+            historyBody.innerHTML = '';
+            
+            // إضافة المهام الحالية المجدولة
+            student.tasks.forEach(task => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${task}</td><td>مهمة قيادية قيادية</td><td><span style="color: #2563eb; font-weight:600;">نشط حالياً</span></td>`;
+                historyBody.appendChild(tr);
+            });
+
+            // إضافة السجل التراكمي القديم
+            student.history.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.title}</td><td>مشاركة ومسابقة (${item.type})</td><td><span style="color: #16a34a;">${item.status}</span></td>`;
+                historyBody.appendChild(tr);
+            });
+        }
+
+        // نوافذ إسناد المهام التفاعلية
+        function openAssignModal(studentId) {
+            selectedStudentIdForTask = studentId;
+            const student = studentsData.find(s => s.id === studentId);
+            document.getElementById('modal-student-name').textContent = student.name;
+            document.getElementById('task-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('task-modal').style.display = 'none';
+        }
+
+        function assignTaskSubmit() {
+            const taskValue = document.getElementById('task-select').value;
+            const student = studentsData.find(s => s.id === selectedStudentIdForTask);
+            
+            if (student && !student.tasks.includes(taskValue)) {
+                student.tasks.push(taskValue);
+                alert(`تم بنجاح إسناد مهمة (${taskValue}) للطالب ${student.name}`);
+            } else {
+                alert('المهمة مسندة بالفعل لهذا الطالب!');
+            }
+            
+            closeModal();
+            loadStudentsTable();
+        }
+
+        // تشغيل التهيئة الأولية عند تحميل الصفحة
+        window.onload = function() {
+            loadStudentsTable();
+            loadStudentSelector();
+        };
+    </script>
+</body>
+</html>

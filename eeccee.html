@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسابقة TopGoal 2 - خامس وسادس | الفصل الثاني</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #6C3BAA;
+    --primary-light: #9B6DD6;
+    --gold: #F5C842;
+    --gold-dark: #D4A017;
+    --teal: #1ABC9C;
+    --teal-dark: #148F77;
+    --red: #E74C3C;
+    --red-dark: #C0392B;
+    --bg: #0F0A1E;
+    --card: #1A1035;
+    --card2: #221545;
+    --text: #F0E6FF;
+    --text-muted: #A899CC;
+    --border: #3D2870;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(108,59,170,0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(26,188,156,0.15) 0%, transparent 50%);
+    overflow-x: hidden;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, #3D1870 50%, #0F0A1E 100%);
+    padding: 20px 24px 16px;
+    text-align: center;
+    border-bottom: 3px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.02) 20px, rgba(255,255,255,0.02) 40px);
+  }
+  .header-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(245,200,66,0.5);
+    letter-spacing: 1px;
+    position: relative;
+  }
+  .header-subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    position: relative;
+  }
+  .stars-row {
+    display: flex; justify-content: center; gap: 6px;
+    margin: 8px 0 0;
+    position: relative;
+  }
+  .star { font-size: 1.2rem; animation: twinkle 2s infinite; }
+  .star:nth-child(2) { animation-delay: 0.3s; }
+  .star:nth-child(3) { animation-delay: 0.6s; }
+  @keyframes twinkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+
+  /* ===== SETTINGS / FILTER ===== */
+  .settings-bar {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
+  }
+  .settings-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+  .unit-btn {
+    background: var(--card2);
+    border: 2px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .unit-btn:hover, .unit-btn.active {
+    background: var(--primary);
+    border-color: var(--gold);
+    color: var(--gold);
+    box-shadow: 0 0 12px rgba(245,200,66,0.3);
+  }
+
+  .credit-bar {
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 20px;
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .credit-bar a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 700;
+  }
+  .credit-bar a:hover { text-decoration: underline; }
+
+  /* ===== SCORE BAR ===== */
+  .score-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .score-item {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.9rem; font-weight: 700;
+  }
+  .score-icon { font-size: 1.1rem; }
+  .score-num { font-size: 1.1rem; font-weight: 900; }
+  .score-correct .score-num { color: var(--teal); }
+  .score-wrong .score-num { color: var(--red); }
+  .score-total .score-num { color: var(--gold); }
+
+  .progress-wrap {
+    width: 100%;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* ===== QUIZ AREA ===== */
+  .quiz-container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  .question-counter {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  .question-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 24px 22px 20px;
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    animation: slideIn 0.35s ease;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+  .question-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 80px; height: 80px;
+    background: radial-gradient(circle, rgba(108,59,170,0.3), transparent 70%);
+  }
+
+  .unit-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+
+  .question-en {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1.5;
+    margin-bottom: 6px;
+    direction: ltr;
+    text-align: left;
+  }
+  .question-ar {
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 18px;
+    line-height: 1.6;
+  }
+
+  /* ===== OPTIONS ===== */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option-btn {
+    background: var(--card2);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    text-align: right;
+    font-family: 'Tajawal', sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--primary-light);
+    background: rgba(108,59,170,0.2);
+    transform: translateX(-3px);
+  }
+  .option-letter {
+    min-width: 30px; height: 30px;
+    background: var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.85rem;
+    font-weight: 900;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .option-text-en {
+    font-size: 0.9rem;
+    color: var(--text);
+    font-weight: 600;
+    direction: ltr;
+    text-align: left;
+  }
+  .option-text-ar {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+  .option-texts { flex: 1; }
+
+  /* Correct */
+  .option-btn.correct {
+    background: rgba(26,188,156,0.15);
+    border-color: var(--teal);
+    animation: correctPulse 0.5s ease;
+  }
+  .option-btn.correct .option-letter { background: var(--teal); color: #fff; }
+  @keyframes correctPulse { 0%{transform:scale(1)} 40%{transform:scale(1.03)} 100%{transform:scale(1)} }
+
+  /* Wrong */
+  .option-btn.wrong {
+    background: rgba(231,76,60,0.12);
+    border-color: var(--red);
+    animation: shake 0.4s ease;
+  }
+  .option-btn.wrong .option-letter { background: var(--red); color: #fff; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  /* ===== FEEDBACK PANEL ===== */
+  .feedback-panel {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .feedback-panel.correct-fb {
+    background: rgba(26,188,156,0.15);
+    border: 1px solid var(--teal);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .feedback-panel.wrong-fb {
+    background: rgba(231,76,60,0.1);
+    border: 1px solid var(--red);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .feedback-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .feedback-msg { font-size: 0.95rem; font-weight: 700; }
+  .feedback-msg.correct-msg { color: var(--teal); }
+  .feedback-msg.wrong-msg { color: var(--red); }
+  .feedback-answer {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .correct-answer-highlight {
+    color: var(--gold);
+    font-weight: 700;
+    direction: ltr;
+  }
+
+  /* ===== NEXT BUTTON ===== */
+  .nav-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .btn-next {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border: none;
+    color: #fff;
+    padding: 12px 36px;
+    border-radius: 30px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(108,59,170,0.4);
+    display: none;
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(108,59,170,0.5); }
+  .btn-next.visible { display: block; }
+
+  .btn-restart {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+    border: none;
+    color: #1a1035;
+    padding: 12px 32px;
+    border-radius: 30px;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.25s;
+    box-shadow: 0 4px 16px rgba(245,200,66,0.3);
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+
+  /* ===== END SCREEN ===== */
+  .end-screen {
+    display: none;
+    text-align: center;
+    padding: 40px 20px;
+    animation: slideIn 0.5s ease;
+  }
+  .end-trophy { font-size: 5rem; margin-bottom: 16px; }
+  .end-title {
+    font-family: 'Cairo', sans-serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .end-score-big {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--text);
+    margin: 16px 0;
+  }
+  .end-score-big span { color: var(--gold); }
+  .end-msg {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .end-stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .end-stat {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 24px;
+    min-width: 120px;
+  }
+  .end-stat-num { font-size: 2rem; font-weight: 900; }
+  .end-stat-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+  .end-stat.c .end-stat-num { color: var(--teal); }
+  .end-stat.w .end-stat-num { color: var(--red); }
+  .end-stat.p .end-stat-num { color: var(--gold); }
+
+  /* ===== RESPONSIVE ===== */
+  @media(max-width: 500px) {
+    .header-title { font-size: 1.5rem; }
+    .question-en { font-size: 0.95rem; }
+    .option-btn { padding: 10px 12px; }
+    .option-texts { font-size: 0.85rem; }
+  }
+
+  /* Confetti */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    border-radius: 2px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 999;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  .footer-credit {
+    text-align: center;
+    padding: 16px;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title">⭐ مسابقة TopGoal 2 ⭐</div>
+  <div class="header-subtitle">الصف الخامس والسادس | الفصل الثاني | الوحدات 5 - 6 - 7 - 8</div>
+  <div class="stars-row">
+    <span class="star">✨</span><span class="star">🎯</span><span class="star">✨</span>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-bar">
+  <span class="settings-label">🔖 اختر الوحدة:</span>
+  <button class="unit-btn active" onclick="filterUnit('all')">الكل</button>
+  <button class="unit-btn" onclick="filterUnit('5')">الوحدة الخامسة</button>
+  <button class="unit-btn" onclick="filterUnit('6')">الوحدة السادسة</button>
+  <button class="unit-btn" onclick="filterUnit('7')">الوحدة السابعة</button>
+  <button class="unit-btn" onclick="filterUnit('8')">الوحدة الثامنة</button>
+</div>
+
+<!-- CREDIT -->
+<div class="credit-bar">
+  تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا: <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">قناة التعليم 🎓</a>
+</div>
+
+<!-- SCORE BAR -->
+<div class="score-bar">
+  <div class="score-item score-correct">
+    <span class="score-icon">✅</span>
+    <span>صحيح:</span>
+    <span class="score-num" id="scoreCorrect">0</span>
+  </div>
+  <div class="score-item score-wrong">
+    <span class="score-icon">❌</span>
+    <span>خطأ:</span>
+    <span class="score-num" id="scoreWrong">0</span>
+  </div>
+  <div class="score-item score-total">
+    <span class="score-icon">📊</span>
+    <span>المجموع:</span>
+    <span class="score-num" id="scoreTotal">0</span>
+  </div>
+  <div style="width:100%">
+    <div class="progress-wrap">
+      <div class="progress-fill" id="progressFill" style="width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ CONTAINER -->
+<div class="quiz-container">
+  <div id="quizArea">
+    <div class="question-counter" id="questionCounter">السؤال 1 من 0</div>
+    <div class="question-card" id="questionCard">
+      <div class="unit-badge" id="unitBadge">الوحدة الخامسة</div>
+      <div class="question-en" id="questionEn"></div>
+      <div class="question-ar" id="questionAr"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="feedback-panel" id="feedbackPanel">
+        <div class="feedback-icon" id="feedbackIcon"></div>
+        <div>
+          <div class="feedback-msg" id="feedbackMsg"></div>
+          <div class="feedback-answer" id="feedbackAnswer"></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">السؤال التالي ◀</button>
+    </div>
+  </div>
+
+  <div class="end-screen" id="endScreen">
+    <div class="end-trophy" id="endTrophy">🏆</div>
+    <div class="end-title" id="endTitle">أحسنت! انتهت المسابقة</div>
+    <div class="end-score-big"><span id="endPercent">0</span>%</div>
+    <div class="end-msg" id="endMsg"></div>
+    <div class="end-stats">
+      <div class="end-stat c">
+        <div class="end-stat-num" id="endCorrect">0</div>
+        <div class="end-stat-label">✅ إجابات صحيحة</div>
+      </div>
+      <div class="end-stat w">
+        <div class="end-stat-num" id="endWrong">0</div>
+        <div class="end-stat-label">❌ إجابات خاطئة</div>
+      </div>
+      <div class="end-stat p">
+        <div class="end-stat-num" id="endTotal">0</div>
+        <div class="end-stat-label">📝 إجمالي الأسئلة</div>
+      </div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة المسابقة</button>
+  </div>
+</div>
+
+<div class="footer-credit">
+  الشكر موصول لمُعدِّها الأستاذ / عوضه الاحمري 💙
+</div>
+
+<script>
+// ============================================================
+// QUESTIONS DATABASE
+// ============================================================
+const allQuestions = [
+  // ========== UNIT 5 ==========
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What's your favorite kind of story?",
+    ar: "ما هو نوع القصة المفضل لديك؟",
+    options: [
+      { en: "My favorite kind of story is a comedy.", ar: "نوعي المفضل من القصص هو الكوميديا." },
+      { en: "My favorite kind of story is a documentary.", ar: "نوعي المفضل من القصص هو الوثائقي." },
+      { en: "I don't like stories.", ar: "أنا لا أحب القصص." },
+      { en: "My favorite kind of story is horror.", ar: "نوعي المفضل من القصص هو الرعب." }
+    ],
+    correct: 0
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "Which kinds of stories do you like or dislike?",
+    ar: "ما أنواع القصص التي تحبها أو تكرهها؟",
+    options: [
+      { en: "I like all kinds of stories.", ar: "أحب جميع أنواع القصص." },
+      { en: "I like sci-fi stories, but I dislike horror stories.", ar: "أحب قصص الخيال العلمي، لكني أكره قصص الرعب." },
+      { en: "I like horror stories, but I dislike comedy.", ar: "أحب قصص الرعب، لكني أكره الكوميديا." },
+      { en: "I dislike all kinds of stories.", ar: "أكره جميع أنواع القصص." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "Why do you like or dislike certain kinds of stories?",
+    ar: "لماذا تحب أو تكره أنواعاً معينة من القصص؟",
+    options: [
+      { en: "I like comedies because they make me laugh.", ar: "أحب الكوميديا لأنها تضحكني." },
+      { en: "I like horror because it makes me sleep well.", ar: "أحب الرعب لأنه يجعلني أنام جيداً." },
+      { en: "I like comedies because they make me cry.", ar: "أحب الكوميديا لأنها تجعلني أبكي." },
+      { en: "I dislike comedies because they are too long.", ar: "أكره الكوميديا لأنها طويلة جداً." }
+    ],
+    correct: 0
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "Name four kinds of stories.",
+    ar: "اذكر أربعة أنواع من القصص.",
+    options: [
+      { en: "Action, thriller, romance, and cartoon.", ar: "أكشن، إثارة، رومانسية، وكرتون." },
+      { en: "Comedy, mystery, sci-fi, and documentary.", ar: "الكوميديا، الغموض، الخيال العلمي، والوثائقي." },
+      { en: "Horror, fantasy, comedy, and news.", ar: "الرعب، الخيال، الكوميديا، والأخبار." },
+      { en: "History, sports, music, and art.", ar: "التاريخ، الرياضة، الموسيقى، والفن." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What were Kai and Connor doing for homework?",
+    ar: "ماذا كان كاي وكونور يفعلان كواجب منزلي؟",
+    options: [
+      { en: "They were writing a story together.", ar: "كانا يكتبان قصة معاً." },
+      { en: "They had to present a book for their presentation.", ar: "كان عليهم تقديم كتاب في عرضهم التقديمي." },
+      { en: "They were watching a documentary.", ar: "كانا يشاهدان فيلماً وثائقياً." },
+      { en: "They were drawing a storyboard.", ar: "كانا يرسمان لوحة قصة." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "Why weren't Kai and Connor happy at the start of the story?",
+    ar: "لماذا لم يكن كاي وكونور سعيدين في بداية القصة؟",
+    options: [
+      { en: "Because they couldn't agree on a book to present.", ar: "لأنهما لم يتمكنا من الاتفاق على كتاب لتقديمه." },
+      { en: "Because they forgot their homework.", ar: "لأنهما نسيا واجبهما." },
+      { en: "Because they didn't like school.", ar: "لأنهما لم يحبا المدرسة." },
+      { en: "Because they lost their books.", ar: "لأنهما فقدا كتبهما." }
+    ],
+    correct: 0
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What was Connor doing the night before?",
+    ar: "ماذا كان كونور يفعل في الليلة السابقة؟",
+    options: [
+      { en: "He was reading a mystery book.", ar: "كان يقرأ كتاب غموض." },
+      { en: "He was watching a documentary.", ar: "كان يشاهد وثائقياً." },
+      { en: "He was watching a musical.", ar: "كان يشاهد فيلماً موسيقياً." },
+      { en: "He was sleeping early.", ar: "كان ينام مبكراً." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What did Kai ask Connor to do?",
+    ar: "ماذا طلب كاي من كونور أن يفعل؟",
+    options: [
+      { en: "He asked him to write a story.", ar: "طلب منه كتابة قصة." },
+      { en: "He asked him to watch a documentary about a real-life mystery.", ar: "طلب منه مشاهدة فيلم وثائقي عن لغز من الحياة الواقعية." },
+      { en: "He asked him to go to school early.", ar: "طلب منه الذهاب إلى المدرسة مبكراً." },
+      { en: "He asked him to present first.", ar: "طلب منه أن يُقدِّم أولاً." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "Why was Connor smiling when he got to school?",
+    ar: "لماذا كان كونور يبتسم عندما وصل إلى المدرسة؟",
+    options: [
+      { en: "Because he met a new friend.", ar: "لأنه قابل صديقاً جديداً." },
+      { en: "Because he got a good grade.", ar: "لأنه حصل على درجة جيدة." },
+      { en: "Because he loved the documentary and read the book all night.", ar: "لأنه أحب الفيلم الوثائقي وقرأ الكتاب طوال الليل." },
+      { en: "Because school was cancelled.", ar: "لأن المدرسة أُلغيت." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What kind of story was Liliana telling?",
+    ar: "ما نوع القصة التي كانت ترويها ليليانا؟",
+    options: [
+      { en: "Liliana was telling a mystery story.", ar: "كانت ليليانا تروي قصة غموض." },
+      { en: "Liliana was telling a sci-fi story.", ar: "كانت ليليانا تروي قصة خيال علمي." },
+      { en: "Liliana was telling a fairy tale.", ar: "كانت ليليانا تروي قصة خيالية." },
+      { en: "Liliana was telling a horror story.", ar: "كانت ليليانا تروي قصة رعب." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What can you draw to plan a story?",
+    ar: "ما الذي يمكنك رسمه لتخطيط قصة؟",
+    options: [
+      { en: "You can draw a map.", ar: "يمكنك رسم خريطة." },
+      { en: "You can draw a timeline.", ar: "يمكنك رسم جدول زمني." },
+      { en: "You can draw a storyboard.", ar: "يمكنك رسم لوحة قصة (ستوري بورد)." },
+      { en: "You can draw a character.", ar: "يمكنك رسم شخصية." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "How many acts are there in a story storyboard?",
+    ar: "كم عدد الفصول (الأجزاء) الموجودة في لوحة القصة؟",
+    options: [
+      { en: "2 acts", ar: "فصلان" },
+      { en: "4 acts", ar: "4 فصول" },
+      { en: "5 acts", ar: "5 فصول" },
+      { en: "3 acts: the beginning, main events, and ending.", ar: "3 فصول: البداية، الأحداث الرئيسية، والنهاية." }
+    ],
+    correct: 3
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What two events happen in the third act of a story?",
+    ar: "ما هما الحدثان اللذان يقعان في الفصل الثالث من القصة؟",
+    options: [
+      { en: "The beginning and the middle.", ar: "البداية والوسط." },
+      { en: "The introduction and the problem.", ar: "المقدمة والمشكلة." },
+      { en: "The climax and the resolution.", ar: "ذروة الأحداث (العقدة) والحل (النهاية)." },
+      { en: "The characters and the setting.", ar: "الشخصيات والإعداد." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What kind of movie was the blogger watching yesterday?",
+    ar: "ما نوع الفيلم الذي كان المدون يشاهده بالأمس؟",
+    options: [
+      { en: "She was watching a horror movie.", ar: "كانت تشاهد فيلم رعب." },
+      { en: "She was watching a new comedy.", ar: "كانت تشاهد فيلماً كوميدياً جديداً." },
+      { en: "She was watching a documentary.", ar: "كانت تشاهد فيلماً وثائقياً." },
+      { en: "She was watching a mystery film.", ar: "كانت تشاهد فيلم غموض." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "Why was the comedy scene so funny to the audience?",
+    ar: "لماذا كان المشهد الكوميدي مضحكاً جداً للجمهور؟",
+    options: [
+      { en: "Because the character was making funny faces.", ar: "لأن الشخصية كانت تصنع وجوهاً مضحكة." },
+      { en: "Because they were watching the disaster happen, but the character didn't know.", ar: "لأنهم كانوا يشاهدون الكارثة تحدث، لكن الشخصية لم تكن تعلم." },
+      { en: "Because the actor was singing.", ar: "لأن الممثل كان يغني." },
+      { en: "Because the movie was too short.", ar: "لأن الفيلم كان قصيراً جداً." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '5', unitName: 'الوحدة الخامسة - Storylines',
+    en: "What are the people in stories called?",
+    ar: "ماذا يُطلق على الأشخاص في القصص؟",
+    options: [
+      { en: "They are called actors.", ar: "يُطلق عليهم اسم الممثلين." },
+      { en: "They are called directors.", ar: "يُطلق عليهم اسم المخرجين." },
+      { en: "They are called characters.", ar: "يُطلق عليهم اسم الشخصيات." },
+      { en: "They are called writers.", ar: "يُطلق عليهم اسم الكتّاب." }
+    ],
+    correct: 2
+  },
+
+  // ========== UNIT 6 ==========
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "What activities do you do outside?",
+    ar: "ما الأنشطة التي تمارسها في الخارج؟",
+    options: [
+      { en: "I watch TV and play video games.", ar: "أشاهد التلفزيون وألعب ألعاب الفيديو." },
+      { en: "I go hiking and camping in the great outdoors.", ar: "أذهب للمشي الجبلي والتخييم في الهواء الطلق." },
+      { en: "I read books and draw pictures.", ar: "أقرأ الكتب وأرسم الصور." },
+      { en: "I cook and clean at home.", ar: "أطبخ وأنظف في المنزل." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "Which outdoor activities can make you tired?",
+    ar: "ما الأنشطة التي يمكن أن تجعلك متعباً؟",
+    options: [
+      { en: "Watching a movie and eating popcorn.", ar: "مشاهدة فيلم وأكل الفشار." },
+      { en: "Sleeping and resting.", ar: "النوم والراحة." },
+      { en: "Hiking and climbing mountains.", ar: "المشي لمسافات طويلة وتسلق الجبال." },
+      { en: "Reading a book at the park.", ar: "قراءة كتاب في الحديقة." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "How was Riley feeling about her school's camping trip?",
+    ar: "كيف كانت تشعر رايلي حيال رحلة التخييم المدرسية؟",
+    options: [
+      { en: "She was feeling happy and relaxed.", ar: "كانت تشعر بالسعادة والاسترخاء." },
+      { en: "She was feeling nervous about the trip.", ar: "كانت تشعر بالتوتر حيال الرحلة." },
+      { en: "She was feeling bored.", ar: "كانت تشعر بالملل." },
+      { en: "She was feeling angry.", ar: "كانت تشعر بالغضب." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "What was Riley's special ability?",
+    ar: "ما هي قدرة رايلي الخاصة؟",
+    options: [
+      { en: "She was very good at swimming.", ar: "كانت بارعة جداً في السباحة." },
+      { en: "She was very fast and good at climbing.", ar: "كانت سريعة جداً وبارعة في التسلق." },
+      { en: "She was very good at singing.", ar: "كانت بارعة جداً في الغناء." },
+      { en: "She was very good at cooking.", ar: "كانت بارعة جداً في الطهي." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "When did Riley start climbing trees?",
+    ar: "متى بدأت رايلي في تسلق الأشجار؟",
+    options: [
+      { en: "She started when she was five.", ar: "بدأت عندما كانت في الخامسة." },
+      { en: "She started last year.", ar: "بدأت العام الماضي." },
+      { en: "She started when she was three.", ar: "بدأت عندما كانت في الثالثة." },
+      { en: "She started when she was ten.", ar: "بدأت عندما كانت في العاشرة." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "Did Riley notice the dark when night came at the campsite?",
+    ar: "هل لاحظت رايلي الظلام عندما حل الليل في موقع التخييم؟",
+    options: [
+      { en: "Yes, she was very scared.", ar: "نعم، كانت خائفة جداً." },
+      { en: "Yes, she screamed.", ar: "نعم، صرخت." },
+      { en: "No, she was so happy that she didn't even notice the dark.", ar: "لا، كانت سعيدة جداً لدرجة أنها لم تلاحظ الظلام." },
+      { en: "Yes, she ran back to her tent.", ar: "نعم، ركضت عائدةً إلى خيمتها." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "Why did Sebastian hurt his head when he fell?",
+    ar: "لماذا أصيب رأس سيباستيان عندما سقط؟",
+    options: [
+      { en: "Because he was going too fast.", ar: "لأنه كان يسير بسرعة كبيرة جداً." },
+      { en: "Because he wasn't wearing a helmet.", ar: "لأنه لم يكن يرتدي خوذة." },
+      { en: "Because the road was wet.", ar: "لأن الطريق كان مبللاً." },
+      { en: "Because his bike was broken.", ar: "لأن دراجته كانت معطوبة." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "What is a landscape?",
+    ar: "ما هو المنظر الطبيعي؟",
+    options: [
+      { en: "A landscape is a photo of the sky.", ar: "المنظر الطبيعي هو صورة للسماء." },
+      { en: "A landscape is a painting in a museum.", ar: "المنظر الطبيعي هو لوحة في متحف." },
+      { en: "A landscape is a building in the city.", ar: "المنظر الطبيعي هو مبنى في المدينة." },
+      { en: "A landscape is everything you can see outdoors.", ar: "المنظر الطبيعي هو كل ما يمكنك رؤيته في الخارج." }
+    ],
+    correct: 3
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "What is a cliff?",
+    ar: "ما هو الجرف؟",
+    options: [
+      { en: "A cliff is a type of tree.", ar: "الجرف هو نوع من الأشجار." },
+      { en: "A cliff is a deep river.", ar: "الجرف هو نهر عميق." },
+      { en: "A cliff is where the land stops and there is a drop to the water or land below.", ar: "الجرف هو المكان الذي تتوقف فيه الأرض ويوجد انحدار نحو الماء أو الأرض." },
+      { en: "A cliff is a flat piece of land.", ar: "الجرف هو قطعة أرض مسطحة." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '6', unitName: 'الوحدة السادسة - Outdoor Activities',
+    en: "What do you have to take lots of when visiting a desert?",
+    ar: "ما الذي يجب أن تأخذ منه الكثير عند زيارة الصحراء؟",
+    options: [
+      { en: "You have to take lots of food.", ar: "يجب أن تأخذ الكثير من الطعام." },
+      { en: "You have to take lots of water.", ar: "يجب أن تأخذ الكثير من الماء." },
+      { en: "You have to take lots of clothes.", ar: "يجب أن تأخذ الكثير من الملابس." },
+      { en: "You have to take lots of books.", ar: "يجب أن تأخذ الكثير من الكتب." }
+    ],
+    correct: 1
+  },
+
+  // ========== UNIT 7 ==========
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "What is your favorite way to travel and why?",
+    ar: "ما هي طريقتك المفضلة في السفر ولماذا؟",
+    options: [
+      { en: "My favorite way to travel is by bus because it is cheap.", ar: "طريقتي المفضلة بالحافلة لأنها رخيصة." },
+      { en: "My favorite way to travel is by airplane because it is fast and exciting.", ar: "طريقتي المفضلة بالطائرة لأنها سريعة ومثيرة." },
+      { en: "My favorite way to travel is by boat because it is slow.", ar: "طريقتي المفضلة بالقارب لأنه بطيء." },
+      { en: "I don't like traveling.", ar: "أنا لا أحب السفر." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "What must passengers pass through at the airport before going to the gate?",
+    ar: "ما الذي يجب على الركاب المرور عبره في المطار قبل الذهاب إلى البوابة؟",
+    options: [
+      { en: "The restaurant.", ar: "المطعم." },
+      { en: "The gift shop.", ar: "محل الهدايا." },
+      { en: "The parking lot.", ar: "موقف السيارات." },
+      { en: "The security check.", ar: "التفتيش الأمني." }
+    ],
+    correct: 3
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "Why is this an exciting trip for James?",
+    ar: "لماذا تعد هذه الرحلة مثيرة لجيمس؟",
+    options: [
+      { en: "Because he is going to a new school.", ar: "لأنه سيذهب إلى مدرسة جديدة." },
+      { en: "Because he is meeting his friends.", ar: "لأنه سيلتقي بأصدقائه." },
+      { en: "Because he hasn't taken a plane before.", ar: "لأنه لم يستقل طائرة من قبل." },
+      { en: "Because it is his birthday.", ar: "لأنه عيد ميلاده." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "What does James's dad forget when leaving the house?",
+    ar: "ماذا نسي والد جيمس عند مغادرة المنزل؟",
+    options: [
+      { en: "His dad has forgotten his passport.", ar: "نسي والده جواز سفره." },
+      { en: "His dad has forgotten his phone.", ar: "نسي والده هاتفه." },
+      { en: "His dad has forgotten the tickets.", ar: "نسي والده التذاكر." },
+      { en: "His dad has forgotten the suitcase.", ar: "نسي والده الحقيبة." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "Where did James's dad find the missing passport?",
+    ar: "أين عثر والد جيمس على جواز السفر المفقود؟",
+    options: [
+      { en: "He found it in his jacket pocket.", ar: "وجده في جيب سترته." },
+      { en: "He found it at home on the table.", ar: "وجده في المنزل على الطاولة." },
+      { en: "He found the passport in the taxi outside.", ar: "وجد جواز السفر في سيارة الأجرة بالخارج." },
+      { en: "He found it at the airport reception.", ar: "وجده في استقبال المطار." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "Why was James shocked when he opened his suitcase in the hotel?",
+    ar: "لماذا صُدم جيمس عندما فتح حقيبته في الفندق؟",
+    options: [
+      { en: "Because his clothes were wet.", ar: "لأن ملابسه كانت مبللة." },
+      { en: "Because he picked up the wrong suitcase.", ar: "لأنه أخذ حقيبة خاطئة." },
+      { en: "Because his suitcase was empty.", ar: "لأن حقيبته كانت فارغة." },
+      { en: "Because someone stole his clothes.", ar: "لأن شخصاً ما سرق ملابسه." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "Name four actions that a plane can do.",
+    ar: "اذكر أربعة أفعال يمكن للطائرة القيام بها.",
+    options: [
+      { en: "Swim, dive, float, and sink.", ar: "تسبح، تغوص، تطفو، وتغرق." },
+      { en: "Walk, run, jump, and stop.", ar: "تمشي، تجري، تقفز، وتتوقف." },
+      { en: "Take off, fly, land, and depart.", ar: "تقلع، وتطير، وتهبط، وتغادر." },
+      { en: "Climb, descend, hover, and crash.", ar: "تتسلق، تنزل، تحلق، وتتحطم." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "What are four places related to travel?",
+    ar: "ما هي أربعة أماكن مرتبطة بالسفر؟",
+    options: [
+      { en: "School, hospital, park, and mall.", ar: "مدرسة، مستشفى، حديقة، ومول." },
+      { en: "A terminal, a station, an airport, and a hotel.", ar: "مبنى الركاب، المحطة، المطار، والفندق." },
+      { en: "Cinema, restaurant, museum, and library.", ar: "سينما، مطعم، متحف، ومكتبة." },
+      { en: "Beach, mountain, desert, and forest.", ar: "شاطئ، جبل، صحراء، وغابة." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "What can students learn about at the Science Museum?",
+    ar: "ما الذي يمكن للطلاب تعلمه في متحف العلوم؟",
+    options: [
+      { en: "They can learn about animals only.", ar: "يمكنهم التعلم عن الحيوانات فقط." },
+      { en: "They can hear talks about how the body works and see a room about the railroad.", ar: "يمكنهم الاستماع إلى محادثات حول كيفية عمل الجسم ورؤية غرفة حول السكك الحديدية." },
+      { en: "They can learn about cooking.", ar: "يمكنهم التعلم عن الطهي." },
+      { en: "They can only see paintings.", ar: "يمكنهم فقط رؤية اللوحات." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '7', unitName: 'الوحدة السابعة - Trips',
+    en: "What can you learn about at the Planetarium?",
+    ar: "ما الذي يمكنك التعرف عليه في القبة السماوية؟",
+    options: [
+      { en: "You can learn about history.", ar: "يمكنك التعلم عن التاريخ." },
+      { en: "You can learn about the ocean.", ar: "يمكنك التعلم عن المحيط." },
+      { en: "It's the best place to learn about space and the universe.", ar: "إنها أفضل مكان للتعرف على الفضاء والكون." },
+      { en: "You can learn about animals.", ar: "يمكنك التعلم عن الحيوانات." }
+    ],
+    correct: 2
+  },
+
+  // ========== UNIT 8 ==========
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "What clothes do you like to wear?",
+    ar: "ما الملابس التي تحب ارتداءها؟",
+    options: [
+      { en: "I like to wear uncomfortable clothes.", ar: "أحب ارتداء ملابس غير مريحة." },
+      { en: "I never think about clothes.", ar: "لا أفكر أبداً في الملابس." },
+      { en: "I like to wear comfortable clothes like cotton shirts and jeans.", ar: "أحب ارتداء ملابس مريحة مثل القمصان القطنية والجينز." },
+      { en: "I only wear uniforms.", ar: "أرتدي الزي الرسمي فقط." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "Why was Mia amazed by Nadia's belt?",
+    ar: "لماذا كانت ميا مندهشة من حزام ناديا؟",
+    options: [
+      { en: "Because it was very expensive.", ar: "لأنه كان مكلفاً جداً." },
+      { en: "Because everyone thought it was the coolest belt ever; it was shiny, colorful, and striped.", ar: "لأن الجميع اعتقد أنه أروع حزام؛ كان لامعاً وملوناً ومخططاً." },
+      { en: "Because Nadia made it herself.", ar: "لأن ناديا صنعته بنفسها." },
+      { en: "Because it was very old.", ar: "لأنه كان قديماً جداً." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "What did Mia decide to do to solve her problem?",
+    ar: "ماذا قررت ميا أن تفعل لحل مشكلتها؟",
+    options: [
+      { en: "She decided to buy a new belt from the store.", ar: "قررت شراء حزام جديد من المتجر." },
+      { en: "She decided to ask Nadia for her belt.", ar: "قررت أن تطلب حزام ناديا." },
+      { en: "She decided to make her own new belt.", ar: "قررت أن تصنع حزامها الجديد بنفسها." },
+      { en: "She decided to forget about it.", ar: "قررت أن تنسى الأمر." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "What kind of jewelry did people wear in Ancient Greece?",
+    ar: "ما نوع المجوهرات التي ارتداها الناس في اليونان القديمة؟",
+    options: [
+      { en: "Only rings made of plastic.", ar: "خواتم مصنوعة من البلاستيك فقط." },
+      { en: "Necklaces made of metal and stones, earrings, bracelets, and rings.", ar: "قلائد من المعدن والأحجار، وأقراط وأساور وخواتم." },
+      { en: "Only hats and scarves.", ar: "قبعات وأوشحة فقط." },
+      { en: "Gold watches only.", ar: "ساعات ذهبية فقط." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "When was the plastic comb invented?",
+    ar: "متى تم اختراع المشط البلاستيكي؟",
+    options: [
+      { en: "In 1900.", ar: "في عام 1900." },
+      { en: "In 1950.", ar: "في عام 1950." },
+      { en: "In 1862.", ar: "في عام 1862." },
+      { en: "In 2000.", ar: "في عام 2000." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "What did people wear in the past to stay warm?",
+    ar: "ماذا كان يرتدي الناس في الماضي للتدفئة؟",
+    options: [
+      { en: "People wore clothes made of plastic.", ar: "كان الناس يرتدون ملابس مصنوعة من البلاستيك." },
+      { en: "People wore clothes made of real fur from animals.", ar: "كان الناس يرتدون ملابس مصنوعة من فراء الحيوانات الحقيقي." },
+      { en: "People wore clothes made of paper.", ar: "كان الناس يرتدون ملابس مصنوعة من الورق." },
+      { en: "People wore nothing in the past.", ar: "لم يكن الناس يرتدون شيئاً في الماضي." }
+    ],
+    correct: 1
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "Why do fashion designers use more synthetic materials now?",
+    ar: "لماذا يستخدم مصممو الأزياء المزيد من المواد الاصطناعية الآن؟",
+    options: [
+      { en: "Because synthetic materials are more expensive.", ar: "لأن المواد الاصطناعية أغلى ثمناً." },
+      { en: "Because natural materials are not available.", ar: "لأن المواد الطبيعية غير متاحة." },
+      { en: "Because people protect animals a lot more today.", ar: "لأن الناس يحمون الحيوانات بشكل أكبر اليوم." },
+      { en: "Because synthetic materials look better.", ar: "لأن المواد الاصطناعية تبدو أجمل." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "Name six different fashion accessories.",
+    ar: "اذكر ستة إكسسوارات أزياء مختلفة.",
+    options: [
+      { en: "Hat, scarf, gloves, socks, shoes, and sunglasses.", ar: "قبعة، وشاح، قفازات، جوارب، حذاء، ونظارات شمسية." },
+      { en: "Shirt, pants, dress, skirt, jacket, and coat.", ar: "قميص، بنطلون، فستان، تنورة، جاكيت، ومعطف." },
+      { en: "Necklace, bracelet, ring, earrings, belt, and purse.", ar: "قلادة، سوار، خاتم، أقراط، حزام، وحقيبة يد." },
+      { en: "Watch, phone, wallet, keys, bag, and laptop.", ar: "ساعة، هاتف، محفظة، مفاتيح، حقيبة، وحاسوب." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "Name six different materials mentioned in the unit.",
+    ar: "اذكر ست مواد مختلفة مذكورة في الوحدة.",
+    options: [
+      { en: "Iron, steel, copper, bronze, tin, and lead.", ar: "حديد، فولاذ، نحاس، برونز، قصدير، ورصاص." },
+      { en: "Glass, clay, rubber, silk, bamboo, and paper.", ar: "زجاج، طين، مطاط، حرير، بامبو، وورق." },
+      { en: "Gold, silver, cotton, wool, wood, and plastic.", ar: "الذهب، الفضة، القطن، الصوف، الخشب، والبلاستيك." },
+      { en: "Nylon, polyester, linen, denim, velvet, and satin.", ar: "نايلون، بوليستر، كتان، دنيم، مخمل، وساتان." }
+    ],
+    correct: 2
+  },
+  {
+    unit: '8', unitName: 'الوحدة الثامنة - Outfits',
+    en: "Why were the first clothes made?",
+    ar: "لماذا صُنعت الملابس الأولى؟",
+    options: [
+      { en: "To look fashionable and trendy.", ar: "لتبدو عصرية وأنيقة." },
+      { en: "To express personality and identity.", ar: "للتعبير عن الشخصية والهوية." },
+      { en: "The first clothes were only worn to keep people warm and safe.", ar: "كانت الملابس الأولى تُرتدى فقط لإبقاء الناس دافئين وآمنين." },
+      { en: "To impress other people.", ar: "لإعجاب الآخرين." }
+    ],
+    correct: 2
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentFilter = 'all';
+let filteredQuestions = [];
+let currentIndex = 0;
+let scoreCorrect = 0;
+let scoreWrong = 0;
+let answered = false;
+
+const encouragements = [
+  "🌟 ممتاز! إجابة صحيحة تماماً!",
+  "🎉 رائع! أنت نجم!",
+  "✅ أحسنت! هذه الإجابة صحيحة!",
+  "🏆 إجابة صحيحة! استمر هكذا!",
+  "👏 ذكاء! إجابتك صحيحة!",
+  "💫 بارك الله فيك! إجابة ممتازة!",
+  "🎯 في الصميم! أحسنت!"
+];
+const wrongs = [
+  "❌ للأسف، هذه ليست الإجابة الصحيحة.",
+  "🔴 حاول مرة أخرى في السؤال القادم!",
+  "💡 ليست الإجابة الصحيحة، لكن يمكنك التعلم منها!",
+  "📚 الإجابة الصحيحة موضحة أدناه. استذكرها جيداً!",
+  "🔁 خطأ هذه المرة! لكن ستتحسن!"
+];
+
+function filterUnit(unit) {
+  currentFilter = unit;
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  restartQuiz();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function initQuiz() {
+  if (currentFilter === 'all') {
+    filteredQuestions = shuffle(allQuestions);
+  } else {
+    filteredQuestions = shuffle(allQuestions.filter(q => q.unit === currentFilter));
+  }
+  currentIndex = 0;
+  scoreCorrect = 0;
+  scoreWrong = 0;
+  answered = false;
+  updateScoreBar();
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('endScreen').style.display = 'none';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (currentIndex >= filteredQuestions.length) {
+    showEndScreen();
+    return;
+  }
+  answered = false;
+  const q = filteredQuestions[currentIndex];
+  document.getElementById('questionCounter').textContent = `السؤال ${currentIndex + 1} من ${filteredQuestions.length}`;
+  document.getElementById('unitBadge').textContent = q.unitName;
+  document.getElementById('questionEn').textContent = q.en;
+  document.getElementById('questionAr').textContent = q.ar;
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const letters = ['أ', 'ب', 'ج', 'د'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `
+      <div class="option-letter">${letters[i]}</div>
+      <div class="option-texts">
+        <div class="option-text-en">${opt.en}</div>
+        <div class="option-text-ar">${opt.ar}</div>
+      </div>`;
+    btn.onclick = () => selectAnswer(i, q.correct);
+    grid.appendChild(btn);
+  });
+
+  const fp = document.getElementById('feedbackPanel');
+  fp.className = 'feedback-panel';
+  fp.style.display = 'none';
+  document.getElementById('btnNext').classList.remove('visible');
+
+  // animate card
+  const card = document.getElementById('questionCard');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'slideIn 0.35s ease';
+}
+
+function selectAnswer(selected, correct) {
+  if (answered) return;
+  answered = true;
+
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const fp = document.getElementById('feedbackPanel');
+  const correctQ = filteredQuestions[currentIndex];
+
+  if (selected === correct) {
+    btns[selected].classList.add('correct');
+    scoreCorrect++;
+    fp.className = 'feedback-panel correct-fb';
+    fp.style.display = 'flex';
+    document.getElementById('feedbackIcon').textContent = '🎉';
+    document.getElementById('feedbackMsg').className = 'feedback-msg correct-msg';
+    document.getElementById('feedbackMsg').textContent = encouragements[Math.floor(Math.random() * encouragements.length)];
+    document.getElementById('feedbackAnswer').innerHTML = `<span class="correct-answer-highlight">${correctQ.options[correct].en}</span>`;
+    launchConfetti();
+  } else {
+    btns[selected].classList.add('wrong');
+    btns[correct].classList.add('correct');
+    scoreWrong++;
+    fp.className = 'feedback-panel wrong-fb';
+    fp.style.display = 'flex';
+    document.getElementById('feedbackIcon').textContent = '💡';
+    document.getElementById('feedbackMsg').className = 'feedback-msg wrong-msg';
+    document.getElementById('feedbackMsg').textContent = wrongs[Math.floor(Math.random() * wrongs.length)];
+    document.getElementById('feedbackAnswer').innerHTML = `الإجابة الصحيحة: <span class="correct-answer-highlight">${correctQ.options[correct].en}</span><br>${correctQ.options[correct].ar}`;
+  }
+
+  updateScoreBar();
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function nextQuestion() {
+  currentIndex++;
+  renderQuestion();
+}
+
+function updateScoreBar() {
+  document.getElementById('scoreCorrect').textContent = scoreCorrect;
+  document.getElementById('scoreWrong').textContent = scoreWrong;
+  const total = currentIndex + (answered ? 1 : 0);
+  document.getElementById('scoreTotal').textContent = total;
+  const pct = filteredQuestions.length > 0 ? (total / filteredQuestions.length * 100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showEndScreen() {
+  document.getElementById('quizArea').style.display = 'none';
+  const es = document.getElementById('endScreen');
+  es.style.display = 'block';
+
+  const total = filteredQuestions.length;
+  const pct = total > 0 ? Math.round(scoreCorrect / total * 100) : 0;
+
+  document.getElementById('endCorrect').textContent = scoreCorrect;
+  document.getElementById('endWrong').textContent = scoreWrong;
+  document.getElementById('endTotal').textContent = total;
+  document.getElementById('endPercent').textContent = pct;
+
+  let trophy, title, msg;
+  if (pct >= 90) { trophy = '🏆'; title = 'ممتاز! أداء رائع جداً!'; msg = 'أنت نجم المسابقة! نتيجتك ممتازة، استمر في هذا المستوى الرفيع.'; }
+  else if (pct >= 75) { trophy = '🥇'; title = 'أحسنت! نتيجة جيدة جداً!'; msg = 'عمل رائع! أداؤك يدل على اجتهاد وتفوق. واصل المذاكرة!'; }
+  else if (pct >= 60) { trophy = '🥈'; title = 'جيد! يمكنك التحسن أكثر'; msg = 'لا بأس! نتيجتك جيدة ويمكنك التحسن بالمراجعة والإعادة.'; }
+  else { trophy = '📚'; title = 'راجع الدروس وحاول مجدداً!'; msg = 'لا تيأس! المراجعة هي مفتاح النجاح. أعد المحاولة بعد مراجعة الوحدات.'; }
+
+  document.getElementById('endTrophy').textContent = trophy;
+  document.getElementById('endTitle').textContent = title;
+  document.getElementById('endMsg').textContent = msg;
+
+  if (pct >= 75) launchConfetti(50);
+}
+
+function restartQuiz() {
+  initQuiz();
+}
+
+// Confetti
+function launchConfetti(count = 20) {
+  const colors = ['#F5C842','#6C3BAA','#1ABC9C','#E74C3C','#3498DB','#E91E63'];
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '-10px';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.width = (8 + Math.random() * 8) + 'px';
+      el.style.height = (8 + Math.random() * 8) + 'px';
+      el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+      el.style.animationDelay = Math.random() * 0.5 + 's';
+      document.body.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }, i * 50);
+  }
+}
+
+// Start
+initQuiz();
+</script>
+</body>
+</html>

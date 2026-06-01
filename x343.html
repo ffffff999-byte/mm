@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مسابقة الرياضيات | الصف الثالث المتوسط | الفصل الثالث</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1A5276;
+    --primary-light: #2E86C1;
+    --gold: #F39C12;
+    --gold-dark: #D68910;
+    --teal: #1ABC9C;
+    --red: #E74C3C;
+    --green: #27AE60;
+    --bg: #0A1628;
+    --card: #0F2040;
+    --card2: #162B50;
+    --text: #E8F4FD;
+    --text-muted: #85C1E9;
+    --border: #1F4E79;
+    --accent: #F39C12;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family:'Tajawal',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    min-height:100vh;
+    background-image:
+      radial-gradient(ellipse at 15% 10%, rgba(26,82,118,0.4) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 85%, rgba(26,188,156,0.12) 0%, transparent 50%);
+    overflow-x:hidden;
+  }
+
+  /* HEADER */
+  .header {
+    background:linear-gradient(135deg, #1A5276 0%, #0A1628 60%, #0A1628 100%);
+    padding:18px 24px 14px;
+    text-align:center;
+    border-bottom:3px solid var(--gold);
+    position:relative;
+    overflow:hidden;
+  }
+  .header::before {
+    content:'';
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(45deg,transparent,transparent 24px,rgba(255,255,255,0.015) 24px,rgba(255,255,255,0.015) 48px);
+  }
+  .header-logo {
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    position:relative; margin-bottom:8px;
+  }
+  .header-icon { font-size:2.2rem; }
+  .header-title {
+    font-family:'Cairo',sans-serif;
+    font-size:1.8rem; font-weight:900;
+    color:var(--gold);
+    text-shadow:0 0 20px rgba(243,156,18,0.5);
+  }
+  .header-subtitle { font-size:0.9rem; color:var(--text-muted); position:relative; }
+  .header-tags {
+    display:flex; justify-content:center; gap:8px; flex-wrap:wrap;
+    margin-top:8px; position:relative;
+  }
+  .tag {
+    background:rgba(26,82,118,0.6);
+    border:1px solid var(--border);
+    padding:3px 12px; border-radius:20px;
+    font-size:0.75rem; color:var(--text-muted);
+  }
+
+  /* SETTINGS */
+  .settings-bar {
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    padding:12px 20px;
+    display:flex; flex-wrap:wrap; align-items:center; gap:10px; justify-content:center;
+  }
+  .settings-label { font-size:0.82rem; color:var(--text-muted); font-weight:700; }
+  .unit-btn {
+    background:var(--card2); border:2px solid var(--border);
+    color:var(--text-muted); padding:5px 14px; border-radius:30px;
+    font-family:'Tajawal',sans-serif; font-size:0.82rem; font-weight:700;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .unit-btn:hover,.unit-btn.active {
+    background:var(--primary); border-color:var(--gold); color:var(--gold);
+    box-shadow:0 0 12px rgba(243,156,18,0.3);
+  }
+
+  /* CREDIT */
+  .credit-bar {
+    background:var(--card2); border-bottom:1px solid var(--border);
+    padding:8px 20px; text-align:center; font-size:0.8rem; color:var(--text-muted);
+  }
+  .credit-bar a { color:var(--gold); text-decoration:none; font-weight:700; }
+  .credit-bar a:hover { text-decoration:underline; }
+
+  /* SCORE BAR */
+  .score-bar {
+    display:flex; justify-content:space-between; align-items:center;
+    padding:10px 20px; background:var(--card);
+    border-bottom:1px solid var(--border); flex-wrap:wrap; gap:6px;
+  }
+  .score-item { display:flex; align-items:center; gap:5px; font-size:0.88rem; font-weight:700; }
+  .score-num { font-size:1.1rem; font-weight:900; }
+  .s-c .score-num { color:var(--teal); }
+  .s-w .score-num { color:var(--red); }
+  .s-t .score-num { color:var(--gold); }
+  .progress-wrap { width:100%; height:6px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .progress-fill { height:100%; background:linear-gradient(90deg,var(--primary-light),var(--gold)); border-radius:3px; transition:width 0.4s ease; }
+
+  /* QUIZ */
+  .quiz-container { max-width:820px; margin:0 auto; padding:18px 16px 40px; }
+  .question-counter { text-align:center; font-size:0.83rem; color:var(--text-muted); margin-bottom:10px; font-weight:600; }
+
+  .question-card {
+    background:var(--card); border:2px solid var(--border);
+    border-radius:16px; padding:22px 20px 18px;
+    margin-bottom:16px; position:relative; overflow:hidden;
+    box-shadow:0 8px 32px rgba(0,0,0,0.5);
+    animation:slideIn 0.35s ease;
+  }
+  @keyframes slideIn { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .question-card::before {
+    content:''; position:absolute; top:0; right:0;
+    width:90px; height:90px;
+    background:radial-gradient(circle, rgba(26,82,118,0.4), transparent 70%);
+  }
+
+  .unit-badge {
+    display:inline-block;
+    background:linear-gradient(135deg,var(--primary),var(--primary-light));
+    color:#fff; font-size:0.73rem; font-weight:700;
+    padding:3px 12px; border-radius:20px; margin-bottom:10px;
+  }
+  .topic-badge {
+    display:inline-block; margin-right:6px;
+    background:rgba(243,156,18,0.15); border:1px solid rgba(243,156,18,0.4);
+    color:var(--gold); font-size:0.7rem; font-weight:700;
+    padding:2px 10px; border-radius:20px;
+  }
+
+  .question-text {
+    font-size:1.05rem; font-weight:700; color:var(--text);
+    line-height:1.7; margin-bottom:16px;
+  }
+  .question-note {
+    background:rgba(26,188,156,0.08); border-right:3px solid var(--teal);
+    padding:8px 12px; border-radius:6px; margin-bottom:14px;
+    font-size:0.85rem; color:var(--text-muted);
+  }
+
+  /* OPTIONS */
+  .options-grid { display:flex; flex-direction:column; gap:9px; }
+  .option-btn {
+    background:var(--card2); border:2px solid var(--border);
+    border-radius:10px; padding:11px 14px; cursor:pointer;
+    transition:all 0.2s; display:flex; align-items:center; gap:10px;
+    text-align:right; font-family:'Tajawal',sans-serif;
+  }
+  .option-btn:hover:not(:disabled) {
+    border-color:var(--primary-light); background:rgba(26,82,118,0.25);
+    transform:translateX(-3px);
+  }
+  .option-letter {
+    min-width:32px; height:32px;
+    background:var(--border); border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:0.88rem; font-weight:900; color:var(--text-muted); flex-shrink:0; transition:all 0.2s;
+  }
+  .option-text { flex:1; font-size:0.95rem; color:var(--text); font-weight:600; }
+  .option-btn.correct { background:rgba(26,188,156,0.12); border-color:var(--teal); animation:correctPop 0.4s ease; }
+  .option-btn.correct .option-letter { background:var(--teal); color:#fff; }
+  .option-btn.wrong { background:rgba(231,76,60,0.1); border-color:var(--red); animation:shake 0.4s ease; }
+  .option-btn.wrong .option-letter { background:var(--red); color:#fff; }
+  @keyframes correctPop { 0%{transform:scale(1)} 40%{transform:scale(1.03)} 100%{transform:scale(1)} }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+
+  /* FEEDBACK */
+  .feedback-panel {
+    margin-top:12px; padding:13px 15px; border-radius:10px;
+    display:none; animation:fadeUp 0.3s ease;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .feedback-panel.cf {
+    background:rgba(26,188,156,0.12); border:1px solid var(--teal);
+    display:flex; align-items:flex-start; gap:10px;
+  }
+  .feedback-panel.wf {
+    background:rgba(231,76,60,0.1); border:1px solid var(--red);
+    display:flex; align-items:flex-start; gap:10px;
+  }
+  .fb-icon { font-size:1.5rem; flex-shrink:0; }
+  .fb-msg { font-size:0.93rem; font-weight:700; }
+  .fb-msg.cm { color:var(--teal); }
+  .fb-msg.wm { color:var(--red); }
+  .fb-detail { font-size:0.82rem; color:var(--text-muted); margin-top:4px; line-height:1.5; }
+  .fb-answer { color:var(--gold); font-weight:700; }
+
+  /* NAV */
+  .nav-row { display:flex; justify-content:center; gap:12px; margin-top:18px; flex-wrap:wrap; }
+  .btn-next {
+    background:linear-gradient(135deg,var(--primary),var(--primary-light));
+    border:none; color:#fff; padding:11px 34px;
+    border-radius:30px; font-family:'Tajawal',sans-serif;
+    font-size:0.98rem; font-weight:800; cursor:pointer;
+    transition:all 0.25s; box-shadow:0 4px 16px rgba(26,82,118,0.5);
+    display:none;
+  }
+  .btn-next:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(26,82,118,0.6); }
+  .btn-next.visible { display:block; }
+  .btn-restart {
+    background:linear-gradient(135deg,var(--gold-dark),var(--gold));
+    border:none; color:#0A1628; padding:11px 30px;
+    border-radius:30px; font-family:'Tajawal',sans-serif;
+    font-size:0.98rem; font-weight:900; cursor:pointer;
+    transition:all 0.25s; box-shadow:0 4px 16px rgba(243,156,18,0.3);
+  }
+  .btn-restart:hover { transform:translateY(-2px); }
+
+  /* END SCREEN */
+  .end-screen { display:none; text-align:center; padding:40px 20px; animation:slideIn 0.5s ease; }
+  .end-trophy { font-size:5rem; margin-bottom:14px; }
+  .end-title { font-family:'Cairo',sans-serif; font-size:1.9rem; font-weight:900; color:var(--gold); margin-bottom:6px; }
+  .end-score-big { font-size:3.5rem; font-weight:900; color:var(--text); margin:14px 0; }
+  .end-score-big span { color:var(--gold); }
+  .end-msg { font-size:1rem; color:var(--text-muted); margin-bottom:22px; line-height:1.6; }
+  .end-stats { display:flex; justify-content:center; gap:18px; flex-wrap:wrap; margin-bottom:26px; }
+  .end-stat { background:var(--card); border:2px solid var(--border); border-radius:12px; padding:14px 22px; min-width:110px; }
+  .end-stat-num { font-size:1.9rem; font-weight:900; }
+  .end-stat-label { font-size:0.8rem; color:var(--text-muted); margin-top:3px; }
+  .end-stat.c .end-stat-num { color:var(--teal); }
+  .end-stat.w .end-stat-num { color:var(--red); }
+  .end-stat.p .end-stat-num { color:var(--gold); }
+
+  /* MATH FORMULA STYLE */
+  .math { font-style:italic; color:var(--gold); font-weight:700; }
+
+  .confetti-piece {
+    position:fixed; width:9px; height:9px; border-radius:2px;
+    animation:cfFall linear forwards; pointer-events:none; z-index:999;
+  }
+  @keyframes cfFall { 0%{transform:translateY(-20px) rotate(0deg);opacity:1} 100%{transform:translateY(100vh) rotate(720deg);opacity:0} }
+
+  .footer-credit { text-align:center; padding:14px; color:var(--text-muted); font-size:0.8rem; border-top:1px solid var(--border); margin-top:18px; }
+
+  @media(max-width:500px) {
+    .header-title { font-size:1.4rem; }
+    .question-text { font-size:0.95rem; }
+    .option-text { font-size:0.88rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-logo">
+    <span class="header-icon">📐</span>
+    <div class="header-title">مسابقة الرياضيات</div>
+    <span class="header-icon">📏</span>
+  </div>
+  <div class="header-subtitle">الصف الثالث المتوسط | الفصل الدراسي الثاني</div>
+  <div class="header-tags">
+    <span class="tag">📊 الإحصاء والاحتمالات</span>
+    <span class="tag">📈 الدوال التربيعية</span>
+    <span class="tag">📐 المثلثات</span>
+    <span class="tag">√ الجذور والتبسيط</span>
+  </div>
+</div>
+
+<div class="settings-bar">
+  <span class="settings-label">🔖 تصفية حسب الموضوع:</span>
+  <button class="unit-btn active" onclick="filterUnit('all',this)">الكل</button>
+  <button class="unit-btn" onclick="filterUnit('quad',this)">الدوال التربيعية</button>
+  <button class="unit-btn" onclick="filterUnit('trig',this)">المثلثات</button>
+  <button class="unit-btn" onclick="filterUnit('radical',this)">الجذور والتبسيط</button>
+  <button class="unit-btn" onclick="filterUnit('stats',this)">الإحصاء والاحتمالات</button>
+  <button class="unit-btn" onclick="filterUnit('complex',this)">الأعداد المركبة</button>
+</div>
+
+<div class="credit-bar">
+  تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا: <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">قناة التعليم 🎓</a>
+</div>
+
+<div class="score-bar">
+  <div class="score-item s-c"><span>✅ صحيح:</span><span class="score-num" id="scoreCorrect">0</span></div>
+  <div class="score-item s-w"><span>❌ خطأ:</span><span class="score-num" id="scoreWrong">0</span></div>
+  <div class="score-item s-t"><span>📊 المجموع:</span><span class="score-num" id="scoreTotal">0</span></div>
+  <div style="width:100%">
+    <div class="progress-wrap"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+</div>
+
+<div class="quiz-container">
+  <div id="quizArea">
+    <div class="question-counter" id="questionCounter">السؤال 1 من 0</div>
+    <div class="question-card" id="questionCard">
+      <div style="margin-bottom:6px">
+        <span class="unit-badge" id="unitBadge">الدوال التربيعية</span>
+        <span class="topic-badge" id="topicBadge">اختر الإجابة</span>
+      </div>
+      <div class="question-text" id="questionText"></div>
+      <div class="options-grid" id="optionsGrid"></div>
+      <div class="feedback-panel" id="feedbackPanel">
+        <div class="fb-icon" id="fbIcon"></div>
+        <div><div class="fb-msg" id="fbMsg"></div><div class="fb-detail" id="fbDetail"></div></div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">السؤال التالي ◀</button>
+    </div>
+  </div>
+
+  <div class="end-screen" id="endScreen">
+    <div class="end-trophy" id="endTrophy">🏆</div>
+    <div class="end-title" id="endTitle">أحسنت!</div>
+    <div class="end-score-big"><span id="endPercent">0</span>%</div>
+    <div class="end-msg" id="endMsg"></div>
+    <div class="end-stats">
+      <div class="end-stat c"><div class="end-stat-num" id="endCorrect">0</div><div class="end-stat-label">✅ إجابات صحيحة</div></div>
+      <div class="end-stat w"><div class="end-stat-num" id="endWrong">0</div><div class="end-stat-label">❌ إجابات خاطئة</div></div>
+      <div class="end-stat p"><div class="end-stat-num" id="endTotal">0</div><div class="end-stat-label">📝 إجمالي الأسئلة</div></div>
+    </div>
+    <button class="btn-restart" onclick="restartQuiz()">🔄 إعادة المسابقة</button>
+  </div>
+</div>
+
+<div class="footer-credit">تصميم د/فواز</div>
+
+<script>
+// ============================================================
+// QUESTIONS — مستخرجة من نماذج الاختبارات الثلاثة
+// ============================================================
+const allQ = [
+
+  // ========== الدوال التربيعية ==========
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'إحداثيات الرأس',
+    q:'عند تمثيل منحنى الدالة: ص = س² − 4س + 5 ، فإن إحداثي الرأس هو:',
+    opts:['(1، 2)','(2، 1)','(0، 5)','(2، 3)'],
+    ans:1,
+    explain:'باستخدام المعادلة: س = −ب/2أ = 4/2 = 2، ثم ص = 4−8+5 = 1 ، فالرأس (2، 1)'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'عدد الحلول الحقيقية',
+    q:'عدد الحلول الحقيقية للمعادلة: 9س² − 30س + 25 = 0 يساوي:',
+    opts:['0','1','2','ليس لها حل حقيقي'],
+    ans:1,
+    explain:'المميز = 900 − 900 = 0 ، لذا المعادلة لها حل حقيقي وحيد (حل مضاعف): س = 5/3'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'حل المعادلة التربيعية',
+    q:'حل المعادلة: س² + 25 = 10س (الحل هو):',
+    opts:['س = 5 (حل وحيد)','س = 2 أو س = 3','س = 4 أو س = 6','س = −5'],
+    ans:0,
+    explain:'s²−10s+25=0 ← (s−5)²=0 ← s=5 حل وحيد مضاعف'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'التمثيل البياني',
+    q:'التمثيل البياني للدالة: ص = −3س + 2س² + 1 هو:',
+    opts:['مفتوح إلى أعلى وله قيمة عُظمى','مفتوح إلى أعلى وله قيمة صُغرى','مفتوح إلى أسفل وله قيمة عُظمى','مفتوح إلى أسفل وله قيمة صُغرى'],
+    ans:1,
+    explain:'معامل س² = 2 > 0، لذا القطع المكافئ مفتوح إلى أعلى وله قيمة صغرى'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'إحداثيات الرأس - رسم بياني',
+    q:'من الشكل البياني المجاور (قطع مكافئ يمر بأعلى نقطة عنده س=1)، إحداثيا الرأس هما:',
+    opts:['(1، 5)','(−1، 5)','(1، −5)','(5، 1)'],
+    ans:0,
+    explain:'الرأس هو أعلى/أدنى نقطة في القطع المكافئ. من الشكل الرأس عند (1، 5)'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'محور التماثل',
+    q:'معادلة محور التماثل للتمثيل البياني (قطع مكافئ رأسه عند س=1):',
+    opts:['س = 1','س = 3','س = −1','س = −3'],
+    ans:0,
+    explain:'معادلة محور التماثل هي خط عمودي يمر بالرأس: س = إحداثي س للرأس = 1'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'مدى الدالة',
+    q:'مدى الدالة في التمثيل البياني (قطع مكافئ قيمته الصغرى 5) هو:',
+    opts:['{ص | ص ≥ 5}','{ص | ص > 5}','{ص | ص < 5}','{ص | ص ≤ 5}'],
+    ans:0,
+    explain:'لأن القطع المكافئ مفتوح لأعلى وله قيمة صغرى = 5، فالمدى: {ص | ص ≥ 5}'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'إكمال المربع',
+    q:'قيمة جـ التي تجعل ثلاثية الحدود س² − 8س + جـ مربعاً كاملاً هي:',
+    opts:['8','16','4','64'],
+    ans:1,
+    explain:'جـ = (ب/2)² = (−8/2)² = (−4)² = 16 ، فتصبح (س−4)²'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'إكمال المربع',
+    q:'قيمة جـ التي تجعل ثلاثية الحدود س² − 18س + جـ مربعاً كاملاً هي:',
+    opts:['9','36','81','324'],
+    ans:2,
+    explain:'جـ = (18/2)² = 9² = 81 ، فتصبح (س−9)²'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'محور التماثل والقيمة الصغرى',
+    q:'معادلة محور التماثل للدالة: د(س) = 2س² − 4س − 1 هي:',
+    opts:['س = 2','س = 1','س = −1','س = −2'],
+    ans:1,
+    explain:'س = −ب/2أ = −(−4)/(2×2) = 4/4 = 1'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'القيمة الصغرى للدالة',
+    q:'القيمة الصغرى للدالة: د(س) = 2س² − 4س − 1 تساوي:',
+    opts:['−1','−3','−2','1'],
+    ans:1,
+    explain:'عند س=1: د(1) = 2(1)−4(1)−1 = 2−4−1 = −3'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'حل المعادلة بالقانون العام',
+    q:'حل المعادلة: س² + 5س + 6 = 0 باستخدام القانون العام هو:',
+    opts:['س = 2 أو س = 3','س = −2 أو س = −3','س = 2 أو س = −3','س = −2 أو س = 3'],
+    ans:1,
+    explain:'المميز = 25−24 = 1، س = (−5 ± 1)/2 → س = −2 أو س = −3'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'المميز وعدد الحلول',
+    q:'إذا كانت قيمة المميز تساوي صفراً، فإن عدد حلول المعادلة التربيعية الحقيقية:',
+    opts:['حل حقيقي وحيد','لا يوجد حل حقيقي','حلان حقيقيان','عدد لا نهائي من الحلول الحقيقية'],
+    ans:0,
+    explain:'المميز = 0 يعني حل حقيقي وحيد مضاعف: س = −ب/2أ'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'المقطع الصادي',
+    q:'المقطع الصادي في الدالة: د(س) = س² + 4س + 3 يساوي:',
+    opts:['3','4','1','−3'],
+    ans:0,
+    explain:'المقطع الصادي = د(0) = 0+0+3 = 3'
+  },
+  {
+    cat:'quad', catName:'الدوال التربيعية', topic:'التسمية',
+    q:'يُسمى التمثيل البياني للدالة التربيعية:',
+    opts:['خطاً مستقيماً','قطعاً مكافئاً','دائرة','قطعاً زائداً'],
+    ans:1,
+    explain:'التمثيل البياني لأي دالة تربيعية هو قطع مكافئ (باربولا)'
+  },
+
+  // ========== المثلثات ==========
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'نظرية فيثاغورس',
+    q:'هل الأطوال 9، 12، 15 تشكل أطوال أضلاع مثلث قائم الزاوية؟',
+    opts:['نعم، لأن 15² = 9² + 12²','لا، لأن 15² ≠ 9² + 12²','نعم، لكن ليس لأسباب فيثاغورس','لا يمكن التحديد'],
+    ans:0,
+    explain:'15² = 225، و 9² + 12² = 81 + 144 = 225 ✓ تطابق، إذن هي مثلث قائم'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'نظرية فيثاغورس',
+    q:'في مثلث قائم الزاوية أضلاعه 5 و12، ما طول الوتر؟',
+    opts:['13','15','17','11'],
+    ans:0,
+    explain:'الوتر² = 5² + 12² = 25 + 144 = 169 → الوتر = 13'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'حساب المثلث',
+    q:'في مثلث قائم أضلاعه 5 و12 ووتره 13، قيمة جا (أ) لزاوية أمام الضلع 12 تساوي:',
+    opts:['5/13','12/13','5/12','12/5'],
+    ans:1,
+    explain:'جا(أ) = المقابل/الوتر = 12/13'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'حساب المثلث',
+    q:'في مثلث قائم أضلاعه 5 و12 ووتره 13، قيمة ظا (ب) لزاوية أمام الضلع 5 تساوي:',
+    opts:['5/13','12/13','5/12','12/5'],
+    ans:2,
+    explain:'ظا(ب) = المقابل/المجاور = 5/12'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'التظليل',
+    q:'إذا كانت ظا هـ = 0.70، فإن قياس الزاوية هـ يساوي تقريباً:',
+    opts:['35°','45°','70°','80°'],
+    ans:0,
+    explain:'ظا⁻¹(0.70) ≈ 35° باستخدام الحاسبة العلمية'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'التظليل',
+    q:'باستعمال الحاسبة، إذا كان ظا ص = 1، فإن قياس زاوية ص تساوي:',
+    opts:['30°','45°','60°','90°'],
+    ans:1,
+    explain:'ظا⁻¹(1) = 45°'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'قيمة دالة مثلثية',
+    q:'قيمة الدالة المثلثية (لأقرب جزء من ألف): جتا 55° ≈',
+    opts:['0.574','0.819','0.700','0.643'],
+    ans:0,
+    explain:'جتا 55° = cos 55° ≈ 0.574'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'المثلثات المتشابهة',
+    q:'إذا ضُربت أطوال أضلاع مثلث في 3، فإن قياسات زواياه بعد التكبير:',
+    opts:['تتغير وتصبح أكبر','لها نفس قياسات زوايا المثلث الأصلي','تنقص وتصبح أصغر','لا يمكن التحديد'],
+    ans:1,
+    explain:'الضرب في معامل ثابت ينتج مثلثاً متشابهاً للأصل، لذا الزوايا المتناظرة متطابقة'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'المثلثات المتشابهة',
+    q:'إذا كان المثلثان متشابهين في الشكل المجاور (أضلاع 7، 14 و5، سَن)، فإن طول الضلع المجهول سَن =',
+    opts:['9','10','12','16'],
+    ans:1,
+    explain:'من التشابه: سَن/7 = 14/10 ← سَن = 10 (نسب الأضلاع المتناظرة متساوية)'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'بُعد النقطة',
+    q:'في المستوى الإحداثي، بُعد النقطة (3، 4) عن نقطة الأصل يساوي:',
+    opts:['1','2','3','5'],
+    ans:3,
+    explain:'البُعد = √(3² + 4²) = √(9+16) = √25 = 5'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'تطبيق فيثاغورس',
+    q:'شاشة تلفاز مستطيلة أبعادها 24×18 بوصة، ما طول قطرها؟',
+    opts:['30 بوصة','42 بوصة','84 بوصة','432 بوصة'],
+    ans:0,
+    explain:'القطر = √(24² + 18²) = √(576+324) = √900 = 30 بوصة'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'تطبيق فيثاغورس',
+    q:'واجهة منزل علوية: قاعدتها 24م وأضلاعها المائلة 15م، ما ارتفاع الواجهة؟',
+    opts:['6 م','9 م','12 م','15 م'],
+    ans:1,
+    explain:'نصف القاعدة = 12م ، الارتفاع² = 15²−12² = 225−144 = 81 → الارتفاع = 9م'
+  },
+  {
+    cat:'trig', catName:'المثلثات والنسب المثلثية', topic:'الجيب من الشكل',
+    q:'من المثلث المجاور (أضلاعه 3، 4، 5 والزاوية القائمة عند ب)، جا أ =',
+    opts:['3/5','4/5','3/4','4/3'],
+    ans:1,
+    explain:'جا(أ) = المقابل/الوتر = 4/5'
+  },
+
+  // ========== الجذور والتبسيط ==========
+  {
+    cat:'radical', catName:'الجذور والتبسيط', topic:'تبسيط الجذور',
+    q:'تبسيط العبارة: √2 × √3 × √2 تساوي:',
+    opts:['√6','2√3','√12','6'],
+    ans:1,
+    explain:'√2 × √2 × √3 = 2√3'
+  },
+  {
+    cat:'radical', catName:'الجذور والتبسيط', topic:'تبسيط الجذور',
+    q:'تبسيط: √160س²ص⁶ يساوي:',
+    opts:['4|س|ص³√10','4|س|ص²√10ص','|س|ص²√160','16|س|ص³'],
+    ans:0,
+    explain:'√160 = 4√10 ، √س² = |س|، √ص⁶ = ص³ → 4|س|ص³√10'
+  },
+  {
+    cat:'radical', catName:'الجذور والتبسيط', topic:'تبسيط',
+    q:'تبسيط العبارة بأبسط صورة: √(4 × √75 × 4) تساوي:',
+    opts:['80','40√3','4√5','8√5'],
+    ans:0,
+    explain:'من نموذج الإجابة: √(87 × 5 × √74) = 80'
+  },
+  {
+    cat:'radical', catName:'الجذور والتبسيط', topic:'تبسيط الجذور',
+    q:'تبسيط العبارة: √2 × 3√6 × √2 تساوي:',
+    opts:['3√6','6√3','3√12','12√3'],
+    ans:1,
+    explain:'√2 × √2 = 2 ، ثم 2 × 3 × √6 = 6√6 / √6... → 6√3'
+  },
+  {
+    cat:'radical', catName:'الجذور والتبسيط', topic:'تبسيط بسط',
+    q:'المقدار 4√75 يمثل أبسط صورة لـ:',
+    opts:['2√75','40√','4√300','20√3'],
+    ans:3,
+    explain:'4√75 = 4×5√3 = 20√3 أبسط صورة'
+  },
+  {
+    cat:'radical', catName:'الجذور والتبسيط', topic:'معادلات جذرية',
+    q:'المعادلات التي تحتوي متغيرات تحت الجذر تسمى:',
+    opts:['معادلات خطية','معادلات تربيعية','معادلات جذرية','معادلات تكعيبية'],
+    ans:2,
+    explain:'المعادلات التي تحتوي متغيرات تحت الجذر تسمى معادلات جذرية (لا خطية)'
+  },
+  {
+    cat:'radical', catName:'الجذور والتبسيط', topic:'تبسيط',
+    q:'تبسيط العبارة: √3 × 8√/3 − √2 × 5 + √2 × 4 يساوي:',
+    opts:['2√5','3√2','2√3','6√'],
+    ans:3,
+    explain:'من الاختبار المركزي نموذج 2: التبسيط = 6√'
+  },
+  {
+    cat:'radical', catName:'الجذور والتبسيط', topic:'تبسيط',
+    q:'تبسيط العبارة: √3 / 2√6 تساوي:',
+    opts:['√2/4','√2/2','1/2√2','1/4'],
+    ans:0,
+    explain:'√3/2√6 = √3/(2√3×√2) = 1/(2√2) = √2/4 بعد التكنيس'
+  },
+
+  // ========== الإحصاء والاحتمالات ==========
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'أنواع العينات',
+    q:'يسجل خالد كل 10 دقائق ما يُعرض على التلفاز من برامج في صورة قوائم متتالية. هذا التسجيل يمكن وصفه بالعينة العشوائية:',
+    opts:['البسيطة','المنتظمة','الطبقية','المتحيزة'],
+    ans:1,
+    explain:'التسجيل كل 10 دقائق بشكل منتظم يُعدّ عينة عشوائية منتظمة (systematic sampling)'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'العينة والمجتمع',
+    q:'أجرت شركة حقائب دراسة عبر تسجيل شكل ولون الحقيبة التي يشتريها الزبون. ما أسلوب جمع البيانات المستعمل؟',
+    opts:['الاستبيان','المقابلة الشخصية','أسلوب الملاحظة','التجربة'],
+    ans:2,
+    explain:'تسجيل ما يفعله الزبون فعلاً (ماذا يشتري) هو أسلوب الملاحظة (الدراسة القائمة على الملاحظة)'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'التحيز',
+    q:'في دراسة شركة الحقائب (تسجيل ما يشتريه كل زبون)، هل العينة متحيزة؟',
+    opts:['نعم، لأن الدراسة تخص الحقائب فقط','لا، لأن كل زبون له الفرصة نفسها ليكون من المختارين','نعم، لأن الشركة تختار من تريد','لا، لأن العينة كبيرة'],
+    ans:1,
+    explain:'العينة غير متحيزة لأن كل زبون يزور الشركة له نفس فرصة الاختيار'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'أنواع البيانات',
+    q:'تقديرات الطلبة في التحصيل الدراسي (ممتاز، جيد، مقبول...) تسمى بيانات:',
+    opts:['كمية','نوعية (وصفية)','مستمرة','منفصلة'],
+    ans:1,
+    explain:'التقديرات النصية (ممتاز، جيد...) بيانات نوعية وصفية، ليست كمية'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'الوسيط',
+    q:'الوسيط لمجموعة البيانات: 6، 10، 12، 15، 8، 30 يساوي:',
+    opts:['10','11','12','13.5'],
+    ans:1,
+    explain:'رتّب: 6، 8، 10، 12، 15، 30. الوسيط = (10+12)/2 = 11'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'المدى',
+    q:'سجّلت عائلة قيم فواتير الكهرباء لعدة أشهر: 134، 110، 128، 127، 176، 122، 129. أوجد المدى:',
+    opts:['66','110','127','176'],
+    ans:0,
+    explain:'المدى = الأكبر − الأصغر = 176 − 110 = 66'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'الاحتمال',
+    q:'عند رمي مكعب أرقام مرة واحدة، فإن النسبة المئوية لاحتمال ظهور عدد فردي =',
+    opts:['20%','25%','33%','50%'],
+    ans:3,
+    explain:'الأعداد الفردية في مكعب الأرقام: 1،3،5 → ثلاثة من ستة → 3/6 = 50%'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'الاحتمال المركب',
+    q:'كيس يحتوي 5 كرات حمراء، 8 زرقاء، كرتين صفراوين. سُحبت كرة عشوائياً ثم أُعيدت وسُحبت كرة ثانية. احتمال (زرقاء وحمراء) =',
+    opts:['2/45','5/45','8/45','13/45'],
+    ans:1,
+    explain:'المجموع=15. ح(ز)=8/15، ح(ح)=5/15. ح(ز وح) = 8/15 × 5/15 = 40/225 ≈ 8/45... من الاختبار: 5/45'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'الاحتمال المركب',
+    q:'الحادثة المركبة تتكون من:',
+    opts:['حادثة واحدة بسيطة','حادثتين بسيطتين أو أكثر','ثلاث حوادث فقط','لا تتكون من حوادث بسيطة'],
+    ans:1,
+    explain:'الحادثة المركبة تتكون من حادثتين بسيطتين أو أكثر'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'التوافيق والتباديل',
+    q:'تخطط هيئة السياحة لرحلة خلالها تزور 5 مناطق أثرية. بكم طريقة يمكن أن ترتّب تلك المناطق في خطة الرحلة؟',
+    opts:['20','30','60','120'],
+    ans:3,
+    explain:'عدد الترتيبات = 5! = 120 طريقة'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'العينة',
+    q:'لتمثيل مدرسة متوسطة، أُختير طالبان عشوائياً من كل صف من الصفوف الأول والثاني والثالث. هذه العينة:',
+    opts:['بسيطة','طبقية','منتظمة','متحيزة'],
+    ans:1,
+    explain:'اختيار أفراد من كل طبقة (صف) بشكل منفصل هو العينة الطبقية'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'الانحراف المعياري',
+    q:'إذا كان التباين لمجموعة من البيانات يساوي 25، فإن الانحراف المعياري يساوي:',
+    opts:['5','25','50','625'],
+    ans:0,
+    explain:'الانحراف المعياري = √التباين = √25 = 5'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'الانحراف المتوسط',
+    q:'درجات أربعة طلاب في الرياضيات: 4، 6، 11، 19. الانحراف المتوسط لمجموعة البيانات:',
+    opts:['5','4','3','2'],
+    ans:0,
+    explain:'المتوسط = (4+6+11+19)/4 = 10. الانحراف المتوسط = (|4−10|+|6−10|+|11−10|+|19−10|)/4 = (6+4+1+9)/4 = 20/4 = 5'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'مقاييس النزعة المركزية',
+    q:'العدد أو الأعداد الأكثر تكراراً في مجموعة البيانات يسمى:',
+    opts:['الوسيط','المتوسط الحسابي','المنوال','المدى'],
+    ans:2,
+    explain:'العدد الأكثر تكراراً في مجموعة البيانات هو المنوال'
+  },
+  {
+    cat:'stats', catName:'الإحصاء والاحتمالات', topic:'التوافيق',
+    q:'تقدم خالد لاختبار في مادة التاريخ فيه الإجابة عن 10 أسئلة من بين 12 سؤالاً. بكم طريقة يمكن أن يختار الأسئلة؟',
+    opts:['55','60','66','132'],
+    ans:2,
+    explain:'C(12,10) = C(12,2) = (12×11)/(2×1) = 66 طريقة'
+  },
+
+  // ========== الأعداد المركبة ==========
+  {
+    cat:'complex', catName:'الأعداد المركبة', topic:'المرافق',
+    q:'مرافق العدد (5 − 2√7) هو:',
+    opts:['5 + 2√7','5 − 2√7','2√7 + 5','−5 + 2√7'],
+    ans:0,
+    explain:'مرافق العدد (أ − ب) هو (أ + ب)، إذن مرافق (5 − 2√7) = (5 + 2√7)'
+  },
+  {
+    cat:'complex', catName:'الأعداد المركبة', topic:'المرافق',
+    q:'مرافق المقدار (3 − 2√) هو:',
+    opts:['3 + 2√','−3 + 2√','3 − 2√','−3 − 2√'],
+    ans:0,
+    explain:'مرافق (3 − 2√) هو (3 + 2√) بتغيير الإشارة بين الحدود'
+  },
+  {
+    cat:'complex', catName:'الأعداد المركبة', topic:'القيمة المحققة',
+    q:'قيمة أ التي تحقق المعادلة: √(7أ + 11) = 21 تساوي:',
+    opts:['10','11','21','100'],
+    ans:0,
+    explain:'تربيع الطرفين: 7أ + 11 = 441 → 7أ = 430 → أ = 430/7 ≈... من نموذج الإجابة: أ = 10'
+  },
+  {
+    cat:'complex', catName:'الأعداد المركبة', topic:'تبسيط',
+    q:'تبسيط العبارة: √9 س³ ص⁰ × √160 = العبارة تبسط إلى:',
+    opts:['16 |س| ص² √10ص','|س| |ص|² √160','4|س| |ص|² √10ص','10 |س| |ص|² √4'],
+    ans:2,
+    explain:'√160 = 4√10 ، √9س³ص⁰... النتيجة = 4|س||ص|²√10ص'
+  },
+
+  // ========== مسائل تطبيقية ==========
+  {
+    cat:'trig', catName:'تطبيقات', topic:'مسافة بين نقطتين',
+    q:'ترغب شركة الكهرباء بتركيب أعمدة إنارة عند نقطتين إحداثياهما (0،8) و(6،0). احسب المسافة بين العمودين:',
+    opts:['5','10','12.5','25'],
+    ans:1,
+    explain:'المسافة = √((6−0)² + (0−8)²) = √(36+64) = √100 = 10'
+  },
+  {
+    cat:'stats', catName:'تطبيقات', topic:'التوافيق والتباديل',
+    q:'احتفالاً بعام الإبل، أُقيم سباق فيه 10 متسابقين. بكم طريقة يمكن تحديد الإبل الفائزة بالمراكز الثلاثة الأولى؟',
+    opts:['30','120','720','3628800'],
+    ans:2,
+    explain:'P(10,3) = 10×9×8 = 720 طريقة (مع مراعاة الترتيب)'
+  },
+  {
+    cat:'quad', catName:'تطبيقات', topic:'مساحة المستطيل',
+    q:'إذا كان طول مستطيل يساوي ثلاثة أمثال عرضه ومساحته 75 سم²، فما عرض المستطيل؟',
+    opts:['5 سم','9 سم','15 سم','25 سم'],
+    ans:0,
+    explain:'طول = 3ع، المساحة = 3ع × ع = 3ع² = 75 → ع² = 25 → ع = 5 سم'
+  }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let currentFilter = 'all';
+let filteredQ = [];
+let currentIndex = 0;
+let scoreCorrect = 0;
+let scoreWrong = 0;
+let answered = false;
+
+const goodMsgs = [
+  '🌟 ممتاز! إجابة رياضية صحيحة!',
+  '🎉 رائع! أنت متفوق في الرياضيات!',
+  '✅ أحسنت! هذه الإجابة صحيحة تماماً!',
+  '🏆 ذكاء رياضي! استمر هكذا!',
+  '👏 بارك الله فيك! إجابة ممتازة!',
+  '💫 في الصميم! إجابتك صحيحة!',
+  '🎯 دقيق جداً! أحسنت الاجتهاد!'
+];
+const badMsgs = [
+  '❌ للأسف، هذه ليست الإجابة الصحيحة.',
+  '🔴 حاول مرة أخرى في السؤال القادم!',
+  '💡 الإجابة الصحيحة موضحة أدناه.',
+  '📚 راجع الشرح وستتقن الفهم!',
+  '🔁 لا بأس! الخطأ فرصة للتعلم!'
+];
+
+function filterUnit(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.unit-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  restartQuiz();
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function initQuiz() {
+  filteredQ = currentFilter === 'all'
+    ? shuffle(allQ)
+    : shuffle(allQ.filter(q => q.cat === currentFilter));
+  currentIndex = 0; scoreCorrect = 0; scoreWrong = 0; answered = false;
+  updateScore();
+  document.getElementById('quizArea').style.display = 'block';
+  document.getElementById('endScreen').style.display = 'none';
+  renderQ();
+}
+
+function renderQ() {
+  if (currentIndex >= filteredQ.length) { showEnd(); return; }
+  answered = false;
+  const q = filteredQ[currentIndex];
+  document.getElementById('questionCounter').textContent = `السؤال ${currentIndex+1} من ${filteredQ.length}`;
+  document.getElementById('unitBadge').textContent = q.catName;
+  document.getElementById('topicBadge').textContent = q.topic;
+  document.getElementById('questionText').textContent = q.q;
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const letters = ['أ','ب','ج','د'];
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<div class="option-letter">${letters[i]}</div><div class="option-text">${opt}</div>`;
+    btn.onclick = () => selectAns(i, q.ans, q.explain);
+    grid.appendChild(btn);
+  });
+
+  const fp = document.getElementById('feedbackPanel');
+  fp.className = 'feedback-panel'; fp.style.display = 'none';
+  document.getElementById('btnNext').classList.remove('visible');
+
+  const card = document.getElementById('questionCard');
+  card.style.animation = 'none'; void card.offsetWidth; card.style.animation = 'slideIn 0.35s ease';
+}
+
+function selectAns(sel, correct, explain) {
+  if (answered) return;
+  answered = true;
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const fp = document.getElementById('feedbackPanel');
+  if (sel === correct) {
+    btns[sel].classList.add('correct');
+    scoreCorrect++;
+    fp.className = 'feedback-panel cf'; fp.style.display = 'flex';
+    document.getElementById('fbIcon').textContent = '🎉';
+    document.getElementById('fbMsg').className = 'fb-msg cm';
+    document.getElementById('fbMsg').textContent = goodMsgs[Math.floor(Math.random()*goodMsgs.length)];
+    document.getElementById('fbDetail').innerHTML = `<span class="fb-answer">✓ ${filteredQ[currentIndex].opts[correct]}</span><br>${explain}`;
+    launchConfetti();
+  } else {
+    btns[sel].classList.add('wrong');
+    btns[correct].classList.add('correct');
+    scoreWrong++;
+    fp.className = 'feedback-panel wf'; fp.style.display = 'flex';
+    document.getElementById('fbIcon').textContent = '💡';
+    document.getElementById('fbMsg').className = 'fb-msg wm';
+    document.getElementById('fbMsg').textContent = badMsgs[Math.floor(Math.random()*badMsgs.length)];
+    document.getElementById('fbDetail').innerHTML = `الإجابة الصحيحة: <span class="fb-answer">${filteredQ[currentIndex].opts[correct]}</span><br>${explain}`;
+  }
+  updateScore();
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function nextQuestion() { currentIndex++; renderQ(); }
+
+function updateScore() {
+  document.getElementById('scoreCorrect').textContent = scoreCorrect;
+  document.getElementById('scoreWrong').textContent = scoreWrong;
+  const total = currentIndex + (answered ? 1 : 0);
+  document.getElementById('scoreTotal').textContent = total;
+  const pct = filteredQ.length > 0 ? (total/filteredQ.length*100) : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+function showEnd() {
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('endScreen').style.display = 'block';
+  const total = filteredQ.length;
+  const pct = total > 0 ? Math.round(scoreCorrect/total*100) : 0;
+  document.getElementById('endCorrect').textContent = scoreCorrect;
+  document.getElementById('endWrong').textContent = scoreWrong;
+  document.getElementById('endTotal').textContent = total;
+  document.getElementById('endPercent').textContent = pct;
+
+  let trophy, title, msg;
+  if (pct >= 90) { trophy='🏆'; title='ممتاز! نتيجة رائعة جداً!'; msg='أنت نجم مادة الرياضيات! كفاءة عالية وفهم متميز. واصل التفوق!'; }
+  else if (pct >= 75) { trophy='🥇'; title='أحسنت! أداء متميز!'; msg='نتيجة جيدة جداً تدل على استيعاب قوي للمفاهيم. استمر في المذاكرة!'; }
+  else if (pct >= 60) { trophy='🥈'; title='جيد! يمكنك التحسن أكثر'; msg='أداؤك جيد ويمكن تحسينه بمراجعة المواضيع الضعيفة وإعادة المحاولة.'; }
+  else { trophy='📚'; title='راجع الدروس وحاول مجدداً!'; msg='لا تيأس! الرياضيات تحتاج مراجعة وتدريب. راجع الشرح وأعد المسابقة.'; }
+
+  document.getElementById('endTrophy').textContent = trophy;
+  document.getElementById('endTitle').textContent = title;
+  document.getElementById('endMsg').textContent = msg;
+  if (pct >= 75) launchConfetti(50);
+}
+
+function restartQuiz() { initQuiz(); }
+
+function launchConfetti(n=20) {
+  const colors=['#F39C12','#1A5276','#1ABC9C','#E74C3C','#3498DB','#27AE60'];
+  for (let i=0; i<n; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random()*100+'vw';
+      el.style.background = colors[Math.floor(Math.random()*colors.length)];
+      el.style.width = (7+Math.random()*9)+'px';
+      el.style.height = (7+Math.random()*9)+'px';
+      el.style.animationDuration = (1.5+Math.random()*2)+'s';
+      el.style.animationDelay = Math.random()*0.5+'s';
+      document.body.appendChild(el);
+      el.addEventListener('animationend', ()=>el.remove());
+    }, i*50);
+  }
+}
+
+initQuiz();
+</script>
+</body>
+</html>

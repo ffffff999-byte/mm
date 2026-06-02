@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة شهادات الشكر والتقدير</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&family=Cairo:wght@400;600;700;800&family=Scheherazade+New:wght@400;700&family=Lateef&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #F0D080;
+    --gold-dark: #8B6914;
+    --gold-shine: #FFE87C;
+    --black: #1a1a1a;
+    --white: #ffffff;
+    --bg: #f5f0e8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  /* ===== SETTINGS PANEL ===== */
+  .settings-panel {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 20px;
+    padding: 24px;
+    color: white;
+  }
+
+  .settings-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--gold-light);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .settings-title::before {
+    content: '⚙️';
+    font-size: 20px;
+  }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-group.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .field-group label {
+    font-size: 13px;
+    color: var(--gold-light);
+    font-weight: 600;
+  }
+
+  .field-group input,
+  .field-group textarea,
+  .field-group select {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: white;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s;
+    direction: rtl;
+  }
+
+  .field-group input:focus,
+  .field-group textarea:focus,
+  .field-group select:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.12);
+  }
+
+  .field-group select option {
+    background: #1a1a2e;
+    color: white;
+  }
+
+  .field-group textarea {
+    resize: vertical;
+    min-height: 70px;
+  }
+
+  .font-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+
+  .color-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .color-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .color-field label {
+    font-size: 11px;
+    color: var(--gold-light);
+  }
+
+  .color-field input[type="color"] {
+    width: 50px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 2px;
+    background: transparent;
+  }
+
+  .btn-print {
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    color: #1a1a1a;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Tajawal', sans-serif;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+    width: 100%;
+    margin-top: 16px;
+  }
+
+  .btn-print:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(201,168,76,0.6);
+  }
+
+  .section-divider {
+    grid-column: 1 / -1;
+    border-top: 1px solid rgba(201,168,76,0.2);
+    padding-top: 12px;
+    margin-top: 4px;
+    color: var(--gold);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* ===== TEMPLATE SELECTOR ===== */
+  .template-selector {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .tpl-btn {
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(201,168,76,0.3);
+    border-radius: 10px;
+    padding: 8px 16px;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    font-family: 'Tajawal', sans-serif;
+    font-size: 13px;
+    transition: all 0.3s;
+  }
+
+  .tpl-btn.active, .tpl-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold-light);
+    background: rgba(201,168,76,0.1);
+  }
+
+  /* ===== CERTIFICATE PREVIEW AREA ===== */
+  #preview-wrap {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ===== CERTIFICATE STYLES ===== */
+  #cert-container {
+    width: 297mm;
+    height: 210mm;
+    position: relative;
+    overflow: hidden;
+    background: white;
+  }
+
+  /* TEMPLATE 1: Golden Waves */
+  .tpl-1 #cert-bg {
+    position: absolute;
+    inset: 0;
+    background: white;
+  }
+
+  .tpl-1 .wave-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+  }
+
+  .tpl-1 .wave-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 30%;
+    height: 40%;
+  }
+
+  /* TEMPLATE 2: Classic Frame */
+  .tpl-2 #cert-bg {
+    position: absolute;
+    inset: 0;
+    background: #fdfaf4;
+  }
+
+  /* TEMPLATE 3: Dark Luxury */
+  .tpl-3 #cert-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  }
+
+  /* ===== CERT CONTENT ===== */
+  .cert-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 8mm 10mm;
+    text-align: center;
+    direction: rtl;
+    gap: 5px;
+  }
+
+  .cert-title {
+    font-size: 76px;
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 0;
+  }
+
+  .cert-subtitle {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.4;
+    margin-bottom: 0;
+  }
+
+  .cert-name {
+    font-size: 80px;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 2px 0;
+  }
+
+  .cert-divider {
+    width: 70%;
+    height: 3px;
+    margin: 3px auto;
+  }
+
+  .cert-body {
+    font-size: 24px;
+    font-weight: 400;
+    line-height: 1.7;
+    max-width: 90%;
+    margin: 0;
+  }
+
+  /* Signatures area */
+  .cert-sigs {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    width: 92%;
+    margin-top: 8px;
+    gap: 20px;
+  }
+
+  .sig-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    flex: 1;
+  }
+
+  .sig-line {
+    width: 160px;
+    height: 1.5px;
+    margin-bottom: 3px;
+  }
+
+  .sig-title {
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .sig-name {
+    font-size: 22px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* Medal badge */
+  .cert-medal {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+  }
+
+  /* ===== FOOTER ATTRIBUTION (hidden in print) ===== */
+  .attribution-footer {
+    width: 100%;
+    max-width: 900px;
+    text-align: center;
+    padding: 12px;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    direction: rtl;
+  }
+
+  .attribution-footer a {
+    color: var(--gold);
+    text-decoration: none;
+  }
+
+  /* ===== PRINT STYLES ===== */
+  @media print {
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    body {
+      background: white !important;
+      padding: 0 !important;
+      display: block !important;
+    }
+
+    .settings-panel,
+    .attribution-footer,
+    #preview-wrap > *:not(#cert-container) {
+      display: none !important;
+    }
+
+    #preview-wrap {
+      display: block !important;
+      width: 100% !important;
+      max-width: none !important;
+    }
+
+    #cert-container {
+      width: 297mm !important;
+      height: 210mm !important;
+      max-width: none !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+      overflow: hidden !important;
+    }
+
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SETTINGS PANEL ===== -->
+<div class="settings-panel">
+  <div class="settings-title">إعدادات الشهادة</div>
+
+  <!-- Template Selector -->
+  <div class="field-group full-width" style="margin-bottom:12px;">
+    <label>اختر القالب</label>
+    <div class="template-selector">
+      <button class="tpl-btn active" onclick="setTemplate(1)">📜 الأمواج الذهبية</button>
+      <button class="tpl-btn" onclick="setTemplate(2)">🖼️ الإطار الكلاسيكي</button>
+      <button class="tpl-btn" onclick="setTemplate(3)">✨ الفاخر الداكن</button>
+    </div>
+  </div>
+
+  <div class="settings-grid">
+
+    <div class="section-divider">📝 النصوص</div>
+
+    <div class="field-group">
+      <label>عنوان الشهادة</label>
+      <input type="text" id="f-title" value="شهادة تقدير" oninput="updateCert()">
+    </div>
+
+    <div class="field-group">
+      <label>نص المقدمة</label>
+      <input type="text" id="f-intro" value="يتم تقديم هذه الشهادة بكل فخر إلى" oninput="updateCert()">
+    </div>
+
+    <div class="field-group">
+      <label>اسم المستلم</label>
+      <input type="text" id="f-name" value="اسم المستلم" oninput="updateCert()">
+    </div>
+
+    <div class="field-group">
+      <label>نص الشهادة</label>
+      <textarea id="f-body" oninput="updateCert()">تقديرًا لجهوده المتميزة وعطائه الدائم في خدمة العملية التعليمية</textarea>
+    </div>
+
+    <div class="section-divider">✍️ التوقيعات</div>
+
+    <div class="field-group">
+      <label>لقب المدير/ة</label>
+      <input type="text" id="f-dir-title" value="مدير المدرسة" oninput="updateCert()">
+    </div>
+
+    <div class="field-group">
+      <label>اسم المدير/ة</label>
+      <input type="text" id="f-dir-name" value="اسم المدير" oninput="updateCert()">
+    </div>
+
+    <div class="field-group">
+      <label>لقب الوكيل/ة</label>
+      <input type="text" id="f-dep-title" value="وكيل المدرسة" oninput="updateCert()">
+    </div>
+
+    <div class="field-group">
+      <label>اسم الوكيل/ة</label>
+      <input type="text" id="f-dep-name" value="اسم الوكيل" oninput="updateCert()">
+    </div>
+
+    <div class="section-divider">🎨 الخطوط والألوان</div>
+
+    <div class="field-group full-width">
+      <label>خط الشهادة</label>
+      <div class="font-row">
+        <select id="f-font-title" onchange="updateCert()">
+          <option value="Amiri">أميري (كلاسيكي)</option>
+          <option value="Cairo" selected>القاهرة (عصري)</option>
+          <option value="Tajawal">تجوال</option>
+          <option value="Scheherazade New">شهرزاد</option>
+          <option value="Lateef">لطيف</option>
+        </select>
+        <select id="f-font-name" onchange="updateCert()">
+          <option value="Amiri" selected>أميري - للاسم</option>
+          <option value="Cairo">القاهرة - للاسم</option>
+          <option value="Tajawal">تجوال - للاسم</option>
+          <option value="Scheherazade New">شهرزاد - للاسم</option>
+        </select>
+        <select id="f-font-body" onchange="updateCert()">
+          <option value="Tajawal" selected>تجوال - للنص</option>
+          <option value="Cairo">القاهرة - للنص</option>
+          <option value="Amiri">أميري - للنص</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-group full-width">
+      <label>الألوان</label>
+      <div class="color-row">
+        <div class="color-field">
+          <label>لون العنوان</label>
+          <input type="color" id="c-title" value="#1a1a1a" oninput="updateCert()">
+        </div>
+        <div class="color-field">
+          <label>لون الاسم</label>
+          <input type="color" id="c-name" value="#8B6914" oninput="updateCert()">
+        </div>
+        <div class="color-field">
+          <label>لون الذهبي</label>
+          <input type="color" id="c-gold" value="#C9A84C" oninput="updateCert()">
+        </div>
+        <div class="color-field">
+          <label>لون النص</label>
+          <input type="color" id="c-body" value="#2d2d2d" oninput="updateCert()">
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="btn-print" onclick="window.print()">🖨️ طباعة / تصدير PDF</button>
+</div>
+
+<!-- ===== CERTIFICATE PREVIEW ===== -->
+<div id="preview-wrap">
+  <div id="cert-container" class="tpl-1">
+    <!-- SVG BG rendered by JS -->
+    <div id="cert-bg"></div>
+    <!-- Content -->
+    <div class="cert-content" id="cert-content-inner">
+      <!-- Filled by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ===== ATTRIBUTION FOOTER (NO PRINT) ===== -->
+<div class="attribution-footer">
+  تصميم د/فواز &nbsp;|&nbsp; تفضل للمزيد هنا <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+</div>
+
+<script>
+let currentTemplate = 1;
+
+function setTemplate(n) {
+  currentTemplate = n;
+  document.querySelectorAll('.tpl-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === n - 1);
+  });
+  updateCert();
+}
+
+function g(id) { return document.getElementById(id); }
+function gv(id) { return g(id) ? g(id).value : ''; }
+
+function updateCert() {
+  const title = gv('f-title');
+  const intro = gv('f-intro');
+  const name = gv('f-name');
+  const body = gv('f-body');
+  const dirTitle = gv('f-dir-title');
+  const dirName = gv('f-dir-name');
+  const depTitle = gv('f-dep-title');
+  const depName = gv('f-dep-name');
+  const fontTitle = gv('f-font-title');
+  const fontName = gv('f-font-name');
+  const fontBody = gv('f-font-body');
+  const cTitle = gv('c-title');
+  const cName = gv('c-name');
+  const cGold = gv('c-gold');
+  const cBody = gv('c-body');
+
+  const container = g('cert-container');
+  container.className = `tpl-${currentTemplate}`;
+
+  // Render background SVG
+  renderBackground(currentTemplate, cGold);
+
+  // Render content
+  renderContent({ title, intro, name, body, dirTitle, dirName, depTitle, depName,
+                  fontTitle, fontName, fontBody, cTitle, cName, cGold, cBody });
+}
+
+function renderBackground(tpl, gold) {
+  const bg = g('cert-bg');
+  if (tpl === 1) {
+    bg.innerHTML = `
+    <svg width="100%" height="100%" viewBox="0 0 1122 793" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <rect width="1122" height="793" fill="white"/>
+      <!-- Bottom waves -->
+      <path d="M0,600 Q200,500 400,580 Q600,660 800,540 Q1000,420 1122,500 L1122,793 L0,793 Z" fill="${gold}22"/>
+      <path d="M0,650 Q250,560 500,620 Q750,680 1000,590 Q1080,560 1122,580 L1122,793 L0,793 Z" fill="${gold}44"/>
+      <path d="M0,720 Q300,670 600,700 Q900,730 1122,690 L1122,793 L0,793 Z" fill="${gold}66"/>
+      <path d="M0,760 Q400,730 700,750 Q950,765 1122,740 L1122,793 L0,793 Z" fill="${gold}88"/>
+      <!-- Top right accent -->
+      <path d="M1122,0 Q950,80 1020,200 Q1080,300 1122,250 Z" fill="${gold}33"/>
+      <path d="M1122,0 Q1000,60 1050,150 Q1090,220 1122,180 Z" fill="${gold}55"/>
+      <!-- Medal area top-left -->
+      <circle cx="85" cy="85" r="55" fill="${gold}22"/>
+      <circle cx="85" cy="85" r="42" fill="${gold}33"/>
+    </svg>`;
+  } else if (tpl === 2) {
+    bg.innerHTML = `
+    <svg width="100%" height="100%" viewBox="0 0 1122 793" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <rect width="1122" height="793" fill="#fdfaf4"/>
+      <!-- Outer frame -->
+      <rect x="12" y="12" width="1098" height="769" fill="none" stroke="${gold}" stroke-width="3"/>
+      <rect x="20" y="20" width="1082" height="753" fill="none" stroke="${gold}" stroke-width="1"/>
+      <!-- Corner ornaments -->
+      ${cornerOrnament(30, 30, 0, gold)}
+      ${cornerOrnament(1092, 30, 90, gold)}
+      ${cornerOrnament(30, 763, 270, gold)}
+      ${cornerOrnament(1092, 763, 180, gold)}
+      <!-- Top/Bottom center ornament lines -->
+      <line x1="200" y1="16" x2="922" y2="16" stroke="${gold}" stroke-width="1.5"/>
+      <line x1="200" y1="777" x2="922" y2="777" stroke="${gold}" stroke-width="1.5"/>
+      <!-- Background pattern subtle -->
+      <rect x="30" y="30" width="1062" height="733" fill="${gold}08"/>
+    </svg>`;
+  } else {
+    bg.innerHTML = `
+    <svg width="100%" height="100%" viewBox="0 0 1122 793" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="darkbg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="100%" stop-color="#2d2020"/>
+        </linearGradient>
+      </defs>
+      <rect width="1122" height="793" fill="url(#darkbg)"/>
+      <!-- Gold border thick -->
+      <rect x="8" y="8" width="1106" height="777" fill="none" stroke="${gold}" stroke-width="4"/>
+      <rect x="18" y="18" width="1086" height="757" fill="none" stroke="${gold}" stroke-width="1"/>
+      <!-- Corner triangles -->
+      <polygon points="8,8 120,8 8,120" fill="${gold}"/>
+      <polygon points="1114,8 1002,8 1114,120" fill="${gold}"/>
+      <polygon points="8,785 120,785 8,665" fill="${gold}"/>
+      <polygon points="1114,785 1002,785 1114,665" fill="${gold}"/>
+      <!-- Islamic geometric subtle pattern center -->
+      <circle cx="561" cy="396" r="280" fill="none" stroke="${gold}15" stroke-width="1"/>
+      <circle cx="561" cy="396" r="220" fill="none" stroke="${gold}15" stroke-width="1"/>
+      <!-- Top center ornament -->
+      <polygon points="561,30 575,55 561,48 547,55" fill="${gold}"/>
+    </svg>`;
+  }
+}
+
+function cornerOrnament(x, y, rot, gold) {
+  return `<g transform="translate(${x},${y}) rotate(${rot})">
+    <path d="M0,0 L60,0 L60,8 L8,8 L8,60 L0,60 Z" fill="${gold}"/>
+    <path d="M12,12 L45,12 L45,18 L18,18 L18,45 L12,45 Z" fill="${gold}66"/>
+    <path d="M0,0 Q30,15 15,30" fill="none" stroke="${gold}" stroke-width="1.5"/>
+  </g>`;
+}
+
+function renderMedal(tpl, gold) {
+  if (tpl === 1) {
+    return `<svg width="90" height="100" viewBox="0 0 90 100">
+      <circle cx="45" cy="45" r="38" fill="${gold}" opacity="0.9"/>
+      <circle cx="45" cy="45" r="30" fill="white"/>
+      <circle cx="45" cy="45" r="24" fill="${gold}cc"/>
+      <text x="45" y="52" text-anchor="middle" font-size="11" font-family="Tajawal" font-weight="bold" fill="white">أفضل</text>
+      <!-- Ribbon -->
+      <path d="M32,80 L45,90 L58,80 L52,65 L38,65 Z" fill="${gold}"/>
+    </svg>`;
+  } else if (tpl === 2) {
+    return `<svg width="80" height="90" viewBox="0 0 80 90">
+      <circle cx="40" cy="42" r="36" fill="${gold}"/>
+      <circle cx="40" cy="42" r="28" fill="white"/>
+      <circle cx="40" cy="42" r="22" fill="${gold}aa"/>
+      <text x="40" y="48" text-anchor="middle" font-size="10" font-family="Tajawal" font-weight="bold" fill="white">تقدير</text>
+      <path d="M28,76 L40,86 L52,76 L47,62 L33,62 Z" fill="${gold}"/>
+    </svg>`;
+  } else {
+    return `<svg width="70" height="70" viewBox="0 0 70 70">
+      <polygon points="35,5 42,25 64,25 47,40 53,62 35,49 17,62 23,40 6,25 28,25" fill="${gold}"/>
+      <polygon points="35,15 40,28 54,28 43,37 47,52 35,43 23,52 27,37 16,28 30,28" fill="white" opacity="0.3"/>
+    </svg>`;
+  }
+}
+
+function renderContent(d) {
+  const inner = g('cert-content-inner');
+  const t = currentTemplate;
+
+  // Colors based on template
+  const titleColor = t === 3 ? d.cGold : d.cTitle;
+  const nameColor = d.cName;
+  const bodyColor = t === 3 ? '#e0d0a0' : d.cBody;
+  const dividerColor = d.cGold;
+  const sigLineColor = d.cGold;
+  const introColor = t === 3 ? '#ccbbaa' : '#555';
+
+  // Medal position: top-left for tpl1, bottom-center for tpl2, top-right for tpl3
+  const medalHTML = `<div style="position:absolute; ${
+    t === 1 ? 'top:14mm;right:16mm' :
+    t === 2 ? 'bottom:14mm;left:50%;transform:translateX(-50%)' :
+    'top:10mm;left:16mm'
+  };">${renderMedal(t, d.cGold)}</div>`;
+
+  inner.innerHTML = `
+    ${medalHTML}
+
+    <div class="cert-title" style="font-family:'${d.fontTitle}',serif; color:${titleColor};">
+      ${d.title}
+    </div>
+
+    <div class="cert-subtitle" style="font-family:'${d.fontBody}',sans-serif; color:${introColor};">
+      ${d.intro}
+    </div>
+
+    <div class="cert-name" style="font-family:'${d.fontName}',serif; color:${nameColor};">
+      ${d.name}
+    </div>
+
+    <div class="cert-divider" style="background: linear-gradient(90deg, transparent, ${dividerColor}, transparent);"></div>
+
+    <div class="cert-body" style="font-family:'${d.fontBody}',sans-serif; color:${bodyColor};">
+      ${d.body.replace(/\n/g, '<br>')}
+    </div>
+
+    <div class="cert-sigs">
+      <div class="sig-block">
+        <div class="sig-line" style="background:${sigLineColor};"></div>
+        <div class="sig-title" style="font-family:'${d.fontBody}',sans-serif; color:${titleColor}; font-size:20px;">${d.dirTitle}</div>
+        <div class="sig-name" style="font-family:'${d.fontTitle}',serif; color:${nameColor}; font-size:22px;">${d.dirName}</div>
+      </div>
+      <div class="sig-block" style="flex:0 0 auto;">
+        <!-- center space -->
+      </div>
+      <div class="sig-block">
+        <div class="sig-line" style="background:${sigLineColor};"></div>
+        <div class="sig-title" style="font-family:'${d.fontBody}',sans-serif; color:${titleColor}; font-size:20px;">${d.depTitle}</div>
+        <div class="sig-name" style="font-family:'${d.fontTitle}',serif; color:${nameColor}; font-size:22px;">${d.depName}</div>
+      </div>
+    </div>
+  `;
+}
+
+// Init
+updateCert();
+</script>
+</body>
+</html>

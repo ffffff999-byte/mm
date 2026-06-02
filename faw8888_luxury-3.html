@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة تقارير البرامج المدرسية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --gold:       #c9a84c;
+            --gold-light: #f0d080;
+            --deep:       #0a1628;
+            --navy:       #0d2240;
+            --teal:       #0e7490;
+            --teal-light: #22d3ee;
+            --white:      #ffffff;
+            --off-white:  #f8fafc;
+            --text:       #1e293b;
+            --muted:      #64748b;
+            --border:     #e2e8f0;
+            --shadow:     rgba(10,22,40,0.18);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--off-white);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse 80% 40% at 50% -10%, rgba(14,116,144,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 50% at 100% 0%,  rgba(201,168,76,0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 40% 40% at 0% 100%,  rgba(13,34,64,0.08)  0%, transparent 50%);
+            pointer-events: none; z-index: 0;
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+            position: relative; z-index: 1;
+        }
+
+        /* ===== الترويسة ===== */
+        .header {
+            background: linear-gradient(135deg, var(--deep) 0%, var(--navy) 45%, #0f3460 100%);
+            border-radius: 20px;
+            margin-bottom: 1.8rem;
+            box-shadow: 0 20px 60px var(--shadow), 0 1px 0 rgba(201,168,76,0.3) inset;
+            overflow: hidden;
+            position: relative;
+        }
+        .header::before {
+            content: '';
+            position: absolute; top: -60px; left: -60px;
+            width: 220px; height: 220px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%);
+        }
+        .header::after {
+            content: '';
+            position: absolute; bottom: -40px; right: -40px;
+            width: 160px; height: 160px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(14,116,144,0.2) 0%, transparent 70%);
+        }
+        .header-bar {
+            height: 5px;
+            background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal-light), var(--gold));
+            background-size: 300% 100%;
+            animation: shimmer 4s linear infinite;
+        }
+        @keyframes shimmer {
+            0%   { background-position: 0% 0%; }
+            100% { background-position: 300% 0%; }
+        }
+        .header-body {
+            padding: 2.2rem 2.5rem 1.8rem;
+            position: relative; z-index: 1;
+            text-align: center;
+        }
+        .moe-emblem {
+            width: 64px; height: 64px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            margin-bottom: 0.9rem;
+            box-shadow: 0 0 0 3px rgba(201,168,76,0.3), 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .moe-emblem i { font-size: 1.8rem; color: var(--deep); }
+        .header h1 {
+            font-family: 'Amiri', serif;
+            font-size: 2rem; font-weight: 700;
+            color: var(--white);
+            text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            margin-bottom: 0.25rem;
+        }
+        .header-subtitle {
+            font-size: 0.82rem; color: rgba(255,255,255,0.5);
+            letter-spacing: 0.15em; margin-bottom: 1.3rem;
+        }
+        .school-wrap {
+            display: inline-flex; align-items: center; gap: 0.8rem;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(201,168,76,0.35);
+            border-radius: 50px; padding: 0.5rem 1.4rem;
+            backdrop-filter: blur(10px); transition: 0.3s;
+        }
+        .school-wrap:focus-within {
+            background: rgba(255,255,255,0.12);
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(201,168,76,0.12);
+        }
+        .school-wrap i { color: var(--gold); font-size: 1rem; }
+        .school-input {
+            background: transparent; border: none;
+            color: var(--white); font-family: 'Tajawal', sans-serif;
+            font-size: 1rem; font-weight: 600; outline: none;
+            width: 250px; text-align: center;
+        }
+        .school-input::placeholder { color: rgba(255,255,255,0.4); font-weight: 400; }
+
+        /* ===== شريط الأدوات ===== */
+        .toolbar {
+            display: flex; justify-content: center; gap: 1rem;
+            margin-bottom: 1.8rem;
+            background: var(--white); border-radius: 16px;
+            padding: 1.1rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid var(--border); flex-wrap: wrap;
+        }
+        .tool-btn {
+            display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+            background: none; border: none; cursor: pointer; transition: all 0.25s;
+            padding: 0.5rem 1rem; border-radius: 12px;
+            color: var(--muted); font-family: 'Tajawal', sans-serif;
+            font-weight: 700; font-size: 0.82rem;
+        }
+        .tool-btn:hover { color: var(--navy); }
+        .tool-icon {
+            width: 50px; height: 50px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.35rem; transition: all 0.25s;
+        }
+        .tool-btn:hover .tool-icon { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.12); }
+        .icon-ai    { background: linear-gradient(135deg, #4f46e5, #7c3aed); color: white; }
+        .icon-pdf   { background: linear-gradient(135deg, #e11d48, #be123c); color: white; }
+        .icon-print { background: linear-gradient(135deg, var(--teal), #0891b2); color: white; }
+        .icon-clear { background: linear-gradient(135deg, #475569, #334155); color: white; }
+        .tool-btn.generating .tool-icon {
+            animation: aiPulse 1.2s ease-in-out infinite;
+        }
+        @keyframes aiPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.4); transform: scale(1); }
+            50%       { box-shadow: 0 0 0 8px rgba(124,58,237,0); transform: scale(1.05); }
+        }
+
+        /* ===== التبويبات ===== */
+        .tabs {
+            display: flex; justify-content: center; gap: 0.6rem;
+            margin-bottom: 1.8rem; flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: var(--white); border: 1.5px solid var(--border);
+            color: var(--muted); padding: 0.6rem 1.5rem;
+            font-family: 'Tajawal', sans-serif; font-weight: 700; font-size: 0.88rem;
+            border-radius: 50px; cursor: pointer; transition: all 0.25s;
+            display: flex; align-items: center; gap: 0.45rem;
+        }
+        .tab-btn i { font-size: 0.82rem; }
+        .tab-btn:hover { border-color: var(--teal); color: var(--teal); }
+        .tab-btn.active {
+            background: linear-gradient(135deg, var(--deep), var(--navy));
+            color: var(--gold-light); border-color: transparent;
+            box-shadow: 0 6px 20px rgba(10,22,40,0.25);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeUp 0.35s ease; }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== البطاقات ===== */
+        .card {
+            background: var(--white);
+            border-radius: 18px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            margin-bottom: 1.2rem;
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute; top: 0; right: 0; left: 0; height: 3px;
+            background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal-light));
+        }
+
+        /* ===== الحقول ===== */
+        .fields-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.1rem;
+        }
+        .field-group { display: flex; flex-direction: column; gap: 0.38rem; }
+        .field-label {
+            display: flex; align-items: center; gap: 0.45rem;
+            font-size: 0.75rem; font-weight: 800; color: var(--muted);
+            letter-spacing: 0.06em;
+        }
+        .field-label i { color: var(--teal); font-size: 0.7rem; }
+        .field-input {
+            background: var(--off-white); border: 1.5px solid var(--border);
+            border-radius: 10px; padding: 0.65rem 0.9rem;
+            font-family: 'Tajawal', sans-serif; font-size: 0.97rem;
+            font-weight: 600; color: var(--text);
+            outline: none; transition: all 0.2s; width: 100%; text-align: right;
+        }
+        .field-input:focus {
+            border-color: var(--teal); background: var(--white);
+            box-shadow: 0 0 0 4px rgba(14,116,144,0.08);
+        }
+        .field-input::placeholder { color: #adb5c7; font-weight: 400; }
+        textarea.field-input { min-height: 155px; resize: vertical; line-height: 1.85; }
+
+        .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+        @media (max-width: 640px) { .two-cols { grid-template-columns: 1fr; } }
+
+        .section-label {
+            font-size: 0.9rem; font-weight: 800; color: var(--navy);
+            margin-bottom: 0.55rem;
+            display: flex; align-items: center; gap: 0.45rem;
+        }
+        .section-label .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal), var(--gold));
+        }
+
+        /* ===== رفع الصور ===== */
+        .upload-zone {
+            border: 2px dashed rgba(14,116,144,0.4);
+            border-radius: 13px; padding: 2rem;
+            text-align: center; cursor: pointer; transition: all 0.3s;
+            background: linear-gradient(135deg, rgba(14,116,144,0.03), rgba(201,168,76,0.03));
+            margin-bottom: 1.2rem;
+        }
+        .upload-zone:hover { border-color: var(--teal); background: rgba(14,116,144,0.05); transform: translateY(-2px); }
+        .upload-icon {
+            width: 58px; height: 58px;
+            background: linear-gradient(135deg, var(--teal), #0891b2);
+            border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            margin-bottom: 0.8rem;
+            box-shadow: 0 8px 20px rgba(14,116,144,0.25);
+        }
+        .upload-icon i { font-size: 1.5rem; color: white; }
+        .upload-zone h3 { font-size: 0.95rem; font-weight: 700; color: var(--navy); margin-bottom: 0.25rem; }
+        .upload-zone p  { font-size: 0.8rem; color: var(--muted); }
+
+        .images-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.9rem;
+        }
+        .image-slot {
+            aspect-ratio: 4/3; border-radius: 11px; overflow: hidden;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            border: 1.5px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .image-slot i   { font-size: 1.8rem; color: #cbd5e1; }
+        .image-slot img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* ===== التذييل ===== */
+        .footer {
+            margin-top: 2.2rem;
+            background: linear-gradient(135deg, var(--deep) 0%, var(--navy) 60%, #0f3460 100%);
+            border-radius: 18px; padding: 2rem 2rem 1.8rem;
+            text-align: center;
+            box-shadow: 0 16px 48px var(--shadow);
+            position: relative; overflow: hidden;
+        }
+        .footer::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--gold), var(--teal-light), var(--gold));
+        }
+        .footer-designer {
+            font-family: 'Amiri', serif; font-size: 1.45rem;
+            color: var(--gold-light); font-weight: 700;
+            text-shadow: 0 0 20px rgba(201,168,76,0.3);
+            margin-bottom: 0.4rem;
+        }
+        .footer-sep {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            color: rgba(255,255,255,0.25); font-size: 0.7rem; margin-bottom: 0.6rem;
+        }
+        .footer-sep::before, .footer-sep::after {
+            content: ''; display: block; width: 36px; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(201,168,76,0.35));
+        }
+        .footer-sep::after { transform: scaleX(-1); }
+        .footer p { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 0.5rem; }
+        .footer a {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            color: var(--teal-light); text-decoration: none; font-size: 0.8rem;
+            font-weight: 600; background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(34,211,238,0.2);
+            padding: 0.35rem 1.1rem; border-radius: 20px; transition: 0.3s; direction: ltr;
+        }
+        .footer a:hover { background: rgba(34,211,238,0.12); color: white; }
+
+        /* ============================================================
+           إعدادات الطباعة — A4 Portrait صفحة واحدة محكمة
+        ============================================================ */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 7mm 8mm 7mm 8mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            html, body {
+                background: white !important;
+                overflow: hidden;
+            }
+
+            /* إخفاء عناصر الشاشة */
+            body::before        { display: none !important; }
+            .toolbar            { display: none !important; }
+            .tabs               { display: none !important; }
+            .footer             { display: none !important; }
+            .upload-zone        { display: none !important; }
+
+            /* الحاوية */
+            .container {
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            /* الترويسة */
+            .header {
+                border-radius: 8px !important;
+                box-shadow: none !important;
+                margin-bottom: 5pt !important;
+                page-break-inside: avoid !important;
+            }
+            .header::before, .header::after { display: none !important; }
+            .header-bar {
+                height: 3px !important;
+                animation: none !important;
+                background: linear-gradient(90deg, #0e7490, #c9a84c, #22d3ee) !important;
+            }
+            .header-body {
+                padding: 8pt 14pt 7pt !important;
+            }
+            .moe-emblem { width: 44px !important; height: 44px !important; margin-bottom: 5pt !important; }
+            .moe-emblem i { font-size: 1.15rem !important; }
+            .header h1 { font-size: 14pt !important; margin-bottom: 2pt !important; }
+            .header-subtitle { font-size: 7pt !important; margin-bottom: 7pt !important; }
+            .school-wrap { padding: 3pt 12pt !important; }
+            .school-input { font-size: 10pt !important; width: 200px !important; }
+
+            /* التبويبات: إظهار كل المحتوى */
+            .tab-content {
+                display: block !important;
+                animation: none !important;
+                margin-bottom: 4pt !important;
+            }
+
+            /* البطاقات */
+            .card {
+                border-radius: 7px !important;
+                padding: 8pt 10pt !important;
+                box-shadow: none !important;
+                border: 1px solid #d1d9e0 !important;
+                margin-bottom: 4pt !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .card::before { height: 2px !important; }
+
+            /* الشبكة */
+            .fields-grid {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 5pt !important;
+            }
+
+            /* الحقول */
+            .field-label { font-size: 6.5pt !important; margin-bottom: 2pt !important; }
+            .field-input {
+                font-size: 8.5pt !important;
+                padding: 4pt 6pt !important;
+                border-radius: 5px !important;
+                border: 1px solid #ccd4dc !important;
+                background: #fafbfc !important;
+            }
+            textarea.field-input {
+                min-height: 55pt !important;
+                max-height: 60pt !important;
+                overflow: hidden !important;
+                resize: none !important;
+            }
+
+            /* العمودان */
+            .two-cols {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 6pt !important;
+            }
+            .section-label { font-size: 8pt !important; margin-bottom: 3pt !important; }
+            .section-label .dot { width: 6px !important; height: 6px !important; }
+
+            /* الصور */
+            .images-grid {
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 4pt !important;
+            }
+            .image-slot {
+                aspect-ratio: 4/3 !important;
+                border-radius: 5px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- الترويسة -->
+    <header class="header">
+        <div class="header-bar"></div>
+        <div class="header-body">
+            <div class="moe-emblem"><i class="fas fa-graduation-cap"></i></div>
+            <h1>استمارة تقارير البرامج المدرسية</h1>
+            <div class="header-subtitle">وزارة التعليم — المملكة العربية السعودية</div>
+            <div class="school-wrap">
+                <i class="fas fa-school"></i>
+                <input type="text" class="school-input" id="schoolName" placeholder="أدخل اسم المدرسة...">
+            </div>
+        </div>
+    </header>
+
+    <!-- شريط الأدوات -->
+    <div class="toolbar">
+        <button class="tool-btn" onclick="runAI()" id="aiBtn">
+            <div class="tool-icon icon-ai"><i class="fas fa-wand-magic-sparkles"></i></div>
+            <span id="aiBtnLabel">توليد ذكي</span>
+        </button>
+        <button class="tool-btn" onclick="window.print()">
+            <div class="tool-icon icon-pdf"><i class="fas fa-file-pdf"></i></div>
+            <span>حفظ PDF</span>
+        </button>
+        <button class="tool-btn" onclick="window.print()">
+            <div class="tool-icon icon-print"><i class="fas fa-print"></i></div>
+            <span>طباعة</span>
+        </button>
+        <button class="tool-btn" onclick="clearForm()">
+            <div class="tool-icon icon-clear"><i class="fas fa-rotate-left"></i></div>
+            <span>مسح</span>
+        </button>
+    </div>
+
+    <!-- التبويبات -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('tab1', this)">
+            <i class="fas fa-id-card"></i> بطاقة البرنامج
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab2', this)">
+            <i class="fas fa-list-check"></i> الأهداف والخطوات
+        </button>
+        <button class="tab-btn" onclick="switchTab('tab3', this)">
+            <i class="fas fa-images"></i> الشواهد
+        </button>
+    </div>
+
+    <!-- تبويب 1: بطاقة البرنامج -->
+    <div id="tab1" class="tab-content active">
+        <div class="card">
+            <div class="fields-grid">
+                <div class="field-group">
+                    <label class="field-label"><i class="fas fa-star"></i> اسم البرنامج</label>
+                    <input type="text" id="programName" class="field-input" placeholder="مثال: اليوم العالمي للغة العربية">
+                </div>
+                <div class="field-group">
+                    <label class="field-label"><i class="fas fa-tag"></i> مجال البرنامج</label>
+                    <input type="text" id="programField" class="field-input" placeholder="مثال: النشاط الثقافي">
+                </div>
+                <div class="field-group">
+                    <label class="field-label"><i class="fas fa-calendar-day"></i> تاريخ التنفيذ</label>
+                    <input type="date" class="field-input" id="progDate">
+                </div>
+                <div class="field-group">
+                    <label class="field-label"><i class="fas fa-user-tie"></i> المنفذ / المنفذون</label>
+                    <input type="text" id="progExec" class="field-input" placeholder="أسماء المعلمين أو الإداريين">
+                </div>
+                <div class="field-group">
+                    <label class="field-label"><i class="fas fa-users"></i> المستفيدون</label>
+                    <input type="text" id="progBene" class="field-input" placeholder="مثال: جميع الطلاب">
+                </div>
+                <div class="field-group">
+                    <label class="field-label"><i class="fas fa-hashtag"></i> عدد المستفيدين</label>
+                    <input type="text" id="progCount" class="field-input" placeholder="مثال: أكثر من 70 طالبًا">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تبويب 2: الأهداف والخطوات -->
+    <div id="tab2" class="tab-content">
+        <div class="card">
+            <div class="two-cols">
+                <div>
+                    <div class="section-label"><span class="dot"></span> الأهداف</div>
+                    <textarea id="goalsArea" class="field-input" placeholder="1. الهدف الأول...&#10;2. الهدف الثاني...&#10;3. الهدف الثالث..."></textarea>
+                </div>
+                <div>
+                    <div class="section-label"><span class="dot"></span> خطوات التنفيذ</div>
+                    <textarea id="stepsArea" class="field-input" placeholder="1. الخطوة الأولى...&#10;2. الخطوة الثانية...&#10;3. الخطوة الثالثة..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- تبويب 3: الشواهد -->
+    <div id="tab3" class="tab-content">
+        <div class="card">
+            <div class="upload-zone" onclick="document.getElementById('imgInput').click()">
+                <div class="upload-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                <h3>اضغط لرفع صور الشواهد</h3>
+                <p>يُفضَّل رفع 4 صور لتوثيق الفعالية</p>
+                <input type="file" id="imgInput" multiple accept="image/*" style="display:none" onchange="loadImages()">
+            </div>
+            <div class="images-grid" id="imgGrid">
+                <div class="image-slot"><i class="fas fa-image"></i></div>
+                <div class="image-slot"><i class="fas fa-image"></i></div>
+                <div class="image-slot"><i class="fas fa-image"></i></div>
+                <div class="image-slot"><i class="fas fa-image"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- التذييل -->
+    <footer class="footer">
+        <div class="footer-designer">✦ تصميم د/ فواز ✦</div>
+    </footer>
+
+</div>
+
+<script>
+    function switchTab(id, btn) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        btn.classList.add('active');
+    }
+
+    function runAI() {
+        const name  = document.getElementById('programName').value.trim();
+        const field = document.getElementById('programField').value.trim();
+        const btn   = document.getElementById('aiBtn');
+        const label = document.getElementById('aiBtnLabel');
+        if (!name) {
+            alert('يرجى إدخال اسم البرنامج أولاً في تبويب "بطاقة البرنامج".');
+            document.querySelectorAll('.tab-btn')[0].click();
+            return;
+        }
+        btn.classList.add('generating');
+        label.textContent = 'جارٍ التوليد...';
+        setTimeout(() => {
+            let goals = '', steps = '';
+            if (/لغة|قراءة|أدب|شعر|كتابة/.test(name)) {
+                goals = '1. إبراز مكانة اللغة العربية وأهميتها.\n2. تشجيع الطلاب على القراءة والتعبير بالفصحى.\n3. اكتشاف المواهب الأدبية والشعرية.\n4. تعزيز الهوية الثقافية والحضارية.';
+                steps = '1. تشكيل لجنة تنظيمية من معلمي اللغة العربية.\n2. الإعلان عبر الإذاعة المدرسية.\n3. إقامة مسابقات أدبية وشعرية.\n4. معرض للأعمال الفنية والخطية.\n5. تكريم المشاركين وتوزيع الجوائز.';
+            } else if (/صحة|رياضة|بدني|مشي|غذاء/.test(name)) {
+                goals = '1. رفع مستوى الوعي الصحي والبدني لدى الطلاب.\n2. تعزيز العادات الغذائية والحياتية السليمة.\n3. تحفيز ممارسة النشاط الحركي اليومي.';
+                steps = '1. اجتماع للجنة الصحية ومعلمي التربية البدنية.\n2. برنامج إذاعي توعوي وتثقيفي.\n3. مسيرة مشي أو دوري رياضي داخل الفناء.\n4. توزيع مطويات صحية على المستفيدين.';
+            } else {
+                goals = `1. تحقيق أهداف ${name} وفق الخطة المدرسية.\n2. تنمية مهارات الطلاب في ${field || 'هذا المجال'}.\n3. تعزيز روح الفريق والمشاركة الإيجابية.\n4. اكتشاف المواهب وتعزيز الثقة بالنفس.`;
+                steps = `1. اجتماعات تحضيرية لفريق العمل وتوزيع المهام.\n2. الإعلان عن ${name} وتحفيز الطلاب للمشاركة.\n3. تنفيذ ورش عمل وعروض مرتبطة بالبرنامج.\n4. إقامة الفعاليات المصاحبة.\n5. التقييم الختامي ورفع التقرير والشواهد.`;
+            }
+            document.getElementById('goalsArea').value = goals;
+            document.getElementById('stepsArea').value = steps;
+            btn.classList.remove('generating');
+            label.textContent = 'توليد ذكي';
+            document.querySelectorAll('.tab-btn')[1].click();
+        }, 1500);
+    }
+
+    function loadImages() {
+        const input = document.getElementById('imgInput');
+        const grid  = document.getElementById('imgGrid');
+        if (!input.files.length) return;
+        grid.innerHTML = '';
+        const files = Array.from(input.files).slice(0, 4);
+        files.forEach(file => {
+            const r = new FileReader();
+            r.onload = e => {
+                const slot = document.createElement('div');
+                slot.className = 'image-slot';
+                slot.innerHTML = `<img src="${e.target.result}" alt="شاهد">`;
+                grid.appendChild(slot);
+            };
+            r.readAsDataURL(file);
+        });
+        for (let i = files.length; i < 4; i++)
+            grid.innerHTML += `<div class="image-slot"><i class="fas fa-image"></i></div>`;
+    }
+
+    function clearForm() {
+        if (!confirm('هل أنت متأكد من مسح جميع البيانات؟')) return;
+        ['programName','programField','progDate','progExec','progBene','progCount','goalsArea','stepsArea','schoolName']
+            .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        document.getElementById('imgGrid').innerHTML = `
+            <div class="image-slot"><i class="fas fa-image"></i></div>
+            <div class="image-slot"><i class="fas fa-image"></i></div>
+            <div class="image-slot"><i class="fas fa-image"></i></div>
+            <div class="image-slot"><i class="fas fa-image"></i></div>`;
+    }
+</script>
+</body>
+</html>

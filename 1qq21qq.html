@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة Super Goal - مسابقة اللغة الإنجليزية</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&family=Poppins:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ===== ROOT VARS ===== */
+:root {
+  --gold:#E8A020; --gold2:#FFD166; --gold3:#FFF0C0;
+  --teal:#00C896; --teal2:#00F5BB;
+  --bg:#07101C; --bg2:#0C1A2E; --bg3:#112240;
+  --card:#0E1E35; --card2:#132540;
+  --border:#1E3A5A; --border2:#2A5070;
+  --text:#EEF6FF; --muted:#6B91B8;
+  --red:#F0416A; --green:#00C896;
+  --blue:#1488CC; --purple:#8B5CF6;
+  --shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ===== ANIMATED BG ===== */
+.bg-layer{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 800px 600px at 10% 10%, #0d2e5020 0%, transparent 70%),
+    radial-gradient(ellipse 600px 500px at 90% 90%, #0d3a2020 0%, transparent 70%),
+    radial-gradient(ellipse 400px 300px at 50% 50%, #1a2e5010 0%, transparent 70%);
+}
+.stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.star{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,0.7);
+  animation:twinkle linear infinite;
+}
+@keyframes twinkle{0%,100%{opacity:0.1;transform:scale(1);}50%{opacity:0.8;transform:scale(1.3);}}
+
+/* ===== HERO BANNER ===== */
+.hero{
+  position:relative;z-index:10;
+  padding:0;
+  overflow:hidden;
+}
+.hero-inner{
+  background:linear-gradient(160deg, #0C1A2E 0%, #0E2A45 40%, #091830 100%);
+  border-bottom:1px solid var(--border2);
+  padding:36px 24px 28px;
+  text-align:center;
+  position:relative;
+}
+.hero-inner::before{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(232,160,32,0.05) 0%, transparent 100%);
+  pointer-events:none;
+}
+
+/* TOP CREDIT BANNER */
+.top-credit{
+  background:linear-gradient(90deg, transparent, rgba(232,160,32,0.12), transparent);
+  border:1px solid rgba(232,160,32,0.3);
+  border-radius:12px;
+  padding:10px 20px;
+  margin:0 auto 22px;
+  max-width:680px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  animation:glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse{
+  0%,100%{box-shadow:0 0 0 rgba(232,160,32,0);}
+  50%{box-shadow:0 0 24px rgba(232,160,32,0.2);}
+}
+.top-credit .tc-icon{font-size:1.5rem;}
+.top-credit p{
+  font-size:1.05rem;
+  font-weight:900;
+  color:var(--gold2);
+  line-height:1.4;
+  letter-spacing:0.3px;
+}
+.top-credit p span{color:#fff;}
+
+.hero-logo{
+  display:inline-flex;align-items:center;gap:14px;
+  margin-bottom:12px;
+}
+.logo-icon{
+  width:56px;height:56px;
+  background:linear-gradient(135deg,var(--gold),#b87010);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;
+  box-shadow:0 8px 24px rgba(232,160,32,0.35);
+}
+.logo-text{text-align:right;}
+.logo-text h1{
+  font-family:'Poppins',sans-serif;
+  font-size:1.8rem;font-weight:900;
+  background:linear-gradient(90deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:1px;
+}
+.logo-text p{color:var(--muted);font-size:0.82rem;margin-top:1px;}
+
+.hero-sub{color:var(--muted);font-size:0.87rem;margin-bottom:16px;}
+.hero-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+.pill{
+  background:rgba(20,136,204,0.12);
+  border:1px solid rgba(20,136,204,0.3);
+  color:#7EC8E8;
+  padding:5px 16px;border-radius:20px;
+  font-size:0.75rem;font-weight:700;
+}
+.pill:nth-child(2){background:rgba(139,92,246,0.12);border-color:rgba(139,92,246,0.3);color:#C4A8FF;}
+.pill:nth-child(3){background:rgba(0,200,150,0.12);border-color:rgba(0,200,150,0.3);color:var(--teal);}
+
+/* ===== SETTINGS CARD ===== */
+.wrap{max-width:860px;margin:0 auto;padding:28px 18px 80px;position:relative;z-index:5;}
+
+.glass-card{
+  background:rgba(14,30,53,0.85);
+  backdrop-filter:blur(20px);
+  border:1px solid var(--border2);
+  border-radius:24px;
+  padding:32px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+.glass-card::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+
+.section-head{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:24px;
+}
+.section-head .sh-icon{
+  width:44px;height:44px;
+  background:linear-gradient(135deg,var(--gold),#b87010);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;
+  flex-shrink:0;
+  box-shadow:0 4px 14px rgba(232,160,32,0.3);
+}
+.section-head h2{font-size:1.15rem;font-weight:900;color:var(--gold2);}
+.section-head p{font-size:0.78rem;color:var(--muted);margin-top:2px;}
+
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;}
+.sg label{
+  display:block;font-size:0.75rem;font-weight:700;
+  color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;
+}
+.sg select{
+  width:100%;
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  color:var(--text);
+  border-radius:12px;
+  padding:11px 16px;
+  font-family:'Tajawal',sans-serif;font-size:0.9rem;
+  outline:none;cursor:pointer;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B91B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:left 14px center;
+  padding-left:36px;
+}
+.sg select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(232,160,32,0.12);}
+
+.btn-start{
+  display:block;width:100%;margin-top:26px;
+  padding:18px;
+  background:linear-gradient(135deg,#F0B030 0%,#C07010 100%);
+  color:#07101C;
+  border:none;border-radius:16px;
+  font-family:'Tajawal',sans-serif;font-size:1.15rem;font-weight:900;
+  cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.2s;
+  box-shadow:0 6px 28px rgba(232,160,32,0.4);
+  letter-spacing:0.5px;
+  position:relative;overflow:hidden;
+}
+.btn-start::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.18) 0%,transparent 60%);
+  pointer-events:none;
+}
+.btn-start:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(232,160,32,0.55);}
+.btn-start:active{transform:translateY(0);}
+
+/* ===== SCORE BAR ===== */
+.scorebar{
+  display:none;
+  position:sticky;top:0;z-index:100;
+  background:rgba(7,16,28,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border2);
+  padding:12px 22px;
+  align-items:center;justify-content:space-between;gap:14px;
+  flex-wrap:wrap;
+}
+.scorebar.on{display:flex;}
+.sb-item{text-align:center;min-width:52px;}
+.sb-val{
+  font-family:'Poppins',sans-serif;
+  font-size:1.5rem;font-weight:900;color:var(--gold);
+  line-height:1;
+}
+.sb-lbl{font-size:0.68rem;color:var(--muted);margin-top:2px;}
+.sb-prog{flex:1;min-width:120px;}
+.sb-prog-txt{font-size:0.72rem;color:var(--muted);text-align:center;margin-bottom:5px;}
+.prog-track{height:8px;background:var(--bg3);border-radius:8px;overflow:hidden;}
+.prog-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--teal),var(--gold));
+  border-radius:8px;
+  transition:width 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.sb-tag{
+  padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;
+}
+.sb-tag.green{background:rgba(0,200,150,0.15);color:var(--teal);border:1px solid rgba(0,200,150,0.3);}
+.sb-tag.red{background:rgba(240,65,106,0.15);color:var(--red);border:1px solid rgba(240,65,106,0.3);}
+
+/* ===== QUIZ AREA ===== */
+#quiz-wrap{max-width:860px;margin:0 auto;padding:20px 18px 80px;position:relative;z-index:5;display:none;}
+
+/* Section divider */
+.sec-divider{
+  display:flex;align-items:center;gap:16px;
+  margin:36px 0 18px;
+}
+.sec-divider .sd-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border2));}
+.sec-divider .sd-line.right{background:linear-gradient(270deg,transparent,var(--border2));}
+.sec-badge{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  border-radius:14px;
+  padding:10px 22px;
+  font-size:0.88rem;font-weight:700;
+  white-space:nowrap;
+  box-shadow:0 4px 20px rgba(20,136,204,0.3);
+  display:flex;align-items:center;gap:8px;
+}
+
+/* Question card */
+.q-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:26px 24px;
+  margin-bottom:18px;
+  position:relative;
+  overflow:hidden;
+  animation:slideUp 0.4s ease both;
+  transition:border-color 0.3s;
+}
+.q-card::before{
+  content:'';
+  position:absolute;top:0;left:0;width:4px;height:100%;
+  background:linear-gradient(180deg,var(--blue),var(--purple));
+  border-radius:4px 0 0 4px;
+}
+.q-card:hover{border-color:var(--border2);}
+@keyframes slideUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+
+.q-meta{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.q-num-badge{
+  background:linear-gradient(135deg,var(--blue),var(--purple));
+  color:#fff;font-size:0.72rem;font-weight:800;
+  padding:4px 12px;border-radius:20px;
+  font-family:'Poppins',sans-serif;
+}
+.q-section-tag{
+  font-size:0.68rem;color:var(--muted);
+  background:var(--bg3);border:1px solid var(--border);
+  padding:3px 10px;border-radius:10px;
+}
+.q-status{margin-right:auto;}
+.q-status-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--border2);
+  display:inline-block;
+  transition:background 0.3s;
+}
+.q-status-dot.correct{background:var(--green);}
+.q-status-dot.wrong{background:var(--red);}
+
+.q-text{
+  font-size:1rem;font-weight:700;
+  line-height:1.7;color:var(--text);
+  direction:ltr;text-align:left;
+  margin-bottom:20px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+
+/* Options grid */
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:480px){.opts-grid{grid-template-columns:1fr;}}
+
+.opt{
+  background:var(--bg3);
+  border:2px solid var(--border);
+  border-radius:14px;
+  padding:13px 16px;
+  display:flex;align-items:center;gap:11px;
+  cursor:pointer;
+  transition:all 0.18s;
+  font-family:'Tajawal',sans-serif;
+  font-size:0.87rem;color:var(--text);
+  direction:ltr;text-align:left;
+  position:relative;overflow:hidden;
+}
+.opt::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.03) 0%,transparent 60%);
+  pointer-events:none;
+}
+.opt:hover:not(:disabled){
+  border-color:var(--gold2);
+  background:rgba(232,160,32,0.07);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(232,160,32,0.12);
+}
+.opt:disabled{cursor:default;}
+.opt-letter{
+  width:30px;height:30px;flex-shrink:0;
+  background:var(--border2);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:0.78rem;
+  font-family:'Poppins',sans-serif;
+  transition:background 0.2s,color 0.2s;
+  color:var(--muted);
+}
+.opt-text{font-size:0.87rem;line-height:1.4;}
+
+/* States */
+.opt.correct{border-color:var(--green);background:rgba(0,200,150,0.08);}
+.opt.correct .opt-letter{background:var(--green);color:#000;}
+.opt.wrong{border-color:var(--red);background:rgba(240,65,106,0.08);}
+.opt.wrong .opt-letter{background:var(--red);color:#fff;}
+.opt.reveal{border-color:var(--green);background:rgba(0,200,150,0.06);}
+.opt.reveal .opt-letter{background:var(--green);color:#000;}
+
+/* Feedback */
+.feedback{
+  display:none;margin-top:16px;
+  border-radius:14px;padding:14px 18px;
+  direction:rtl;text-align:right;
+  font-size:0.9rem;font-weight:700;
+  animation:popBounce 0.35s cubic-bezier(0.34,1.56,0.64,1) both;
+  align-items:flex-start;gap:10px;
+}
+.feedback.show{display:flex;}
+@keyframes popBounce{from{opacity:0;transform:scale(0.8);}to{opacity:1;transform:scale(1);}}
+.feedback.ok{background:rgba(0,200,150,0.1);border:1px solid rgba(0,200,150,0.3);color:var(--teal2);}
+.feedback.no{background:rgba(240,65,106,0.1);border:1px solid rgba(240,65,106,0.3);color:#FF7099;}
+.fb-emoji{font-size:1.4rem;flex-shrink:0;line-height:1.4;}
+.fb-content{display:flex;flex-direction:column;gap:8px;line-height:1.65;}
+.fb-main{font-size:0.92rem;}
+.rule-box{
+  background:rgba(255,255,255,0.055);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px;
+  padding:10px 12px;
+  color:#EEF6FF;
+  font-weight:600;
+}
+.rule-box b{color:var(--gold2);}
+.rule-box .correct-answer{color:var(--teal2);font-weight:900;direction:ltr;unicode-bidi:plaintext;display:inline-block;}
+
+/* ===== RESULTS ===== */
+#result-wrap{
+  display:none;
+  max-width:680px;margin:40px auto;
+  padding:0 18px 80px;
+  position:relative;z-index:5;
+}
+.result-hero{
+  background:var(--card);
+  border:1px solid var(--border2);
+  border-radius:28px;
+  padding:48px 36px;
+  text-align:center;
+  position:relative;overflow:hidden;
+  box-shadow:var(--shadow);
+}
+.result-hero::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--blue),var(--gold),var(--teal));
+}
+.result-glow{
+  width:140px;height:140px;margin:0 auto 24px;
+  background:linear-gradient(135deg,var(--bg3),var(--card2));
+  border:3px solid var(--gold);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:3.5rem;
+  box-shadow:0 0 60px rgba(232,160,32,0.25),0 0 0 8px rgba(232,160,32,0.07);
+  animation:floatBob 2.5s ease-in-out infinite;
+}
+@keyframes floatBob{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.result-pct{
+  font-family:'Poppins',sans-serif;font-size:4.5rem;font-weight:900;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  line-height:1;margin-bottom:8px;
+}
+.result-grade{font-size:1.3rem;font-weight:900;color:var(--text);margin-bottom:6px;}
+.result-msg{color:var(--muted);font-size:0.9rem;margin-bottom:32px;}
+.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px;}
+.rg-box{
+  background:var(--bg3);border-radius:16px;padding:20px 10px;
+  border:1px solid var(--border);
+}
+.rg-box .rv{font-family:'Poppins',sans-serif;font-size:2rem;font-weight:900;line-height:1;}
+.rg-box .rl{font-size:0.72rem;color:var(--muted);margin-top:6px;}
+.rg-box.g .rv{color:var(--green);}
+.rg-box.r .rv{color:var(--red);}
+.rg-box.o .rv{color:var(--gold);}
+.btn-retry{
+  background:linear-gradient(135deg,#F0B030,#C07010);
+  color:#07101C;
+  border:none;border-radius:14px;
+  padding:15px 44px;
+  font-family:'Tajawal',sans-serif;font-size:1rem;font-weight:900;
+  cursor:pointer;
+  transition:transform 0.15s,box-shadow 0.2s;
+  box-shadow:0 6px 24px rgba(232,160,32,0.35);
+}
+.btn-retry:hover{transform:scale(1.04);}
+
+/* Submit zone */
+.submit-zone{
+  text-align:center;padding:30px 0 10px;
+}
+.submit-zone button{max-width:360px;}
+
+/* ===== FOOTER ===== */
+.footer{
+  text-align:center;
+  padding:24px 16px;
+  color:var(--muted);font-size:0.8rem;
+  border-top:1px solid var(--border);
+  position:relative;z-index:5;
+  background:var(--bg);
+}
+.footer a{color:var(--gold);text-decoration:none;font-weight:700;}
+.footer a:hover{text-decoration:underline;}
+
+/* ===== CONFETTI ===== */
+.cf{
+  position:fixed;top:-14px;
+  animation:cfFall linear forwards;
+  z-index:9999;pointer-events:none;
+}
+@keyframes cfFall{
+  0%{transform:translateY(0) rotateZ(0);opacity:1;}
+  100%{transform:translateY(105vh) rotateZ(800deg);opacity:0;}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-layer"></div>
+<div class="stars" id="stars"></div>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="hero-inner">
+
+    <!-- TOP CREDIT BANNER -->
+    <div class="top-credit">
+      <span class="tc-icon">🌟</span>
+      <p>الشكر موصول للمعلم المبدع <span>الأستاذ / راشد السلمي</span> على هذه الاختبارات المتميزة</p>
+      <span class="tc-icon">🌟</span>
+    </div>
+
+    <div class="hero-logo">
+      <div class="logo-icon">🏆</div>
+      <div class="logo-text">
+        <h1>Super Goal Quiz</h1>
+        <p>منصة مسابقات اللغة الإنجليزية التفاعلية</p>
+      </div>
+    </div>
+
+    <p class="hero-sub">الفصل الثالث — الاختبار النهائي 1444 | الدور الأول</p>
+
+    <div class="hero-pills">
+      <span class="pill">📗 Super Goal 1 — الأول متوسط</span>
+      <span class="pill">📘 Super Goal 2 — الثاني متوسط</span>
+      <span class="pill">📕 Super Goal 3 — الثالث متوسط</span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCORE BAR ===== -->
+<div class="scorebar" id="scorebar">
+  <div class="sb-item">
+    <div class="sb-val" id="sb-pts">0</div>
+    <div class="sb-lbl">النقاط</div>
+  </div>
+  <div class="sb-prog">
+    <div class="sb-prog-txt" id="sb-txt">0 / 0</div>
+    <div class="prog-track"><div class="prog-fill" id="sb-fill" style="width:0%"></div></div>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <span class="sb-tag green" id="sb-ok">✓ 0</span>
+    <span class="sb-tag red" id="sb-no">✗ 0</span>
+  </div>
+</div>
+
+<!-- ===== SETTINGS ===== -->
+<div class="wrap" id="settings-wrap">
+  <div class="glass-card">
+    <div class="section-head">
+      <div class="sh-icon">⚙️</div>
+      <div>
+        <h2>إعدادات المسابقة</h2>
+        <p>اختر الكتاب والقسم وعدد الأسئلة</p>
+      </div>
+    </div>
+
+    <div class="settings-grid">
+      <div class="sg">
+        <label>📚 الكتاب</label>
+        <select id="sel-book">
+          <option value="all">جميع الكتب الثلاثة</option>
+          <option value="1">Super Goal 1 — الأول متوسط</option>
+          <option value="2">Super Goal 2 — الثاني متوسط</option>
+          <option value="3">Super Goal 3 — الثالث متوسط</option>
+        </select>
+      </div>
+      <div class="sg">
+        <label>📂 القسم</label>
+        <select id="sel-section">
+          <option value="all">جميع الأقسام</option>
+          <option value="comprehension">Comprehension — الفهم القرائي</option>
+          <option value="grammar">Grammar — القواعد</option>
+          <option value="vocabulary">Vocabulary — المفردات</option>
+          <option value="orthography">Orthography — الإملاء</option>
+        </select>
+      </div>
+      <div class="sg">
+        <label>🔢 عدد الأسئلة</label>
+        <select id="sel-count">
+          <option value="10">10 أسئلة</option>
+          <option value="20" selected>20 سؤال</option>
+          <option value="30">30 سؤال</option>
+          <option value="all">جميع الأسئلة</option>
+        </select>
+      </div>
+      <div class="sg">
+        <label>🔀 الترتيب</label>
+        <select id="sel-shuffle">
+          <option value="1">عشوائي مختلط</option>
+          <option value="0">بالترتيب الأصلي</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-start" onclick="startQuiz()">
+      🚀 &nbsp; ابدأ المسابقة الآن
+    </button>
+
+    <!-- FOOTER CREDIT inside settings -->
+    <div style="margin-top:26px;padding-top:20px;border-top:1px solid var(--border);text-align:center;color:var(--muted);font-size:0.8rem;line-height:1.8;">
+      <div style="font-size:0.95rem;font-weight:900;color:var(--gold2);margin-bottom:4px;">تصميم د / فواز</div>
+      تفضل للمزيد هنا &nbsp;
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--gold);font-weight:700;text-decoration:none;">
+        https://t.me/TAqhjT3MFVE1Yzk0
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ AREA ===== -->
+<div id="quiz-wrap"></div>
+
+<!-- ===== RESULT ===== -->
+<div id="result-wrap"></div>
+
+<!-- ===== FOOTER ===== -->
+<div class="footer">
+  تصميم <strong style="color:var(--gold);">د / فواز</strong> &nbsp;|&nbsp;
+  تفضل للمزيد هنا &nbsp;
+  <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+</div>
+
+<script>
+/* ===== STARS ===== */
+(()=>{
+  const s=document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const d=document.createElement('div');
+    d.className='star';
+    const sz=Math.random()*2.5+0.5;
+    d.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;`;
+    s.appendChild(d);
+  }
+})();
+
+/* ===== DATA ===== */
+const QS=[
+// SG1 Comprehension
+{b:1,s:'comprehension',q:"The text is about Ali's ___.",o:['Saturdays','Sundays','weekends','Mondays'],a:0},
+{b:1,s:'comprehension',q:'Ali _____ wakes up late on Saturdays.',o:['never','sometimes','usually','always'],a:3},
+{b:1,s:'comprehension',q:'Ali usually eats a big _____ on Saturdays.',o:['food','breakfast','lunch','dinner'],a:1},
+{b:1,s:'comprehension',q:'Ali sometimes goes for a long walk with his brother.',o:['True ✓','False ✗'],a:0},
+{b:1,s:'comprehension',q:'Ali usually watches a football game on Saturday mornings.',o:['True ✓','False ✗'],a:1},
+{b:1,s:'comprehension',q:'Ali goes to bed at 10 P.M.',o:['True ✓','False ✗'],a:0},
+// SG1 Grammar
+{b:1,s:'grammar',q:"He can't surf, but he _____ water-ski.",o:["can't",'can','not can',"don't can"],a:1},
+{b:1,s:'grammar',q:'Aisha: Do they like to relax on the beach? Lucy: Yes, _____.',o:['they do','do they','not they',"they don't"],a:0},
+{b:1,s:'grammar',q:'I _____ play volleyball, but I can play tennis.',o:['can','am can',"can't","am can't"],a:2},
+{b:1,s:'grammar',q:"I'm not going to buy jeans. ____________ pants.",o:["I'm going to buy","I buying","I'm going buying","I going to buy"],a:0},
+{b:1,s:'grammar',q:"Susan ____________ a dress. She's going to wear a skirt and blouse.",o:["isn't wear","not wearing","isn't going to wear","isn't going to wearing"],a:2},
+{b:1,s:'grammar',q:"They ____________ suits. They're going to wear jeans.",o:["not wearing","not going to wearing","aren't going wear","aren't going to wear"],a:3},
+{b:1,s:'grammar',q:'_____ Bob to our house!',o:['We invite','Let invite',"Let's invite","Let's us invite"],a:2},
+{b:1,s:'grammar',q:'Do you _____ a film on TV tonight?',o:['want to watch','want watch','want watching','want to watching'],a:0},
+{b:1,s:'grammar',q:'You _____ the street when the light is red.',o:["mustn't cross","should cross not","must not to cross","should cross"],a:0},
+{b:1,s:'grammar',q:'My grandfather _____ a car salesman.',o:['was','were','not','be'],a:0},
+{b:1,s:'grammar',q:'Majed Ahmed Abdullah _____ in Jeddah.',o:['is born','are born','was born','were born'],a:2},
+{b:1,s:'grammar',q:'When I was a child, I _____ a good student.',o:["wasn't be",'not',"wasn't","weren't"],a:2},
+{b:1,s:'grammar',q:"We didn't go to the football game yesterday. We_____ to the museum.",o:['go','went','are','going'],a:1},
+{b:1,s:'grammar',q:"Sally didn't drink coffee. She _____ water.",o:['is drink','drinking','drink','drank'],a:3},
+// SG1 Orthography
+{b:1,s:'orthography',q:'sho…..ping and meet friends. ( v – p – r )',o:['v','p','r'],a:1},
+{b:1,s:'orthography',q:'fly to pla…..es. ( n – o – c )',o:['n','o','c'],a:2},
+{b:1,s:'orthography',q:'buy aba…..a ( y – o – r )',o:['y','o','r'],a:0},
+{b:1,s:'orthography',q:'…..old in Abha ( n – o – c )',o:['n','o','c'],a:2},
+{b:1,s:'orthography',q:'in…itation to the party ( y – v – r )',o:['y','v','r'],a:1},
+{b:1,s:'orthography',q:'ca…ds for the National Day ( r – o – c )',o:['r','o','c'],a:2},
+{b:1,s:'orthography',q:'old pa…t of Jeddah ( y – v – r )',o:['y','v','r'],a:2},
+{b:1,s:'orthography',q:'prese…tation ( o – t – n )',o:['o','t','n'],a:2},
+// SG1 Vocabulary
+{b:1,s:'vocabulary',q:'You can _____ at the pool.',o:['swim','surf','rollerblade','sail'],a:0},
+{b:1,s:'vocabulary',q:'My friends like to _____. They enjoy looking at underwater attractions.',o:['swim','sail','surf','snorkel'],a:3},
+{b:1,s:'vocabulary',q:"He's going to wear a shirt and a ____________.",o:['shoes','tie','shorts','white'],a:1},
+{b:1,s:'vocabulary',q:'Do you need to buy new ____________ to play basketball?',o:['suit','shirt','sneakers','blouses'],a:2},
+{b:1,s:'vocabulary',q:'On December 2nd, they _____ Federation of the Emirates in the UAE.',o:['parades','decorate','celebrate','share'],a:2},
+{b:1,s:'vocabulary',q:'In Saudi Arabia, people fly _____ on September 23rd.',o:['flags','streets','fireworks','celebrations'],a:0},
+{b:1,s:'vocabulary',q:'In old Riyadh, many houses were made from ____ bricks.',o:['ruins','town','mud','city'],a:2},
+{b:1,s:'vocabulary',q:'In modern Riyadh, you can see many ______.',o:['skyscrapers','walls','population','areas'],a:0},
+{b:1,s:'vocabulary',q:'Peter did his _____ yesterday. (clean clothes)',o:['closet','laundry','home','house'],a:1},
+{b:1,s:'vocabulary',q:'Todd went to the _____ and played volleyball.',o:['car race','beach','museum','zoo'],a:1},
+{b:1,s:'vocabulary',q:'Aisha: I went to a _____. I love history.',o:['restaurant','closet','mall','museum'],a:3},
+{b:1,s:'vocabulary',q:'Picture: building with treadmills.',o:['Gym','Calendar','Graduation day'],a:0},
+{b:1,s:'vocabulary',q:'Picture: page showing numbers 31, 30.',o:['Gym','Calendar','Graduation day'],a:1},
+{b:1,s:'vocabulary',q:'Picture: boy in graduation cap and gown.',o:['Gym','Calendar','Graduation day'],a:2},
+// SG2 Comprehension
+{b:2,s:'comprehension',q:'A nutrient your body needs to stay healthy is ____.',o:['grasshopper','calcium','chicken','beef'],a:1},
+{b:2,s:'comprehension',q:'Many people call shrimp, crab, and lobster ____.',o:['sea bugs','land bugs','fish','vegetables'],a:0},
+{b:2,s:'comprehension',q:'Bugs are eaten in _____ Asian countries.',o:['36','23','12','29'],a:3},
+{b:2,s:'comprehension',q:'Bugs are a healthy food to eat.',o:['True ✓','False ✗'],a:0},
+{b:2,s:'comprehension',q:'Many people around the world eat bugs every day.',o:['True ✓','False ✗'],a:0},
+{b:2,s:'comprehension',q:'Dave Gordon is a famous doctor.',o:['True ✓','False ✗'],a:1},
+// SG2 Grammar
+{b:2,s:'grammar',q:"Karl: What are you going to do tomorrow? Larry: _____",o:["I go to study.","I going to study.","I'm going to study.","I'm going studying"],a:2},
+{b:2,s:'grammar',q:'Riyadh is _______.',o:['a beautiful city','a city beautiful','a beautiful','beautiful a city'],a:0},
+{b:2,s:'grammar',q:'They _________ going to go by plane.',o:["isn't",'are','is','am'],a:1},
+{b:2,s:'grammar',q:'Jane: Will it be sunny tomorrow? Amira: No, ______.',o:["it won't","it will","won't it","will it"],a:0},
+{b:2,s:'grammar',q:"Jim: _____ on vacation? Gordon: We'll probably go in the spring.",o:['Where will you go','Where you will go','When you will go','When will you go'],a:3},
+{b:2,s:'grammar',q:'If the lake ___, the children will probably go ice-skating.',o:['frozen','freezes','freeze','will freeze'],a:1},
+{b:2,s:'grammar',q:'_____ he understand what you were talking about?',o:['Could','cans','will can','can not'],a:0},
+{b:2,s:'grammar',q:'My brother _____ play tennis now. He is in the field.',o:['will not can','can not','will can','can'],a:3},
+{b:2,s:'grammar',q:'_________ carry that for you thank you.',o:['can','let me','could','will'],a:1},
+{b:2,s:'grammar',q:'He was so surprised that he _____ speak.',o:['was almost able to',"couldn't hardly","was able just to","could hardly"],a:3},
+{b:2,s:'grammar',q:'There was so much traffic that I was _____ for work.',o:['almost late','just late','absolutely late','hardly late'],a:0},
+{b:2,s:'grammar',q:"The injured runner didn't win, but he_____ the race.",o:["wasn't able to finish","could finish","was able to finish","couldn't finish"],a:2},
+{b:2,s:'grammar',q:'I _____ Italy last year.',o:['has visited','have visited','visited','visit'],a:2},
+{b:2,s:'grammar',q:'Max: Have you ever seen snake? Tom: Yes, ____.',o:['I has','I have','I have seen','I has seen'],a:1},
+// SG2 Orthography
+{b:2,s:'orthography',q:'va…..ation ( c – o – r )',o:['c','o','r'],a:0},
+{b:2,s:'orthography',q:'Scuba di…ing ( q – o – v )',o:['q','o','v'],a:1},
+{b:2,s:'orthography',q:'c….ol weather ( v – o – r )',o:['v','o','r'],a:1},
+{b:2,s:'orthography',q:'win…er ( q – t – x )',o:['q','t','x'],a:1},
+{b:2,s:'orthography',q:'to….s (toys) ( v – o – y )',o:['v','o','y'],a:2},
+{b:2,s:'orthography',q:'p….one (phone) ( q – h – x )',o:['q','h','x'],a:1},
+{b:2,s:'orthography',q:'ele….ator ( v – o – y )',o:['v','o','y'],a:1},
+{b:2,s:'orthography',q:'Li…e (Life) ( x – o – f )',o:['x','o','f'],a:1},
+// SG2 Vocabulary
+{b:2,s:'vocabulary',q:'This quiet beach is ____.',o:['noisy','relaxing','adventurous','expensive'],a:1},
+{b:2,s:'vocabulary',q:'This hiking vacation in the mountains is ____.',o:['adventurous','luxurious','expensive','relaxing'],a:0},
+{b:2,s:'vocabulary',q:"It's _______________ today. Hold on to your hat!",o:['windy','sunny','cloudy','snows'],a:0},
+{b:2,s:'vocabulary',q:"Don't forget your sunglasses. It's very _____________.",o:['cloudy','rainy','sunny','windy'],a:2},
+{b:2,s:'vocabulary',q:'"I have no idea" means ____________.',o:["I don't know","I have no problem","He knows","I have to say"],a:0},
+{b:2,s:'vocabulary',q:'I will bring some snacks from the_________.',o:['bathroom','the roof','Kitchen','garage'],a:2},
+{b:2,s:'vocabulary',q:'I _____ when I saw the snake. I was so surprised!',o:['fired','shrieked','lightning','wounds'],a:1},
+{b:2,s:'vocabulary',q:'Did you see the storm last night? The _____ was amazing!',o:['lightning','wounds','fired','risk'],a:0},
+{b:2,s:'vocabulary',q:'A zorse is half zebra, half _________.',o:['horse','fish','Elephant','Tiger'],a:0},
+{b:2,s:'vocabulary',q:'Which of the following sports is unusual?',o:['Dennis','Football','Basketball','Hang gliding'],a:3},
+{b:2,s:'vocabulary',q:'"Definitely" means: _____________.',o:['not sure','certainty','very frightened',"You're crazy!"],a:1},
+{b:2,s:'vocabulary',q:'Picture: person with scuba gear.',o:['Scuba diving','Hospital','Desert'],a:0},
+{b:2,s:'vocabulary',q:'Picture: doctors treating a patient.',o:['Scuba diving','Hospital','Desert'],a:1},
+{b:2,s:'vocabulary',q:'Picture: sandy desert dunes.',o:['Scuba diving','Hospital','Desert'],a:2},
+// SG3 Comprehension
+{b:3,s:'comprehension',q:'_____ is one of the most beautiful cities in the world.',o:['Rome','Florence','Venice','Pompeii'],a:2},
+{b:3,s:'comprehension',q:'In Pompeii, you can learn about life in ____.',o:['79 C.E.','72 C.E.','790 C.E.','the 1700s'],a:0},
+{b:3,s:'comprehension',q:'A gondola is a ________.',o:['car','boat','bicycle','helicopter'],a:1},
+{b:3,s:'comprehension',q:'Italy is the third most popular country to visit in the world.',o:['True ✓','False ✗'],a:1},
+{b:3,s:'comprehension',q:'Florence is home to many museums.',o:['True ✓','False ✗'],a:0},
+{b:3,s:'comprehension',q:'A popular thing to do in Florence is to ride in a gondola.',o:['True ✓','False ✗'],a:1},
+// SG3 Grammar
+{b:3,s:'grammar',q:'We were sitting in the café when a thief _____ my bag!',o:['steal','stole','was stealing','stolen'],a:1},
+{b:3,s:'grammar',q:'Jack was talking on the phone _____ he was driving.',o:['that','while','where','which'],a:1},
+{b:3,s:'grammar',q:'She was cooking dinner _____ I arrived.',o:['when','while','where','which'],a:0},
+{b:3,s:'grammar',q:'I _____ at the monument when someone called my name.',o:['look','looked','am looking','was looking'],a:3},
+{b:3,s:'grammar',q:'Have you ______ washed the clothes?',o:['already','yet','just','already not'],a:0},
+{b:3,s:'grammar',q:'The salesperson was _____ pushy that I left the store.',o:['so','such','much','so much'],a:0},
+{b:3,s:'grammar',q:'He enjoys _____ in the high-tech computer field.',o:['work','worked','working','to work'],a:2},
+{b:3,s:'grammar',q:'He has ________books that he can hardly carry them.',o:['so much','much','so many','that many'],a:2},
+{b:3,s:'grammar',q:'Bart: Do you prefer to walk or take the bus? Bob:_________________.',o:['I rather walk','I had rather walk','I did rather walk','I would rather walk'],a:3},
+{b:3,s:'grammar',q:'I wish I _____ so much homework.',o:['had',"hadn't","didn't have","not have"],a:2},
+{b:3,s:'grammar',q:"If fewer people _____ their cars, there wouldn't be so much traffic.",o:['drove','will drive','would drive','drive'],a:0},
+{b:3,s:'grammar',q:'I wish I _____ what to do. Can you give me some advice?',o:['will know','would know','know','knew'],a:3},
+{b:3,s:'grammar',q:'I miss ____________________ time with my friends.',o:['to spend','spends','spend','spending'],a:3},
+{b:3,s:'grammar',q:"I'm sorry. I didn't expect ____________________ out so late.",o:['is be','being','to be','be'],a:2},
+// SG3 Orthography
+{b:3,s:'orthography',q:'hur….y (hurry) ( c – r – k )',o:['c','r','k'],a:1},
+{b:3,s:'orthography',q:'s….lling (selling) ( e – h – n )',o:['e','h','n'],a:0},
+{b:3,s:'orthography',q:'turn it of…. (off) ( c – f – k )',o:['c','f','k'],a:1},
+{b:3,s:'orthography',q:'o…t (out) ( e – h – u )',o:['e','h','u'],a:2},
+{b:3,s:'orthography',q:'fi….. in (fit) ( t – f – k )',o:['t','f','k'],a:0},
+{b:3,s:'orthography',q:'pas…. (pass) ( e – h – s )',o:['e','h','s'],a:2},
+{b:3,s:'orthography',q:'li….e (line) ( t – n – k )',o:['t','n','k'],a:1},
+{b:3,s:'orthography',q:'ho…se (house) ( u – h – s )',o:['u','h','s'],a:0},
+// SG3 Vocabulary
+{b:3,s:'vocabulary',q:'He saw a man who tried to __________ a bag.',o:['steal','fake','pretend','in a hurry'],a:0},
+{b:3,s:'vocabulary',q:'That diamond is not real. It is ____________________.',o:['thief','give direction','fake','steal'],a:2},
+{b:3,s:'vocabulary',q:"Some people are always ____________________. They don't have time to talk and relax.",o:['pretend','in a hurry','steal','give direction'],a:1},
+{b:3,s:'vocabulary',q:'You use a toothbrush and _______________to brush your teeth.',o:['toothpaste','hair dryer','shampoo','scissors'],a:0},
+{b:3,s:'vocabulary',q:'You use ____________________ to cut paper.',o:['dishwashing liquid','scissors','hair dryer','mirror'],a:1},
+{b:3,s:'vocabulary',q:'You use a ____________________ to dry your hair when it is wet.',o:['shampoo','toothpaste','hairbrush','hair dryer'],a:3},
+{b:3,s:'vocabulary',q:"If you drive too fast, you'll get a____________.",o:['ticket','conservationist','benefit','scenic'],a:0},
+{b:3,s:'vocabulary',q:'Donna tries too hard to ________. She always does what other people are doing.',o:['cheat','scenic','pollution','fit in'],a:3},
+{b:3,s:'vocabulary',q:'One __________ to being a professional sports player is that they make a lot of money.',o:['generate','pollution','benefit','conservationist'],a:2},
+{b:3,s:'vocabulary',q:'Americans usually introduce themselves with their ________________ name.',o:['Second','last','middle','first'],a:3},
+{b:3,s:'vocabulary',q:'Ali thanks his friend the_______ for his hospitality.',o:['late','host','Rush','Break'],a:1},
+{b:3,s:'vocabulary',q:'Picture: yellow taxi car.',o:['Taxi','Dishes','Tennis Player'],a:0},
+{b:3,s:'vocabulary',q:'Picture: stacked cups and plates.',o:['Taxi','Dishes','Tennis Player'],a:1},
+{b:3,s:'vocabulary',q:'Picture: athlete swinging a racket.',o:['Taxi','Dishes','Tennis Player'],a:2},
+];
+
+/* ===== FEEDBACK TEXT ===== */
+const OK_FB=['🎉 ممتاز! إجابة صحيحة تماماً!','🌟 رائع! أنت نجم حقيقي!','✅ أحسنت! هذا هو الجواب الصحيح!','🏆 عظيم! استمر هكذا!','💪 بالضبط! ذكاء واضح!','🔥 صح 100%! أنت في القمة!','👏 برافو! إجابة مثالية!','⭐ ممتاز جداً!'];
+const NO_FB=['❌ للأسف خطأ! الجواب الصحيح مُعلَّم باللون الأخضر.','😔 حاول في المرة القادمة! راجع الجواب الصحيح.','🔍 ليس هذا! الجواب الصحيح ظاهر أدناه.','💡 لا بأس! تعلمنا من أخطائنا. الجواب مميَّز.','📚 خطأ! الأهم أن تتعلم الجواب الصحيح.'];
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ===== DIRECT FEEDBACK: CORRECTION + RULE ===== */
+function escHtml(v){
+  return String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
+}
+function ruleExplanation(q){
+  const question=q.q.toLowerCase();
+  const answer=q.o[q.a];
+  if(q.s==='orthography'){
+    return `الكلمة تُكمَل بالحرف الصحيح حسب تهجئتها الأصلية، لذلك التصحيح هو: <span class="correct-answer">${escHtml(answer)}</span>. اقرأ الكلمة كاملة بعد الإضافة لتتأكد أن نطقها وكتابتها سليمان.`;
+  }
+  if(q.s==='vocabulary'){
+    return `هذا سؤال مفردات: اختر الكلمة التي تناسب معنى الجملة والسياق. الإجابة الأنسب هنا هي: <span class="correct-answer">${escHtml(answer)}</span>. جرّب ترجمة الجملة كاملة، لا الكلمة وحدها.`;
+  }
+  if(q.s==='comprehension'){
+    return `هذا سؤال فهم مقروء: نرجع للمعلومة الموجودة في النص ولا نعتمد على التخمين. الإجابة الصحيحة: <span class="correct-answer">${escHtml(answer)}</span>. ابحث عن الكلمة المفتاحية في السؤال داخل النص.`;
+  }
+  if(q.s==='grammar'){
+    let rule='راجع تركيب الجملة والزمن والكلمة التي تأتي قبل الفراغ وبعده؛ فهي غالباً تكشف القاعدة المطلوبة.';
+    if(/can|can't|could|couldn't|able to|mustn't|should|will can/.test(question)) rule='بعد أفعال القدرة أو الإلزام مثل can / could / must يأتي الفعل مجرداً بدون to، والنفي يكون: can\’t / couldn\’t / mustn\’t.';
+    else if(/going to|tomorrow|vacation/.test(question)) rule='نستخدم be going to للتخطيط للمستقبل: am/is/are + going to + verb. اختر فعل be المناسب للفاعل.';
+    else if(/was|were|born|yesterday|last year|didn't|drank|went/.test(question)) rule='للماضي البسيط نستخدم التصريف الثاني للفعل، ومع didn\’t يرجع الفعل للمصدر. was مع المفرد، وwere مع الجمع.';
+    else if(/will|probably|tomorrow|if the lake|freezes/.test(question)) rule='في الشرط من النوع الأول: If + present simple، ثم will + verb للنتيجة المستقبلية.';
+    else if(/have you|has visited|already|yet|just/.test(question)) rule='في المضارع التام نستخدم have/has + past participle، وتأتي already غالباً في الجمل المثبتة، وyet في السؤال أو النفي.';
+    else if(/when|while|was looking|was cooking|was talking/.test(question)) rule='نستخدم الماضي المستمر was/were + V-ing للفعل الذي كان مستمراً، وwhen للفعل المفاجئ، وwhile لفعلين مستمرين غالباً.';
+    else if(/so|such|so many|so much/.test(question)) rule='so تأتي قبل الصفة أو الظرف، وsuch قبل الاسم، وso many مع الأسماء المعدودة، وso much مع غير المعدودة.';
+    else if(/enjoys|miss|spending|working/.test(question)) rule='بعد أفعال مثل enjoy وmiss نستخدم الفعل بصيغة ing: working / spending.';
+    else if(/expect|to be/.test(question)) rule='بعد expect نستخدم غالباً to + verb، مثل: expect to be.';
+    else if(/wish|wouldn't|wouldn't be|wouldn't have|didn't have|knew|fewer people/.test(question)) rule='بعد wish للتعبير عن أمنية مخالفة للواقع نستخدم الماضي البسيط، وفي الشرط الثاني: If + past simple ثم would + verb.';
+    else if(/rather/.test(question)) rule='الصيغة الصحيحة للتفضيل هي: would rather + الفعل مجرداً.';
+    else if(/a beautiful city|beautiful/.test(question)) rule='الصفة في الإنجليزية تأتي قبل الاسم: a beautiful city، وليس بعده كما في العربية.';
+    else if(/let's|let invite/.test(question)) rule='للاقتراح نستخدم: Let\’s + verb، مثل: Let\’s invite.';
+    else if(/want to/.test(question)) rule='بعد want نستخدم to + verb: want to watch.';
+    return `${rule} الإجابة الصحيحة هي: <span class="correct-answer">${escHtml(answer)}</span>.`;
+  }
+  return `الإجابة الصحيحة هي: <span class="correct-answer">${escHtml(answer)}</span>.`;
+}
+
+/* ===== STATE ===== */
+let active=[],ans_cnt=0,ok=0,no=0;
+
+/* ===== SHUFFLE ===== */
+function sh(a){let r=[...a];for(let i=r.length-1;i>0;i--){const j=0|Math.random()*(i+1);[r[i],r[j]]=[r[j],r[i]];}return r;}
+
+/* ===== SECTION LABELS ===== */
+const SL={comprehension:'📖 Comprehension — الفهم القرائي',grammar:'📝 Grammar — القواعد',vocabulary:'🔤 Vocabulary — المفردات',orthography:'🔡 Orthography — الإملاء'};
+const BL={1:'Super Goal 1',2:'Super Goal 2',3:'Super Goal 3'};
+const LETTERS=['A','B','C','D','E','F'];
+
+/* ===== START ===== */
+function startQuiz(){
+  const book=document.getElementById('sel-book').value;
+  const sec=document.getElementById('sel-section').value;
+  const cnt=document.getElementById('sel-count').value;
+  const doSh=document.getElementById('sel-shuffle').value==='1';
+
+  let pool=QS.filter(q=>(book==='all'||q.b==book)&&(sec==='all'||q.s===sec));
+  if(!pool.length){alert('لا توجد أسئلة بهذه المعايير!');return;}
+  if(doSh)pool=sh(pool);
+  const n=cnt==='all'?pool.length:Math.min(parseInt(cnt),pool.length);
+  active=pool.slice(0,n);
+  ans_cnt=ok=no=0;
+
+  document.getElementById('settings-wrap').style.display='none';
+  document.getElementById('result-wrap').style.display='none';
+  document.getElementById('quiz-wrap').style.display='block';
+  document.getElementById('scorebar').classList.add('on');
+
+  render();updateBar();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===== RENDER ===== */
+function render(){
+  const wrap=document.getElementById('quiz-wrap');
+  wrap.innerHTML='';
+
+  // group by book+section
+  const groups={};
+  active.forEach((q,i)=>{
+    const k=`${q.b}-${q.s}`;
+    if(!groups[k])groups[k]={b:q.b,s:q.s,qs:[]};
+    groups[k].qs.push({q,i});
+  });
+
+  Object.values(groups).forEach(g=>{
+    // Divider
+    const div=document.createElement('div');
+    div.className='sec-divider';
+    div.innerHTML=`<div class="sd-line"></div><div class="sec-badge">${SL[g.s]} &nbsp;·&nbsp; ${BL[g.b]}</div><div class="sd-line right"></div>`;
+    wrap.appendChild(div);
+    g.qs.forEach(({q,i})=>wrap.appendChild(buildCard(q,i)));
+  });
+
+  // Submit button
+  const sub=document.createElement('div');
+  sub.className='submit-zone';
+  sub.innerHTML=`<button class="btn-start" onclick="showResult()">📊 &nbsp; عرض النتيجة النهائية</button>`;
+  wrap.appendChild(sub);
+}
+
+/* ===== BUILD CARD ===== */
+function buildCard(q,idx){
+  const card=document.createElement('div');
+  card.className='q-card';
+  card.id=`c${idx}`;
+  card.style.animationDelay=`${(idx%12)*0.045}s`;
+
+  const optsHtml=q.o.map((opt,oi)=>`
+    <button class="opt" id="o${idx}-${oi}" onclick="answer(${idx},${oi})">
+      <span class="opt-letter">${LETTERS[oi]}</span>
+      <span class="opt-text">${opt}</span>
+    </button>`).join('');
+
+  card.innerHTML=`
+    <div class="q-meta">
+      <span class="q-num-badge">Q ${idx+1} / ${active.length}</span>
+      <span class="q-section-tag">${SL[q.s].split('—')[0].trim()}</span>
+      <span class="q-status"><span class="q-status-dot" id="dot${idx}"></span></span>
+    </div>
+    <div class="q-text">${idx+1}. ${q.q}</div>
+    <div class="opts-grid">${optsHtml}</div>
+    <div class="feedback" id="fb${idx}"></div>`;
+  return card;
+}
+
+/* ===== ANSWER ===== */
+function answer(idx,chosen){
+  const q=active[idx];
+  const card=document.getElementById(`c${idx}`);
+  if(card.dataset.done)return;
+  card.dataset.done='1';
+
+  const allBtns=q.o.map((_,oi)=>document.getElementById(`o${idx}-${oi}`));
+  allBtns.forEach(b=>b.disabled=true);
+
+  const isOk=chosen===q.a;
+  document.getElementById(`o${idx}-${chosen}`).classList.add(isOk?'correct':'wrong');
+  if(!isOk)document.getElementById(`o${idx}-${q.a}`).classList.add('reveal');
+
+  // Status dot
+  const dot=document.getElementById(`dot${idx}`);
+  dot.classList.add(isOk?'correct':'wrong');
+
+  // Feedback
+  const fb=document.getElementById(`fb${idx}`);
+  fb.className=`feedback show ${isOk?'ok':'no'}`;
+  const emoji=isOk?'🎯':'💡';
+  const msg=isOk?rnd(OK_FB):rnd(NO_FB);
+  const correction=isOk?'تعزيز القاعدة':'تصحيح الخطأ وشرح القاعدة';
+  fb.innerHTML=`
+    <span class="fb-emoji">${emoji}</span>
+    <span class="fb-content">
+      <span class="fb-main">${msg}</span>
+      <span class="rule-box"><b>${correction}:</b> ${ruleExplanation(q)}</span>
+    </span>`;
+
+  ans_cnt++;
+  if(isOk){ok++;confetti();}else{no++;}
+  updateBar();
+}
+
+/* ===== SCORE BAR ===== */
+function updateBar(){
+  const t=active.length;
+  document.getElementById('sb-pts').textContent=ok*5;
+  document.getElementById('sb-ok').textContent=`✓ ${ok}`;
+  document.getElementById('sb-no').textContent=`✗ ${no}`;
+  document.getElementById('sb-txt').textContent=`${ans_cnt} / ${t}`;
+  document.getElementById('sb-fill').style.width=t?`${(ans_cnt/t)*100}%`:'0%';
+}
+
+/* ===== RESULT ===== */
+function showResult(){
+  active.forEach((_,i)=>{
+    const card=document.getElementById(`c${i}`);
+    if(!card.dataset.done){card.dataset.done='1';ans_cnt++;no++;updateBar();}
+  });
+
+  const t=active.length;
+  const pct=Math.round((ok/t)*100);
+  let emoji='🏆',grade='تقدير ممتاز',msg='أداء استثنائي! أنت متفوق حقيقي.';
+  if(pct<50){emoji='😔';grade='يحتاج مراجعة';msg='لا تستسلم! راجع المادة وحاول مجدداً.';}
+  else if(pct<65){emoji='🙂';grade='تقدير مقبول';msg='جيد! بإمكانك تحسين أدائك.';}
+  else if(pct<80){emoji='😊';grade='تقدير جيد';msg='جيد جداً! استمر في التحسن.';}
+  else if(pct<90){emoji='🌟';grade='تقدير جيد جداً';msg='رائع! أداء ممتاز يُحتذى به.'}
+
+  document.getElementById('quiz-wrap').style.display='none';
+  document.getElementById('scorebar').classList.remove('on');
+
+  const rw=document.getElementById('result-wrap');
+  rw.style.display='block';
+  rw.innerHTML=`
+    <div class="result-hero">
+      <div class="result-glow">${emoji}</div>
+      <div class="result-pct">${pct}%</div>
+      <div class="result-grade">${grade}</div>
+      <div class="result-msg">${msg}</div>
+      <div class="result-grid">
+        <div class="rg-box g"><div class="rv">${ok}</div><div class="rl">✓ صحيحة</div></div>
+        <div class="rg-box r"><div class="rv">${no}</div><div class="rl">✗ خاطئة</div></div>
+        <div class="rg-box o"><div class="rv">${t}</div><div class="rl">إجمالي</div></div>
+      </div>
+      <button class="btn-retry" onclick="goBack()">🔄 &nbsp; العودة للإعدادات</button>
+    </div>
+    <div style="text-align:center;margin-top:22px;color:var(--muted);font-size:0.8rem;line-height:2;">
+      <div style="font-size:1rem;font-weight:900;color:var(--gold2);">تصميم د / فواز</div>
+      تفضل للمزيد هنا &nbsp;
+      <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" style="color:var(--gold);font-weight:700;text-decoration:none;">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>`;
+
+  if(pct>=70)confetti(50);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBack(){
+  document.getElementById('result-wrap').style.display='none';
+  document.getElementById('settings-wrap').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===== CONFETTI ===== */
+function confetti(n=10){
+  const colors=['#E8A020','#FFD166','#00C896','#1488CC','#F0416A','#8B5CF6','#ffffff'];
+  for(let i=0;i<n;i++){
+    setTimeout(()=>{
+      const p=document.createElement('div');
+      p.className='cf';
+      const sz=5+Math.random()*9;
+      p.style.cssText=`left:${Math.random()*100}vw;width:${sz}px;height:${sz}px;background:${colors[0|Math.random()*colors.length]};border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${1.4+Math.random()*2}s;animation-delay:${Math.random()*.4}s;`;
+      document.body.appendChild(p);
+      setTimeout(()=>p.remove(),3600);
+    },i*55);
+  }
+}
+</script>
+</body>
+</html>

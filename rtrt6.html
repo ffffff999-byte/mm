@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة شهادات الشكر والتقدير - متجاوبة للجوال</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&family=Cairo:wght@400;700;900&family=Amiri:ital,wght@0,400;0,700;1,400&family=Aref+Ruqaa:wght@400;700&family=Reem+Kufi:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #c59b27;
+            --gold-light: #f6e27a;
+            --gold-dark: #8b6914;
+            --bg-color: #f3f4f6;
+            --panel-bg: #ffffff;
+            --text-main: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* ---------------------------------
+           Settings Panel (Sidebar)
+        --------------------------------- */
+        .settings-panel {
+            width: 350px;
+            background: var(--panel-bg);
+            padding: 25px;
+            box-shadow: -4px 0 15px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .settings-panel h2 {
+            font-size: 20px;
+            color: var(--text-main);
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--gold-primary);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 700;
+            color: #4b5563;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--gold-primary);
+            box-shadow: 0 0 0 2px rgba(197, 155, 39, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .print-btn {
+            margin-top: 15px;
+            background: linear-gradient(135deg, var(--gold-primary), var(--gold-dark));
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(197, 155, 39, 0.3);
+        }
+
+        .footer-credits {
+            margin-top: auto;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            border-top: 1px dashed #d1d5db;
+        }
+
+        .footer-credits a {
+            color: var(--gold-dark);
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-top: 5px;
+            direction: ltr;
+        }
+
+        /* ---------------------------------
+           Preview Area
+        --------------------------------- */
+        .preview-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #e5e7eb;
+            position: relative;
+        }
+
+        /* حاوية مرنة للشهادة لضبط الحجم بدون مساحات بيضاء زائدة */
+        .cert-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            transition: height 0.3s ease;
+        }
+
+        /* ---------------------------------
+           Certificate Page Base (A4 Landscape)
+        --------------------------------- */
+        .certificate-page {
+            width: 297mm;
+            height: 210mm;
+            background-color: white;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* ---------------------------------
+           Common Elements
+        --------------------------------- */
+        .cert-content {
+            z-index: 5;
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            padding-top: 20px;
+            position: relative;
+        }
+
+        .cert-title {
+            font-size: 60px;
+            font-weight: 900;
+            color: #111;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .cert-subtitle {
+            font-size: 24px;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .cert-name {
+            font-size: 70px;
+            font-weight: 900;
+            margin: 10px 0;
+            line-height: 1.2;
+            min-height: 85px;
+        }
+
+        .divider {
+            width: 70%;
+            height: 2px;
+            margin: 10px 0;
+            background: linear-gradient(to right, transparent, var(--gold-primary), transparent);
+        }
+
+        .cert-reason {
+            font-size: 24px;
+            color: #333;
+            line-height: 1.8;
+            max-width: 90%;
+            margin-bottom: 40px;
+        }
+
+        .signatures-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 20px;
+            padding: 0 40px;
+            z-index: 10;
+        }
+
+        .signature-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 250px;
+        }
+
+        .sig-role {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .sig-line {
+            width: 100%;
+            height: 2px;
+            background-color: #555;
+        }
+
+        .sig-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #444;
+            min-height: 30px;
+        }
+
+        /* Seal Base */
+        .seal-container {
+            position: absolute;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .seal-circle {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .seal-text {
+            font-size: 26px;
+            font-weight: 900;
+        }
+
+        .ribbons {
+            display: flex;
+            gap: 10px;
+            margin-top: -15px;
+            z-index: -1;
+        }
+
+        .ribbon {
+            width: 25px;
+            height: 60px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .ribbon::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            border-left: 12.5px solid transparent;
+            border-right: 12.5px solid transparent;
+            border-bottom: 15px solid white;
+        }
+
+        /* =========================================================
+           THEME 1: التصميم الكلاسيكي (الأمواج الذهبية)
+        ========================================================= */
+        .certificate-page[data-theme="theme-1"] {
+            background-color: #ffffff;
+            border: none;
+        }
+        
+        .certificate-page[data-theme="theme-1"] .theme-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;
+        }
+        
+        .certificate-page[data-theme="theme-1"] .theme-bg::before {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 35%;
+            background: linear-gradient(to top right, rgba(197,155,39,0.15) 0%, transparent 60%);
+            clip-path: polygon(0 100%, 100% 100%, 100% 80%, 0 20%);
+        }
+
+        .certificate-page[data-theme="theme-1"] .theme-bg::after {
+            content: ''; position: absolute; bottom: -80px; right: -80px; width: 400px; height: 400px;
+            background: radial-gradient(circle, var(--gold-light) 0%, var(--gold-dark) 100%);
+            border-radius: 50%; opacity: 0.15;
+        }
+
+        .certificate-page[data-theme="theme-1"] .cert-name {
+            background: linear-gradient(to right, #986d14, #d4af37, #986d14);
+            -webkit-background-clip: text; color: transparent;
+        }
+
+        .certificate-page[data-theme="theme-1"] .seal-container { top: 40px; left: 40px; }
+        .certificate-page[data-theme="theme-1"] .seal-circle {
+            background: radial-gradient(circle, #f9e285 0%, #d4af37 60%, #aa771c 100%); border: 4px dashed #ffffff;
+        }
+        .certificate-page[data-theme="theme-1"] .seal-circle::before {
+            content: ''; position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px; border-radius: 50%; border: 2px solid #d4af37;
+        }
+        .certificate-page[data-theme="theme-1"] .seal-text { color: #1a1a1a; }
+        .certificate-page[data-theme="theme-1"] .ribbon { background: linear-gradient(to bottom, #d4af37, #f6e27a); }
+        .certificate-page[data-theme="theme-1"] .ribbon::after { border-bottom-color: #ffffff; }
+
+        /* =========================================================
+           THEME 2: التصميم الفاخر (أسود وذهبي)
+        ========================================================= */
+        .certificate-page[data-theme="theme-2"] {
+            background-color: #fcfcfc; border: 15px solid #111111; padding: 50px;
+        }
+        
+        .certificate-page[data-theme="theme-2"]::before {
+            content: ''; position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
+            border: 4px solid var(--gold-primary); pointer-events: none; z-index: 2;
+        }
+        
+        .certificate-page[data-theme="theme-2"] .theme-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none;
+            background: linear-gradient(135deg, #111 60px, transparent 60px), linear-gradient(-135deg, #111 60px, transparent 60px), linear-gradient(45deg, #111 60px, transparent 60px), linear-gradient(-45deg, #111 60px, transparent 60px);
+            background-position: top left, top right, bottom left, bottom right; background-repeat: no-repeat;
+        }
+        
+        .certificate-page[data-theme="theme-2"] .theme-bg::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, var(--gold-primary) 64px, transparent 64px), linear-gradient(-135deg, var(--gold-primary) 64px, transparent 64px), linear-gradient(45deg, var(--gold-primary) 64px, transparent 64px), linear-gradient(-45deg, var(--gold-primary) 64px, transparent 64px);
+            background-position: top left, top right, bottom left, bottom right; background-repeat: no-repeat; z-index: -1;
+        }
+
+        .certificate-page[data-theme="theme-2"] .cert-name { color: #111111; text-shadow: 1px 1px 0px var(--gold-primary); }
+        .certificate-page[data-theme="theme-2"] .seal-container { top: 40px; right: 40px; left: auto; }
+        .certificate-page[data-theme="theme-2"] .seal-circle { background: radial-gradient(circle, #333 0%, #000 100%); border: 4px double var(--gold-primary); }
+        .certificate-page[data-theme="theme-2"] .seal-text { color: var(--gold-primary); }
+        .certificate-page[data-theme="theme-2"] .ribbon { background: linear-gradient(to bottom, #111, #333); }
+        .certificate-page[data-theme="theme-2"] .ribbon::after { border-bottom-color: #fcfcfc; }
+
+        /* =========================================================
+           THEME 3: التصميم الرسمي المزخرف (إطار ذهبي وزوايا)
+        ========================================================= */
+        .certificate-page[data-theme="theme-3"] { background-color: #ffffff; border: none; padding: 40px; }
+        
+        .certificate-page[data-theme="theme-3"] .theme-bg {
+            position: absolute; top: 25px; left: 25px; right: 25px; bottom: 25px;
+            border: 2px solid var(--gold-primary); outline: 6px double var(--gold-primary); outline-offset: -12px; z-index: 1; pointer-events: none;
+        }
+        
+        .certificate-page[data-theme="theme-3"] .cert-name { background: none; color: #8b6914; }
+        .certificate-page[data-theme="theme-3"] .seal-container { bottom: 30px; top: auto; left: 50%; transform: translateX(-50%); }
+        .certificate-page[data-theme="theme-3"] .seal-circle {
+            background: radial-gradient(circle, #f9e285 0%, #d4af37 60%, #aa771c 100%); border: 2px solid #ffffff; box-shadow: 0 0 0 4px #d4af37, 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .certificate-page[data-theme="theme-3"] .seal-text { color: #111; }
+        .certificate-page[data-theme="theme-3"] .ribbon { background: linear-gradient(to bottom, #d4af37, #f6e27a); }
+        .certificate-page[data-theme="theme-3"] .ribbon::after { border-bottom-color: #ffffff; }
+        .certificate-page[data-theme="theme-3"] .signatures-container { padding-bottom: 60px; justify-content: space-between; }
+
+
+        /* =========================================================
+           Responsive Design (لجعلها متجاوبة مع كل الشاشات والجوالات)
+        ========================================================= */
+        @media (max-width: 1024px) {
+            body {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                overflow-y: auto; /* السماح بالتمرير العمودي */
+            }
+
+            .settings-panel {
+                width: 100%;
+                max-height: none;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                z-index: 100;
+            }
+
+            .preview-area {
+                padding: 15px;
+                overflow: hidden; /* لمنع ظهور أشرطة تمرير أفقية بسبب الشهادة الكبيرة */
+                align-items: flex-start;
+                min-height: 50vh;
+            }
+        }
+
+        /* ---------------------------------
+           Print Styles (Strict A4 Landscape)
+        --------------------------------- */
+        @media print {
+            @page {
+                size: A4 landscape;
+                margin: 0 !important;
+            }
+
+            body, html {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 297mm;
+                height: 210mm;
+                background-color: white !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                overflow: hidden !important;
+            }
+
+            .no-print, .settings-panel {
+                display: none !important;
+            }
+
+            .preview-area {
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+
+            /* إجبار إزالة أي تصغير (Scale) ناتج عن التجاوب في الجوال أثناء الطباعة */
+            .cert-wrapper {
+                height: auto !important;
+                width: auto !important;
+                transform: none !important;
+            }
+
+            .certificate-page {
+                width: 297mm !important;
+                height: 210mm !important;
+                box-shadow: none !important;
+                margin: 0 !important;
+                position: absolute;
+                top: 0; left: 0;
+                page-break-after: avoid !important;
+                page-break-before: avoid !important;
+                page-break-inside: avoid !important;
+                transform: none !important;
+            }
+
+            .certificate-page[data-theme="theme-1"] .cert-name {
+                background: none !important;
+                -webkit-background-clip: border-box !important;
+                color: #986d14 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="settings-panel no-print">
+        <h2>إعدادات الشهادة</h2>
+        
+        <div class="form-group">
+            <label>تصميم الشهادة</label>
+            <select id="themeSelect" onchange="updateDesign()">
+                <option value="theme-1">التصميم الكلاسيكي (أمواج ذهبية)</option>
+                <option value="theme-2">التصميم الفاخر (أسود وذهبي)</option>
+                <option value="theme-3">التصميم الرسمي (إطار مزدوج)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>نوع الخط</label>
+            <select id="fontSelect" onchange="updateDesign()">
+                <option value="'Tajawal', sans-serif">تجوال (Tajawal)</option>
+                <option value="'Cairo', sans-serif">القاهرة (Cairo)</option>
+                <option value="'Amiri', serif">أميري (Amiri)</option>
+                <option value="'Aref Ruqaa', serif">رقعة (Aref Ruqaa)</option>
+                <option value="'Reem Kufi', sans-serif">كوفي (Reem Kufi)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>عنوان الشهادة</label>
+            <input type="text" id="inTitle" value="شهادة تقدير" oninput="updateDesign()">
+        </div>
+
+        <div class="form-group">
+            <label>العبارة الافتتاحية</label>
+            <input type="text" id="inSubtitle" value="يتم تقديم هذه الشهادة بكل فخر إلى" oninput="updateDesign()">
+        </div>
+
+        <div class="form-group">
+            <label>اسم المكرم/ة</label>
+            <input type="text" id="inName" value="" placeholder="أدخل اسم المكرم/ة هنا..." oninput="updateDesign()">
+        </div>
+
+        <div class="form-group">
+            <label>نص التقدير</label>
+            <textarea id="inReason" oninput="updateDesign()">تقديراً لتفانيكم وعملكم الجاد تجاه المهام الموكلة إليكم على مدى السنوات الماضية.</textarea>
+        </div>
+
+        <div class="form-group">
+            <label>اسم المدير/ة</label>
+            <input type="text" id="inManager" value="" placeholder="أدخل اسم المدير/ة هنا..." oninput="updateDesign()">
+        </div>
+
+        <div class="form-group">
+            <label>اسم الوكيل/ة</label>
+            <input type="text" id="inDeputy" value="" placeholder="أدخل اسم الوكيل/ة هنا..." oninput="updateDesign()">
+        </div>
+
+        <button onclick="window.print()" class="print-btn">
+            🖨️ طباعة / تصدير PDF
+        </button>
+
+        <div class="footer-credits no-print">
+            تصميم د/فواز تفضل للمزيد هنا
+            <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+        </div>
+    </aside>
+
+    <main class="preview-area" id="previewArea">
+        <div class="cert-wrapper" id="certWrapper">
+            <div class="certificate-page" id="certificatePage" data-theme="theme-1">
+                
+                <div class="theme-bg"></div>
+
+                <div class="seal-container">
+                    <div class="seal-circle">
+                        <span class="seal-text">أفضل</span>
+                    </div>
+                    <div class="ribbons">
+                        <div class="ribbon" style="transform: rotate(15deg);"></div>
+                        <div class="ribbon" style="transform: rotate(-15deg);"></div>
+                    </div>
+                </div>
+
+                <div class="cert-content">
+                    <h1 class="cert-title" id="outTitle">شهادة تقدير</h1>
+                    <p class="cert-subtitle" id="outSubtitle">يتم تقديم هذه الشهادة بكل فخر إلى</p>
+                    
+                    <h2 class="cert-name" id="outName"></h2>
+                    
+                    <div class="divider" id="outDivider"></div>
+                    
+                    <p class="cert-reason" id="outReason">تقديراً لتفانيكم وعملكم الجاد تجاه المهام الموكلة إليكم على مدى السنوات الماضية.</p>
+
+                    <div class="signatures-container">
+                        <div class="signature-block">
+                            <span class="sig-role">المدير/ة</span>
+                            <div class="sig-line"></div>
+                            <span class="sig-name" id="outManager"></span>
+                        </div>
+                        
+                        <div class="signature-block">
+                            <span class="sig-role">الوكيل/ة</span>
+                            <div class="sig-line"></div>
+                            <span class="sig-name" id="outDeputy"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function updateDesign() {
+            document.getElementById('outTitle').innerText = document.getElementById('inTitle').value;
+            document.getElementById('outSubtitle').innerText = document.getElementById('inSubtitle').value;
+            document.getElementById('outName').innerText = document.getElementById('inName').value || " ";
+            document.getElementById('outReason').innerText = document.getElementById('inReason').value;
+            document.getElementById('outManager').innerText = document.getElementById('inManager').value || " ";
+            document.getElementById('outDeputy').innerText = document.getElementById('inDeputy').value || " ";
+
+            const selectedFont = document.getElementById('fontSelect').value;
+            document.getElementById('certificatePage').style.fontFamily = selectedFont;
+
+            const selectedTheme = document.getElementById('themeSelect').value;
+            document.getElementById('certificatePage').setAttribute('data-theme', selectedTheme);
+            
+            if(selectedTheme === 'theme-2' || selectedTheme === 'theme-3') {
+                document.getElementById('outDivider').style.display = 'none';
+            } else {
+                document.getElementById('outDivider').style.display = 'block';
+            }
+
+            // تحديث الحجم المتجاوب بعد أي تغيير
+            adjustResponsiveScale();
+        }
+
+        // دالة ذكية لتصغير حجم الشهادة لتتناسب مع شاشات الجوال والايباد دون تخريب الطباعة
+        function adjustResponsiveScale() {
+            const previewArea = document.getElementById('previewArea');
+            const certWrapper = document.getElementById('certWrapper');
+            const certPage = document.getElementById('certificatePage');
+
+            if (!previewArea || !certWrapper || !certPage) return;
+
+            // إزالة التصغير المؤقت لمعرفة الحجم الحقيقي
+            certPage.style.transform = 'none';
+
+            // عرض الشاشة المتاح (مع ترك مساحة صغيرة كحواف)
+            const availableWidth = previewArea.clientWidth - 30; 
+            const certRealWidth = certPage.offsetWidth; // عرض ورقة A4 بالبكسل
+
+            if (availableWidth < certRealWidth && availableWidth > 0) {
+                // حساب نسبة التصغير المطلوبة
+                const scale = availableWidth / certRealWidth;
+                
+                // تطبيق التصغير على الشهادة
+                certPage.style.transform = `scale(${scale})`;
+                certPage.style.transformOrigin = 'top center';
+                
+                // تعديل ارتفاع الحاوية لكي لا تترك مساحات بيضاء فارغة كبيرة بالأسفل
+                certWrapper.style.height = `${certPage.offsetHeight * scale}px`;
+            } else {
+                // إرجاع الحجم الطبيعي في الشاشات الكبيرة
+                certPage.style.transform = 'none';
+                certWrapper.style.height = 'auto';
+            }
+        }
+
+        // تشغيل التحديث والتصغير عند تحميل الصفحة وعند تغيير حجم النافذة (دوران الجوال مثلاً)
+        window.addEventListener('resize', adjustResponsiveScale);
+        window.onload = updateDesign;
+    </script>
+</body>
+</html>

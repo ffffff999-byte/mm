@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إنفوجرافيك - خطوات نظام فارس</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .card {
+    width: 780px;
+    background: linear-gradient(145deg, #0f3460 0%, #16213e 40%, #0d2137 100%);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.07);
+    position: relative;
+  }
+
+  /* Decorative background circles */
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(100,200,255,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #e8a820 0%, #f5c842 50%, #e09010 100%);
+    padding: 28px 36px 22px;
+    text-align: center;
+    position: relative;
+    clip-path: polygon(0 0, 100% 0, 100% 82%, 50% 100%, 0 82%);
+    padding-bottom: 42px;
+  }
+  .header-icon {
+    font-size: 38px;
+    margin-bottom: 6px;
+  }
+  .header h1 {
+    color: #1a0a00;
+    font-size: 22px;
+    font-weight: 900;
+    line-height: 1.4;
+    letter-spacing: -0.3px;
+  }
+  .header h1 span {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: #3d1f00;
+    margin-top: 4px;
+  }
+  .hashtag {
+    display: inline-block;
+    background: rgba(0,0,0,0.15);
+    color: #1a0a00;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-top: 8px;
+  }
+
+  /* ===== BODY ===== */
+  .body {
+    padding: 32px 36px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Section label */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .section-label .line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to left, transparent, rgba(248,196,50,0.4));
+  }
+  .section-label span {
+    color: #f8c432;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  /* Steps grid */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 12px 16px;
+    transition: transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .step::before {
+    content: '';
+    position: absolute;
+    right: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 0 14px 14px 0;
+    background: var(--accent);
+  }
+
+  .step-num {
+    min-width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+
+  .step-icon {
+    font-size: 22px;
+    min-width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .step-text {
+    color: #e8eaf0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  /* Note box */
+  .note-box {
+    margin-top: 16px;
+    background: rgba(255,100,100,0.08);
+    border: 1px solid rgba(255,120,120,0.2);
+    border-radius: 12px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .note-icon { font-size: 20px; flex-shrink: 0; }
+  .note-text { color: #ffb8b8; font-size: 14px; font-weight: 500; line-height: 1.5; }
+
+  /* Print section */
+  .print-section {
+    margin-top: 14px;
+    background: rgba(100,220,180,0.07);
+    border: 1px solid rgba(100,220,180,0.2);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .print-title {
+    color: #7dedd0;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .print-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .print-opt {
+    background: rgba(100,220,180,0.12);
+    border: 1px solid rgba(100,220,180,0.25);
+    border-radius: 8px;
+    padding: 7px 14px;
+    color: #a8f5df;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .print-opt .badge {
+    background: rgba(100,220,180,0.25);
+    border-radius: 5px;
+    padding: 2px 7px;
+    font-size: 11px;
+    font-family: monospace;
+  }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: rgba(0,0,0,0.25);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 16px 36px;
+    text-align: center;
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  .footer-brand .brand-title {
+    color: #f8c432;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .footer-brand .brand-tagline {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .footer-brand .brand-link {
+    color: #7dd3fc;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  .footer-brand .brand-link:hover {
+    color: #38bdf8;
+    text-decoration: underline;
+  }
+
+  /* Colors per step */
+  .s1 { --accent: #e8705a; }
+  .s2 { --accent: #e89b3a; }
+  .s3 { --accent: #d4c040; }
+  .s4 { --accent: #5ec476; }
+  .s5 { --accent: #40b8a8; }
+  .s6 { --accent: #4a9de8; }
+  .s7 { --accent: #6e7de8; }
+  .s8 { --accent: #9e6ee8; }
+  .s9 { --accent: #e86ea8; }
+
+  @media print {
+    body { background: white; }
+    .card { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-icon">⚙️</div>
+    <h1>
+      خطوات الاستعلام وطباعة تقييم الأداء الوظيفي
+      <span>من نظام فارس لشاغلي الوظائف التعليمية</span>
+    </h1>
+    <div class="hashtag">#الوظائف_التعليمية</div>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <div class="section-label">
+      <span>🔹 خطوات التنفيذ</span>
+      <div class="line"></div>
+    </div>
+
+    <div class="steps">
+
+      <div class="step s1">
+        <div class="step-num">١</div>
+        <div class="step-icon">🔐</div>
+        <div class="step-text">الدخول لنظام فارس</div>
+      </div>
+
+      <div class="step s2">
+        <div class="step-num">٢</div>
+        <div class="step-icon">👤</div>
+        <div class="step-text">صلاحية الخدمة الذاتية للموظف</div>
+      </div>
+
+      <div class="step s3">
+        <div class="step-num">٣</div>
+        <div class="step-icon">📊</div>
+        <div class="step-text">الدخول على الأداء الوظيفي</div>
+      </div>
+
+      <div class="step s4">
+        <div class="step-num">٤</div>
+        <div class="step-icon">📋</div>
+        <div class="step-text">إعداد ميثاق الأداء الوظيفي</div>
+      </div>
+
+      <div class="step s5">
+        <div class="step-num">٥</div>
+        <div class="step-icon">🔍</div>
+        <div class="step-text">الاطلاع على نموذج ميثاق الأداء الوظيفي</div>
+      </div>
+
+      <div class="step s6">
+        <div class="step-num">٦</div>
+        <div class="step-icon">📅</div>
+        <div class="step-text">تحديد السنة المراد طباعة أدائها</div>
+      </div>
+
+      <div class="step s7">
+        <div class="step-num">٧</div>
+        <div class="step-icon">▶️</div>
+        <div class="step-text">انقر على "استمرار"</div>
+      </div>
+
+      <div class="step s8">
+        <div class="step-num">٨</div>
+        <div class="step-icon">📤</div>
+        <div class="step-text">انقر على "تقديم"</div>
+      </div>
+
+      <div class="step s9">
+        <div class="step-num">٩</div>
+        <div class="step-icon">🖨️</div>
+        <div class="step-text">انقر على أيقونة المخرجات</div>
+      </div>
+
+    </div>
+
+    <!-- Note -->
+    <div class="note-box">
+      <div class="note-icon">⚠️</div>
+      <div class="note-text">ستظهر رسالة تنفيذ الطباعة — اضغط <strong>"OK"</strong> للمتابعة</div>
+    </div>
+
+    <!-- Print Options -->
+    <div class="print-section">
+      <div class="print-title">🖨️ طباعة المستند عبر:</div>
+      <div class="print-options">
+        <div class="print-opt">📸 تصوير الشاشة</div>
+        <div class="print-opt">⌨️ <span class="badge">Ctrl + P</span> من لوحة المفاتيح</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-brand">
+      <div class="brand-title">✦ تصميم د/فواز</div>
+      <div class="brand-tagline">تفضل للمزيد هنا</div>
+      <a class="brand-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

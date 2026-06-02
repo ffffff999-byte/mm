@@ -1423,6 +1423,126 @@ ${clone.outerHTML}
 }
 
 
+function savePDF() {
+  const name  = (document.getElementById('ai-name')?.value  || '').trim() || 'موظف';
+  const title = (document.getElementById('ai-title')?.value || '').trim() || 'اداري';
+
+  const area = document.getElementById('printArea');
+  if (!area) { alert('لا يوجد نموذج لحفظه — يرجى توليد الأهداف أولاً'); return; }
+
+  // Clone and replace inputs with text
+  const clone = area.cloneNode(true);
+
+  clone.querySelectorAll('.fill-input').forEach(inp => {
+    const span = document.createElement('span');
+    span.style.cssText = 'font-weight:700;color:#8B6914;border-bottom:1px dotted #aaa;padding:0 3px;min-width:20px;display:inline-block;text-align:center;';
+    span.textContent = inp.value.trim() || inp.placeholder || '...';
+    inp.replaceWith(span);
+  });
+  clone.querySelectorAll('.weight-input').forEach(inp => {
+    const span = document.createElement('span');
+    span.style.cssText = 'font-weight:900;color:#005F5A;';
+    span.textContent = inp.value || '0';
+    inp.replaceWith(span);
+  });
+  clone.querySelectorAll('.target-input').forEach(inp => {
+    const span = document.createElement('span');
+    span.style.cssText = 'color:#555;display:block;text-align:center;';
+    span.textContent = inp.value || '—';
+    inp.replaceWith(span);
+  });
+  clone.querySelectorAll('.time-input').forEach(inp => {
+    const span = document.createElement('span');
+    span.style.cssText = 'color:#555;display:block;text-align:center;';
+    span.textContent = inp.value || '—';
+    inp.replaceWith(span);
+  });
+  clone.querySelectorAll('textarea').forEach(ta => {
+    const span = document.createElement('span');
+    span.style.cssText = 'font-size:.82rem;line-height:1.5;';
+    span.textContent = ta.value || ta.placeholder || '';
+    ta.replaceWith(span);
+  });
+  clone.querySelectorAll('.no-print, #add-goal-row, #goalsFooter, button').forEach(el => el.remove());
+
+  const printCSS = `
+    @page { size:A4 portrait; margin:7mm 9mm 7mm 9mm; }
+    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;box-sizing:border-box;}
+    html,body{margin:0;padding:0;background:#fff;font-family:'Tajawal',sans-serif;direction:rtl;}
+    #printArea{width:100%;font-size:11.5px;background:#fff;}
+    #rpt-header{background:linear-gradient(135deg,#005F5A,#007B75,#004D40)!important;padding:9px 16px;display:flex;align-items:center;justify-content:space-between;}
+    #rpt-header>div:first-child{display:flex;align-items:center;gap:12px;}
+    #rpt-header>div:first-child>div:first-child{width:42px;height:42px;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+    #rpt-header>div:first-child>div:last-child>div:first-child{color:#fff;font-size:.95rem;font-weight:900;}
+    #rpt-header>div:first-child>div:last-child>div:last-child{color:rgba(255,255,255,.75);font-size:.72rem;margin-top:2px;}
+    #rpt-header>div:last-child{display:none;}
+    #printArea>div:nth-child(2){padding:9px 16px;background:#f8fffe;border-bottom:2px solid #B2DFDB;}
+    #printArea>div:nth-child(2)>div:first-child{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:7px;}
+    #printArea>div:nth-child(2)>div:first-child>div{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #B2DFDB;}
+    #printArea>div:nth-child(2)>div:first-child>div>div:first-child{font-size:.65rem;color:#5C7A77;font-weight:600;margin-bottom:3px;}
+    #printArea>div:nth-child(2)>div:first-child>div>div:last-child{font-size:.88rem;font-weight:800;color:#005F5A;}
+    #printArea>div:nth-child(2)>div:last-child{background:#fff;border-radius:8px;padding:8px 10px;border:1px solid #B2DFDB;}
+    #printArea>div:nth-child(2)>div:last-child>div:first-child{font-size:.65rem;color:#5C7A77;font-weight:600;margin-bottom:3px;}
+    #rpt-desc{font-size:.8rem;color:#1C3330;line-height:1.5;}
+    #printArea>div:nth-child(3){padding:9px 16px;}
+    #printArea>div:nth-child(3)>div:first-child{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+    #printArea>div:nth-child(3)>div:first-child>div:first-child{font-size:.88rem;font-weight:800;color:#005F5A;}
+    #printArea>div:nth-child(3)>div:first-child>div:nth-child(2){flex:1;height:2px;background:linear-gradient(90deg,#4DB6AC,transparent);}
+    #goalsCount{display:none;}
+    #goalsTable{width:100%;border-collapse:collapse;font-size:.78rem;table-layout:fixed;}
+    #goalsTable thead tr{background:linear-gradient(135deg,#005F5A,#007B75)!important;}
+    #goalsTable thead tr th{padding:7px 6px;color:#fff;font-size:.72rem;font-weight:700;text-align:center;}
+    #goalsTable thead tr th:nth-child(2){text-align:right;}
+    #goalsTable th:nth-child(1),#goalsTable td:nth-child(1){width:28px;}
+    #goalsTable th:nth-child(2),#goalsTable td:nth-child(2){width:auto;}
+    #goalsTable th:nth-child(3),#goalsTable td:nth-child(3){width:44px;}
+    #goalsTable th:nth-child(4),#goalsTable td:nth-child(4){width:68px;}
+    #goalsTable th:nth-child(5),#goalsTable td:nth-child(5){width:68px;}
+    #goalsTable tbody tr:nth-child(odd){background:#f8fffe;}
+    #goalsTable tbody tr:nth-child(even){background:#fff;}
+    #goalsTable tbody tr td{padding:6px 7px;border-bottom:1px solid #e0e0e0;vertical-align:middle;line-height:1.45;font-size:.77rem;}
+    #goalsTable tbody tr td:nth-child(1){text-align:center;font-weight:800;color:#005F5A;}
+    #goalsTable tbody tr td:nth-child(3),#goalsTable tbody tr td:nth-child(4),#goalsTable tbody tr td:nth-child(5){text-align:center;}
+    #printArea>div:last-child{padding:9px 16px 10px;border-top:1px solid #B2DFDB;}
+    #printArea>div:last-child>div:first-child{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    #printArea>div:last-child>div:first-child>div{text-align:center;padding:10px 8px;border:1px dashed #B2DFDB;border-radius:8px;}
+    #printArea>div:last-child>div:first-child>div>div:nth-child(1){font-size:.7rem;font-weight:700;color:#5C7A77;margin-bottom:6px;}
+    #printArea>div:last-child>div:first-child>div>div:nth-child(2){height:22px;border-bottom:1px solid #bbb;margin-bottom:5px;}
+    #printArea>div:last-child>div:first-child>div>div:nth-child(3){font-size:.65rem;color:#5C7A77;}
+    #printArea>div:last-child>div:last-child{display:none;}
+  `;
+
+  const printHTML = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800;900&display=swap" rel="stylesheet">
+<title>اهداف_${name}_${title}</title>
+<style>${printCSS}</style>
+</head>
+<body>${clone.outerHTML}</body>
+</html>`;
+
+  const blob = new Blob([printHTML], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = 'اهداف_' + name + '_' + title + '.html';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 1000);
+
+  // Also open print dialog for PDF export via browser
+  const win = window.open(url, '_blank', 'width=900,height=700');
+  if (win) {
+    win.onload = function() {
+      setTimeout(() => { win.focus(); win.print(); }, 800);
+    };
+  }
+}
+
+function regenerate() { generateGoals(); }
+
 function clearAll() {
   ['ai-name','ai-title','ai-desc','ai-tasks'].forEach(id => { document.getElementById(id).value = ''; });
   document.getElementById('ai-result').style.display  = 'none';

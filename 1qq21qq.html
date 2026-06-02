@@ -761,46 +761,116 @@ const QS=[
 
 /* ===== FEEDBACK TEXT ===== */
 const OK_FB=['🎉 ممتاز! إجابة صحيحة تماماً!','🌟 رائع! أنت نجم حقيقي!','✅ أحسنت! هذا هو الجواب الصحيح!','🏆 عظيم! استمر هكذا!','💪 بالضبط! ذكاء واضح!','🔥 صح 100%! أنت في القمة!','👏 برافو! إجابة مثالية!','⭐ ممتاز جداً!'];
-const NO_FB=['❌ للأسف خطأ! الجواب الصحيح مُعلَّم باللون الأخضر.','😔 حاول في المرة القادمة! راجع الجواب الصحيح.','🔍 ليس هذا! الجواب الصحيح ظاهر أدناه.','💡 لا بأس! تعلمنا من أخطائنا. الجواب مميَّز.','📚 خطأ! الأهم أن تتعلم الجواب الصحيح.'];
+const NO_FB=['❌ للأسف خطأ! الجواب الصحيح مُعلَّم باللون الأخضر.','😔 حاول في المرة القادمة! راجع الجواب الصحيح.','🔍 ليس هذا! الجواب الصحيح ظاهر أدناه.','💡 لا بأس! تعلمنا من أخطائنا. الجواب مميَّز.','📚 خطأ! اقرأ القاعدة تحت السؤال، هنا الفائدة الحقيقية.'];
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 
 /* ===== DIRECT FEEDBACK: CORRECTION + RULE ===== */
 function escHtml(v){
   return String(v).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));
 }
-function ruleExplanation(q){
+function cleanWord(v){return String(v).replace(/✓|✗/g,'').trim();}
+function correctedSentence(q){
+  const ans=cleanWord(q.o[q.a]);
+  let txt=q.q;
+  if(/_+/.test(txt)) txt=txt.replace(/_+/g, ans);
+  else if(/…+|\.\.\.+|…../.test(txt)) txt=txt.replace(/…+|\.\.\.+|…../g, ans);
+  return txt;
+}
+function vocabInfo(word){
+  const w=cleanWord(word).toLowerCase();
+  const data={
+    'swim':'swim تعني يسبح؛ لذلك تناسب عبارة at the pool لأن المسبح مكان السباحة.',
+    'snorkel':'snorkel تعني الغطس بأنبوب تنفس؛ وتناسب underwater attractions لأنها أشياء تُشاهَد تحت الماء.',
+    'tie':'tie تعني ربطة عنق؛ وتأتي مع shirt غالباً في الملابس الرسمية.',
+    'sneakers':'sneakers تعني حذاء رياضي؛ لذلك تناسب ممارسة basketball.',
+    'celebrate':'celebrate تعني يحتفل؛ ونستخدمها مع المناسبات الوطنية مثل National Day.',
+    'flags':'flags تعني أعلام؛ والتعبير الصحيح fly flags أي يرفعون الأعلام.',
+    'mud':'mud تعني طين؛ وmud bricks تعني طوب/لبن طيني.',
+    'skyscrapers':'skyscrapers تعني ناطحات سحاب؛ وهي مبانٍ عالية في المدن الحديثة.',
+    'laundry':'do the laundry تعني يغسل الملابس.',
+    'beach':'beach تعني الشاطئ؛ وهو مكان مناسب للعب volleyball في السياق.',
+    'museum':'museum تعني متحف؛ وتناسب جملة I love history.',
+    'gym':'Gym تعني صالة رياضية، وفيها أجهزة مثل treadmills.',
+    'calendar':'Calendar يعني تقويم، وهو صفحة تعرض الأيام والأرقام.',
+    'graduation day':'Graduation day يعني يوم التخرج ويدل عليه cap and gown.',
+    'calcium':'calcium عنصر غذائي يحتاجه الجسم لصحة العظام والأسنان.',
+    'sea bugs':'sea bugs تعبير يُطلق مجازاً على shrimp, crab, and lobster بسبب شكلها الخارجي.',
+    'relaxing':'relaxing تعني مريح/هادئ؛ لذلك تناسب quiet beach.',
+    'adventurous':'adventurous تعني مليء بالمغامرة؛ وتناسب hiking in the mountains.',
+    'windy':'windy تعني عاصف؛ وHold on to your hat دليل على وجود رياح.',
+    'sunny':'sunny تعني مشمس؛ وsunglasses قرينة واضحة على الشمس.',
+    "i don't know":'I have no idea معناها: لا أعرف.',
+    'kitchen':'Kitchen تعني المطبخ، وهو المكان المنطقي لإحضار snacks.',
+    'shrieked':'shrieked تعني صرخت؛ وتناسب المفاجأة والخوف من snake.',
+    'lightning':'lightning تعني برق؛ وتأتي مع storm.',
+    'horse':'zorse كلمة مركبة من zebra + horse.',
+    'hang gliding':'Hang gliding رياضة غير مألوفة مقارنة بكرة القدم والسلة.',
+    'certainty':'Definitely تعبّر عن التأكيد/اليقين.',
+    'scuba diving':'Scuba diving تعني الغوص بمعدات التنفس.',
+    'hospital':'Hospital مستشفى، وتظهر من وجود أطباء يعالجون مريضاً.',
+    'desert':'Desert صحراء، وتدل عليها الكثبان الرملية.',
+    'venice':'Venice مدينة إيطالية مشهورة بالقنوات والجندول.',
+    '79 c.e.':'79 C.E. تاريخ مرتبط بمدينة Pompeii وثوران البركان.',
+    'boat':'gondola نوع من القوارب وليس سيارة أو دراجة.',
+    'steal':'steal تعني يسرق؛ لذلك تناسب tried to ___ a bag.',
+    'fake':'fake تعني مزيف/غير حقيقي؛ وتناسب diamond is not real.',
+    'in a hurry':'in a hurry تعني مستعجل؛ لا يملك وقتاً للحديث والاسترخاء.',
+    'toothpaste':'toothpaste معجون أسنان، ويستخدم مع toothbrush.',
+    'scissors':'scissors مقص، ويستخدم لقص الورق.',
+    'hair dryer':'hair dryer مجفف شعر يستخدم لتجفيف الشعر المبلل.',
+    'ticket':'ticket مخالفة مرورية؛ تحصل عليها إذا قدت بسرعة عالية.',
+    'fit in':'fit in تعني ينسجم/يتشبه بالآخرين كي لا يكون مختلفاً.',
+    'benefit':'benefit تعني فائدة أو ميزة.',
+    'first':'first name يعني الاسم الأول، وهو الشائع عند التعريف بالنفس في الثقافة الأمريكية.',
+    'host':'host يعني المضيف؛ وهو الشخص الذي يستقبل الضيف ويكرمه.',
+    'taxi':'Taxi سيارة أجرة.',
+    'dishes':'Dishes أطباق/صحون وأدوات طعام.',
+    'tennis player':'Tennis Player لاعب تنس، ويدل عليه المضرب.'
+  };
+  return data[w] || `${cleanWord(word)} هي الكلمة الأنسب لمعنى الجملة. افهم السياق أولاً ثم اختر الكلمة التي تكمل المعنى لا التي تبدو مألوفة فقط.`;
+}
+function grammarRule(q){
   const question=q.q.toLowerCase();
-  const answer=q.o[q.a];
+  const ans=cleanWord(q.o[q.a]);
+  let rule='القاعدة هنا تُفهم من تركيب الجملة: انظر للفاعل والزمن والكلمة قبل الفراغ وبعده، ثم اختر الصيغة التي تجعل الجملة صحيحة نحواً ومعنى.';
+  if(/can\b|can't|could|couldn't|able to|mustn't|will can|can not/.test(question)) rule='أفعال القدرة والإلزام مثل can / could / must يأتي بعدها الفعل مجرداً بدون to. النفي الصحيح: can’t / couldn’t / mustn’t. ولا نقول will can.';
+  else if(/going to|tomorrow|vacation/.test(question)) rule='قاعدة المستقبل المخطط: am/is/are + going to + verb. نختار am مع I، وis مع المفرد، وare مع الجمع.';
+  else if(/was born|were born|grandfather|when i was|child/.test(question)) rule='في الماضي نستخدم was مع المفرد وI/he/she/it، ونستخدم were مع الجمع وyou/we/they. وعبارة was born تعني وُلِد.';
+  else if(/yesterday|last year|didn't|didn’t|drank|went|visited/.test(question)) rule='في الماضي البسيط نستخدم التصريف الثاني للفعل مثل went/drank/visited. وبعد didn’t يعود الفعل للمصدر، لكن إذا لم يوجد didn’t نستخدم فعل الماضي.';
+  else if(/will|probably|if the lake|freezes/.test(question)) rule='في الشرط من النوع الأول: If + present simple، ثم will + verb للنتيجة المستقبلية. لذلك نقول: If the lake freezes, children will go.';
+  else if(/have you|has visited|already|yet|just|ever seen/.test(question)) rule='المضارع التام: have/has + past participle. نستخدم have مع I/you/we/they، وhas مع he/she/it. وكلمة ever تناسب السؤال عن الخبرة.';
+  else if(/when|while|was looking|was cooking|was talking|were sitting|was driving/.test(question)) rule='الماضي المستمر: was/were + V-ing للفعل الذي كان مستمراً. نستخدم when مع الحدث المفاجئ، وwhile مع فعل كان مستمراً في نفس الوقت.';
+  else if(/so|such|so many|so much/.test(question)) rule='so تأتي قبل الصفة أو الظرف مثل so surprised. أما so many فتأتي مع الأسماء المعدودة، وso much مع غير المعدودة.';
+  else if(/enjoys|miss/.test(question)) rule='بعد enjoy وmiss نستخدم الفعل بصيغة -ing؛ مثل enjoys working وmiss spending.';
+  else if(/expect/.test(question)) rule='بعد expect نستخدم to + verb؛ لذلك الصيغة الصحيحة هي expect to be.';
+  else if(/wish|fewer people|wouldn't|wouldn’t|didn't have|knew/.test(question)) rule='مع wish للأمنية المخالفة للواقع نستخدم الماضي البسيط. وفي الشرط الثاني: If + past simple ثم would + verb.';
+  else if(/rather/.test(question)) rule='صيغة التفضيل الصحيحة: would rather + verb بدون to. لذلك نقول: I would rather walk.';
+  else if(/beautiful city|city beautiful/.test(question)) rule='الصفة في الإنجليزية تأتي قبل الاسم غالباً: a beautiful city، وليس city beautiful.';
+  else if(/let's|let invite/.test(question)) rule='للاقتراح نستخدم: Let’s + الفعل مجرداً. مثال: Let’s invite Bob.';
+  else if(/want to/.test(question)) rule='بعد want نستخدم to + verb: want to watch.';
+  else if(/are going to go|they/.test(question)) rule='مع الفاعل الجمع They نستخدم are، لذلك: They are going to go.';
+  return `${rule} الإجابة الصحيحة: <span class="correct-answer">${escHtml(ans)}</span>. الصياغة الصحيحة: <span class="correct-answer">${escHtml(correctedSentence(q))}</span>`;
+}
+function ruleExplanation(q, chosen){
+  const answer=cleanWord(q.o[q.a]);
   if(q.s==='orthography'){
-    return `الكلمة تُكمَل بالحرف الصحيح حسب تهجئتها الأصلية، لذلك التصحيح هو: <span class="correct-answer">${escHtml(answer)}</span>. اقرأ الكلمة كاملة بعد الإضافة لتتأكد أن نطقها وكتابتها سليمان.`;
+    let full='';
+    const m=q.q.match(/\(([^()]+)\)/);
+    if(m && !/[–-]/.test(m[1])) full=m[1];
+    if(!full) full=correctedSentence(q).replace(/\([^)]*\)/g,'').trim();
+    return `التهجئة الصحيحة للكلمة هي: <span class="correct-answer">${escHtml(full)}</span>. الحرف المطلوب هو <span class="correct-answer">${escHtml(answer)}</span> لأن الكلمة لا تُكتب بالشكل الصحيح إلا به.`;
   }
   if(q.s==='vocabulary'){
-    return `هذا سؤال مفردات: اختر الكلمة التي تناسب معنى الجملة والسياق. الإجابة الأنسب هنا هي: <span class="correct-answer">${escHtml(answer)}</span>. جرّب ترجمة الجملة كاملة، لا الكلمة وحدها.`;
+    return `${vocabInfo(answer)} الإجابة الصحيحة: <span class="correct-answer">${escHtml(answer)}</span>.`;
   }
   if(q.s==='comprehension'){
-    return `هذا سؤال فهم مقروء: نرجع للمعلومة الموجودة في النص ولا نعتمد على التخمين. الإجابة الصحيحة: <span class="correct-answer">${escHtml(answer)}</span>. ابحث عن الكلمة المفتاحية في السؤال داخل النص.`;
+    if(answer.toLowerCase().includes('true')) return `المعلومة صحيحة حسب النص؛ لذلك الاختيار هو <span class="correct-answer">True</span>. لا نعتمد على التخمين، بل على ما ورد في الجملة/النص.`;
+    if(answer.toLowerCase().includes('false')) return `المعلومة غير صحيحة حسب النص؛ لذلك الاختيار هو <span class="correct-answer">False</span>. سبب الخطأ أن العبارة تخالف المعلومة الأصلية في النص.`;
+    return `المعلومة المطلوبة موجودة في النص، والإجابة المطابقة لها هي: <span class="correct-answer">${escHtml(answer)}</span>. ركّز على الكلمة المفتاحية في السؤال ثم طابقها مع النص.`;
   }
-  if(q.s==='grammar'){
-    let rule='راجع تركيب الجملة والزمن والكلمة التي تأتي قبل الفراغ وبعده؛ فهي غالباً تكشف القاعدة المطلوبة.';
-    if(/can|can't|could|couldn't|able to|mustn't|should|will can/.test(question)) rule='بعد أفعال القدرة أو الإلزام مثل can / could / must يأتي الفعل مجرداً بدون to، والنفي يكون: can\’t / couldn\’t / mustn\’t.';
-    else if(/going to|tomorrow|vacation/.test(question)) rule='نستخدم be going to للتخطيط للمستقبل: am/is/are + going to + verb. اختر فعل be المناسب للفاعل.';
-    else if(/was|were|born|yesterday|last year|didn't|drank|went/.test(question)) rule='للماضي البسيط نستخدم التصريف الثاني للفعل، ومع didn\’t يرجع الفعل للمصدر. was مع المفرد، وwere مع الجمع.';
-    else if(/will|probably|tomorrow|if the lake|freezes/.test(question)) rule='في الشرط من النوع الأول: If + present simple، ثم will + verb للنتيجة المستقبلية.';
-    else if(/have you|has visited|already|yet|just/.test(question)) rule='في المضارع التام نستخدم have/has + past participle، وتأتي already غالباً في الجمل المثبتة، وyet في السؤال أو النفي.';
-    else if(/when|while|was looking|was cooking|was talking/.test(question)) rule='نستخدم الماضي المستمر was/were + V-ing للفعل الذي كان مستمراً، وwhen للفعل المفاجئ، وwhile لفعلين مستمرين غالباً.';
-    else if(/so|such|so many|so much/.test(question)) rule='so تأتي قبل الصفة أو الظرف، وsuch قبل الاسم، وso many مع الأسماء المعدودة، وso much مع غير المعدودة.';
-    else if(/enjoys|miss|spending|working/.test(question)) rule='بعد أفعال مثل enjoy وmiss نستخدم الفعل بصيغة ing: working / spending.';
-    else if(/expect|to be/.test(question)) rule='بعد expect نستخدم غالباً to + verb، مثل: expect to be.';
-    else if(/wish|wouldn't|wouldn't be|wouldn't have|didn't have|knew|fewer people/.test(question)) rule='بعد wish للتعبير عن أمنية مخالفة للواقع نستخدم الماضي البسيط، وفي الشرط الثاني: If + past simple ثم would + verb.';
-    else if(/rather/.test(question)) rule='الصيغة الصحيحة للتفضيل هي: would rather + الفعل مجرداً.';
-    else if(/a beautiful city|beautiful/.test(question)) rule='الصفة في الإنجليزية تأتي قبل الاسم: a beautiful city، وليس بعده كما في العربية.';
-    else if(/let's|let invite/.test(question)) rule='للاقتراح نستخدم: Let\’s + verb، مثل: Let\’s invite.';
-    else if(/want to/.test(question)) rule='بعد want نستخدم to + verb: want to watch.';
-    return `${rule} الإجابة الصحيحة هي: <span class="correct-answer">${escHtml(answer)}</span>.`;
-  }
+  if(q.s==='grammar') return grammarRule(q);
   return `الإجابة الصحيحة هي: <span class="correct-answer">${escHtml(answer)}</span>.`;
 }
-
 /* ===== STATE ===== */
 let active=[],ans_cnt=0,ok=0,no=0;
 
@@ -917,7 +987,7 @@ function answer(idx,chosen){
     <span class="fb-emoji">${emoji}</span>
     <span class="fb-content">
       <span class="fb-main">${msg}</span>
-      <span class="rule-box"><b>${correction}:</b> ${ruleExplanation(q)}</span>
+      <span class="rule-box"><b>${correction}:</b> ${ruleExplanation(q, chosen)}</span>
     </span>`;
 
   ans_cnt++;
@@ -945,7 +1015,7 @@ function showResult(){
   const t=active.length;
   const pct=Math.round((ok/t)*100);
   let emoji='🏆',grade='تقدير ممتاز',msg='أداء استثنائي! أنت متفوق حقيقي.';
-  if(pct<50){emoji='😔';grade='يحتاج مراجعة';msg='لا تستسلم! راجع المادة وحاول مجدداً.';}
+  if(pct<50){emoji='😔';grade='يحتاج مراجعة';msg='لا تستسلم! راجع التصحيحات والقواعد التي ظهرت تحت الأسئلة ثم حاول مجدداً.';}
   else if(pct<65){emoji='🙂';grade='تقدير مقبول';msg='جيد! بإمكانك تحسين أدائك.';}
   else if(pct<80){emoji='😊';grade='تقدير جيد';msg='جيد جداً! استمر في التحسن.';}
   else if(pct<90){emoji='🌟';grade='تقدير جيد جداً';msg='رائع! أداء ممتاز يُحتذى به.'}

@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة تقرير التقويم المدرسي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --primary: #3d3580;
+  --primary-light: #5a50b0;
+  --primary-dark: #2a2460;
+  --accent: #7c74c9;
+  --accent2: #a89de8;
+  --gold: #f0a500;
+  --green: #27ae60;
+  --orange: #e67e22;
+  --red: #e74c3c;
+  --teal: #16a085;
+  --bg: #f0eff8;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --text-light: #555577;
+  --border: #dddaf5;
+  --shadow: 0 4px 24px rgba(61,53,128,0.10);
+  --shadow-lg: 0 8px 40px rgba(61,53,128,0.18);
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  direction: rtl;
+}
+
+/* ===== UPLOAD SCREEN ===== */
+#uploadScreen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2a2460 0%, #3d3580 50%, #5a50b0 100%);
+  position: relative;
+  overflow: hidden;
+}
+#uploadScreen::before {
+  content:'';
+  position:absolute;
+  width:600px; height:600px;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+  top:-200px; left:-200px;
+  border-radius:50%;
+}
+#uploadScreen::after {
+  content:'';
+  position:absolute;
+  width:400px; height:400px;
+  background: radial-gradient(circle, rgba(168,157,232,0.1) 0%, transparent 70%);
+  bottom:-100px; right:-100px;
+  border-radius:50%;
+}
+
+.upload-container {
+  position: relative; z-index:2;
+  text-align: center;
+  max-width: 600px;
+  padding: 40px 20px;
+}
+
+.upload-logo {
+  width: 100px; height: 100px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 30px;
+  font-size: 48px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.2);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+.upload-title {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 8px;
+}
+.upload-subtitle {
+  font-size: 1.1rem;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 40px;
+}
+
+.drop-zone {
+  border: 2px dashed rgba(255,255,255,0.4);
+  border-radius: 20px;
+  padding: 50px 30px;
+  cursor: pointer;
+  transition: all 0.3s;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+.drop-zone:hover, .drop-zone.dragover {
+  border-color: rgba(255,255,255,0.8);
+  background: rgba(255,255,255,0.15);
+  transform: scale(1.01);
+}
+.drop-zone-icon { font-size: 3rem; margin-bottom: 16px; }
+.drop-zone-text { font-size: 1.2rem; font-weight: 700; color: #fff; margin-bottom: 8px; }
+.drop-zone-hint { font-size: 0.95rem; color: rgba(255,255,255,0.6); }
+
+#fileInput { display:none; }
+
+.btn-upload {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin-top: 24px;
+  background: linear-gradient(135deg, #f0a500, #e67e22);
+  color: #fff;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: 'Tajawal', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(240,165,0,0.4);
+}
+.btn-upload:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(240,165,0,0.5); }
+
+/* ===== LOADING SCREEN ===== */
+#loadingScreen {
+  display: none;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: linear-gradient(135deg, #2a2460 0%, #3d3580 100%);
+}
+.loading-spinner {
+  width: 80px; height: 80px;
+  border: 4px solid rgba(255,255,255,0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 24px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { color: #fff; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+.loading-sub { color: rgba(255,255,255,0.6); font-size: 1rem; }
+.loading-progress {
+  width: 300px; height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  margin-top: 24px;
+  overflow: hidden;
+}
+.loading-bar {
+  height: 100%;
+  background: var(--gold);
+  border-radius: 2px;
+  animation: progress 3s ease-in-out infinite;
+}
+@keyframes progress { 0%{width:0} 100%{width:100%} }
+
+/* ===== DASHBOARD ===== */
+#dashboard {
+  display: none;
+  min-height: 100vh;
+}
+
+.header {
+  background: linear-gradient(135deg, #2a2460 0%, #3d3580 60%, #5a50b0 100%);
+  padding: 0;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 4px 20px rgba(61,53,128,0.3);
+}
+.header-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.header-logo { display:flex; align-items:center; gap:12px; }
+.header-logo-icon {
+  width:48px; height:48px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px;
+}
+.header-title { font-size:1.3rem; font-weight:800; color:#fff; }
+.header-sub { font-size:0.85rem; color:rgba(255,255,255,0.7); }
+.header-actions { display:flex; gap:10px; align-items:center; }
+.btn-reset {
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-reset:hover { background: rgba(255,255,255,0.25); }
+.btn-print {
+  background: var(--gold);
+  border: none;
+  color: #fff;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-print:hover { background: #e09400; }
+
+/* School info badge */
+.school-badge {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 6px 16px;
+  border-radius: 8px;
+  color: rgba(255,255,255,0.9);
+  font-size: 0.9rem;
+}
+
+/* Tabs */
+.tabs-bar {
+  background: var(--primary-dark);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.tabs-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; gap: 4px;
+  padding: 0 30px;
+  overflow-x: auto;
+}
+.tab-btn {
+  background: none; border: none;
+  color: rgba(255,255,255,0.6);
+  padding: 12px 18px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+}
+.tab-btn:hover { color: rgba(255,255,255,0.9); }
+.tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+/* Main content */
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px;
+}
+
+/* Hero cards row */
+.hero-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.hero-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+.hero-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.hero-card::before {
+  content:'';
+  position:absolute;
+  top:0; right:0;
+  width:80px; height:80px;
+  border-radius: 0 var(--radius) 0 80px;
+}
+.hero-card.purple::before { background: linear-gradient(135deg,#3d3580,#5a50b0); }
+.hero-card.green::before { background: linear-gradient(135deg,#27ae60,#2ecc71); }
+.hero-card.orange::before { background: linear-gradient(135deg,#e67e22,#f39c12); }
+.hero-card.red::before { background: linear-gradient(135deg,#e74c3c,#c0392b); }
+.hero-card-icon {
+  position:absolute; top:12px; right:16px;
+  font-size:28px; z-index:1;
+}
+.hero-card-value {
+  font-size: 2.8rem;
+  font-weight: 900;
+  margin-bottom: 4px;
+  line-height: 1;
+}
+.hero-card.purple .hero-card-value { color: var(--primary); }
+.hero-card.green .hero-card-value { color: var(--green); }
+.hero-card.orange .hero-card-value { color: var(--orange); }
+.hero-card.red .hero-card-value { color: var(--red); }
+.hero-card-label { font-size:0.95rem; color: var(--text-light); font-weight:600; }
+.hero-card-sub { font-size:0.8rem; color: #aaa; margin-top:4px; }
+
+/* Section cards */
+.section-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.section-title span { font-size: 1.3rem; }
+
+/* Charts grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.chart-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+}
+.chart-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 16px;
+  text-align: center;
+}
+.chart-wrap { position:relative; height: 240px; }
+
+/* Gauge */
+.gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+}
+.gauge-canvas { max-width: 260px; }
+.gauge-value {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--primary);
+  text-align: center;
+  margin-top: -20px;
+}
+.gauge-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--orange);
+  text-align: center;
+  margin-top: 4px;
+}
+.gauge-desc {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  text-align: center;
+  margin-top: 6px;
+}
+
+/* Domains table */
+.domains-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.domain-item {
+  background: linear-gradient(135deg, #f8f7ff, #ededfc);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  border-right: 4px solid var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.domain-name { font-size:0.95rem; font-weight:700; color: var(--text); }
+.domain-bar-wrap { flex:1; height:10px; background:#e0dff5; border-radius:5px; overflow:hidden; }
+.domain-bar { height:100%; border-radius:5px; transition: width 1s ease; }
+.domain-pct {
+  font-size:1.1rem; font-weight:900;
+  min-width:55px; text-align:left;
+}
+
+/* Indicators table */
+.indicators-table { width:100%; border-collapse: collapse; }
+.indicators-table th {
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 16px;
+  font-size:0.9rem;
+  font-weight:700;
+  text-align: right;
+}
+.indicators-table th:last-child { text-align:center; }
+.indicators-table td {
+  padding: 12px 16px;
+  font-size:0.88rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  line-height:1.6;
+}
+.indicators-table tr:hover td { background:#f8f7ff; }
+.level-badge {
+  display:inline-block;
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:0.8rem;
+  font-weight:700;
+  white-space:nowrap;
+}
+.level-badge.tamayoz { background:#d4edda; color:#155724; }
+.level-badge.taqadom { background:#cce5ff; color:#004085; }
+.level-badge.intilaq { background:#fff3cd; color:#856404; }
+.level-badge.tahia { background:#f8d7da; color:#721c24; }
+
+/* Stakeholders */
+.stakeholders-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:20px; }
+.stakeholder-card {
+  background: linear-gradient(135deg,#f8f7ff,#ededfc);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  border-top: 4px solid var(--primary);
+}
+.stakeholder-title {
+  font-size:1rem; font-weight:800; color:var(--primary);
+  margin-bottom:16px; text-align:center;
+}
+.s-row {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:10px; gap:10px;
+}
+.s-label { font-size:0.85rem; color:var(--text-light); flex:1; }
+.s-bar-wrap { width:80px; height:8px; background:#e0dff5; border-radius:4px; overflow:hidden; }
+.s-bar { height:100%; background:var(--primary); border-radius:4px; }
+.s-val { font-size:0.9rem; font-weight:800; color:var(--primary); min-width:35px; text-align:left; }
+
+/* Tab panels */
+.tab-panel { display:none; }
+.tab-panel.active { display:block; }
+
+/* Year chart */
+.years-chart-wrap { height:280px; }
+
+/* Improvement table */
+.improvement-table { width:100%; border-collapse:collapse; }
+.improvement-table th {
+  background:var(--primary); color:#fff;
+  padding:12px 16px; font-size:0.9rem; font-weight:700; text-align:right;
+}
+.improvement-table td {
+  padding:12px 16px; font-size:0.85rem;
+  border-bottom:1px solid var(--border); line-height:1.6;
+}
+.improvement-table tr:nth-child(even) td { background:#f8f7ff; }
+
+/* Error box */
+.error-box {
+  background:#fff3cd; border:1px solid #ffc107; border-radius:12px;
+  padding:20px; margin:20px 0; display:none;
+}
+.error-title { font-weight:700; color:#856404; margin-bottom:8px; }
+
+/* Print */
+@media print {
+  .header-actions, .tabs-bar, #uploadScreen, #loadingScreen { display:none!important; }
+  .section-card, .chart-card { box-shadow:none; border:1px solid #ddd; }
+  body { background:#fff; }
+}
+
+/* Responsive */
+@media(max-width:900px) {
+  .hero-row { grid-template-columns:1fr 1fr; }
+  .charts-grid { grid-template-columns:1fr; }
+  .domains-grid { grid-template-columns:1fr; }
+  .stakeholders-grid { grid-template-columns:1fr; }
+  .main-content { padding:16px; }
+}
+
+/* Loading overlay */
+#analysisOverlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(42,36,96,0.9);
+  z-index:999;
+  flex-direction:column;
+  align-items:center; justify-content:center;
+}
+.analysis-spinner {
+  width:60px; height:60px;
+  border:4px solid rgba(255,255,255,0.2);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+  margin-bottom:20px;
+}
+.analysis-steps {
+  display:flex; flex-direction:column; gap:8px;
+  margin-top:20px;
+}
+.analysis-step {
+  display:flex; align-items:center; gap:10px;
+  color:rgba(255,255,255,0.6);
+  font-size:0.95rem; padding:8px 20px;
+  border-radius:8px; transition:all 0.3s;
+}
+.analysis-step.active {
+  color:#fff; background:rgba(255,255,255,0.1);
+}
+.analysis-step.done { color:var(--gold); }
+.step-icon { font-size:1.2rem; }
+</style>
+</head>
+<body>
+
+<!-- UPLOAD SCREEN -->
+<div id="uploadScreen">
+  <div class="upload-container">
+    <div class="upload-logo">📊</div>
+    <h1 class="upload-title">منصة تقرير التقويم المدرسي</h1>
+    <p class="upload-subtitle">الإدارة العامة للتعليم بمنطقة المدينة المنورة</p>
+    
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-zone-icon">📄</div>
+      <div class="drop-zone-text">ارفع ملف PDF لتقرير التقويم المدرسي</div>
+      <div class="drop-zone-hint">اسحب وأفلت الملف هنا أو انقر للاختيار</div>
+    </div>
+    
+    <button class="btn-upload" id="btnChooseFile">
+      📂 اختر ملف PDF
+    </button>
+    
+    <div style="margin-top:16px; color:rgba(255,255,255,0.5); font-size:0.85rem;">
+      يدعم ملفات PDF لتقارير التقويم المدرسي
+    </div>
+    
+    <!-- Demo button -->
+    <button class="btn-upload" style="background:linear-gradient(135deg,rgba(255,255,255,0.2),rgba(255,255,255,0.1));margin-top:12px;box-shadow:none;"
+      onclick="loadDemoData()">
+      🎯 تحميل بيانات تجريبية (المتوسطة الثلاثون بالمدينة)
+    </button>
+  </div>
+</div>
+
+<!-- LOADING SCREEN -->
+<div id="loadingScreen" style="display:none; min-height:100vh; align-items:center; justify-content:center; flex-direction:column; background:linear-gradient(135deg,#2a2460,#3d3580);">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">جاري تحليل ملف PDF...</div>
+  <div class="loading-sub" id="loadingStep">يقرأ الذكاء الاصطناعي محتوى التقرير</div>
+  <div class="loading-progress"><div class="loading-bar" id="loadingBar"></div></div>
+</div>
+
+<!-- ANALYSIS OVERLAY -->
+<div id="analysisOverlay" style="display:none; position:fixed; inset:0; background:rgba(42,36,96,0.92); z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
+  <div class="analysis-spinner"></div>
+  <div style="color:#fff;font-size:1.3rem;font-weight:700;margin-bottom:8px;">يحلل الذكاء الاصطناعي التقرير</div>
+  <div style="color:rgba(255,255,255,0.6);font-size:0.95rem;">Claude يقرأ ويستخرج البيانات من PDF...</div>
+  <div class="analysis-steps" id="analysisSteps">
+    <div class="analysis-step active" id="step1"><span class="step-icon">📄</span> قراءة ملف PDF</div>
+    <div class="analysis-step" id="step2"><span class="step-icon">🔍</span> استخراج بيانات المدرسة</div>
+    <div class="analysis-step" id="step3"><span class="step-icon">📊</span> تحليل النتائج والمؤشرات</div>
+    <div class="analysis-step" id="step4"><span class="step-icon">📈</span> بناء الرسوم البيانية</div>
+    <div class="analysis-step" id="step5"><span class="step-icon">✅</span> اكتمل التحليل</div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard" style="display:none;">
+  <div class="header">
+    <div class="header-inner">
+      <div class="header-logo">
+        <div class="header-logo-icon">📊</div>
+        <div>
+          <div class="header-title">منصة تقرير التقويم المدرسي</div>
+          <div class="header-sub" id="headerSub">الإدارة العامة للتعليم بمنطقة المدينة المنورة</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div class="school-badge" id="schoolBadge">🏫 المتوسطة الثلاثون - بنات</div>
+        <div class="school-badge" id="yearBadge">📅 2025م</div>
+        <div class="header-actions">
+          <button class="btn-reset" onclick="resetApp()">📂 رفع ملف جديد</button>
+          <button class="btn-print" onclick="window.print()">🖨️ طباعة</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tabs-bar">
+      <div class="tabs-inner">
+        <button class="tab-btn active" onclick="switchTab('overview')">📋 نظرة عامة</button>
+        <button class="tab-btn" onclick="switchTab('management')">🏛️ الإدارة المدرسية</button>
+        <button class="tab-btn" onclick="switchTab('teaching')">📚 التعليم والتعلم</button>
+        <button class="tab-btn" onclick="switchTab('outcomes')">🎯 نواتج التعلم</button>
+        <button class="tab-btn" onclick="switchTab('environment')">🏫 البيئة المدرسية</button>
+        <button class="tab-btn" onclick="switchTab('stakeholders')">👥 أصحاب المصلحة</button>
+        <button class="tab-btn" onclick="switchTab('history')">📆 الأداء التاريخي</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <!-- ERROR BOX -->
+    <div class="error-box" id="errorBox">
+      <div class="error-title">⚠️ تنبيه</div>
+      <div id="errorMsg"></div>
+    </div>
+
+    <!-- TAB: OVERVIEW -->
+    <div id="tab-overview" class="tab-panel active">
+      <!-- Hero Stats -->
+      <div class="hero-row" id="heroRow">
+        <div class="hero-card purple">
+          <div class="hero-card-icon">📊</div>
+          <div class="hero-card-value" id="overallScore">79%</div>
+          <div class="hero-card-label">الأداء العام للمدرسة</div>
+          <div class="hero-card-sub" id="overallLevel">مستوى التقدم</div>
+        </div>
+        <div class="hero-card green">
+          <div class="hero-card-icon">🏫</div>
+          <div class="hero-card-value" id="envScore">90.5%</div>
+          <div class="hero-card-label">البيئة المدرسية</div>
+          <div class="hero-card-sub">أعلى مجال</div>
+        </div>
+        <div class="hero-card orange">
+          <div class="hero-card-icon">📖</div>
+          <div class="hero-card-value" id="teachScore">71.75%</div>
+          <div class="hero-card-label">التعليم والتعلم</div>
+          <div class="hero-card-sub">أدنى مجال</div>
+        </div>
+        <div class="hero-card" style="background:linear-gradient(135deg,#f8f7ff,#fff);">
+          <div class="hero-card-icon">📅</div>
+          <div class="hero-card-value" style="color:var(--primary);font-size:2rem;" id="reportYear">2025م</div>
+          <div class="hero-card-label">عام التقرير</div>
+          <div class="hero-card-sub" id="schoolType">بنات - متوسط</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">الأداء وفق المجالات الأربعة</div>
+          <div class="chart-wrap">
+            <canvas id="domainsChart"></canvas>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">مستوى الأداء العام</div>
+          <div class="gauge-wrap">
+            <canvas id="gaugeChart" class="gauge-canvas" width="260" height="160"></canvas>
+            <div class="gauge-value" id="gaugeVal">79%</div>
+            <div class="gauge-label" id="gaugeLevel">التقدم</div>
+            <div class="gauge-desc">أداء جيد يحتاج إلى استمرار التحسين والتطوير</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Domains breakdown -->
+      <div class="section-card">
+        <div class="section-title"><span>📊</span> تفاصيل الأداء وفق المجالات</div>
+        <div class="domains-grid" id="domainsGrid"></div>
+      </div>
+    </div>
+
+    <!-- TAB: MANAGEMENT -->
+    <div id="tab-management" class="tab-panel">
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">الإدارة المدرسية - الأداء وفق المعايير</div>
+          <div class="chart-wrap"><canvas id="mgmtChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">توزيع مستويات المؤشرات</div>
+          <div class="chart-wrap"><canvas id="mgmtPieChart"></canvas></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-title"><span>📋</span> مؤشرات وإجراءات التحسين - الإدارة المدرسية</div>
+        <div id="mgmtIndicators"></div>
+      </div>
+    </div>
+
+    <!-- TAB: TEACHING -->
+    <div id="tab-teaching" class="tab-panel">
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">التعليم والتعلم - الأداء وفق المعايير</div>
+          <div class="chart-wrap"><canvas id="teachChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">مقارنة معايير التعليم والتعلم</div>
+          <div class="chart-wrap"><canvas id="teachRadar"></canvas></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-title"><span>📚</span> مؤشرات وإجراءات التحسين - التعليم والتعلم</div>
+        <div id="teachIndicators"></div>
+      </div>
+    </div>
+
+    <!-- TAB: OUTCOMES -->
+    <div id="tab-outcomes" class="tab-panel">
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">نواتج التعلم</div>
+          <div class="chart-wrap"><canvas id="outcomesChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">التحصيل الأكاديمي مقابل التطور الشخصي</div>
+          <div class="chart-wrap"><canvas id="outcomesBar"></canvas></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-title"><span>🎯</span> مؤشرات وإجراءات التحسين - نواتج التعلم</div>
+        <div id="outcomesIndicators"></div>
+      </div>
+    </div>
+
+    <!-- TAB: ENVIRONMENT -->
+    <div id="tab-environment" class="tab-panel">
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">البيئة المدرسية - الأداء وفق المعايير</div>
+          <div class="chart-wrap"><canvas id="envChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">الأمن والسلامة - البيئة التعليمية</div>
+          <div class="chart-wrap"><canvas id="envBar2"></canvas></div>
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-title"><span>🏫</span> مؤشرات وإجراءات التحسين - البيئة المدرسية</div>
+        <div id="envIndicators"></div>
+      </div>
+    </div>
+
+    <!-- TAB: STAKEHOLDERS -->
+    <div id="tab-stakeholders" class="tab-panel">
+      <div class="section-card">
+        <div class="section-title"><span>👥</span> استطلاع آراء أصحاب المصلحة</div>
+        <div class="stakeholders-grid" id="stakeholdersGrid"></div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">مقارنة آراء المتعلم ووليّ الأمر والمعلم</div>
+          <div class="chart-wrap"><canvas id="stakeholdersChart"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">أعلى وأدنى تقييمات أصحاب المصلحة</div>
+          <div class="chart-wrap"><canvas id="stakeholdersBar"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: HISTORY -->
+    <div id="tab-history" class="tab-panel">
+      <div class="section-card">
+        <div class="section-title"><span>📆</span> أداء المدرسة في التقويم المدرسي عبر السنوات</div>
+        <div class="years-chart-wrap"><canvas id="yearsChart"></canvas></div>
+      </div>
+      <div class="section-card">
+        <div class="section-title"><span>📈</span> تطور الأداء والمقارنة</div>
+        <div id="historyTable"></div>
+      </div>
+    </div>
+  </div><!-- end main-content -->
+</div><!-- end dashboard -->
+
+<script>
+// =====================
+// STATE
+// =====================
+let reportData = null;
+let chartsInstances = {};
+
+// =====================
+// FILE INPUT — مُدار بالكامل من JS، input دائماً جديد داخل body
+// =====================
+function openFilePicker() {
+  // احذف أي input قديم
+  const existing = document.getElementById('_pdfPicker');
+  if (existing) existing.remove();
+
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.id = '_pdfPicker';
+  inp.accept = '.pdf';
+  inp.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+
+  inp.addEventListener('change', function() {
+    const file = this.files && this.files[0];
+    this.remove(); // نظّف فوراً
+    if (file) {
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('يرجى اختيار ملف PDF فقط');
+        return;
+      }
+      processPDF(file);
+    }
+  });
+
+  document.body.appendChild(inp);
+  // setTimeout ضروري في بعض المتصفحات (خاصة Safari/iOS)
+  setTimeout(() => inp.click(), 50);
+}
+
+// =====================
+// DRAG & DROP + CLICK on zone
+// =====================
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('click', openFilePicker);
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  const file = e.dataTransfer.files[0];
+  if (file && (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf'))) {
+    processPDF(file);
+  } else {
+    alert('يرجى رفع ملف PDF فقط');
+  }
+});
+
+document.getElementById('btnChooseFile').addEventListener('click', openFilePicker);
+
+// =====================
+// PROCESS PDF via Claude API
+// =====================
+async function processPDF(file) {
+  // Show loading
+  document.getElementById('uploadScreen').style.display = 'none';
+  const overlay = document.getElementById('analysisOverlay');
+  overlay.style.display = 'flex';
+  
+  const steps = ['step1','step2','step3','step4','step5'];
+  let si = 0;
+  
+  async function advanceStep() {
+    if(si > 0) {
+      document.getElementById(steps[si-1]).classList.remove('active');
+      document.getElementById(steps[si-1]).classList.add('done');
+    }
+    if(si < steps.length) {
+      document.getElementById(steps[si]).classList.add('active');
+      si++;
+    }
+  }
+  
+  advanceStep(); // step1 reading
+  
+  try {
+    // Convert PDF to base64
+    const base64Data = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = () => rej(new Error('فشل قراءة الملف'));
+      r.readAsDataURL(file);
+    });
+    
+    advanceStep(); // step2
+    
+    const systemPrompt = `أنت محلل بيانات تعليمية متخصص في تقارير التقويم المدرسي السعودي. 
+مهمتك: قراءة تقرير التقويم المدرسي واستخراج جميع البيانات وإعادتها كـ JSON فقط بدون أي نص إضافي.
+
+استخرج البيانات التالية بدقة:
+{
+  "schoolName": "اسم المدرسة",
+  "schoolType": "نوع المدرسة (بنات/بنين - متوسط/ابتدائي...)",
+  "region": "المنطقة",
+  "year": "السنة",
+  "overallScore": رقم النسبة المئوية الكلية,
+  "overallLevel": "مستوى الأداء (تميز/تقدم/انطلاق/تهيئة)",
+  "overallDesc": "وصف مختصر للمستوى",
+  "domains": {
+    "management": {"name": "الإدارة المدرسية والتعليمية", "score": رقم},
+    "teaching": {"name": "التعليم والتعلم", "score": رقم},
+    "outcomes": {"name": "نواتج التعلم", "score": رقم},
+    "environment": {"name": "البيئة المدرسية", "score": رقم}
+  },
+  "managementStandards": [{"name":"اسم المعيار","score":رقم,"code":"الرمز"}],
+  "teachingStandards": [{"name":"اسم المعيار","score":رقم,"code":"الرمز"}],
+  "outcomesStandards": [{"name":"اسم المعيار","score":رقم,"code":"الرمز"}],
+  "environmentStandards": [{"name":"اسم المعيار","score":رقم,"code":"الرمز"}],
+  "indicators": [
+    {"code":"رمز المؤشر","text":"نص المؤشر","improvement":"إجراء التحسين","score":رقم,"level":"مستوى","domain":"management/teaching/outcomes/environment"}
+  ],
+  "stakeholders": {
+    "student": {"management":رقم,"teaching":رقم,"environment":رقم,"overall":رقم},
+    "parent": {"management":رقم,"teaching":رقم,"environment":رقم,"overall":رقم},
+    "teacher": {"management":رقم,"teaching":رقم,"environment":رقم,"overall":رقم}
+  },
+  "historicalData": [{"year":سنة,"score":رقم}]
+}
+
+أعد JSON فقط بدون أي نص آخر.`;
+
+    advanceStep(); // step3
+    
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 4000,
+        system: systemPrompt,
+        messages: [{
+          role: 'user',
+          content: [
+            {
+              type: 'document',
+              source: { type: 'base64', media_type: 'application/pdf', data: base64Data }
+            },
+            { type: 'text', text: 'استخرج جميع البيانات من هذا التقرير وأعدها كـ JSON فقط حسب الهيكل المطلوب.' }
+          ]
+        }]
+      })
+    });
+    
+    advanceStep(); // step4
+    
+    if(!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'خطأ في API');
+    }
+    
+    const data = await response.json();
+    const rawText = data.content.map(i => i.text || '').join('');
+    
+    // Parse JSON
+    let jsonText = rawText.replace(/```json\n?/g,'').replace(/```\n?/g,'').trim();
+    // Find JSON object
+    const start = jsonText.indexOf('{');
+    const end = jsonText.lastIndexOf('}');
+    if(start !== -1 && end !== -1) jsonText = jsonText.slice(start, end+1);
+    
+    reportData = JSON.parse(jsonText);
+    
+    advanceStep(); // step5 done
+    
+    await new Promise(r => setTimeout(r, 600));
+    overlay.style.display = 'none';
+    renderDashboard(reportData);
+    
+  } catch(err) {
+    overlay.style.display = 'none';
+    console.error('Error:', err);
+    showError('حدث خطأ أثناء تحليل الملف: ' + err.message + '<br>تأكد من أن الملف هو تقرير تقويم مدرسي صحيح.');
+    document.getElementById('uploadScreen').style.display = 'flex';
+  }
+}
+
+function showError(msg) {
+  const b = document.getElementById('errorBox');
+  document.getElementById('errorMsg').innerHTML = msg;
+  b.style.display = 'block';
+}
+
+// =====================
+// DEMO DATA
+// =====================
+function loadDemoData() {
+  reportData = {
+    schoolName: "المتوسطة الثلاثون بالمدينة",
+    schoolType: "بنات - متوسط",
+    region: "الإدارة العامة للتعليم بمنطقة المدينة المنورة",
+    year: "2025",
+    overallScore: 79,
+    overallLevel: "التقدم",
+    overallDesc: "أداء جيد يحتاج إلى استمرار التحسين والتطوير",
+    domains: {
+      management: { name: "الإدارة المدرسية والتعليمية", score: 83.75 },
+      teaching: { name: "التعليم والتعلم", score: 71.75 },
+      outcomes: { name: "نواتج التعلم", score: 77.00 },
+      environment: { name: "البيئة المدرسية", score: 90.50 }
+    },
+    managementStandards: [
+      { name: "التخطيط", score: 83.00, code: "1-1" },
+      { name: "قيادة العملية التعليمية", score: 87.00, code: "1-2" },
+      { name: "المجتمع المدرسي", score: 81.50, code: "1-3" },
+      { name: "التطوير المؤسسي", score: 82.50, code: "1-4" }
+    ],
+    teachingStandards: [
+      { name: "بناء خبرات التعلم", score: 67.03, code: "2-1" },
+      { name: "تقويم التعلم", score: 82.50, code: "2-2" }
+    ],
+    outcomesStandards: [
+      { name: "التحصيل العلمي", score: 73.50, code: "3-1" },
+      { name: "النمو الشخصي والاجتماعي", score: 90.75, code: "3-2" }
+    ],
+    environmentStandards: [
+      { name: "المبنى التعليمي", score: 89.75, code: "4-1" },
+      { name: "الأمن والسلامة", score: 91.00, code: "4-2" }
+    ],
+    indicators: [
+      { code: "1-1-1-1", text: "تضع المدرسة خطة تشغيلية تخطط لمفردات الجدول من أهداف مطورة محددة", improvement: "وضع خطة تشغيلية تتضمن أهدافاً محددة وقابلة للقياس", score: 88.50, level: "تقدم", domain: "management" },
+      { code: "2-1-1-1", text: "تلتزم المدرسة لتنفيذ خططها وطموحاتها بما يضمن تحقيق مخرجاتها", improvement: "مراجعة خطة التنفيذ وضمان المتابعة الدورية", score: 80.50, level: "تقدم", domain: "management" },
+      { code: "1-2-1-1", text: "تعزز المدرسة قيم الاستماع والوعية الوطنية", improvement: "برامج تنمية الانتماء الوطني لدى الطلاب", score: 83.75, level: "تقدم", domain: "management" },
+      { code: "1-2-2-1", text: "تلتزم المدرسة بتعزيز مهنية وأخلاقيات", improvement: "ورش تطوير مهني للمعلمين", score: 94.50, level: "تميز", domain: "management" },
+      { code: "1-1-2-1", text: "تعدد المدرسة مناماً فلسفياً تستمر في تحسين نواتج التعلم", improvement: "تطوير خطة تحسين مستمر", score: 90.25, level: "تميز", domain: "management" },
+      { code: "1-1-1-2", text: "توفر المدرسة مناخاً آمناً يشجع الطلاب وتشرف على نمائهم", improvement: "تعزيز بيئة التعلم الإيجابية", score: 92.75, level: "تميز", domain: "management" },
+      { code: "1-1-2-2", text: "تعدد المدرسة المناخ الفني أعلى على المعايير المعتمدة من الهيئة", improvement: "مراجعة أداء المعلمين وفق معايير الهيئة المهنية", score: 99.25, level: "تميز", domain: "management" },
+      { code: "1-1-2-1-t", text: "تدعم المدرسة حصة تقييمية وتأثيرها الإيجابي على تأثير التقويم والاعتماد", improvement: "تطوير منهجية التقويم الصفي", score: 83.75, level: "تقدم", domain: "management" },
+      { code: "1-1-1-2-t", text: "تعدد المدرسة بناءً هادفاً للمتعلم ويتاح لهم المشاركة وتدريبهم", improvement: "تفعيل مجالس الطلاب ودعم مشاركتهم", score: 85.75, level: "تقدم", domain: "outcomes" },
+      { code: "1-2-1-t", text: "تهتم المدرسة بمناخ التعلم وتقوم بالتحفيز والدعم المستمر", improvement: "برامج تحفيز وتشجيع الطلاب", score: 85.75, level: "تقدم", domain: "outcomes" },
+      { code: "1-1-1-2-t2", text: "توفر المدرسة الجو الملائم للمتعلم ليتعلم ويتطور", improvement: "تحسين بيئة التعلم وتجهيز الفصول", score: 75.00, level: "انطلاق", domain: "teaching" },
+      { code: "1-1-2-2-t", text: "تدعم المدرسة التطوير المهني المستمر وفق المعايير المعتمدة", improvement: "الاشتراك في برامج التطوير المهني", score: 99.25, level: "تميز", domain: "teaching" },
+      { code: "1-4-1-1", text: "تنظيم البيئة المدرسية وتعليم عدد المتعلمين والقدرة العلمية", improvement: "ضبط الكثافة الطلابية وتنظيم الفصول", score: 98.25, level: "تميز", domain: "environment" },
+      { code: "2-1-4-1", text: "توافق عمل وإجراءاتها وانطباقها على متطلبات الأمن والسلامة", improvement: "تطبيق اشتراطات السلامة بشكل كامل", score: 98.75, level: "تميز", domain: "environment" },
+      { code: "2-4-1", text: "تحمل المدرسة على نظافة صحية جميع منافق الأمن والسلامة بالنظام", improvement: "تكثيف جولات التفتيش الصحي", score: 87.75, level: "تقدم", domain: "environment" },
+      { code: "3-4-1", text: "تعمل المدرسة على نظام الأمن المدرسي وصيانة مرافقها", improvement: "صيانة دورية لجميع المرافق المدرسية", score: 86.00, level: "تقدم", domain: "environment" }
+    ],
+    stakeholders: {
+      student: { management: 92, teaching: 80, environment: 77, overall: 90 },
+      parent: { management: 82, teaching: 80, environment: 88, overall: 88 },
+      teacher: { management: 95, teaching: 91, environment: 69, overall: 91 }
+    },
+    historicalData: [
+      { year: 2024, score: 79 },
+      { year: 2025, score: 79 }
+    ]
+  };
+  
+  document.getElementById('uploadScreen').style.display = 'none';
+  renderDashboard(reportData);
+}
+
+// =====================
+// RENDER DASHBOARD
+// =====================
+function renderDashboard(data) {
+  // Update header
+  document.getElementById('schoolBadge').textContent = '🏫 ' + (data.schoolName || 'المدرسة');
+  document.getElementById('yearBadge').textContent = '📅 ' + (data.year || '2025') + 'م';
+  document.getElementById('headerSub').textContent = data.region || '';
+  
+  // Hero cards
+  document.getElementById('overallScore').textContent = data.overallScore + '%';
+  document.getElementById('overallLevel').textContent = 'مستوى ' + (data.overallLevel || '');
+  document.getElementById('envScore').textContent = (data.domains?.environment?.score || 0) + '%';
+  document.getElementById('teachScore').textContent = (data.domains?.teaching?.score || 0) + '%';
+  document.getElementById('reportYear').textContent = (data.year || '2025') + 'م';
+  document.getElementById('schoolType').textContent = data.schoolType || '';
+  
+  // Gauge
+  document.getElementById('gaugeVal').textContent = data.overallScore + '%';
+  document.getElementById('gaugeLevel').textContent = data.overallLevel || 'التقدم';
+  
+  // Render components
+  renderGauge(data.overallScore);
+  renderDomainsGrid(data);
+  renderDomainsChart(data);
+  renderManagement(data);
+  renderTeaching(data);
+  renderOutcomes(data);
+  renderEnvironment(data);
+  renderStakeholders(data);
+  renderHistory(data);
+  
+  // Show dashboard
+  document.getElementById('dashboard').style.display = 'block';
+}
+
+// =====================
+// GAUGE
+// =====================
+function renderGauge(score) {
+  const canvas = document.getElementById('gaugeChart');
+  const ctx = canvas.getContext('2d');
+  const w = 260, h = 160;
+  canvas.width = w; canvas.height = h;
+  
+  const cx = w/2, cy = h - 20;
+  const r = 110;
+  const startAngle = Math.PI;
+  const endAngle = 0;
+  
+  // Background arc
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, startAngle, endAngle);
+  ctx.lineWidth = 24;
+  ctx.strokeStyle = '#e5e3f5';
+  ctx.stroke();
+  
+  // Colored segments
+  const segments = [
+    { from: 0, to: 0.35, color: '#e74c3c' },   // تهيئة
+    { from: 0.35, to: 0.55, color: '#e67e22' }, // انطلاق
+    { from: 0.55, to: 0.75, color: '#3d3580' }, // تقدم
+    { from: 0.75, to: 1.0, color: '#27ae60' }   // تميز
+  ];
+  
+  segments.forEach(seg => {
+    ctx.beginPath();
+    const sa = Math.PI + seg.from * Math.PI;
+    const ea = Math.PI + seg.to * Math.PI;
+    ctx.arc(cx, cy, r, sa, ea);
+    ctx.lineWidth = 24;
+    ctx.strokeStyle = seg.color;
+    ctx.stroke();
+  });
+  
+  // Needle
+  const pct = score / 100;
+  const needleAngle = Math.PI + pct * Math.PI;
+  const nx = cx + (r - 30) * Math.cos(needleAngle);
+  const ny = cy + (r - 30) * Math.sin(needleAngle);
+  
+  ctx.beginPath();
+  ctx.moveTo(cx, cy);
+  ctx.lineTo(nx, ny);
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = '#1a1a2e';
+  ctx.lineCap = 'round';
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.arc(cx, cy, 8, 0, 2*Math.PI);
+  ctx.fillStyle = '#1a1a2e';
+  ctx.fill();
+  
+  // Labels
+  ctx.font = '11px Tajawal';
+  ctx.fillStyle = '#888';
+  ctx.textAlign = 'center';
+  ctx.fillText('تهيئة', cx - r + 20, cy - 40);
+  ctx.fillText('تميز', cx + r - 20, cy - 40);
+}
+
+// =====================
+// DOMAINS CHART
+// =====================
+function renderDomainsChart(data) {
+  if(chartsInstances.domainsChart) chartsInstances.domainsChart.destroy();
+  const ctx = document.getElementById('domainsChart').getContext('2d');
+  const d = data.domains || {};
+  
+  chartsInstances.domainsChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['الإدارة المدرسية', 'التعليم والتعلم', 'نواتج التعلم', 'البيئة المدرسية'],
+      datasets: [{
+        data: [d.management?.score||0, d.teaching?.score||0, d.outcomes?.score||0, d.environment?.score||0],
+        backgroundColor: ['#3d3580','#e67e22','#27ae60','#7c74c9'],
+        borderRadius: 8,
+        borderSkipped: false
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: {
+        y: { min: 0, max: 100, ticks: { callback: v => v+'%' }, grid: { color: '#f0eff8' } },
+        x: { ticks: { font: { family: 'Tajawal', size: 11 } } }
+      }
+    }
+  });
+}
+
+// =====================
+// DOMAINS GRID
+// =====================
+function renderDomainsGrid(data) {
+  const d = data.domains || {};
+  const items = [
+    { name: 'الإدارة المدرسية والتعليمية', score: d.management?.score||0, color: '#3d3580' },
+    { name: 'التعليم والتعلم', score: d.teaching?.score||0, color: '#e67e22' },
+    { name: 'نواتج التعلم', score: d.outcomes?.score||0, color: '#27ae60' },
+    { name: 'البيئة المدرسية', score: d.environment?.score||0, color: '#7c74c9' }
+  ];
+  
+  const grid = document.getElementById('domainsGrid');
+  grid.innerHTML = items.map(item => `
+    <div class="domain-item">
+      <div class="domain-name">${item.name}</div>
+      <div class="domain-bar-wrap">
+        <div class="domain-bar" style="width:${item.score}%;background:${item.color};"></div>
+      </div>
+      <div class="domain-pct" style="color:${item.color};">${item.score}%</div>
+    </div>
+  `).join('');
+}
+
+// =====================
+// INDICATORS TABLE
+// =====================
+function renderIndicatorsTable(indicators, containerId) {
+  if(!indicators || indicators.length === 0) {
+    document.getElementById(containerId).innerHTML = '<p style="color:#aaa;text-align:center;padding:20px;">لا توجد بيانات مؤشرات</p>';
+    return;
+  }
+  
+  const html = `
+    <table class="indicators-table">
+      <thead>
+        <tr>
+          <th style="width:90px;">الرمز</th>
+          <th>نص المؤشر</th>
+          <th>إجراء التحسين</th>
+          <th style="width:80px;">النسبة</th>
+          <th style="width:90px;">المستوى</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${indicators.map(ind => {
+          const lvl = getLevelBadge(ind.level || getLevelFromScore(ind.score));
+          return `<tr>
+            <td style="font-weight:700;color:var(--primary);font-size:0.8rem;">${ind.code||''}</td>
+            <td>${ind.text||''}</td>
+            <td style="color:var(--text-light);">${ind.improvement||''}</td>
+            <td style="font-weight:900;color:var(--primary);text-align:center;">${ind.score||''}%</td>
+            <td style="text-align:center;">${lvl}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+  
+  document.getElementById(containerId).innerHTML = html;
+}
+
+function getLevelFromScore(score) {
+  if(score >= 90) return 'تميز';
+  if(score >= 75) return 'تقدم';
+  if(score >= 55) return 'انطلاق';
+  return 'تهيئة';
+}
+
+function getLevelBadge(level) {
+  const map = { 'تميز':'tamayoz','تقدم':'taqadom','انطلاق':'intilaq','تهيئة':'tahia' };
+  const cls = map[level] || 'taqadom';
+  return `<span class="level-badge ${cls}">${level||''}</span>`;
+}
+
+// =====================
+// MANAGEMENT
+// =====================
+function renderManagement(data) {
+  const standards = data.managementStandards || [];
+  if(chartsInstances.mgmtChart) chartsInstances.mgmtChart.destroy();
+  
+  const ctx = document.getElementById('mgmtChart').getContext('2d');
+  chartsInstances.mgmtChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: standards.map(s => s.name),
+      datasets: [{ data: standards.map(s => s.score), backgroundColor: '#3d3580', borderRadius:8, borderSkipped:false }]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0eff8'}},
+        x:{ticks:{font:{family:'Tajawal',size:10}}}
+      }
+    }
+  });
+  
+  // Pie
+  if(chartsInstances.mgmtPieChart) chartsInstances.mgmtPieChart.destroy();
+  const ctx2 = document.getElementById('mgmtPieChart').getContext('2d');
+  const mgmtInds = (data.indicators||[]).filter(i=>i.domain==='management');
+  const levels = countLevels(mgmtInds);
+  chartsInstances.mgmtPieChart = new Chart(ctx2, {
+    type: 'doughnut',
+    data: {
+      labels: ['تميز','تقدم','انطلاق','تهيئة'],
+      datasets: [{data:[levels.tamayoz,levels.taqadom,levels.intilaq,levels.tahia], backgroundColor:['#27ae60','#3d3580','#e67e22','#e74c3c'], borderWidth:0}]
+    },
+    options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'right', labels:{font:{family:'Tajawal'}} } } }
+  });
+  
+  renderIndicatorsTable(mgmtInds, 'mgmtIndicators');
+}
+
+// =====================
+// TEACHING
+// =====================
+function renderTeaching(data) {
+  const standards = data.teachingStandards || [];
+  if(chartsInstances.teachChart) chartsInstances.teachChart.destroy();
+  
+  const ctx = document.getElementById('teachChart').getContext('2d');
+  chartsInstances.teachChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: standards.map(s => s.name),
+      datasets: [{ data: standards.map(s=>s.score), backgroundColor:'#e67e22', borderRadius:8, borderSkipped:false }]
+    },
+    options: {responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0eff8'}},x:{ticks:{font:{family:'Tajawal',size:11}}}}}
+  });
+  
+  // Radar
+  if(chartsInstances.teachRadar) chartsInstances.teachRadar.destroy();
+  const ctx2 = document.getElementById('teachRadar').getContext('2d');
+  chartsInstances.teachRadar = new Chart(ctx2, {
+    type: 'radar',
+    data: {
+      labels: standards.map(s=>s.name),
+      datasets: [{label:'الأداء', data:standards.map(s=>s.score), backgroundColor:'rgba(230,126,34,0.2)', borderColor:'#e67e22', pointBackgroundColor:'#e67e22'}]
+    },
+    options: {responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:100,ticks:{stepSize:25}}},plugins:{legend:{labels:{font:{family:'Tajawal'}}}}}
+  });
+  
+  renderIndicatorsTable((data.indicators||[]).filter(i=>i.domain==='teaching'), 'teachIndicators');
+}
+
+// =====================
+// OUTCOMES
+// =====================
+function renderOutcomes(data) {
+  const standards = data.outcomesStandards || [];
+  if(chartsInstances.outcomesChart) chartsInstances.outcomesChart.destroy();
+  
+  const ctx = document.getElementById('outcomesChart').getContext('2d');
+  chartsInstances.outcomesChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: standards.map(s=>s.name),
+      datasets: [{data:standards.map(s=>s.score), backgroundColor:['#27ae60','#7c74c9'], borderWidth:0}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{family:'Tajawal'}}}}}
+  });
+  
+  if(chartsInstances.outcomesBar) chartsInstances.outcomesBar.destroy();
+  const ctx2 = document.getElementById('outcomesBar').getContext('2d');
+  chartsInstances.outcomesBar = new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: standards.map(s=>s.name),
+      datasets: [{data:standards.map(s=>s.score), backgroundColor:['#27ae60','#7c74c9'], borderRadius:8, borderSkipped:false}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0eff8'}},x:{ticks:{font:{family:'Tajawal',size:11}}}}}
+  });
+  
+  renderIndicatorsTable((data.indicators||[]).filter(i=>i.domain==='outcomes'), 'outcomesIndicators');
+}
+
+// =====================
+// ENVIRONMENT
+// =====================
+function renderEnvironment(data) {
+  const standards = data.environmentStandards || [];
+  if(chartsInstances.envChart) chartsInstances.envChart.destroy();
+  
+  const ctx = document.getElementById('envChart').getContext('2d');
+  chartsInstances.envChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: standards.map(s=>s.name),
+      datasets: [{data:standards.map(s=>s.score), backgroundColor:'#7c74c9', borderRadius:8, borderSkipped:false}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0eff8'}},x:{ticks:{font:{family:'Tajawal',size:11}}}}}
+  });
+  
+  if(chartsInstances.envBar2) chartsInstances.envBar2.destroy();
+  const ctx2 = document.getElementById('envBar2').getContext('2d');
+  chartsInstances.envBar2 = new Chart(ctx2, {
+    type: 'polarArea',
+    data: {
+      labels: standards.map(s=>s.name),
+      datasets: [{data:standards.map(s=>s.score), backgroundColor:standards.map((_,i)=>['rgba(124,116,201,0.7)','rgba(39,174,96,0.7)','rgba(240,165,0,0.7)','rgba(231,76,60,0.7)'][i%4])}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,scales:{r:{min:0,max:100}},plugins:{legend:{labels:{font:{family:'Tajawal'}}}}}
+  });
+  
+  renderIndicatorsTable((data.indicators||[]).filter(i=>i.domain==='environment'), 'envIndicators');
+}
+
+// =====================
+// STAKEHOLDERS
+// =====================
+function renderStakeholders(data) {
+  const s = data.stakeholders || {};
+  
+  const stakeholderLabels = [
+    { key: 'student', label: 'استبانة المتعلم', color: '#3d3580' },
+    { key: 'parent', label: 'استبانة ولي الأمر', color: '#27ae60' },
+    { key: 'teacher', label: 'استبانة المعلم', color: '#e67e22' }
+  ];
+  
+  const fields = [
+    { key: 'management', label: 'الإدارة المدرسية' },
+    { key: 'teaching', label: 'التعليم والتعلم' },
+    { key: 'environment', label: 'البيئة المدرسية' },
+    { key: 'overall', label: 'الجانب التعليمي' }
+  ];
+  
+  const grid = document.getElementById('stakeholdersGrid');
+  grid.innerHTML = stakeholderLabels.map(st => {
+    const data2 = s[st.key] || {};
+    return `
+      <div class="stakeholder-card" style="border-top-color:${st.color}">
+        <div class="stakeholder-title" style="color:${st.color}">${st.label}</div>
+        ${fields.map(f => `
+          <div class="s-row">
+            <div class="s-label">${f.label}</div>
+            <div class="s-bar-wrap"><div class="s-bar" style="width:${data2[f.key]||0}%;background:${st.color};"></div></div>
+            <div class="s-val" style="color:${st.color};">${data2[f.key]||0}%</div>
+          </div>
+        `).join('')}
+      </div>`;
+  }).join('');
+  
+  // Grouped bar
+  if(chartsInstances.stakeholdersChart) chartsInstances.stakeholdersChart.destroy();
+  const ctx = document.getElementById('stakeholdersChart').getContext('2d');
+  chartsInstances.stakeholdersChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: fields.map(f=>f.label),
+      datasets: stakeholderLabels.map(st => ({
+        label: st.label,
+        data: fields.map(f=>(s[st.key]||{})[f.key]||0),
+        backgroundColor: st.color,
+        borderRadius: 6
+      }))
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins: { legend: { labels:{ font:{family:'Tajawal'} } } },
+      scales: {
+        y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0eff8'}},
+        x:{ticks:{font:{family:'Tajawal',size:10}}}
+      }
+    }
+  });
+  
+  if(chartsInstances.stakeholdersBar) chartsInstances.stakeholdersBar.destroy();
+  const ctx2 = document.getElementById('stakeholdersBar').getContext('2d');
+  const allVals = stakeholderLabels.map(st=>({label:st.label, val:(s[st.key]||{}).overall||0, color:st.color}));
+  chartsInstances.stakeholdersBar = new Chart(ctx2, {
+    type:'bar',
+    data:{
+      labels:allVals.map(v=>v.label),
+      datasets:[{data:allVals.map(v=>v.val), backgroundColor:allVals.map(v=>v.color), borderRadius:10, borderSkipped:false}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0eff8'}},x:{ticks:{font:{family:'Tajawal'}}}}}
+  });
+}
+
+// =====================
+// HISTORY
+// =====================
+function renderHistory(data) {
+  const hist = data.historicalData || [];
+  // Fill future years
+  const lastYear = hist.length ? Math.max(...hist.map(h=>h.year)) : 2025;
+  const years = [];
+  for(let y = Math.min(...(hist.length?hist.map(h=>h.year):[2024])); y <= 2030; y++) years.push(y);
+  
+  if(chartsInstances.yearsChart) chartsInstances.yearsChart.destroy();
+  const ctx = document.getElementById('yearsChart').getContext('2d');
+  const scores = years.map(y => {
+    const h = hist.find(h=>h.year===y);
+    return h ? h.score : null;
+  });
+  
+  chartsInstances.yearsChart = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels:years.map(y=>y+''),
+      datasets:[{
+        data:scores,
+        backgroundColor:years.map(y=>(hist.find(h=>h.year===y)?'#3d3580':'rgba(200,200,220,0.3)')),
+        borderRadius:8, borderSkipped:false
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{y:{min:0,max:100,ticks:{callback:v=>v+'%'},grid:{color:'#f0eff8'}},x:{ticks:{font:{family:'Tajawal'}}}}}
+  });
+  
+  // History table
+  const tableHtml = `
+    <table class="improvement-table">
+      <thead><tr>
+        <th>السنة</th><th>النسبة الكلية</th><th>المستوى</th><th>الملاحظات</th>
+      </tr></thead>
+      <tbody>
+        ${hist.map(h=>`
+          <tr>
+            <td style="font-weight:700;">${h.year}م</td>
+            <td style="font-weight:900;color:var(--primary);font-size:1.1rem;">${h.score}%</td>
+            <td>${getLevelBadge(getLevelFromScore(h.score))}</td>
+            <td style="color:var(--text-light);">${h.score >= 75 ? 'أداء جيد يستوجب الاستمرار في التحسين' : 'يحتاج إلى مزيد من التطوير'}</td>
+          </tr>`).join('')}
+        ${hist.length===0?'<tr><td colspan="4" style="text-align:center;color:#aaa;">لا توجد بيانات تاريخية</td></tr>':''}
+      </tbody>
+    </table>`;
+  document.getElementById('historyTable').innerHTML = tableHtml;
+}
+
+function countLevels(indicators) {
+  const res = { tamayoz:0, taqadom:0, intilaq:0, tahia:0 };
+  (indicators||[]).forEach(ind => {
+    const lvl = ind.level || getLevelFromScore(ind.score);
+    if(lvl==='تميز') res.tamayoz++;
+    else if(lvl==='تقدم') res.taqadom++;
+    else if(lvl==='انطلاق') res.intilaq++;
+    else res.tahia++;
+  });
+  return res;
+}
+
+// =====================
+// TABS
+// =====================
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// =====================
+// RESET — العودة لشاشة الرفع ورفع ملف جديد
+// =====================
+function resetApp() {
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('uploadScreen').style.display = 'flex';
+  // تنظيف أي picker معلّق
+  const old = document.getElementById('_pdfPicker');
+  if (old) old.remove();
+  // إعادة ضبط الحالة
+  reportData = null;
+  Object.values(chartsInstances).forEach(c => { try{c.destroy()}catch(e){} });
+  chartsInstances = {};
+  // إعادة ضبط خطوات التحليل
+  ['step1','step2','step3','step4','step5'].forEach((s,i) => {
+    const el = document.getElementById(s);
+    if(el) { el.classList.remove('active','done'); if(i===0) el.classList.add('active'); }
+  });
+}
+</script>
+</body>
+</html>

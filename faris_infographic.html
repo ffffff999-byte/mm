@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إنفوجرافيك - كيفية التظلم على نتيجة الأداء في فارس</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Tajawal', sans-serif;
+    background: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 24px;
+  }
+
+  .card {
+    width: 640px;
+    background: #ffffff;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,80,100,0.15);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, #0a5c6e 0%, #0d7a8a 50%, #0b9494 100%);
+    padding: 28px 32px 24px;
+    text-align: center;
+    position: relative;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -16px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 24px solid transparent;
+    border-right: 24px solid transparent;
+    border-top: 18px solid #0b9494;
+  }
+  .header h1 {
+    color: #ffffff;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 1.5;
+  }
+  .header h1 span {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    margin-top: 4px;
+  }
+
+  /* ===== MIND MAP AREA ===== */
+  .mindmap-area {
+    padding: 44px 28px 28px;
+    position: relative;
+    background: #f8fcff;
+  }
+
+  /* SVG connector lines */
+  .connectors {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Center circle */
+  .center-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .center-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #0a5c6e, #0b9494);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: 900;
+    line-height: 1.5;
+    box-shadow:
+      0 0 0 6px rgba(11,148,148,0.2),
+      0 0 0 12px rgba(11,148,148,0.1),
+      0 8px 30px rgba(10,92,110,0.4);
+    padding: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Grid layout for cards around center */
+  .grid-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .grid-middle {
+    display: grid;
+    grid-template-columns: 1fr 150px 1fr;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .grid-bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Step card */
+  .step-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 14px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    border: 2px solid var(--color);
+    position: relative;
+    transition: transform 0.2s;
+  }
+  .step-card:hover { transform: translateY(-2px); }
+
+  .step-card .num {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--color);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .step-card .label {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a3a40;
+    line-height: 1.5;
+  }
+
+  .step-card .dot {
+    position: absolute;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--color);
+    box-shadow: 0 0 0 3px rgba(255,255,255,1), 0 0 0 5px var(--color);
+  }
+
+  /* Dot positions (pointing toward center) */
+  .card-top-right  .dot { bottom: -6px; left: 50%; transform: translateX(-50%); }
+  .card-top-left   .dot { bottom: -6px; left: 50%; transform: translateX(-50%); }
+  .card-mid-right  .dot { top: 50%; left: -6px; transform: translateY(-50%); }
+  .card-mid-left   .dot { top: 50%; right: -6px; transform: translateY(-50%); }
+  .card-bot-right  .dot { top: -6px; left: 50%; transform: translateX(-50%); }
+  .card-bot-left   .dot { top: -6px; left: 50%; transform: translateX(-50%); }
+
+  /* Colors */
+  .c1 { --color: #2196a8; }
+  .c2 { --color: #27ae8f; }
+  .c3 { --color: #16a085; }
+  .c4 { --color: #0d7a8a; }
+  .c5 { --color: #148a7a; }
+  .c6 { --color: #1abc9c; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: linear-gradient(135deg, #0a5c6e, #0d7a8a);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .footer-star {
+    color: #f0c040;
+    font-size: 18px;
+  }
+  .footer-brand {
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 800;
+  }
+  .footer-sep {
+    color: rgba(255,255,255,0.4);
+    font-size: 14px;
+  }
+  .footer-tagline {
+    color: rgba(255,255,255,0.75);
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .footer-link {
+    color: #a8eee0;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    direction: ltr;
+    unicode-bidi: embed;
+  }
+  .footer-link:hover { color: #ffffff; text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>
+      كيفية التظلم على نتيجة الأداء في فارس
+      <span>#الوظائف_التعليمية</span>
+    </h1>
+  </div>
+
+  <!-- MIND MAP -->
+  <div class="mindmap-area">
+
+    <!-- SVG Lines -->
+    <svg class="connectors" viewBox="0 0 584 420" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- top-right card to center -->
+      <line x1="438" y1="116" x2="357" y2="158" stroke="#2196a8" stroke-width="2" stroke-dasharray="5,4" opacity="0.5"/>
+      <!-- top-left card to center -->
+      <line x1="146" y1="116" x2="227" y2="158" stroke="#27ae8f" stroke-width="2" stroke-dasharray="5,4" opacity="0.5"/>
+      <!-- mid-right to center -->
+      <line x1="404" y1="210" x2="367" y2="210" stroke="#16a085" stroke-width="2" stroke-dasharray="5,4" opacity="0.5"/>
+      <!-- mid-left to center -->
+      <line x1="180" y1="210" x2="217" y2="210" stroke="#0d7a8a" stroke-width="2" stroke-dasharray="5,4" opacity="0.5"/>
+      <!-- bot-right to center -->
+      <line x1="438" y1="305" x2="357" y2="262" stroke="#148a7a" stroke-width="2" stroke-dasharray="5,4" opacity="0.5"/>
+      <!-- bot-left to center -->
+      <line x1="146" y1="305" x2="227" y2="262" stroke="#1abc9c" stroke-width="2" stroke-dasharray="5,4" opacity="0.5"/>
+    </svg>
+
+    <!-- TOP ROW -->
+    <div class="grid-top">
+      <div class="step-card card-top-left c2">
+        <span class="num">1-</span>
+        <div class="label">صلاحية الخدمة الذاتية للموظف</div>
+        <div class="dot"></div>
+      </div>
+      <div class="step-card card-top-right c1">
+        <span class="num">2-</span>
+        <div class="label">الأداء الوظيفي</div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <!-- MIDDLE ROW -->
+    <div class="grid-middle">
+      <div class="step-card card-mid-left c4">
+        <span class="num">4-</span>
+        <div class="label">طلب التظلم</div>
+        <div class="dot"></div>
+      </div>
+
+      <div class="center-circle">
+        كيفية<br>التظلم على<br>نتيجة الأداء<br>في فارس
+      </div>
+
+      <div class="step-card card-mid-right c3">
+        <span class="num">3-</span>
+        <div class="label">التظلم على نتيجة الأداء للموظف</div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="grid-bottom">
+      <div class="step-card card-bot-left c6">
+        <span class="num">6-</span>
+        <div class="label">إكمال البيانات والحفظ والإرسال</div>
+        <div class="dot"></div>
+      </div>
+      <div class="step-card card-bot-right c5">
+        <span class="num">5-</span>
+        <div class="label">الضغط على طلب الاعتراض</div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <span class="footer-star">✦</span>
+    <span class="footer-brand">تصميم د/فواز</span>
+    <span class="footer-sep">|</span>
+    <span class="footer-tagline">تفضل للمزيد هنا</span>
+    <a class="footer-link" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">https://t.me/TAqhjT3MFVE1Yzk0</a>
+  </div>
+
+</div>
+</body>
+</html>

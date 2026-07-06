@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ساعات التطوير المهني | دليل الاحتساب التفاعلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0e1c3f;
+  --navy2:#16295c;
+  --navy3:#1e356f;
+  --gold:#d4ab2a;
+  --gold-soft:#f3e3ac;
+  --teal:#17a08f;
+  --teal-soft:#d8f3ef;
+  --ink:#22304f;
+  --muted:#6a7691;
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --line:#e3e8f2;
+  --radius:18px;
+  --shadow:0 10px 30px rgba(14,28,63,.08);
+  --fz:16px;
+}
+body.dark{
+  --bg:#0b1530;
+  --card:#13224a;
+  --ink:#eef2fb;
+  --muted:#9aa8c9;
+  --line:#243662;
+  --navy:#0b1530;
+  --navy2:#13224a;
+  --navy3:#1b2f61;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Tajawal',sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  font-size:var(--fz);
+  line-height:1.8;
+  transition:background .4s,color .4s;
+}
+h1,h2,h3,.disp{font-family:'Cairo',sans-serif}
+
+/* ===== HEADER ===== */
+header{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 55%,#1c3a6e 100%);
+  color:#fff;
+  padding:52px 20px 120px;
+  position:relative;
+  overflow:hidden;
+}
+header::before{
+  content:"";
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 15% 20%,rgba(212,171,42,.14),transparent 40%),
+    radial-gradient(circle at 85% 80%,rgba(23,160,143,.16),transparent 45%);
+}
+.hwrap{max-width:1100px;margin:0 auto;position:relative;text-align:center}
+.badge-top{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  padding:6px 18px;border-radius:100px;
+  font-size:.82rem;letter-spacing:.5px;color:var(--gold-soft);
+  margin-bottom:22px;
+}
+header h1{
+  font-size:clamp(1.6rem,4vw,2.6rem);
+  font-weight:900;line-height:1.5;
+}
+header h1 span{color:var(--gold)}
+.hsub{color:#c4d0ea;max-width:640px;margin:14px auto 0;font-size:.98rem}
+
+/* equation — signature */
+.equation{
+  margin:36px auto 0;
+  display:flex;align-items:center;justify-content:center;gap:16px;
+  flex-wrap:wrap;
+}
+.eq-chip{
+  background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(212,171,42,.5);
+  border-radius:16px;
+  padding:14px 30px;
+  font-family:'Cairo';font-weight:800;font-size:1.15rem;
+  color:#fff;
+  backdrop-filter:blur(4px);
+  animation:rise .8s ease both;
+}
+.eq-chip.gold{background:linear-gradient(135deg,var(--gold),#b8901c);border-color:transparent;color:var(--navy)}
+.eq-eq{font-size:1.8rem;color:var(--gold);font-weight:900;animation:rise .8s .15s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* ===== STATS STRIP ===== */
+.stats{
+  max-width:1100px;margin:-70px auto 0;padding:0 20px;position:relative;z-index:3;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;
+}
+.stat{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:20px 14px;text-align:center;border-top:4px solid var(--teal);
+  transition:transform .25s;
+}
+.stat:nth-child(2){border-top-color:var(--gold)}
+.stat:nth-child(3){border-top-color:var(--navy3)}
+.stat:nth-child(4){border-top-color:var(--teal)}
+.stat:hover{transform:translateY(-4px)}
+.stat b{display:block;font-family:'Cairo';font-size:1.7rem;font-weight:900;color:var(--teal)}
+.stat:nth-child(2) b{color:var(--gold)}
+.stat:nth-child(3) b{color:var(--navy3)}
+body.dark .stat:nth-child(3) b{color:#8fa8e8}
+.stat small{color:var(--muted);font-size:.82rem}
+
+/* ===== NAV TABS ===== */
+.tabs-wrap{
+  position:sticky;top:0;z-index:50;
+  background:var(--bg);
+  padding:16px 20px 10px;
+  border-bottom:1px solid var(--line);
+}
+.tabs{
+  max-width:1100px;margin:0 auto;
+  display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;
+  scrollbar-width:thin;
+}
+.tab{
+  flex:0 0 auto;
+  background:var(--card);border:1.5px solid var(--line);
+  color:var(--ink);
+  padding:9px 20px;border-radius:100px;cursor:pointer;
+  font-family:'Tajawal';font-weight:700;font-size:.9rem;
+  transition:.25s;white-space:nowrap;
+}
+.tab .n{
+  display:inline-block;background:var(--teal-soft);color:var(--teal);
+  border-radius:100px;padding:0 8px;font-size:.75rem;margin-inline-start:6px;font-weight:800;
+}
+.tab.active{background:var(--navy2);color:#fff;border-color:var(--navy2)}
+.tab.active .n{background:var(--gold);color:var(--navy)}
+body.dark .tab.active{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+body.dark .tab.active .n{background:var(--navy);color:var(--gold-soft)}
+
+/* search */
+.search-row{max-width:1100px;margin:10px auto 0;display:flex;gap:10px}
+.search{
+  flex:1;display:flex;align-items:center;gap:10px;
+  background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:10px 16px;
+}
+.search input{
+  flex:1;border:0;outline:0;background:transparent;color:var(--ink);
+  font-family:'Tajawal';font-size:.95rem;
+}
+.search svg{width:18px;height:18px;stroke:var(--muted)}
+
+/* ===== MAIN ===== */
+main{max-width:1100px;margin:0 auto;padding:34px 20px 60px}
+.vessel{margin-bottom:46px}
+.vhead{
+  display:flex;align-items:center;gap:14px;margin-bottom:20px;
+}
+.vicon{
+  width:52px;height:52px;border-radius:15px;flex:0 0 auto;
+  background:linear-gradient(135deg,var(--navy2),var(--navy3));
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-family:'Cairo';font-weight:900;font-size:1.2rem;
+  box-shadow:var(--shadow);
+}
+.vhead h2{font-size:1.3rem;font-weight:800}
+.vhead .ven{color:var(--muted);font-size:.8rem;font-weight:400;display:block}
+.vline{flex:1;height:2px;background:linear-gradient(to left,var(--gold),transparent);border-radius:2px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px}
+
+/* ===== ACTIVITY CARD ===== */
+.card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:hidden;border:1px solid var(--line);
+  display:flex;flex-direction:column;
+  transition:transform .25s,box-shadow .25s;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(14,28,63,.14)}
+.chead{
+  background:linear-gradient(135deg,var(--navy2),var(--navy3));
+  color:#fff;padding:16px 18px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.chead h3{font-size:1.05rem;font-weight:800;line-height:1.5}
+.chead small{display:block;color:#a9b8dc;font-size:.72rem;font-weight:400;font-family:'Tajawal'}
+.cnum{
+  width:34px;height:34px;border-radius:10px;flex:0 0 auto;
+  background:rgba(212,171,42,.18);border:1px solid rgba(212,171,42,.5);
+  color:var(--gold-soft);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cairo';font-weight:800;font-size:.9rem;
+}
+.cbody{padding:18px;flex:1;display:flex;flex-direction:column;gap:14px}
+
+/* hour badges */
+.hours{display:flex;gap:12px}
+.hbadge{
+  flex:1;border-radius:14px;padding:12px;text-align:center;
+  border:1.5px solid var(--line);position:relative;
+}
+.hbadge.mustafid{background:var(--teal-soft);border-color:rgba(23,160,143,.35)}
+.hbadge.monafith{background:linear-gradient(135deg,#fdf6de,#f7ecc4);border-color:rgba(212,171,42,.45)}
+body.dark .hbadge.mustafid{background:rgba(23,160,143,.12)}
+body.dark .hbadge.monafith{background:rgba(212,171,42,.10)}
+.hbadge .num{font-family:'Cairo';font-weight:900;font-size:1.9rem;line-height:1.2}
+.hbadge.mustafid .num{color:var(--teal)}
+.hbadge.monafith .num{color:#b8901c}
+.hbadge .lbl{font-size:.78rem;font-weight:700;color:var(--ink)}
+.hbadge .per{font-size:.68rem;color:var(--muted)}
+.hbadge.none{background:transparent}
+.hbadge.none .num{color:var(--muted);font-size:1.4rem}
+
+/* sharing */
+.share{
+  background:var(--bg);border:1.5px dashed var(--line);
+  border-radius:12px;padding:10px 14px;font-size:.82rem;color:var(--muted);
+  display:flex;gap:8px;align-items:flex-start;
+}
+.share b{color:var(--ink)}
+.share .ic{color:var(--gold);font-weight:900;flex:0 0 auto}
+
+/* accordion */
+.acc-btn{
+  width:100%;background:transparent;border:1.5px solid var(--line);
+  border-radius:12px;padding:10px 16px;cursor:pointer;
+  font-family:'Tajawal';font-weight:700;font-size:.88rem;color:var(--ink);
+  display:flex;justify-content:space-between;align-items:center;
+  transition:.25s;
+}
+.acc-btn:hover{border-color:var(--teal);color:var(--teal)}
+.acc-btn .arr{transition:transform .3s;color:var(--gold);font-weight:900}
+.card.open .acc-btn .arr{transform:rotate(90deg)}
+.acc-body{
+  max-height:0;overflow:hidden;transition:max-height .45s ease;
+}
+.card.open .acc-body{max-height:1200px}
+.cond-group{margin-top:12px}
+.cond-title{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:.78rem;font-weight:800;padding:4px 14px;border-radius:100px;margin-bottom:8px;
+}
+.cond-title.t-must{background:var(--teal-soft);color:var(--teal)}
+.cond-title.t-mon{background:#f7ecc4;color:#96751a}
+body.dark .cond-title.t-mon{background:rgba(212,171,42,.15);color:var(--gold-soft)}
+body.dark .cond-title.t-must{background:rgba(23,160,143,.15)}
+.cond-list{list-style:none;display:flex;flex-direction:column;gap:7px}
+.cond-list li{
+  position:relative;padding-inline-start:24px;font-size:.84rem;color:var(--ink);line-height:1.7;
+}
+.cond-list li::before{
+  content:"";position:absolute;right:4px;top:11px;
+  width:8px;height:8px;border-radius:3px;background:var(--gold);transform:rotate(45deg);
+}
+.cond-list.tl li::before{background:var(--teal)}
+
+/* ===== GENERAL RULES ===== */
+.rules{
+  background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+  border-radius:24px;color:#fff;padding:40px 30px;margin-top:20px;
+  position:relative;overflow:hidden;
+}
+.rules::after{
+  content:"٪";position:absolute;left:-20px;bottom:-60px;
+  font-family:'Cairo';font-size:16rem;color:rgba(212,171,42,.06);font-weight:900;
+}
+.rules h2{color:var(--gold);font-size:1.4rem;margin-bottom:6px}
+.rules p.sub{color:#b9c6e4;font-size:.88rem;margin-bottom:24px}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;position:relative}
+.rule{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;
+  font-size:.86rem;line-height:1.7;
+}
+.rule .rn{
+  flex:0 0 auto;width:30px;height:30px;border-radius:9px;
+  background:var(--gold);color:var(--navy);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cairo';font-weight:900;font-size:.85rem;
+}
+
+/* ===== MIN POINTS TABLE ===== */
+.minpts{margin-top:46px}
+.tbl-card{
+  background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);
+  overflow:auto;border:1px solid var(--line);
+}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th{
+  background:var(--navy2);color:#fff;padding:13px 14px;font-family:'Cairo';
+  font-size:.86rem;font-weight:700;
+}
+th:first-child{border-radius:0}
+td{
+  padding:12px 14px;border-bottom:1px solid var(--line);font-size:.86rem;text-align:center;
+}
+td.rowh{font-weight:800;text-align:right;color:var(--navy3)}
+body.dark td.rowh{color:#9db4ef}
+tr:last-child td{border-bottom:0}
+.pt{font-family:'Cairo';font-weight:900;color:var(--teal);font-size:1rem}
+.pt-sub{display:block;font-size:.68rem;color:var(--muted);font-weight:400;font-family:'Tajawal'}
+.dash{color:var(--muted)}
+
+/* ===== FOOTER ===== */
+footer{
+  background:var(--navy);color:#8fa0c6;text-align:center;
+  padding:26px 20px;font-size:.8rem;line-height:2;
+}
+footer b{color:var(--gold)}
+footer .brand{
+  margin-top:16px;padding-top:16px;
+  border-top:1px solid rgba(255,255,255,.12);
+  display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
+}
+footer .bsig{
+  font-family:'Cairo';font-weight:900;font-size:1rem;color:var(--gold-soft);
+}
+footer .brand a{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--gold),#b8901c);color:var(--navy);
+  padding:8px 22px;border-radius:100px;text-decoration:none;
+  font-weight:800;font-size:.82rem;font-family:'Tajawal';
+  box-shadow:0 6px 16px rgba(212,171,42,.35);transition:.25s;
+}
+footer .brand a:hover{transform:translateY(-2px);filter:brightness(1.08)}
+
+/* ===== SETTINGS ===== */
+.gear{
+  position:fixed;bottom:24px;left:24px;z-index:200;
+  width:56px;height:56px;border-radius:50%;border:0;cursor:pointer;
+  background:linear-gradient(135deg,var(--gold),#b8901c);
+  color:var(--navy);box-shadow:0 8px 24px rgba(212,171,42,.45);
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s;
+}
+.gear:hover{transform:rotate(90deg) scale(1.06)}
+.gear svg{width:26px;height:26px}
+.overlay{
+  position:fixed;inset:0;background:rgba(10,18,40,.55);z-index:210;
+  opacity:0;pointer-events:none;transition:.35s;backdrop-filter:blur(2px);
+}
+.overlay.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;left:-340px;width:320px;max-width:88vw;height:100vh;z-index:220;
+  background:var(--card);box-shadow:8px 0 40px rgba(0,0,0,.25);
+  transition:left .4s cubic-bezier(.4,0,.2,1);
+  display:flex;flex-direction:column;
+}
+.drawer.on{left:0}
+.dhead{
+  background:linear-gradient(135deg,var(--navy2),var(--navy3));color:#fff;
+  padding:20px;display:flex;justify-content:space-between;align-items:center;
+}
+.dhead h3{font-size:1.05rem;color:var(--gold-soft)}
+.dclose{background:transparent;border:0;color:#fff;font-size:1.5rem;cursor:pointer;line-height:1}
+.dbody{padding:20px;flex:1;overflow:auto;display:flex;flex-direction:column;gap:20px}
+.set{border:1.5px solid var(--line);border-radius:14px;padding:14px 16px}
+.set label{font-weight:800;font-size:.88rem;display:block;margin-bottom:10px;color:var(--ink)}
+.seg{display:flex;background:var(--bg);border-radius:10px;padding:4px;gap:4px}
+.seg button{
+  flex:1;border:0;background:transparent;padding:8px;border-radius:8px;cursor:pointer;
+  font-family:'Tajawal';font-weight:700;font-size:.82rem;color:var(--muted);transition:.25s;
+}
+.seg button.on{background:var(--navy2);color:#fff}
+body.dark .seg button.on{background:var(--gold);color:var(--navy)}
+.fz-row{display:flex;align-items:center;gap:12px}
+.fz-row input{flex:1;accent-color:var(--gold)}
+.fz-val{font-family:'Cairo';font-weight:800;color:var(--teal);min-width:44px;text-align:center}
+.pbtn{
+  width:100%;border:0;border-radius:12px;padding:12px;cursor:pointer;
+  background:var(--teal);color:#fff;font-family:'Tajawal';font-weight:800;font-size:.9rem;
+  display:flex;align-items:center;justify-content:center;gap:8px;transition:.25s;
+}
+.pbtn:hover{filter:brightness(1.08)}
+.dfoot{
+  border-top:1.5px solid var(--line);padding:18px 20px;text-align:center;
+}
+.dfoot .sig{
+  font-family:'Cairo';font-weight:900;color:var(--navy3);font-size:1rem;
+}
+body.dark .dfoot .sig{color:var(--gold-soft)}
+.dfoot a{
+  display:inline-flex;align-items:center;gap:8px;margin-top:8px;
+  background:linear-gradient(135deg,var(--gold),#b8901c);color:var(--navy);
+  padding:9px 22px;border-radius:100px;text-decoration:none;
+  font-weight:800;font-size:.84rem;transition:.25s;
+  box-shadow:0 6px 16px rgba(212,171,42,.35);
+}
+.dfoot a:hover{transform:translateY(-2px)}
+.dfoot a svg{width:16px;height:16px}
+
+/* hidden by filter/search */
+.card.hide,.vessel.hide{display:none}
+.noresult{
+  text-align:center;color:var(--muted);padding:60px 20px;display:none;
+}
+.noresult.on{display:block}
+
+@media print{
+  .gear,.tabs-wrap,.drawer,.overlay,footer .brand{display:none!important}
+  header{padding-bottom:40px}
+  .stats{margin-top:20px}
+  .card .acc-body{max-height:none!important}
+  body{background:#fff}
+}
+@media (max-width:520px){
+  .hours{flex-direction:row}
+  .eq-chip{padding:10px 18px;font-size:.95rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header>
+  <div class="hwrap">
+    <div class="badge-top">✦ المعهد الوطني للتطوير المهني التعليمي — لائحة الوظائف التعليمية</div>
+    <h1>دليل احتساب <span>ساعات التطوير المهني</span><br>للترقية في لائحة الوظائف التعليمية</h1>
+    <p class="hsub">عرض تفاعلي شامل للأنشطة الـ 15 مع الساعات المحتسبة، وضوابط الاحتساب للمستفيد والمنفذ، وقواعد التشارك في التنفيذ</p>
+    <div class="equation">
+      <div class="eq-chip gold">النقطة الواحدة</div>
+      <div class="eq-eq">=</div>
+      <div class="eq-chip">ساعة تطوير مهني</div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= STATS ================= -->
+<div class="stats">
+  <div class="stat"><b>6</b><small>أوعية للتطوير المهني</small></div>
+  <div class="stat"><b>15</b><small>نشاطاً معتمداً</small></div>
+  <div class="stat"><b>25</b><small>نقطة الحد الأدنى سنوياً</small></div>
+  <div class="stat"><b>200</b><small>أعلى حد للترقية (نقطة)</small></div>
+</div>
+
+<!-- ================= TABS ================= -->
+<div class="tabs-wrap">
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-v="all">الكل <span class="n">15</span></button>
+    <button class="tab" data-v="v1">التدريب <span class="n">2</span></button>
+    <button class="tab" data-v="v2">ورش العمل <span class="n">1</span></button>
+    <button class="tab" data-v="v3">القراءة الموجهة <span class="n">1</span></button>
+    <button class="tab" data-v="v4">التعلم التشاركي <span class="n">3</span></button>
+    <button class="tab" data-v="v5">الملتقيات <span class="n">4</span></button>
+    <button class="tab" data-v="v6">الإنتاج المعرفي <span class="n">4</span></button>
+  </div>
+  <div class="search-row">
+    <div class="search">
+      <svg fill="none" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3" stroke-linecap="round"/></svg>
+      <input id="q" type="text" placeholder="ابحث عن نشاط... (مثال: الدرس التطبيقي، بحث الدرس، الحقيبة)">
+    </div>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- ============ وعاء التدريب ============ -->
+<section class="vessel" data-v="v1">
+  <div class="vhead">
+    <div class="vicon">١</div>
+    <h2>وعاء التدريب <span class="ven">Training</span></h2>
+    <div class="vline"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" data-name="التدريب المباشر الحضوري">
+      <div class="chead"><h3>التدريب المباشر (الحضوري)<small>Face to Face Training</small></h3><div class="cnum">1</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">1</div><div class="lbl">للمستفيد</div><div class="per">لكل ساعة حضور فعلية</div></div>
+          <div class="hbadge monafith"><div class="num">2</div><div class="lbl">للمنفذ</div><div class="per">لكل ساعة تنفيذ فعلية</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> لأكثر من منفذ تُحتسب وفق عدد ساعات التنفيذ الفعلية لكل منفذ</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط المستفيد</span>
+            <ul class="cond-list tl">
+              <li>ألا تقل مدة البرنامج عن يومين تدريبيين (10 ساعات تدريبية)</li>
+              <li>أن يكون موضوع التدريب في المجال التعليمي التربوي</li>
+              <li>أن يكون البرنامج معتمداً من المعهد الوطني للتطوير المهني التعليمي</li>
+              <li>توثيق الحضور واعتماده من وزارة التعليم أو الجهات التابعة لها أو الجامعات السعودية أو الجهات المرخصة من المعهد (شهادة / مشهد حضور، شهادة اجتياز)</li>
+            </ul>
+          </div>
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>ألا تقل مدة البرنامج عن يومين تدريبيين (10 ساعات تدريبية)</li>
+              <li>أن يكون موضوع التدريب في المجال التعليمي التربوي</li>
+              <li>أن يكون موضوع التدريب ضمن مجال عمل أو تخصص المنفذ</li>
+              <li>أن يكون البرنامج معتمداً من المعهد الوطني</li>
+              <li>التكليف الرسمي بالتنفيذ من المعهد الوطني، أو إدارة التدريب بإدارة التعليم، أو جهة رسمية تابعة لوزارة التعليم ذات علاقة بمجال المحتوى</li>
+              <li>توثيق التنفيذ واعتماده من جهة رسمية (شهادة تنفيذ)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="التدريب الإلكتروني عن بعد المتزامن غير المتزامن">
+      <div class="chead"><h3>التدريب الإلكتروني / عن بُعد<small>E-training (المتزامن وغير المتزامن)</small></h3><div class="cnum">2</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">1</div><div class="lbl">للمستفيد</div><div class="per">لكل ساعة تدريب إلكتروني فعلية</div></div>
+          <div class="hbadge monafith"><div class="num">2</div><div class="lbl">للمنفذ</div><div class="per">لكل ساعة تنفيذ فعلية</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> لأكثر من منفذ تُحتسب وفق عدد ساعات التنفيذ الفعلية لكل منفذ</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط المستفيد</span>
+            <ul class="cond-list tl">
+              <li>ألا تقل مدة البرنامج عن (6) ساعات تدريبية كحد أدنى، على مدى يومين على الأقل</li>
+              <li>أن يكون موضوع التدريب في المجال التعليمي التربوي</li>
+              <li>أن يكون البرنامج معتمداً من المعهد الوطني</li>
+              <li>توثيق الحضور واعتماده من وزارة التعليم أو الجهات التابعة أو الجامعات السعودية أو الجهات المرخصة من المعهد: <b>المتزامن</b> (شهادة / مشهد حضور، شهادة اجتياز) — <b>غير المتزامن</b> (شهادة اجتياز)</li>
+            </ul>
+          </div>
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>ألا تقل مدة البرنامج عن (6) ساعات كحد أدنى، تنفذ على مدى يومين على الأقل</li>
+              <li>أن يكون موضوع التدريب في المجال التعليمي التربوي</li>
+              <li>أن يكون موضوع التدريب ضمن مجال عمل أو تخصص المنفذ</li>
+              <li>أن يكون البرنامج معتمداً من المعهد الوطني</li>
+              <li>التكليف الرسمي بالتنفيذ من المعهد الوطني أو إدارة التدريب بإدارة التعليم أو جهة رسمية تابعة لوزارة التعليم</li>
+              <li>توثيق التنفيذ واعتماده من جهة رسمية (شهادة تنفيذ)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ وعاء ورش العمل ============ -->
+<section class="vessel" data-v="v2">
+  <div class="vhead">
+    <div class="vicon">٢</div>
+    <h2>وعاء ورش العمل <span class="ven">Workshops</span></h2>
+    <div class="vline"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" data-name="ورشة العمل ورش">
+      <div class="chead"><h3>ورشة العمل<small>Workshops</small></h3><div class="cnum">3</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">1</div><div class="lbl">للمستفيد</div><div class="per">لكل ساعة حضور فعلية</div></div>
+          <div class="hbadge monafith"><div class="num">1</div><div class="lbl">للمنفذ</div><div class="per">لكل ساعة تنفيذ فعلية</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> لأكثر من منفذ تُحتسب وفق عدد ساعات التنفيذ الفعلية لكل منفذ</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط المستفيد</span>
+            <ul class="cond-list tl">
+              <li>ألا تقل مدة الورشة عن ساعتين كحد أدنى</li>
+              <li>أن يكون موضوع الورشة في المجال التعليمي التربوي</li>
+              <li>توثيق الحضور واعتماده من وزارة التعليم أو الجهات التابعة أو الجامعات السعودية أو الجهات التي يعتمدها المعهد (شهادة / مشهد حضور)</li>
+            </ul>
+          </div>
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>ألا تقل مدة الورشة عن ساعتين كحد أدنى</li>
+              <li>أن يكون موضوع الورشة في المجال التعليمي التربوي</li>
+              <li>أن يكون موضوع الورشة ضمن مجال عمل أو تخصص المنفذ</li>
+              <li>التكليف الرسمي بالتنفيذ من المعهد الوطني أو إدارة التدريب بإدارة التعليم أو جهة رسمية تابعة لوزارة التعليم ذات علاقة بمجال الورشة</li>
+              <li>توثيق التنفيذ واعتماده من جهة رسمية (شهادة تنفيذ)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ وعاء القراءة الموجهة ============ -->
+<section class="vessel" data-v="v3">
+  <div class="vhead">
+    <div class="vicon">٣</div>
+    <h2>وعاء القراءة الموجهة <span class="ven">Directed Reading</span></h2>
+    <div class="vline"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" data-name="القراءة الموجهة">
+      <div class="chead"><h3>القراءة الموجهة<small>Directed Reading</small></h3><div class="cnum">4</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمستفيد</div><div class="per">لا يوجد احتساب</div></div>
+          <div class="hbadge monafith"><div class="num">1</div><div class="lbl">للمنفذ</div><div class="per">لكل قراءة موجهة</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> تُحتسب ساعة تطوير مهني لكل منفذ</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>توجيه رسمي من المشرف التربوي أو الرئيس المباشر بتنفيذ القراءة الموجهة وفقاً لاحتياج فعلي</li>
+              <li>إعداد تقرير يتضمن ملخصاً للقراءة الموجهة مع توثيق مصدرها بأسلوب علمي ومجال الاستفادة التي تدعم الممارسات المهنية، واعتماده من الرئيس المباشر أو المشرف التربوي</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ وعاء التعلم التشاركي ============ -->
+<section class="vessel" data-v="v4">
+  <div class="vhead">
+    <div class="vicon">٤</div>
+    <h2>وعاء التعلم التشاركي <span class="ven">Collaborative Learning</span></h2>
+    <div class="vline"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" data-name="الدروس التطبيقية الدرس التطبيقي">
+      <div class="chead"><h3>الدروس التطبيقية<small>Model Lessons</small></h3><div class="cnum">5</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">2</div><div class="lbl">للمستفيد</div><div class="per">لكل درس تطبيقي</div></div>
+          <div class="hbadge monafith"><div class="num">4</div><div class="lbl">للمنفذ</div><div class="per">لكل تنفيذ درس تطبيقي</div></div>
+        </div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط المستفيد</span>
+            <ul class="cond-list tl">
+              <li>توثيق حضور الدرس التطبيقي واعتماده من إدارة / مكتب التعليم أو إدارة الإشراف التربوي</li>
+            </ul>
+          </div>
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>تكليف رسمي من قبل إدارة / مكتب التعليم، أو إدارة الإشراف التربوي بتنفيذ الدرس التطبيقي</li>
+              <li>توثيق تنفيذ الدرس التطبيقي من جهة رسمية</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="الزيارات الميدانية الزيارة الميدانية">
+      <div class="chead"><h3>الزيارات الميدانية<small>Filed Trips</small></h3><div class="cnum">6</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">3</div><div class="lbl">للمستفيد</div><div class="per">لكل زيارة</div></div>
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمنفذ</div><div class="per">لا يوجد احتساب</div></div>
+        </div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط المستفيد</span>
+            <ul class="cond-list tl">
+              <li>موافقة رسمية من وزارة التعليم، أو إدارة / مكتب التعليم على تنفيذ الزيارة الميدانية</li>
+              <li>توثيق تنفيذ الزيارة الميدانية واعتماده من جهة رسمية أو جهة الزيارة</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="دورة بحث الدرس">
+      <div class="chead"><h3>دورة بحث الدرس<small>Lesson Study Cycle</small></h3><div class="cnum">7</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">2</div><div class="lbl">للمستفيد</div><div class="per">لمن يحضر درس بحث من خارج الفريق</div></div>
+          <div class="hbadge monafith"><div class="num">10</div><div class="lbl">للمنفذ</div><div class="per">لكل عضو من الفريق المنفذ</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> تُحتسب عشر ساعات تطوير مهني لكل عضو من الفريق المنفذ</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط المستفيد</span>
+            <ul class="cond-list tl">
+              <li>توثيق حضور درس البحث واعتماده من إدارة / مكتب التعليم، أو إدارة الإشراف التربوي</li>
+            </ul>
+          </div>
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>توثيق تنفيذ دورة بحث الدرس واعتمادها من إدارة / مكتب التعليم، أو إدارة الإشراف التربوي وفق ضوابط دورة بحث الدرس المعتمدة من المعهد الوطني للتطوير المهني التعليمي</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ وعاء الملتقيات ============ -->
+<section class="vessel" data-v="v5">
+  <div class="vhead">
+    <div class="vicon">٥</div>
+    <h2>وعاء الملتقيات <span class="ven">Forums</span></h2>
+    <div class="vline"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" data-name="المؤتمرات المؤتمر">
+      <div class="chead"><h3>المؤتمرات<small>Conferences</small></h3><div class="cnum">8</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">3</div><div class="lbl">للمستفيد</div><div class="per">لكل يوم حضور</div></div>
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمنفذ</div><div class="per">لا يوجد احتساب</div></div>
+        </div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط الاحتساب</span>
+            <ul class="cond-list tl">
+              <li>موافقة صاحب الصلاحية على المشاركة في المؤتمر</li>
+              <li>توثيق حضور المؤتمر واعتماده من الجهة المنفذة للمؤتمر (شهادة / مشهد حضور)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="اللقاءات التربوية اللقاء التربوي">
+      <div class="chead"><h3>اللقاءات التربوية<small>Educational Seminars</small></h3><div class="cnum">9</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">2</div><div class="lbl">للمستفيد</div><div class="per">لكل يوم حضور</div></div>
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمنفذ</div><div class="per">لا يوجد احتساب</div></div>
+        </div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط الاحتساب</span>
+            <ul class="cond-list tl">
+              <li>موافقة صاحب الصلاحية على حضور اللقاء التربوي</li>
+              <li>توثيق حضور اللقاء التربوي واعتماده من الجهة المنفذة للقاء (شهادة / مشهد حضور)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="المحاضرات المحاضرة">
+      <div class="chead"><h3>المحاضرات<small>Lectures</small></h3><div class="cnum">10</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">2</div><div class="lbl">للمستفيد</div><div class="per">لكل محاضرة</div></div>
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمنفذ</div><div class="per">لا يوجد احتساب</div></div>
+        </div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط الاحتساب</span>
+            <ul class="cond-list tl">
+              <li>موافقة صاحب الصلاحية على حضور المحاضرة</li>
+              <li>توثيق حضور المحاضرة واعتمادها من الجهة المنظمة للمحاضرة (شهادة / مشهد حضور)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="الندوات الندوة">
+      <div class="chead"><h3>الندوات<small>Symposiums</small></h3><div class="cnum">11</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge mustafid"><div class="num">2</div><div class="lbl">للمستفيد</div><div class="per">لكل ندوة</div></div>
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمنفذ</div><div class="per">لا يوجد احتساب</div></div>
+        </div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-must">✓ ضوابط الاحتساب</span>
+            <ul class="cond-list tl">
+              <li>موافقة صاحب الصلاحية على حضور الندوة</li>
+              <li>توثيق حضور الندوة واعتمادها من الجهة المنظمة للندوة (شهادة / مشهد حضور)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ وعاء الإنتاج المعرفي ============ -->
+<section class="vessel" data-v="v6">
+  <div class="vhead">
+    <div class="vicon">٦</div>
+    <h2>وعاء الإنتاج المعرفي <span class="ven">Knowledge Production</span></h2>
+    <div class="vline"></div>
+  </div>
+  <div class="grid">
+
+    <div class="card" data-name="الأوراق العلمية الورقة العلمية">
+      <div class="chead"><h3>الأوراق العلمية<small>Scientific Papers</small></h3><div class="cnum">12</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمستفيد</div><div class="per">لا يوجد احتساب</div></div>
+          <div class="hbadge monafith"><div class="num">10</div><div class="lbl">للمنفذ المنفرد</div><div class="per">لكل ورقة علمية</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> (7) ساعات إذا اشترك في التنفيذ اثنان، و(3) ساعات إذا اشترك أكثر من اثنين</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>ارتباط موضوع الورقة العلمية بمجال عمل أو تخصص المنفذ</li>
+              <li>توثيق معتمد لقبول الورقة العلمية في أحد المؤتمرات، أو اللقاءات التربوية، أو النشر العلمي في وعاء نشر مُحَكَّم</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="البحوث الإجرائية البحث الإجرائي">
+      <div class="chead"><h3>البحوث الإجرائية<small>Action Researches</small></h3><div class="cnum">13</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمستفيد</div><div class="per">لا يوجد احتساب</div></div>
+          <div class="hbadge monafith"><div class="num">10</div><div class="lbl">للمنفذ المنفرد</div><div class="per">لكل بحث إجرائي</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> (7) ساعات إذا اشترك في التنفيذ اثنان، و(3) ساعات إذا اشترك أكثر من اثنين</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>معالجة موضوع البحث لمشكلة تربوية أو تخصصية ضمن مجال عمل أو تخصص المنفذ</li>
+              <li>تحكيم البحث الإجرائي من مختصين في مجال البحث اثنين كحد أدنى، بدرجة علمية لا تقل عن بكالوريوس</li>
+              <li>توثيق تنفيذ البحث الإجرائي واعتماده من وزارة التعليم، أو إدارة / مكتب التعليم</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="المؤلفات التخصصية المؤلف التخصصي">
+      <div class="chead"><h3>المؤلفات التخصصية<small>Specialized Publications</small></h3><div class="cnum">14</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمستفيد</div><div class="per">لا يوجد احتساب</div></div>
+          <div class="hbadge monafith"><div class="num">15</div><div class="lbl">للمنفذ المنفرد</div><div class="per">لكل مؤلف تخصصي</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> (10) ساعات إذا اشترك في التنفيذ اثنان، و(5) ساعات إذا اشترك أكثر من اثنين</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>أن يكون المؤلف ضمن مجال عمل أو تخصص المنفذ</li>
+              <li>حصول المؤلف على فسح جهة الاختصاص (وزارة الإعلام)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-name="الحقائب التدريبية الحقيبة التدريبية">
+      <div class="chead"><h3>الحقائب التدريبية<small>Training Package</small></h3><div class="cnum">15</div></div>
+      <div class="cbody">
+        <div class="hours">
+          <div class="hbadge none"><div class="num">—</div><div class="lbl">للمستفيد</div><div class="per">لا يوجد احتساب</div></div>
+          <div class="hbadge monafith"><div class="num">15</div><div class="lbl">للمنفذ المنفرد</div><div class="per">لكل حقيبة تدريبية</div></div>
+        </div>
+        <div class="share"><span class="ic">⇄</span><span><b>التشارك:</b> (10) ساعات إذا اشترك في التنفيذ اثنان، و(5) ساعات إذا اشترك أكثر من اثنين</span></div>
+        <button class="acc-btn">الضوابط والشروط <span class="arr">‹</span></button>
+        <div class="acc-body">
+          <div class="cond-group">
+            <span class="cond-title t-mon">★ ضوابط المنفذ</span>
+            <ul class="cond-list">
+              <li>أن تكون الحقيبة ضمن مجال عمل أو تخصص المنفذ</li>
+              <li>أن تكون الحقيبة التدريبية معتمدة من المعهد الوطني للتطوير المهني التعليمي</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="noresult" id="noresult">لا توجد نتائج مطابقة لبحثك 🔍</div>
+
+<!-- ============ الضوابط العامة ============ -->
+<section class="rules" id="rules">
+  <h2>الضوابط العامة للترقية بنقاط التطوير المهني</h2>
+  <p class="sub">تنطبق على جميع الأنشطة لشاغلي رتب: معلم، معلم ممارس، معلم متقدم</p>
+  <div class="rgrid">
+    <div class="rule"><span class="rn">1</span>أن يكون التطوير المهني في المجال التعليمي التربوي</div>
+    <div class="rule"><span class="rn">2</span>أن يكون التطوير المهني متوافقاً مع طبيعة العمل أو التخصص</div>
+    <div class="rule"><span class="rn">3</span>أن يرتبط التطوير المهني بالمعايير والمسارات المهنية للمعلمين</div>
+    <div class="rule"><span class="rn">4</span>أن تكون الأوعية والأنشطة معتمدة من المعهد الوطني للتطوير المهني التعليمي</div>
+    <div class="rule"><span class="rn">5</span>ألا يكون التطوير المهني منتهياً بمؤهل علمي</div>
+    <div class="rule"><span class="rn">6</span>ألا يكون تنفيذ التطوير المهني من مهام عمل شاغل الوظيفة التعليمية نظاماً</div>
+    <div class="rule"><span class="rn">7</span>تُحتسب النقاط وفق معادلة الاحتساب: النقطة = ساعة تطوير مهني</div>
+    <div class="rule"><span class="rn">8</span>الحصول على التطوير المهني خلال مدة البقاء في الرتبة، ويُحتسب لمرة واحدة فقط</div>
+    <div class="rule"><span class="rn">9</span>تُحتسب النقاط تراكمياً سواء كان الشاغل منفذاً أو مستفيداً</div>
+    <div class="rule"><span class="rn">10</span>تحقيق ما لا يقل عن (25) نقطة سنوياً خلال مدة جواز الترقية نظاماً</div>
+    <div class="rule"><span class="rn">11</span>تحقيق الحد الأدنى من النقاط المخصصة للتطوير المهني حسب الرتبة والمؤهل (الجدول أدناه)</div>
+  </div>
+</section>
+
+<!-- ============ جدول الحد الأدنى ============ -->
+<section class="minpts">
+  <div class="vhead">
+    <div class="vicon">٪</div>
+    <h2>الحد الأدنى من النقاط بحسب الرتبة والمؤهل</h2>
+    <div class="vline"></div>
+  </div>
+  <div class="tbl-card">
+    <table>
+      <thead>
+        <tr>
+          <th>الترقية</th>
+          <th>دون البكالوريوس</th>
+          <th>بكالوريوس</th>
+          <th>ماجستير</th>
+          <th>دكتوراه</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="rowh">من معلم ← معلم ممارس</td>
+          <td><span class="pt">200</span><span class="pt-sub">منها 50 تخصص + 50 تدريب مباشر</span></td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+          <td class="dash">—</td>
+        </tr>
+        <tr>
+          <td class="rowh">من ممارس ← معلم متقدم</td>
+          <td class="dash">—</td>
+          <td><span class="pt">200</span><span class="pt-sub">منها 50 تخصص + 50 تدريب مباشر</span></td>
+          <td><span class="pt">175</span><span class="pt-sub">منها 50 تخصص + 40 تدريب مباشر</span></td>
+          <td><span class="pt">150</span><span class="pt-sub">منها 50 تخصص + 30 تدريب مباشر</span></td>
+        </tr>
+        <tr>
+          <td class="rowh">من متقدم ← معلم خبير</td>
+          <td class="dash">—</td>
+          <td><span class="pt">175</span><span class="pt-sub">منها 50 تخصص + 40 تدريب + 25 تنفيذ أنشطة</span></td>
+          <td><span class="pt">150</span><span class="pt-sub">منها 50 تخصص + 30 تدريب + 25 تنفيذ أنشطة</span></td>
+          <td><span class="pt">125</span><span class="pt-sub">منها 50 تخصص + 20 تدريب + 25 تنفيذ أنشطة</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  المرجع: دليل احتساب نقاط التطوير المهني للترقية في لائحة الوظائف التعليمية — الإصدار الأول (1444هـ – 2022م)
+  <br>ودليل اعتماد وتنفيذ أنشطة التطوير المهني التعليمي — <b>المعهد الوطني للتطوير المهني التعليمي</b>
+  <div class="brand">
+    <span class="bsig">تصميم د/فواز</span>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M11.94 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.63 6.8-1.6 7.56c-.12.54-.44.67-.9.42l-2.47-1.82-1.19 1.15c-.13.13-.24.24-.5.24l.18-2.53 4.6-4.16c.2-.18-.05-.28-.31-.1l-5.69 3.58-2.45-.77c-.53-.16-.54-.53.11-.79l9.57-3.69c.44-.16.83.1.65.91z"/></svg>
+      تفضل للمزيد هنا
+    </a>
+  </div>
+</footer>
+
+<!-- ============ SETTINGS ============ -->
+<button class="gear" id="gearBtn" title="الإعدادات" aria-label="الإعدادات">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.08a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51h.08a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.08a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+</button>
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="drawer" id="drawer" aria-label="قائمة الإعدادات">
+  <div class="dhead">
+    <h3>⚙ الإعدادات</h3>
+    <button class="dclose" id="dclose" aria-label="إغلاق">✕</button>
+  </div>
+  <div class="dbody">
+
+    <div class="set">
+      <label>🎨 مظهر المنصة</label>
+      <div class="seg">
+        <button id="mLight" class="on">☀ فاتح</button>
+        <button id="mDark">🌙 داكن</button>
+      </div>
+    </div>
+
+    <div class="set">
+      <label>🔠 حجم الخط</label>
+      <div class="fz-row">
+        <input type="range" id="fz" min="14" max="20" value="16" step="1">
+        <span class="fz-val" id="fzVal">16</span>
+      </div>
+    </div>
+
+    <div class="set">
+      <label>📂 عرض الضوابط</label>
+      <div class="seg">
+        <button id="expAll">فتح الكل</button>
+        <button id="colAll" class="on">إغلاق الكل</button>
+      </div>
+    </div>
+
+    <button class="pbtn" onclick="window.print()">
+      🖨 طباعة الدليل
+    </button>
+
+  </div>
+  <div class="dfoot">
+    <div class="sig">تصميم د/فواز</div>
+    <a href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.94 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.63 6.8-1.6 7.56c-.12.54-.44.67-.9.42l-2.47-1.82-1.19 1.15c-.13.13-.24.24-.5.24l.18-2.53 4.6-4.16c.2-.18-.05-.28-.31-.1l-5.69 3.58-2.45-.77c-.53-.16-.54-.53.11-.79l9.57-3.69c.44-.16.83.1.65.91z"/></svg>
+      تفضل للمزيد هنا
+    </a>
+  </div>
+</aside>
+
+<script>
+// ===== Accordion =====
+document.querySelectorAll('.acc-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    btn.closest('.card').classList.toggle('open');
+  });
+});
+
+// ===== Tabs filter =====
+var tabs=document.querySelectorAll('.tab');
+var vessels=document.querySelectorAll('.vessel');
+var currentV='all';
+tabs.forEach(function(t){
+  t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.remove('active')});
+    t.classList.add('active');
+    currentV=t.dataset.v;
+    applyFilter();
+  });
+});
+
+// ===== Search =====
+var q=document.getElementById('q');
+q.addEventListener('input',applyFilter);
+
+function applyFilter(){
+  var term=q.value.trim();
+  var any=false;
+  vessels.forEach(function(v){
+    var vShow=(currentV==='all'||v.dataset.v===currentV);
+    var cardShown=false;
+    v.querySelectorAll('.card').forEach(function(c){
+      var match=!term||c.dataset.name.indexOf(term)>-1||c.textContent.indexOf(term)>-1;
+      var show=vShow&&match;
+      c.classList.toggle('hide',!show);
+      if(show)cardShown=true;
+    });
+    v.classList.toggle('hide',!(vShow&&cardShown));
+    if(vShow&&cardShown)any=true;
+  });
+  document.getElementById('noresult').classList.toggle('on',!any);
+}
+
+// ===== Settings drawer =====
+var drawer=document.getElementById('drawer');
+var overlay=document.getElementById('overlay');
+document.getElementById('gearBtn').addEventListener('click',function(){
+  drawer.classList.add('on');overlay.classList.add('on');
+});
+function closeDrawer(){drawer.classList.remove('on');overlay.classList.remove('on');}
+document.getElementById('dclose').addEventListener('click',closeDrawer);
+overlay.addEventListener('click',closeDrawer);
+
+// theme
+var mL=document.getElementById('mLight'),mD=document.getElementById('mDark');
+mL.addEventListener('click',function(){document.body.classList.remove('dark');mL.classList.add('on');mD.classList.remove('on');});
+mD.addEventListener('click',function(){document.body.classList.add('dark');mD.classList.add('on');mL.classList.remove('on');});
+
+// font size
+var fz=document.getElementById('fz'),fzVal=document.getElementById('fzVal');
+fz.addEventListener('input',function(){
+  document.documentElement.style.setProperty('--fz',fz.value+'px');
+  fzVal.textContent=fz.value;
+});
+
+// expand/collapse all
+var expAll=document.getElementById('expAll'),colAll=document.getElementById('colAll');
+expAll.addEventListener('click',function(){
+  document.querySelectorAll('.card').forEach(function(c){c.classList.add('open')});
+  expAll.classList.add('on');colAll.classList.remove('on');
+});
+colAll.addEventListener('click',function(){
+  document.querySelectorAll('.card').forEach(function(c){c.classList.remove('open')});
+  colAll.classList.add('on');expAll.classList.remove('on');
+});
+</script>
+</body>
+</html>

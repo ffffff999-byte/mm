@@ -1,0 +1,2586 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مكتبة د/فواز الرقمية</title>
+<style>
+:root{
+  --navy:#0f1f3d;
+  --navy-2:#16294f;
+  --blue:#1f5fa8;
+  --blue-light:#4d84c9;
+  --gold:#c9a54a;
+  --gold-light:#e8d8ab;
+  --gray-bg:#f4f6f9;
+  --white:#ffffff;
+  --text-dark:#1b2433;
+  --text-mid:#5b6472;
+  --border:#e2e6ee;
+  --shadow:0 4px 18px rgba(15,31,61,0.08);
+  --radius:14px;
+  --success:#2f8f5b;
+  --danger:#c0392b;
+  --warn:#c9a54a;
+}
+[data-theme="dark"]{
+  --gray-bg:#0b1220;
+  --white:#101a2c;
+  --text-dark:#eef1f6;
+  --text-mid:#9aa5b5;
+  --border:#243252;
+  --shadow:0 4px 18px rgba(0,0,0,0.35);
+  --gold-light:#3a3320;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:"Segoe UI","Tahoma","Geeza Pro","Arial",sans-serif;
+  background:var(--gray-bg);
+  color:var(--text-dark);
+  direction:rtl;
+  line-height:1.7;
+  transition:background .3s,color .3s;
+}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;}
+img{max-width:100%;display:block;}
+::selection{background:var(--gold-light);}
+
+/* ===== Top bar ===== */
+.topbar{
+  position:sticky;top:0;z-index:500;
+  background:linear-gradient(90deg,var(--navy),var(--navy-2));
+  color:#fff;
+  padding:10px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  box-shadow:var(--shadow);
+  gap:12px;flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand img{width:38px;height:38px;border-radius:9px;object-fit:cover;background:#fff;}
+.brand .logo-placeholder{
+  width:38px;height:38px;border-radius:9px;background:var(--gold);
+  display:flex;align-items:center;justify-content:center;font-weight:800;color:var(--navy);
+}
+.brand-name{font-weight:800;font-size:16px;}
+.brand-sub{font-size:11px;color:var(--gold-light);opacity:.85;}
+.topbar-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.icon-btn{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.18);
+  color:#fff;padding:8px 12px;border-radius:10px;font-size:13px;
+  display:flex;align-items:center;gap:6px;
+  transition:.2s;
+}
+.icon-btn:hover{background:rgba(255,255,255,.2);}
+.icon-btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy);font-weight:700;}
+.icon-btn.gold:hover{filter:brightness(1.08);}
+
+/* ===== Layout ===== */
+.container{max-width:1280px;margin:0 auto;padding:0 20px;}
+.hero{
+  background:radial-gradient(circle at 30% 20%, var(--blue-light) 0%, transparent 60%),
+             linear-gradient(160deg,var(--navy) 0%, var(--navy-2) 60%, var(--blue) 140%);
+  color:#fff;padding:46px 20px 60px;position:relative;overflow:hidden;
+}
+.hero::after{
+  content:"";position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(201,165,74,.10) 1px,transparent 1px);
+  background-size:26px 26px;pointer-events:none;
+}
+.hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:2;}
+.hero h1{font-size:clamp(22px,3.2vw,34px);margin:0 0 8px;font-weight:800;}
+.hero p{color:#dfe6f2;max-width:720px;margin:0 0 26px;font-size:15px;}
+.search-wrap{
+  background:var(--white);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);
+  padding:10px;display:flex;gap:8px;align-items:center;max-width:760px;
+}
+.search-wrap input{
+  flex:1;border:none;outline:none;background:transparent;
+  font-size:16px;padding:12px 10px;color:var(--text-dark);font-family:inherit;
+}
+.search-wrap .search-icon{font-size:20px;padding:0 8px;color:var(--text-mid);}
+.search-wrap button{
+  background:var(--gold);color:var(--navy);border:none;border-radius:10px;
+  padding:12px 18px;font-weight:700;
+}
+.quick-links{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;}
+.quick-links a{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);
+  padding:8px 14px;border-radius:999px;font-size:13px;color:#fff;
+  transition:.2s;
+}
+.quick-links a:hover{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+
+.stats-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:14px;margin-top:-36px;position:relative;z-index:3;
+}
+.stat-card{
+  background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:16px;text-align:center;border:1px solid var(--border);
+}
+.stat-card .num{font-size:26px;font-weight:800;color:var(--blue);}
+.stat-card .lbl{font-size:12.5px;color:var(--text-mid);margin-top:4px;}
+
+/* ===== Sections ===== */
+section{padding:34px 0;}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.section-head h2{font-size:20px;margin:0;display:flex;align-items:center;gap:8px;}
+.section-head .eyebrow{font-size:12px;color:var(--gold);font-weight:700;letter-spacing:.5px;}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;}
+.tab-btn{
+  background:var(--white);border:1px solid var(--border);padding:8px 16px;border-radius:999px;
+  font-size:13px;color:var(--text-mid);font-weight:600;
+}
+.tab-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* filters */
+.filters-bar{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;
+  box-shadow:var(--shadow);
+}
+.filters-bar select, .filters-bar input[type=text]{
+  padding:9px 10px;border-radius:9px;border:1px solid var(--border);background:var(--gray-bg);
+  color:var(--text-dark);font-family:inherit;font-size:13px;
+}
+.filters-bar .results-count{margin-inline-start:auto;font-size:13px;color:var(--text-mid);}
+.clear-filters{background:transparent;border:1px dashed var(--text-mid);color:var(--text-mid);padding:8px 12px;border-radius:9px;font-size:12.5px;}
+
+/* cards grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px;}
+.card{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;box-shadow:var(--shadow);position:relative;transition:transform .18s, box-shadow .18s;
+  display:flex;flex-direction:column;gap:8px;
+}
+.card:hover{transform:translateY(-4px);box-shadow:0 12px 26px rgba(15,31,61,.14);}
+.card-top{display:flex;align-items:flex-start;gap:10px;}
+.card-icon{
+  width:42px;height:42px;border-radius:10px;background:var(--gray-bg);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+  border:1px solid var(--border);
+}
+.card-title{font-weight:700;font-size:15px;flex:1;}
+.card-desc{font-size:13px;color:var(--text-mid);flex:1;}
+.card-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:11px;}
+.chip{
+  background:var(--gray-bg);border:1px solid var(--border);padding:3px 9px;border-radius:999px;
+  color:var(--text-mid);
+}
+.badge{
+  position:absolute;top:12px;left:12px;font-size:10.5px;padding:3px 9px;border-radius:999px;font-weight:700;
+}
+.badge.new{background:#e5f6ee;color:var(--success);}
+.badge.featured{background:var(--gold-light);color:#7a5b0f;}
+.badge.updated{background:#e6f0fb;color:var(--blue);}
+.badge.important{background:#fbe7e5;color:var(--danger);}
+.card-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;}
+.card-actions button, .card-actions a{
+  flex:1;text-align:center;font-size:12px;padding:7px 6px;border-radius:8px;border:1px solid var(--border);
+  background:var(--gray-bg);color:var(--text-dark);min-width:70px;
+}
+.card-actions .primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+.card-actions .fav.active{background:var(--gold);border-color:var(--gold);color:var(--navy);}
+.empty-state{
+  text-align:center;padding:50px 20px;color:var(--text-mid);
+  background:var(--white);border:1px dashed var(--border);border-radius:var(--radius);
+}
+.empty-state .big{font-size:36px;margin-bottom:8px;}
+
+.domain-group{margin-bottom:26px;}
+.domain-group-title{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+  font-size:15px;font-weight:800;color:var(--navy);
+}
+[data-theme="dark"] .domain-group-title{color:var(--gold-light);}
+.domain-group-title .count-chip{
+  background:var(--gold-light);color:#7a5b0f;font-size:11.5px;font-weight:700;
+  padding:2px 10px;border-radius:999px;
+}
+.domain-group-title::after{content:"";flex:1;height:1px;background:var(--border);}
+
+/* domain/beneficiary pill grid */
+.pill-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.pill{
+  background:var(--white);border:1px solid var(--border);padding:9px 16px;border-radius:999px;
+  font-size:13px;font-weight:600;color:var(--text-dark);box-shadow:var(--shadow);
+}
+.pill.selected{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* back to top */
+.to-top{
+  position:fixed;bottom:24px;left:24px;background:var(--gold);color:var(--navy);
+  width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow);font-size:20px;z-index:400;border:none;opacity:0;pointer-events:none;transition:.3s;
+}
+.to-top.show{opacity:1;pointer-events:auto;}
+
+/* footer */
+footer{
+  background:var(--navy);color:#dfe6f2;padding:30px 20px;text-align:center;font-size:13px;margin-top:30px;
+}
+footer .credit{font-weight:800;color:var(--gold-light);margin-bottom:6px;font-size:14px;}
+footer a{color:#fff;text-decoration:underline;}
+
+/* ===== Modal ===== */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(10,15,25,.55);z-index:900;
+  display:none;align-items:flex-start;justify-content:center;padding:30px 14px;overflow-y:auto;
+}
+.modal-overlay.open{display:flex;}
+.modal{
+  background:var(--white);border-radius:16px;max-width:640px;width:100%;padding:22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.3);position:relative;
+}
+.modal h3{margin-top:0;font-size:18px;display:flex;align-items:center;gap:8px;}
+.modal .close-x{position:absolute;left:16px;top:16px;background:var(--gray-bg);border:1px solid var(--border);
+  width:32px;height:32px;border-radius:8px;font-size:16px;}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+.form-grid .full{grid-column:1/-1;}
+.form-grid label{font-size:12.5px;color:var(--text-mid);display:block;margin-bottom:4px;font-weight:600;}
+.form-grid input, .form-grid select, .form-grid textarea{
+  width:100%;padding:10px;border-radius:9px;border:1px solid var(--border);background:var(--gray-bg);
+  color:var(--text-dark);font-family:inherit;font-size:13.5px;
+}
+.form-grid textarea{resize:vertical;min-height:70px;}
+.modal-actions{display:flex;gap:10px;margin-top:18px;justify-content:flex-end;flex-wrap:wrap;}
+.btn{padding:10px 18px;border-radius:10px;border:1px solid var(--border);background:var(--gray-bg);font-size:13.5px;font-weight:600;}
+.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+.btn.gold{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+.btn.danger{background:var(--danger);color:#fff;border-color:var(--danger);}
+.hint{font-size:12px;color:var(--text-mid);margin-top:4px;}
+
+/* admin table */
+.admin-list{margin-top:16px;border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.admin-row{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);
+  background:var(--white);font-size:13px;
+}
+.admin-row:last-child{border-bottom:none;}
+.admin-row .grow{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.admin-row button{border:none;background:transparent;font-size:15px;padding:4px 8px;border-radius:6px;}
+.admin-row button:hover{background:var(--gray-bg);}
+.admin-tabs{display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:14px;}
+.admin-tabs button{
+  padding:9px 16px;background:none;border:none;font-size:13.5px;font-weight:700;color:var(--text-mid);
+  border-bottom:3px solid transparent;
+}
+.admin-tabs button.active{color:var(--navy);border-color:var(--gold);}
+[data-theme="dark"] .admin-tabs button.active{color:#fff;}
+
+.summary-box{
+  background:var(--gray-bg);border:1px solid var(--border);border-radius:10px;padding:14px;font-size:13px;
+  white-space:pre-line;line-height:2;
+}
+@media(max-width:640px){
+  .form-grid{grid-template-columns:1fr;}
+  .topbar{padding:10px 12px;}
+}
+@media print{
+  .topbar,.hero .search-wrap,.quick-links,.to-top,.filters-bar,.card-actions,.modal-overlay,.admin-only,footer .no-print{display:none !important;}
+  body{background:#fff;color:#000;}
+  .card{break-inside:avoid;}
+}
+</style>
+</head>
+<body data-theme="light">
+
+<!-- ===== Top bar ===== -->
+<div class="topbar">
+  <div class="brand">
+    <div id="logoSlot"><div class="logo-placeholder">فواز</div></div>
+    <div>
+      <div class="brand-name" id="brandName">مكتبة د/فواز الرقمية</div>
+      <div class="brand-sub">للمنصات والملفات التعليمية</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <span class="icon-btn" id="saveIndicator" style="pointer-events:none;">💾 محفوظ تلقائيًا</span>
+    <button class="icon-btn" onclick="toggleTheme()">🌗 الوضع الليلي/النهاري</button>
+    <button class="icon-btn" onclick="window.print()">🖨️ طباعة</button>
+    <button class="icon-btn" onclick="openBackup()">💾 نسخة احتياطية</button>
+    <button class="icon-btn gold" onclick="requestAdminAccess()">⚙️ لوحة الإدارة</button>
+  </div>
+</div>
+
+<!-- ===== Hero ===== -->
+<div class="hero">
+  <div class="hero-inner">
+    <h1 id="platformTitle">مكتبة د/فواز الرقمية للمنصات والملفات التعليمية</h1>
+    <p>منصة تجمع أهم الملفات والمنصات والروابط التعليمية في مكان واحد، لتسهيل الوصول السريع، وتنظيم المحتوى، وخدمة المهتمين بالتقويم والتعليم، مع إمكانية طلب منصة رقمية خاصة حسب الحاجة.</p>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="mainSearch" placeholder="ابحث عن منصة، ملف، رابط، مجال، كلمة مفتاحية...">
+      <button onclick="scrollToResults()">بحث</button>
+    </div>
+    <div class="quick-links">
+      <a href="#platforms">📚 المنصات الرقمية</a>
+      <a href="#files">📄 الملفات</a>
+      <a href="#links">🔗 الروابط المهمة</a>
+      <a href="#favorites">⭐ المفضلة</a>
+      <a href="#" onclick="openRequestForm();return false;">✉️ اطلب منصة رقمية</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="stats-row" id="statsRow">
+    <div class="stat-card"><div class="num">16</div><div class="lbl">منصة رقمية</div></div>
+  
+    <div class="stat-card"><div class="num">0</div><div class="lbl">ملف / نموذج / دليل</div></div>
+  
+    <div class="stat-card"><div class="num">0</div><div class="lbl">رابط مهم</div></div>
+  
+    <div class="stat-card"><div class="num">6</div><div class="lbl">مجال مصنّف</div></div>
+  
+    <div class="stat-card"><div class="num">2026-07-07</div><div class="lbl">آخر تحديث</div></div>
+  </div>
+</div>
+
+<div class="container" id="results">
+
+  <!-- Recently added & most used -->
+  <section id="recent">
+    <div class="section-head"><h2>🆕 المضاف حديثًا</h2></div>
+    <div class="grid" id="recentGrid">
+  <div class="card">
+    <span class="badge featured">مميز</span>
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">دليل  ساعات  التطوير  المهني    ونقاطها</div>
+    </div>
+    <div class="card-desc">منصة عرض    مختصره    لعدد ساعات النشاطات وضوابطها</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الإدارة المدرسية</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/mm/uyhu" target="_blank" onclick="registerUse('id_mrapkgivuaan3')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/mm/uyhu')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrapkgivuaan3')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('دليل  ساعات  التطوير  المهني    ونقاطها')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">حاسبة التقاعد ومكافأة نهاية الخدمة</div>
+    </div>
+    <div class="card-desc">اعداد اخونا بدر البلوي   تصميم د/فواز</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">خدمات</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/retirement_calculator-2" target="_blank" onclick="registerUse('id_mras0fp567g6c')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/retirement_calculator-2')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mras0fp567g6c')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('حاسبة التقاعد ومكافأة نهاية الخدمة')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">الدليل الإرشادي</div>
+    </div>
+    <div class="card-desc">إدارة درجات الدور الثاني وترفيع الطلاب</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/noor-infographic" target="_blank" onclick="registerUse('id_mras2k1s2b18a')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/noor-infographic')">📋 نسخ</button>
+      <button class="fav active" onclick="toggleFav('id_mras2k1s2b18a')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('الدليل الإرشادي')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">خطوات المباشرة  لمنقول في  فرص</div>
+    </div>
+    <div class="card-desc">خطوات رفع  المباشرة  لمنقول في  فرص</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">أخرى</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/faris-infographic" target="_blank" onclick="registerUse('id_mrasfwhzr0kww')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/faris-infographic')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrasfwhzr0kww')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('خطوات المباشرة  لمنقول في  فرص')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+  </section>
+
+  <section id="mostused">
+    <div class="section-head"><h2>🔥 الأكثر استخدامًا</h2></div>
+    <div class="grid" id="mostUsedGrid">
+  <div class="card">
+    <span class="badge featured">مميز</span>
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">دليل  ساعات  التطوير  المهني    ونقاطها</div>
+    </div>
+    <div class="card-desc">منصة عرض    مختصره    لعدد ساعات النشاطات وضوابطها</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الإدارة المدرسية</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/mm/uyhu" target="_blank" onclick="registerUse('id_mrapkgivuaan3')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/mm/uyhu')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrapkgivuaan3')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('دليل  ساعات  التطوير  المهني    ونقاطها')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">الدليل الإرشادي</div>
+    </div>
+    <div class="card-desc">إدارة درجات الدور الثاني وترفيع الطلاب</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/noor-infographic" target="_blank" onclick="registerUse('id_mras2k1s2b18a')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/noor-infographic')">📋 نسخ</button>
+      <button class="fav active" onclick="toggleFav('id_mras2k1s2b18a')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('الدليل الإرشادي')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة رقمية  اختبر  نفسك ذاتيا</div>
+    </div>
+    <div class="card-desc">تجميعات  ٣  متوسط  لجميع المواد المركزيه</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التدريب</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/index" target="_blank" onclick="registerUse('id_mratlqa9rztb9')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/index')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratlqa9rztb9')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة رقمية  اختبر  نفسك ذاتيا')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة  ١٠٠   سؤال في الرخصة المهنيه</div>
+    </div>
+    <div class="card-desc">اختبر نفسك  ذاتيا</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التدريب</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/100s" target="_blank" onclick="registerUse('id_mratotmklbglq')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/100s')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratotmklbglq')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة  ١٠٠   سؤال في الرخصة المهنيه')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+  </section>
+
+  <section id="favorites">
+    <div class="section-head"><h2>⭐ المفضلة</h2></div>
+    <div class="grid" id="favGrid">
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">الدليل الإرشادي</div>
+    </div>
+    <div class="card-desc">إدارة درجات الدور الثاني وترفيع الطلاب</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/noor-infographic" target="_blank" onclick="registerUse('id_mras2k1s2b18a')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/noor-infographic')">📋 نسخ</button>
+      <button class="fav active" onclick="toggleFav('id_mras2k1s2b18a')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('الدليل الإرشادي')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+  </section>
+
+  <!-- Filters + main listing -->
+  <section id="allItemsSection">
+    <div class="section-head">
+      <div><span class="eyebrow">الفهرس الكامل</span><h2>🗂️ جميع العناصر</h2></div>
+    </div>
+    <div class="tabs" id="typeTabs"><button class="tab-btn active" onclick="setTypeFilter('')">الكل</button><button class="tab-btn " onclick="setTypeFilter('منصة')">💻 منصات</button><button class="tab-btn " onclick="setTypeFilter('ملف')">📄 ملفات</button><button class="tab-btn " onclick="setTypeFilter('رابط')">🔗 روابط</button><button class="tab-btn " onclick="setTypeFilter('نموذج')">🧾 نماذج</button><button class="tab-btn " onclick="setTypeFilter('دليل')">📘 أدلة</button></div>
+    <div class="filters-bar">
+      <select id="filterDomain"><option value="">كل المجالات</option><option value="التقويم المدرسي">التقويم المدرسي</option><option value="التعليم والتعلم">التعليم والتعلم</option><option value="نواتج التعلم">نواتج التعلم</option><option value="البيئة المدرسية">البيئة المدرسية</option><option value="الإدارة المدرسية">الإدارة المدرسية</option><option value="الرخصة المهنية">الرخصة المهنية</option><option value="التدريب">التدريب</option><option value="الاختبارات">الاختبارات</option><option value="الشؤون الطلابية">الشؤون الطلابية</option><option value="السلوك والمواظبة">السلوك والمواظبة</option><option value="النشاط الطلابي">النشاط الطلابي</option><option value="القيادة المدرسية">القيادة المدرسية</option><option value="الجودة والتميز">الجودة والتميز</option><option value="خدمات">خدمات</option><option value="أخرى">أخرى</option></select>
+      <select id="filterBeneficiary"><option value="">كل الفئات المستفيدة</option><option value="معلم">معلم</option><option value="مدير مدرسة">مدير مدرسة</option><option value="وكيل مدرسة">وكيل مدرسة</option><option value="مشرف تربوي">مشرف تربوي</option><option value="مرشد طلابي">مرشد طلابي</option><option value="رائد نشاط">رائد نشاط</option><option value="إداري">إداري</option><option value="ولي أمر">ولي أمر</option><option value="طالب">طالب</option><option value="الكل">الكل</option></select>
+      <select id="filterStatus">
+        <option value="">كل الحالات</option>
+        <option value="جديد">جديد</option>
+        <option value="مميز">مميز</option>
+        <option value="محدث">محدث</option>
+        <option value="مهم">مهم</option>
+        <option value="عادي">عادي</option>
+      </select>
+      <button class="clear-filters" onclick="clearFilters()">✖ مسح الفلاتر</button>
+      <span class="results-count" id="resultsCount">16 نتيجة</span>
+    </div>
+    <div class="grid" id="mainGrid">
+  <div class="card">
+    <span class="badge featured">مميز</span>
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">دليل  ساعات  التطوير  المهني    ونقاطها</div>
+    </div>
+    <div class="card-desc">منصة عرض    مختصره    لعدد ساعات النشاطات وضوابطها</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الإدارة المدرسية</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/mm/uyhu" target="_blank" onclick="registerUse('id_mrapkgivuaan3')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/mm/uyhu')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrapkgivuaan3')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('دليل  ساعات  التطوير  المهني    ونقاطها')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">حاسبة التقاعد ومكافأة نهاية الخدمة</div>
+    </div>
+    <div class="card-desc">اعداد اخونا بدر البلوي   تصميم د/فواز</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">خدمات</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/retirement_calculator-2" target="_blank" onclick="registerUse('id_mras0fp567g6c')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/retirement_calculator-2')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mras0fp567g6c')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('حاسبة التقاعد ومكافأة نهاية الخدمة')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">الدليل الإرشادي</div>
+    </div>
+    <div class="card-desc">إدارة درجات الدور الثاني وترفيع الطلاب</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/noor-infographic" target="_blank" onclick="registerUse('id_mras2k1s2b18a')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/noor-infographic')">📋 نسخ</button>
+      <button class="fav active" onclick="toggleFav('id_mras2k1s2b18a')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('الدليل الإرشادي')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">خطوات المباشرة  لمنقول في  فرص</div>
+    </div>
+    <div class="card-desc">خطوات رفع  المباشرة  لمنقول في  فرص</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">أخرى</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/faris-infographic" target="_blank" onclick="registerUse('id_mrasfwhzr0kww')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/faris-infographic')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrasfwhzr0kww')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('خطوات المباشرة  لمنقول في  فرص')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة  شهادات شكر وتقدير  رسميه</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">خدمات</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/index9" target="_blank" onclick="registerUse('id_mrat5hrk08eh0')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/index9')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrat5hrk08eh0')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة  شهادات شكر وتقدير  رسميه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">ثلاثة  طرق لاستخراج  نتائج الطلاب</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/hhiih" target="_blank" onclick="registerUse('id_mrat7b73fqjkz')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/hhiih')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrat7b73fqjkz')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('ثلاثة  طرق لاستخراج  نتائج الطلاب')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">إدخال جميع درجات المراجعة قبل الإغلاق"</div>
+    </div>
+    <div class="card-desc">إغلاق إدخال الدرجات
+حل مشكلة الطلاب المكملين وخطوات الإغلاق الناجح</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/hhhi" target="_blank" onclick="registerUse('id_mrat9kbvm9ppn')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/hhhi')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrat9kbvm9ppn')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('إدخال جميع درجات المراجعة قبل الإغلاق&quot;')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">خطوات إخلاء الطرف والمباشرة للمعلمين وغيرهم  من الوظائف التعليميه عبر نظام "فارس"</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">خدمات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/ttvvcc" target="_blank" onclick="registerUse('id_mratbk5xl547g')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/ttvvcc')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratbk5xl547g')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('خطوات إخلاء الطرف والمباشرة للمعلمين وغيرهم  من الوظائف التعليميه عبر نظام &quot;فارس&quot;')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">قيم نفسك  رقميا  بمعايير  الخارجي  في التقويم   منصة الشواهد والمجالات والمعاير كامله</div>
+    </div>
+    <div class="card-desc">منصة الكترونيه  لجميع  المجالات وشواهدها كما في   الادلة الاسترشادية</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/ff/TTT" target="_blank" onclick="registerUse('id_mratdvoub97o7')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/ff/TTT')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratdvoub97o7')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('قيم نفسك  رقميا  بمعايير  الخارجي  في التقويم   منصة الشواهد والمجالات والمعاير كامله')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصه  لتوليد  خطة التحسين ع المجالات  الاربعه</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/dd55xx" target="_blank" onclick="registerUse('id_mratj6aalbbah')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/dd55xx')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratj6aalbbah')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصه  لتوليد  خطة التحسين ع المجالات  الاربعه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة  توليد  خطة تحسين على المجالات الاربعه</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/d5xx" target="_blank" onclick="registerUse('id_mratk2jdw9p5w')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/d5xx')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratk2jdw9p5w')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة  توليد  خطة تحسين على المجالات الاربعه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة رقمية  اختبر  نفسك ذاتيا</div>
+    </div>
+    <div class="card-desc">تجميعات  ٣  متوسط  لجميع المواد المركزيه</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التدريب</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/index" target="_blank" onclick="registerUse('id_mratlqa9rztb9')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/index')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratlqa9rztb9')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة رقمية  اختبر  نفسك ذاتيا')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">١٠٠   سؤال في الرخصة المهنيه</div>
+    </div>
+    <div class="card-desc">اختبر نفسك  ذاتيا</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التدريب</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/200s" target="_blank" onclick="registerUse('id_mratnsuzyi7hb')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/200s')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratnsuzyi7hb')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('١٠٠   سؤال في الرخصة المهنيه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة  ١٠٠   سؤال في الرخصة المهنيه</div>
+    </div>
+    <div class="card-desc">اختبر نفسك  ذاتيا</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التدريب</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/100s" target="_blank" onclick="registerUse('id_mratotmklbglq')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/100s')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratotmklbglq')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة  ١٠٠   سؤال في الرخصة المهنيه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">رصد  الملاحظة الصفية   وشرحها والمراد بها</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/mk0099" target="_blank" onclick="registerUse('id_mratr5mmaipw9')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/mk0099')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratr5mmaipw9')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('رصد  الملاحظة الصفية   وشرحها والمراد بها')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">رصد  الملاحظة الصفية   وشرحها والمراد بها</div>
+    </div>
+    <div class="card-desc">٢</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/mk009" target="_blank" onclick="registerUse('id_mratsgm9uqv67')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/mk009')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratsgm9uqv67')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('رصد  الملاحظة الصفية   وشرحها والمراد بها')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+  </section>
+
+  <section id="platforms">
+    <div class="section-head"><h2>💻 المنصات الرقمية</h2></div>
+    <p class="hint">كل مجال يظهر في قسمه الخاص، بحيث لا تختلط منصة التقويم الذاتي مع منصة الاختبارات مثلًا.</p>
+    <div id="platformsGrouped">
+      <div class="domain-group">
+        <div class="domain-group-title">📁 التقويم المدرسي <span class="count-chip">5</span></div>
+        <div class="grid">
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">قيم نفسك  رقميا  بمعايير  الخارجي  في التقويم   منصة الشواهد والمجالات والمعاير كامله</div>
+    </div>
+    <div class="card-desc">منصة الكترونيه  لجميع  المجالات وشواهدها كما في   الادلة الاسترشادية</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/ff/TTT" target="_blank" onclick="registerUse('id_mratdvoub97o7')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/ff/TTT')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratdvoub97o7')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('قيم نفسك  رقميا  بمعايير  الخارجي  في التقويم   منصة الشواهد والمجالات والمعاير كامله')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصه  لتوليد  خطة التحسين ع المجالات  الاربعه</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/dd55xx" target="_blank" onclick="registerUse('id_mratj6aalbbah')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/dd55xx')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratj6aalbbah')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصه  لتوليد  خطة التحسين ع المجالات  الاربعه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة  توليد  خطة تحسين على المجالات الاربعه</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/d5xx" target="_blank" onclick="registerUse('id_mratk2jdw9p5w')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/d5xx')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratk2jdw9p5w')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة  توليد  خطة تحسين على المجالات الاربعه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">رصد  الملاحظة الصفية   وشرحها والمراد بها</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/mk0099" target="_blank" onclick="registerUse('id_mratr5mmaipw9')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/mk0099')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratr5mmaipw9')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('رصد  الملاحظة الصفية   وشرحها والمراد بها')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">رصد  الملاحظة الصفية   وشرحها والمراد بها</div>
+    </div>
+    <div class="card-desc">٢</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التقويم المدرسي</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/mk009" target="_blank" onclick="registerUse('id_mratsgm9uqv67')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/mk009')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratsgm9uqv67')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('رصد  الملاحظة الصفية   وشرحها والمراد بها')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+      </div>
+      <div class="domain-group">
+        <div class="domain-group-title">📁 الإدارة المدرسية <span class="count-chip">1</span></div>
+        <div class="grid">
+  <div class="card">
+    <span class="badge featured">مميز</span>
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">دليل  ساعات  التطوير  المهني    ونقاطها</div>
+    </div>
+    <div class="card-desc">منصة عرض    مختصره    لعدد ساعات النشاطات وضوابطها</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الإدارة المدرسية</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/mm/uyhu" target="_blank" onclick="registerUse('id_mrapkgivuaan3')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/mm/uyhu')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrapkgivuaan3')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('دليل  ساعات  التطوير  المهني    ونقاطها')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+      </div>
+      <div class="domain-group">
+        <div class="domain-group-title">📁 التدريب <span class="count-chip">3</span></div>
+        <div class="grid">
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة رقمية  اختبر  نفسك ذاتيا</div>
+    </div>
+    <div class="card-desc">تجميعات  ٣  متوسط  لجميع المواد المركزيه</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التدريب</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/index" target="_blank" onclick="registerUse('id_mratlqa9rztb9')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/index')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratlqa9rztb9')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة رقمية  اختبر  نفسك ذاتيا')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">١٠٠   سؤال في الرخصة المهنيه</div>
+    </div>
+    <div class="card-desc">اختبر نفسك  ذاتيا</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التدريب</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/200s" target="_blank" onclick="registerUse('id_mratnsuzyi7hb')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/200s')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratnsuzyi7hb')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('١٠٠   سؤال في الرخصة المهنيه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة  ١٠٠   سؤال في الرخصة المهنيه</div>
+    </div>
+    <div class="card-desc">اختبر نفسك  ذاتيا</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">التدريب</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/100s" target="_blank" onclick="registerUse('id_mratotmklbglq')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/100s')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratotmklbglq')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة  ١٠٠   سؤال في الرخصة المهنيه')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+      </div>
+      <div class="domain-group">
+        <div class="domain-group-title">📁 الاختبارات <span class="count-chip">3</span></div>
+        <div class="grid">
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">الدليل الإرشادي</div>
+    </div>
+    <div class="card-desc">إدارة درجات الدور الثاني وترفيع الطلاب</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 1 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/noor-infographic" target="_blank" onclick="registerUse('id_mras2k1s2b18a')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/noor-infographic')">📋 نسخ</button>
+      <button class="fav active" onclick="toggleFav('id_mras2k1s2b18a')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('الدليل الإرشادي')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">ثلاثة  طرق لاستخراج  نتائج الطلاب</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/hhiih" target="_blank" onclick="registerUse('id_mrat7b73fqjkz')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/hhiih')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrat7b73fqjkz')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('ثلاثة  طرق لاستخراج  نتائج الطلاب')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">إدخال جميع درجات المراجعة قبل الإغلاق"</div>
+    </div>
+    <div class="card-desc">إغلاق إدخال الدرجات
+حل مشكلة الطلاب المكملين وخطوات الإغلاق الناجح</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">الاختبارات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/hhhi" target="_blank" onclick="registerUse('id_mrat9kbvm9ppn')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/hhhi')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrat9kbvm9ppn')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('إدخال جميع درجات المراجعة قبل الإغلاق&quot;')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+      </div>
+      <div class="domain-group">
+        <div class="domain-group-title">📁 خدمات <span class="count-chip">3</span></div>
+        <div class="grid">
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">حاسبة التقاعد ومكافأة نهاية الخدمة</div>
+    </div>
+    <div class="card-desc">اعداد اخونا بدر البلوي   تصميم د/فواز</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">خدمات</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/retirement_calculator-2" target="_blank" onclick="registerUse('id_mras0fp567g6c')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/retirement_calculator-2')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mras0fp567g6c')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('حاسبة التقاعد ومكافأة نهاية الخدمة')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">منصة  شهادات شكر وتقدير  رسميه</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">خدمات</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/index9" target="_blank" onclick="registerUse('id_mrat5hrk08eh0')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/index9')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrat5hrk08eh0')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('منصة  شهادات شكر وتقدير  رسميه')">➕ طلب مشابه</button>
+    </div>
+  </div>
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">خطوات إخلاء الطرف والمباشرة للمعلمين وغيرهم  من الوظائف التعليميه عبر نظام "فارس"</div>
+    </div>
+    <div class="card-desc"></div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">خدمات</span>
+      <span class="chip">مدير مدرسة</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffff040004-a11y.github.io/fawaz/ttvvcc" target="_blank" onclick="registerUse('id_mratbk5xl547g')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffff040004-a11y.github.io/fawaz/ttvvcc')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mratbk5xl547g')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('خطوات إخلاء الطرف والمباشرة للمعلمين وغيرهم  من الوظائف التعليميه عبر نظام &quot;فارس&quot;')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+      </div>
+      <div class="domain-group">
+        <div class="domain-group-title">📁 أخرى <span class="count-chip">1</span></div>
+        <div class="grid">
+  <div class="card">
+    
+    <div class="card-top">
+      <div class="card-icon">💻</div>
+      <div class="card-title">خطوات المباشرة  لمنقول في  فرص</div>
+    </div>
+    <div class="card-desc">خطوات رفع  المباشرة  لمنقول في  فرص</div>
+    <div class="card-meta">
+      <span class="chip">منصة</span>
+      <span class="chip">أخرى</span>
+      <span class="chip">الكل</span>
+      
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 2026-07-07</span><span class="chip">👁 0 استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="https://ffffff999-byte.github.io/zaza44/faris-infographic" target="_blank" onclick="registerUse('id_mrasfwhzr0kww')">🔗 فتح</a>
+      <button onclick="copyLink('https://ffffff999-byte.github.io/zaza44/faris-infographic')">📋 نسخ</button>
+      <button class="fav " onclick="toggleFav('id_mrasfwhzr0kww')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('خطوات المباشرة  لمنقول في  فرص')">➕ طلب مشابه</button>
+    </div>
+  </div></div>
+      </div></div>
+  </section>
+
+  <section id="files">
+    <div class="section-head"><h2>📄 قسم الملفات</h2></div>
+    <p class="hint">تشمل الملفات، النماذج، والأدلة — مصنّفة حسب المجال.</p>
+    <div id="filesGrouped"><div class="empty-state" style="grid-column:1/-1;"><div class="big">🔍</div><div>لا توجد عناصر في هذا القسم بعد — أضِف عنصرًا من لوحة الإدارة</div></div></div>
+  </section>
+
+  <section id="links">
+    <div class="section-head"><h2>🔗 الروابط المهمة</h2></div>
+    <p class="hint">الروابط مصنّفة حسب المجال أيضًا لسهولة الوصول.</p>
+    <div id="linksGrouped"><div class="empty-state" style="grid-column:1/-1;"><div class="big">🔍</div><div>لا توجد عناصر في هذا القسم بعد — أضِف عنصرًا من لوحة الإدارة</div></div></div>
+  </section>
+
+</div>
+
+<button class="to-top show" id="toTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<footer>
+  <div class="credit">تصميم د/فواز</div>
+  <div>للمزيد تابع <a id="footerChannel" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">قناة التميز في التقويم والتعليم</a> و<a id="footerGroup" href="https://t.me/TAqhjT3MFVE1Yzk0" target="_blank">قروب التميز في التقويم والتعليم</a></div>
+  <div class="no-print" style="margin-top:8px;opacity:.7;font-size:11.5px;">مكتبة د/فواز الرقمية — تعمل بالكامل محليًا دون اتصال بالإنترنت</div>
+</footer>
+
+<!-- ===== Admin PIN Lock Modal ===== -->
+<div class="modal-overlay" id="adminPinModal">
+  <div class="modal" style="max-width:380px;text-align:center;">
+    <button class="close-x" onclick="closeModal('adminPinModal')">✖</button>
+    <h3 style="justify-content:center;">🔒 دخول لوحة الإدارة</h3>
+    <p class="hint">هذه اللوحة مخصصة للمالك فقط. الرجاء إدخال رمز الدخول.</p>
+    <div class="form-grid">
+      <div class="full">
+        <input type="password" id="adminPinInput" placeholder="رمز الدخول" style="text-align:center;font-size:16px;letter-spacing:2px;" onkeydown="if(event.key==='Enter'){checkAdminPin();}">
+      </div>
+    </div>
+    <div class="modal-actions" style="justify-content:center;">
+      <button class="btn" onclick="closeModal('adminPinModal')">إلغاء</button>
+      <button class="btn gold" onclick="checkAdminPin()">دخول</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Item Detail / Add/Edit Modal ===== -->
+<div class="modal-overlay" id="itemModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('itemModal')">✖</button>
+    <h3 id="itemModalTitle">➕ إضافة عنصر جديد</h3>
+    <div class="form-grid">
+      <div><label>نوع العنصر</label>
+        <select id="f_type">
+          <option value="منصة">منصة</option>
+          <option value="ملف">ملف</option>
+          <option value="رابط">رابط</option>
+          <option value="نموذج">نموذج</option>
+          <option value="دليل">دليل</option>
+        </select>
+      </div>
+      <div><label>الحالة</label>
+        <select id="f_status">
+          <option value="عادي">عادي</option>
+          <option value="جديد">جديد</option>
+          <option value="مميز">مميز</option>
+          <option value="محدث">محدث</option>
+          <option value="مهم">مهم</option>
+        </select>
+      </div>
+      <div class="full"><label>العنوان</label><input type="text" id="f_title" placeholder="مثال: منصة مسابقة الرخصة المهنية"></div>
+      <div class="full"><label>الوصف المختصر</label><textarea id="f_desc" placeholder="وصف مختصر للعنصر..."></textarea></div>
+      <div><label>المجال</label>
+        <select id="f_domain"><option value="التقويم المدرسي">التقويم المدرسي</option><option value="التعليم والتعلم">التعليم والتعلم</option><option value="نواتج التعلم">نواتج التعلم</option><option value="البيئة المدرسية">البيئة المدرسية</option><option value="الإدارة المدرسية">الإدارة المدرسية</option><option value="الرخصة المهنية">الرخصة المهنية</option><option value="التدريب">التدريب</option><option value="الاختبارات">الاختبارات</option><option value="الشؤون الطلابية">الشؤون الطلابية</option><option value="السلوك والمواظبة">السلوك والمواظبة</option><option value="النشاط الطلابي">النشاط الطلابي</option><option value="القيادة المدرسية">القيادة المدرسية</option><option value="الجودة والتميز">الجودة والتميز</option><option value="خدمات">خدمات</option><option value="أخرى">أخرى</option></select>
+      </div>
+      <div><label>الفئة المستفيدة</label>
+        <select id="f_beneficiary"><option value="معلم">معلم</option><option value="مدير مدرسة">مدير مدرسة</option><option value="وكيل مدرسة">وكيل مدرسة</option><option value="مشرف تربوي">مشرف تربوي</option><option value="مرشد طلابي">مرشد طلابي</option><option value="رائد نشاط">رائد نشاط</option><option value="إداري">إداري</option><option value="ولي أمر">ولي أمر</option><option value="طالب">طالب</option><option value="الكل">الكل</option></select>
+      </div>
+      <div class="full"><label>الرابط</label><input type="text" id="f_link" placeholder="https://..."></div>
+      <div class="full"><label>الكلمات المفتاحية (افصل بفاصلة)</label><input type="text" id="f_keywords" placeholder="رخصة, مسابقة, تقويم"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('itemModal')">إلغاء</button>
+      <button class="btn primary" onclick="saveItem()">💾 حفظ العنصر</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Admin Panel Modal ===== -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal" style="max-width:820px;">
+    <button class="close-x" onclick="closeModal('adminModal')">✖</button>
+    <h3>⚙️ لوحة الإدارة</h3>
+    <div class="admin-tabs">
+      <button class="" data-tab="items" onclick="switchAdminTab('items')">العناصر</button>
+      <button data-tab="settings" onclick="switchAdminTab('settings')">إعدادات المنصة</button>
+      <button data-tab="data" onclick="switchAdminTab('data')" class="active">البيانات (تصدير/استيراد)</button>
+      <button data-tab="requests" onclick="switchAdminTab('requests')">طلبات المنصات</button>
+    </div>
+
+    <div id="adminTab_items" style="display: none;">
+      <div class="modal-actions" style="justify-content:flex-start;margin-top:0;">
+        <button class="btn gold" onclick="openAddItem()">➕ إضافة عنصر جديد</button>
+        <button class="btn primary" onclick="openQuickAdd()">📥 إضافة سريعة من تليجرام</button>
+      </div>
+      <div class="admin-list" id="adminItemsList">
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">دليل  ساعات  التطوير  المهني    ونقاطها</span>
+      <span class="hint">الإدارة المدرسية</span>
+      <button onclick="openEditItem('id_mrapkgivuaan3')">✏️</button>
+      <button onclick="deleteItem('id_mrapkgivuaan3')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">حاسبة التقاعد ومكافأة نهاية الخدمة</span>
+      <span class="hint">خدمات</span>
+      <button onclick="openEditItem('id_mras0fp567g6c')">✏️</button>
+      <button onclick="deleteItem('id_mras0fp567g6c')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">الدليل الإرشادي</span>
+      <span class="hint">الاختبارات</span>
+      <button onclick="openEditItem('id_mras2k1s2b18a')">✏️</button>
+      <button onclick="deleteItem('id_mras2k1s2b18a')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">خطوات المباشرة  لمنقول في  فرص</span>
+      <span class="hint">أخرى</span>
+      <button onclick="openEditItem('id_mrasfwhzr0kww')">✏️</button>
+      <button onclick="deleteItem('id_mrasfwhzr0kww')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">منصة  شهادات شكر وتقدير  رسميه</span>
+      <span class="hint">خدمات</span>
+      <button onclick="openEditItem('id_mrat5hrk08eh0')">✏️</button>
+      <button onclick="deleteItem('id_mrat5hrk08eh0')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">ثلاثة  طرق لاستخراج  نتائج الطلاب</span>
+      <span class="hint">الاختبارات</span>
+      <button onclick="openEditItem('id_mrat7b73fqjkz')">✏️</button>
+      <button onclick="deleteItem('id_mrat7b73fqjkz')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">إدخال جميع درجات المراجعة قبل الإغلاق"</span>
+      <span class="hint">الاختبارات</span>
+      <button onclick="openEditItem('id_mrat9kbvm9ppn')">✏️</button>
+      <button onclick="deleteItem('id_mrat9kbvm9ppn')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">خطوات إخلاء الطرف والمباشرة للمعلمين وغيرهم  من الوظائف التعليميه عبر نظام "فارس"</span>
+      <span class="hint">خدمات</span>
+      <button onclick="openEditItem('id_mratbk5xl547g')">✏️</button>
+      <button onclick="deleteItem('id_mratbk5xl547g')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">قيم نفسك  رقميا  بمعايير  الخارجي  في التقويم   منصة الشواهد والمجالات والمعاير كامله</span>
+      <span class="hint">التقويم المدرسي</span>
+      <button onclick="openEditItem('id_mratdvoub97o7')">✏️</button>
+      <button onclick="deleteItem('id_mratdvoub97o7')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">منصه  لتوليد  خطة التحسين ع المجالات  الاربعه</span>
+      <span class="hint">التقويم المدرسي</span>
+      <button onclick="openEditItem('id_mratj6aalbbah')">✏️</button>
+      <button onclick="deleteItem('id_mratj6aalbbah')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">منصة  توليد  خطة تحسين على المجالات الاربعه</span>
+      <span class="hint">التقويم المدرسي</span>
+      <button onclick="openEditItem('id_mratk2jdw9p5w')">✏️</button>
+      <button onclick="deleteItem('id_mratk2jdw9p5w')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">منصة رقمية  اختبر  نفسك ذاتيا</span>
+      <span class="hint">التدريب</span>
+      <button onclick="openEditItem('id_mratlqa9rztb9')">✏️</button>
+      <button onclick="deleteItem('id_mratlqa9rztb9')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">١٠٠   سؤال في الرخصة المهنيه</span>
+      <span class="hint">التدريب</span>
+      <button onclick="openEditItem('id_mratnsuzyi7hb')">✏️</button>
+      <button onclick="deleteItem('id_mratnsuzyi7hb')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">منصة  ١٠٠   سؤال في الرخصة المهنيه</span>
+      <span class="hint">التدريب</span>
+      <button onclick="openEditItem('id_mratotmklbglq')">✏️</button>
+      <button onclick="deleteItem('id_mratotmklbglq')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">رصد  الملاحظة الصفية   وشرحها والمراد بها</span>
+      <span class="hint">التقويم المدرسي</span>
+      <button onclick="openEditItem('id_mratr5mmaipw9')">✏️</button>
+      <button onclick="deleteItem('id_mratr5mmaipw9')">🗑️</button>
+    </div>
+  
+    <div class="admin-row">
+      <span>💻</span>
+      <span class="grow">رصد  الملاحظة الصفية   وشرحها والمراد بها</span>
+      <span class="hint">التقويم المدرسي</span>
+      <button onclick="openEditItem('id_mratsgm9uqv67')">✏️</button>
+      <button onclick="deleteItem('id_mratsgm9uqv67')">🗑️</button>
+    </div>
+  </div>
+    </div>
+
+    <div id="adminTab_settings" style="display:none;">
+      <div class="form-grid">
+        <div class="full"><label>اسم المنصة</label><input type="text" id="s_platformName"></div>
+        <div class="full"><label>شعار المنصة (رابط صورة أو Base64)</label><input type="text" id="s_logo" placeholder="اختياري"></div>
+        <div class="full"><label>رابط تليجرام المالك (لإرسال الطلبات)</label><input type="text" id="s_ownerTelegram" placeholder="https://t.me/username"></div>
+        <div class="full"><label>رابط قناة تليجرام (تذييل)</label><input type="text" id="s_footerChannel"></div>
+        <div class="full"><label>رابط قروب تليجرام (تذييل)</label><input type="text" id="s_footerGroup"></div>
+      </div>
+      <div class="modal-actions"><button class="btn primary" onclick="saveSettings()">💾 حفظ الإعدادات</button></div>
+    </div>
+
+    <div id="adminTab_data" style="display: block;">
+      <p class="hint">يمكنك تصدير جميع البيانات كنسخة احتياطية أو لنقلها لجهاز آخر، أو استيرادها من ملف سابق.</p>
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button class="btn primary" onclick="exportJSON()">⬇️ تصدير JSON</button>
+        <button class="btn primary" onclick="exportCSV()">⬇️ تصدير CSV</button>
+        <button class="btn" onclick="document.getElementById('importFile').click()">⬆️ استيراد JSON</button>
+        <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
+        <button class="btn danger" onclick="wipeData()">🗑️ تفريغ جميع البيانات</button>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+      <h4 style="margin:0 0 6px;">🔒 نسخة احتياطية حية على جهازك (موصى به بشدة)</h4>
+      <p class="hint">
+        بياناتك تُحفظ تلقائيًا داخل المتصفح (LocalStorage) مع كل إضافة أو تعديل، وتبقى محفوظة حتى بعد إغلاق المنصة
+        وإعادة فتحها من نفس الجهاز والمتصفح. لكن مسح بيانات المتصفح أو استخدام جهاز/متصفح آخر يفقدها.
+        لضمان أقصى حماية، فعّل الخيار التالي (متاح في متصفحات كروم/إيدج) ليكتب كل تغيير مباشرة في ملف
+        نسخة احتياطية حقيقي على جهازك، بشكل تلقائي وبدون أي إجراء إضافي منك.
+      </p>
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button class="btn gold" id="liveBackupBtn" onclick="enableLiveBackup()">🔒 تفعيل النسخة الاحتياطية الحية</button>
+        <span class="hint" id="liveBackupStatus">لم تُفعَّل بعد في هذا المتصفح</span>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+      <h4 style="margin:0 0 6px;">🧹 حذف البيانات التجريبية التي وضعتها المنصة عند الإنشاء</h4>
+      <p class="hint">
+        العناصر الافتراضية (مثل "منصة مسابقة الرخصة المهنية للمعلمين") موضوعة فقط كأمثلة توضيحية لشكل البطاقات.
+        يمكنك حذفها دفعة واحدة مع الإبقاء الكامل على أي عنصر أضفته أنت بنفسك — أو تعديل أي منها بدل حذفه واستخدامه
+        كنقطة بداية جاهزة.
+      </p>
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button class="btn danger" onclick="clearDemoItems()">🧹 حذف العناصر التجريبية فقط</button>
+      </div>
+      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
+      <h4 style="margin:0 0 6px;">📦 إنشاء نسخة جاهزة للنشر على GitHub</h4>
+      <p class="hint">
+        بعد الانتهاء من الإضافة والتعديل ومراجعة الشكل، اضغط الزر التالي لإنشاء ملف HTML جديد كامل تكون فيه
+        كل منصاتك وملفاتك الحالية مكتوبة داخل الملف نفسه من البداية (تمامًا كمنصاتك السابقة). بعدها ارفع هذا
+        الملف الجديد إلى مستودع GitHub بدل الملف القديم (بنفس الاسم ليستبدله)، وسيراه كل زائر فورًا كما هو،
+        بدون إنترنت مطلوب وقت العرض، وبدون أي حساب أو جهة خارجية.
+      </p>
+      <div class="modal-actions" style="justify-content:flex-start;">
+        <button class="btn gold" onclick="exportDistributionCopy()">📦 إنشاء نسخة جاهزة للنشر</button>
+      </div>
+    </div>
+
+    <div id="adminTab_requests" style="display:none;">
+      <p class="hint">قائمة طلبات المنصات المُرسلة من الزوار (تُحفظ محليًا في هذا المتصفح فقط).</p>
+      <div class="admin-list" id="adminRequestsList">
+    <div class="admin-row">
+      <span>✉️</span>
+      <span class="grow">لبلب — منصة مشابهة لـ: حاسبة التقاعد ومكافأة نهاية الخدمة</span>
+      <span class="hint">عادي</span>
+      <span class="hint">2026-07-07 15:28</span>
+    </div>
+  
+    <div class="admin-row">
+      <span>✉️</span>
+      <span class="grow">فواز — منصة مشابهة لـ: خطوات المباشرة  لمنقول في  فرص</span>
+      <span class="hint">عادي</span>
+      <span class="hint">2026-07-07 15:18</span>
+    </div>
+  </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Quick Add From Telegram Modal ===== -->
+<div class="modal-overlay" id="quickAddModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('quickAddModal')">✖</button>
+    <h3>📥 إضافة سريعة من تليجرام</h3>
+    <p class="hint">
+      انسخ نص منشور القناة كاملًا (أو رابط المنشور فقط) والصقه هنا. ستحاول المنصة استخراج
+      الرابط والعنوان والكلمات المفتاحية تلقائيًا، ثم تفتح لك نموذج المراجعة قبل الحفظ النهائي.
+    </p>
+    <div class="form-grid">
+      <div class="full">
+        <label>نص أو رابط منشور تليجرام</label>
+        <textarea id="qa_raw" style="min-height:130px;" placeholder="مثال:
+منصة مسابقة الرخصة المهنية 2️⃣
+مسابقة تفاعلية للمعلمين قبل اختبار الرخصة المهنية
+#رخصة_مهنية #مسابقة #معلم
+https://t.me/TAqhjT3MFVE1Yzk0/123"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('quickAddModal')">إلغاء</button>
+      <button class="btn gold" onclick="analyzeQuickAdd()">✨ تحليل واستخراج البيانات</button>
+    </div>
+    <p class="hint">لن يُحفظ أي شيء تلقائيًا — سيُفتح نموذج المراجعة العادي بعد التحليل لتتأكد من البيانات وتختار المجال والفئة قبل الحفظ.</p>
+  </div>
+</div>
+
+<!-- ===== Request Platform Modal ===== -->
+<div class="modal-overlay" id="requestModal">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('requestModal')">✖</button>
+    <h3>✉️ اطلب منصة رقمية</h3>
+    <div class="form-grid">
+      <div><label>الاسم</label><input type="text" id="r_name"></div>
+      <div><label>الجهة أو المدرسة</label><input type="text" id="r_org"></div>
+      <div><label>رقم التواصل / حساب تليجرام</label><input type="text" id="r_contact"></div>
+      <div><label>درجة الاستعجال</label>
+        <select id="r_urgency"><option>عادي</option><option>متوسط</option><option>عاجل</option></select>
+      </div>
+      <div class="full"><label>نوع المنصة المطلوبة</label><input type="text" id="r_type" placeholder="مثال: منصة مسابقة تفاعلية"></div>
+      <div class="full"><label>وصف الفكرة</label><textarea id="r_desc"></textarea></div>
+      <div><label>هل توجد ملفات مرفقة؟</label>
+        <select id="r_attach"><option>لا</option><option>نعم</option></select>
+      </div>
+      <div><label>ملاحظات إضافية</label><input type="text" id="r_notes"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeModal('requestModal')">إلغاء</button>
+      <button class="btn gold" onclick="submitRequest()">📤 عرض ملخص الطلب</button>
+    </div>
+    <div id="requestSummaryBox" style="display:none;margin-top:16px;">
+      <h4>ملخص الطلب</h4>
+      <div class="summary-box" id="requestSummaryText"></div>
+      <div class="modal-actions">
+        <button class="btn" onclick="copyRequestSummary()">📋 نسخ الطلب</button>
+        <a class="btn primary" id="sendTelegramBtn" href="#" target="_blank">📨 إرسال إلى المالك عبر تليجرام</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================
+   مكتبة د/فواز الرقمية — منطق التطبيق بالكامل (Vanilla JS)
+   ========================================================== */
+const STORAGE_KEY = 'fawaz_library_items_v1';
+const SETTINGS_KEY = 'fawaz_library_settings_v1';
+const REQUESTS_KEY = 'fawaz_library_requests_v1';
+const FAV_KEY = 'fawaz_library_favs_v1';
+
+const DOMAINS = ["التقويم المدرسي","التعليم والتعلم","نواتج التعلم","البيئة المدرسية","الإدارة المدرسية","الرخصة المهنية","التدريب","الاختبارات","الشؤون الطلابية","السلوك والمواظبة","النشاط الطلابي","القيادة المدرسية","الجودة والتميز","خدمات","أخرى"];
+const BENEFICIARIES = ["معلم","مدير مدرسة","وكيل مدرسة","مشرف تربوي","مرشد طلابي","رائد نشاط","إداري","ولي أمر","طالب","الكل"];
+const TYPE_ICON = {"منصة":"💻","ملف":"📄","رابط":"🔗","نموذج":"🧾","دليل":"📘"};
+
+let defaultSettings = {
+  "platformName": "مكتبة د/فواز الرقمية",
+  "logo": "",
+  "ownerTelegram": "https://t.me/fawaz_hs",
+  "footerChannel": "https://t.me/TAqhjT3MFVE1Yzk0",
+  "footerGroup": "https://t.me/TAqhjT3MFVE1Yzk0"
+};
+
+let demoItems = [
+  {
+    "id": "id_mrapkgivuaan3",
+    "date": "2026-07-07",
+    "uses": 1,
+    "favorite": false,
+    "type": "منصة",
+    "status": "مميز",
+    "title": "دليل  ساعات  التطوير  المهني    ونقاطها",
+    "desc": "منصة عرض    مختصره    لعدد ساعات النشاطات وضوابطها",
+    "domain": "الإدارة المدرسية",
+    "beneficiary": "مدير مدرسة",
+    "link": "https://ffffff999-byte.github.io/mm/uyhu",
+    "keywords": []
+  },
+  {
+    "id": "id_mras0fp567g6c",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "حاسبة التقاعد ومكافأة نهاية الخدمة",
+    "desc": "اعداد اخونا بدر البلوي   تصميم د/فواز",
+    "domain": "خدمات",
+    "beneficiary": "الكل",
+    "link": "https://ffff040004-a11y.github.io/fawaz/retirement_calculator-2",
+    "keywords": []
+  },
+  {
+    "id": "id_mras2k1s2b18a",
+    "date": "2026-07-07",
+    "uses": 1,
+    "favorite": true,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "الدليل الإرشادي",
+    "desc": "إدارة درجات الدور الثاني وترفيع الطلاب",
+    "domain": "الاختبارات",
+    "beneficiary": "مدير مدرسة",
+    "link": "https://ffffff999-byte.github.io/zaza44/noor-infographic",
+    "keywords": []
+  },
+  {
+    "id": "id_mrasfwhzr0kww",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "خطوات المباشرة  لمنقول في  فرص",
+    "desc": "خطوات رفع  المباشرة  لمنقول في  فرص",
+    "domain": "أخرى",
+    "beneficiary": "الكل",
+    "link": "https://ffffff999-byte.github.io/zaza44/faris-infographic",
+    "keywords": []
+  },
+  {
+    "id": "id_mrat5hrk08eh0",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "منصة  شهادات شكر وتقدير  رسميه",
+    "desc": "",
+    "domain": "خدمات",
+    "beneficiary": "الكل",
+    "link": "https://ffffff999-byte.github.io/zaza44/index9",
+    "keywords": []
+  },
+  {
+    "id": "id_mrat7b73fqjkz",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "ثلاثة  طرق لاستخراج  نتائج الطلاب",
+    "desc": "",
+    "domain": "الاختبارات",
+    "beneficiary": "الكل",
+    "link": "https://ffff040004-a11y.github.io/fawaz/hhiih",
+    "keywords": []
+  },
+  {
+    "id": "id_mrat9kbvm9ppn",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "إدخال جميع درجات المراجعة قبل الإغلاق\"",
+    "desc": "إغلاق إدخال الدرجات\nحل مشكلة الطلاب المكملين وخطوات الإغلاق الناجح",
+    "domain": "الاختبارات",
+    "beneficiary": "مدير مدرسة",
+    "link": "https://ffff040004-a11y.github.io/fawaz/hhhi",
+    "keywords": []
+  },
+  {
+    "id": "id_mratbk5xl547g",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "خطوات إخلاء الطرف والمباشرة للمعلمين وغيرهم  من الوظائف التعليميه عبر نظام \"فارس\"",
+    "desc": "",
+    "domain": "خدمات",
+    "beneficiary": "مدير مدرسة",
+    "link": "https://ffff040004-a11y.github.io/fawaz/ttvvcc",
+    "keywords": []
+  },
+  {
+    "id": "id_mratdvoub97o7",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "قيم نفسك  رقميا  بمعايير  الخارجي  في التقويم   منصة الشواهد والمجالات والمعاير كامله",
+    "desc": "منصة الكترونيه  لجميع  المجالات وشواهدها كما في   الادلة الاسترشادية",
+    "domain": "التقويم المدرسي",
+    "beneficiary": "مدير مدرسة",
+    "link": "https://ffffff999-byte.github.io/ff/TTT",
+    "keywords": []
+  },
+  {
+    "id": "id_mratj6aalbbah",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "منصه  لتوليد  خطة التحسين ع المجالات  الاربعه",
+    "desc": "",
+    "domain": "التقويم المدرسي",
+    "beneficiary": "مدير مدرسة",
+    "link": "https://ffffff999-byte.github.io/zaza44/dd55xx",
+    "keywords": []
+  },
+  {
+    "id": "id_mratk2jdw9p5w",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "منصة  توليد  خطة تحسين على المجالات الاربعه",
+    "desc": "",
+    "domain": "التقويم المدرسي",
+    "beneficiary": "مدير مدرسة",
+    "link": "https://ffffff999-byte.github.io/zaza44/d5xx",
+    "keywords": []
+  },
+  {
+    "id": "id_mratlqa9rztb9",
+    "date": "2026-07-07",
+    "uses": 1,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "منصة رقمية  اختبر  نفسك ذاتيا",
+    "desc": "تجميعات  ٣  متوسط  لجميع المواد المركزيه",
+    "domain": "التدريب",
+    "beneficiary": "الكل",
+    "link": "https://ffffff999-byte.github.io/zaza44/index",
+    "keywords": []
+  },
+  {
+    "id": "id_mratnsuzyi7hb",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "١٠٠   سؤال في الرخصة المهنيه",
+    "desc": "اختبر نفسك  ذاتيا",
+    "domain": "التدريب",
+    "beneficiary": "الكل",
+    "link": "https://ffffff999-byte.github.io/zaza44/200s",
+    "keywords": []
+  },
+  {
+    "id": "id_mratotmklbglq",
+    "date": "2026-07-07",
+    "uses": 1,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "منصة  ١٠٠   سؤال في الرخصة المهنيه",
+    "desc": "اختبر نفسك  ذاتيا",
+    "domain": "التدريب",
+    "beneficiary": "الكل",
+    "link": "https://ffffff999-byte.github.io/zaza44/100s",
+    "keywords": []
+  },
+  {
+    "id": "id_mratr5mmaipw9",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "رصد  الملاحظة الصفية   وشرحها والمراد بها",
+    "desc": "",
+    "domain": "التقويم المدرسي",
+    "beneficiary": "مدير مدرسة",
+    "link": "https://ffffff999-byte.github.io/zaza44/mk0099",
+    "keywords": []
+  },
+  {
+    "id": "id_mratsgm9uqv67",
+    "date": "2026-07-07",
+    "uses": 0,
+    "favorite": false,
+    "type": "منصة",
+    "status": "عادي",
+    "title": "رصد  الملاحظة الصفية   وشرحها والمراد بها",
+    "desc": "٢",
+    "domain": "التقويم المدرسي",
+    "beneficiary": "الكل",
+    "link": "https://ffffff999-byte.github.io/zaza44/mk009",
+    "keywords": []
+  }
+];
+
+function daysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);}
+function uid(){return 'id_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+
+function loadItems(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){try{return JSON.parse(raw);}catch(e){return demoItems;}}
+  return demoItems;
+}
+function saveItems(items){localStorage.setItem(STORAGE_KEY, JSON.stringify(items)); markSaved(); writeLiveBackup();}
+function loadSettings(){
+  const raw = localStorage.getItem(SETTINGS_KEY);
+  if(raw){try{return Object.assign({},defaultSettings,JSON.parse(raw));}catch(e){return defaultSettings;}}
+  return defaultSettings;
+}
+function saveSettingsToStorage(s){localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); markSaved(); writeLiveBackup();}
+function loadRequests(){
+  const raw = localStorage.getItem(REQUESTS_KEY);
+  if(raw){try{return JSON.parse(raw);}catch(e){return [];}}
+  return [];
+}
+function saveRequests(r){localStorage.setItem(REQUESTS_KEY, JSON.stringify(r)); markSaved(); writeLiveBackup();}
+
+let ITEMS = loadItems();
+let SETTINGS = loadSettings();
+let REQUESTS = loadRequests();
+let currentTypeFilter = "";
+let editingItemId = null;
+
+/* ---------- init selects ---------- */
+function fillDomainOptions(){
+  const selects = ['f_domain','filterDomain'];
+  selects.forEach(id=>{
+    const el = document.getElementById(id);
+    const keepFirst = id==='filterDomain';
+    el.innerHTML = keepFirst? '<option value="">كل المجالات</option>':'';
+    DOMAINS.forEach(d=>{
+      const o=document.createElement('option');o.value=d;o.textContent=d;el.appendChild(o);
+    });
+  });
+  const selectsB = ['f_beneficiary','filterBeneficiary'];
+  selectsB.forEach(id=>{
+    const el = document.getElementById(id);
+    const keepFirst = id==='filterBeneficiary';
+    el.innerHTML = keepFirst? '<option value="">كل الفئات المستفيدة</option>':'';
+    BENEFICIARIES.forEach(b=>{
+      const o=document.createElement('option');o.value=b;o.textContent=b;el.appendChild(o);
+    });
+  });
+}
+
+/* ---------- rendering ---------- */
+function renderStats(){
+  const platforms = ITEMS.filter(i=>i.type==='منصة').length;
+  const files = ITEMS.filter(i=>i.type==='ملف'||i.type==='نموذج'||i.type==='دليل').length;
+  const links = ITEMS.filter(i=>i.type==='رابط').length;
+  const domainsUsed = new Set(ITEMS.map(i=>i.domain)).size;
+  const lastUpdate = ITEMS.length? ITEMS.map(i=>i.date).sort().slice(-1)[0] : '—';
+  const stats = [
+    {n:platforms,l:'منصة رقمية'},
+    {n:files,l:'ملف / نموذج / دليل'},
+    {n:links,l:'رابط مهم'},
+    {n:domainsUsed,l:'مجال مصنّف'},
+    {n:lastUpdate,l:'آخر تحديث'},
+  ];
+  document.getElementById('statsRow').innerHTML = stats.map(s=>`
+    <div class="stat-card"><div class="num">${s.n}</div><div class="lbl">${s.l}</div></div>
+  `).join('');
+}
+
+function badgeClass(status){
+  return {'جديد':'new','مميز':'featured','محدث':'updated','مهم':'important'}[status] || '';
+}
+
+function cardHTML(item){
+  const badge = item.status && item.status!=='عادي' ? `<span class="badge ${badgeClass(item.status)}">${item.status}</span>` : '';
+  const favActive = item.favorite ? 'active' : '';
+  const kw = (item.keywords||[]).slice(0,4).map(k=>`<span class="chip">#${escapeHTML(k)}</span>`).join('');
+  return `
+  <div class="card">
+    ${badge}
+    <div class="card-top">
+      <div class="card-icon">${TYPE_ICON[item.type]||'📌'}</div>
+      <div class="card-title">${escapeHTML(item.title)}</div>
+    </div>
+    <div class="card-desc">${escapeHTML(item.desc||'')}</div>
+    <div class="card-meta">
+      <span class="chip">${item.type}</span>
+      <span class="chip">${escapeHTML(item.domain||'')}</span>
+      <span class="chip">${escapeHTML(item.beneficiary||'')}</span>
+      ${kw}
+    </div>
+    <div class="card-meta" style="opacity:.7;"><span class="chip">📅 ${item.date}</span><span class="chip">👁 ${item.uses||0} استخدام</span></div>
+    <div class="card-actions">
+      <a class="primary" href="${escapeAttr(item.link||'#')}" target="_blank" onclick="registerUse('${item.id}')">🔗 فتح</a>
+      <button onclick="copyLink('${escapeAttr(item.link||'')}')">📋 نسخ</button>
+      <button class="fav ${favActive}" onclick="toggleFav('${item.id}')">⭐ مفضلة</button>
+      <button onclick="openRequestForm('${escapeAttr(item.title)}')">➕ طلب مشابه</button>
+    </div>
+  </div>`;
+}
+
+function escapeHTML(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function escapeAttr(s){return escapeHTML(s);}
+
+function registerUse(id){
+  const it = ITEMS.find(i=>i.id===id);
+  if(it){it.uses=(it.uses||0)+1; saveItems(ITEMS); }
+}
+
+function toggleFav(id){
+  const it = ITEMS.find(i=>i.id===id);
+  if(it){it.favorite=!it.favorite; saveItems(ITEMS); renderAll();}
+}
+
+function copyLink(link){
+  navigator.clipboard && navigator.clipboard.writeText(link).catch(()=>{});
+  toast('تم نسخ الرابط ✅');
+}
+
+function toast(msg){
+  let t = document.getElementById('_toast');
+  if(!t){
+    t = document.createElement('div'); t.id='_toast';
+    t.style.cssText='position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:12px 18px;border-radius:10px;z-index:999;box-shadow:var(--shadow);font-size:13.5px;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg; t.style.opacity='1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>{t.style.opacity='0';},2200);
+}
+
+function getFilteredItems(){
+  const q = document.getElementById('mainSearch').value.trim().toLowerCase();
+  const domain = document.getElementById('filterDomain').value;
+  const beneficiary = document.getElementById('filterBeneficiary').value;
+  const status = document.getElementById('filterStatus').value;
+  return ITEMS.filter(i=>{
+    if(currentTypeFilter && i.type!==currentTypeFilter) return false;
+    if(domain && i.domain!==domain) return false;
+    if(beneficiary && i.beneficiary!==beneficiary) return false;
+    if(status && i.status!==status) return false;
+    if(q){
+      const hay = [i.title,i.desc,i.domain,i.beneficiary,...(i.keywords||[])].join(' ').toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function renderTypeTabs(){
+  const types = ["","منصة","ملف","رابط","نموذج","دليل"];
+  const labels = {"":"الكل","منصة":"💻 منصات","ملف":"📄 ملفات","رابط":"🔗 روابط","نموذج":"🧾 نماذج","دليل":"📘 أدلة"};
+  document.getElementById('typeTabs').innerHTML = types.map(t=>
+    `<button class="tab-btn ${currentTypeFilter===t?'active':''}" onclick="setTypeFilter('${t}')">${labels[t]}</button>`
+  ).join('');
+}
+function setTypeFilter(t){currentTypeFilter=t; renderTypeTabs(); renderMainGrid();}
+
+function renderMainGrid(){
+  const filtered = getFilteredItems().sort((a,b)=> b.date.localeCompare(a.date));
+  document.getElementById('resultsCount').textContent = `${filtered.length} نتيجة`;
+  const grid = document.getElementById('mainGrid');
+  grid.innerHTML = filtered.length? filtered.map(cardHTML).join('') : emptyState('لا توجد نتائج مطابقة لبحثك أو الفلاتر المختارة');
+}
+
+function emptyState(msg){
+  return `<div class="empty-state" style="grid-column:1/-1;"><div class="big">🔍</div><div>${msg}</div></div>`;
+}
+
+function renderRecent(){
+  const recent = [...ITEMS].sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4);
+  document.getElementById('recentGrid').innerHTML = recent.length? recent.map(cardHTML).join(''):emptyState('لا توجد عناصر بعد');
+}
+function renderMostUsed(){
+  const most = [...ITEMS].sort((a,b)=>(b.uses||0)-(a.uses||0)).slice(0,4);
+  document.getElementById('mostUsedGrid').innerHTML = most.length? most.map(cardHTML).join(''):emptyState('لا توجد بيانات استخدام بعد');
+}
+function renderFavs(){
+  const favs = ITEMS.filter(i=>i.favorite);
+  document.getElementById('favGrid').innerHTML = favs.length? favs.map(cardHTML).join(''):emptyState('لم تُضِف أي عنصر إلى المفضلة بعد');
+}
+function renderGroupedByDomain(containerId, typeList){
+  const el = document.getElementById(containerId);
+  const items = ITEMS.filter(i=>typeList.includes(i.type));
+  if(!items.length){el.innerHTML = emptyState('لا توجد عناصر في هذا القسم بعد — أضِف عنصرًا من لوحة الإدارة'); return;}
+  // نحافظ على ترتيب المجالات كما هي معرّفة في DOMAINS حتى يكون العرض ثابتًا ومنطقيًا
+  const usedDomains = DOMAINS.filter(d=> items.some(i=>i.domain===d));
+  el.innerHTML = usedDomains.map(domain=>{
+    const domainItems = items.filter(i=>i.domain===domain).sort((a,b)=>b.date.localeCompare(a.date));
+    return `
+      <div class="domain-group">
+        <div class="domain-group-title">📁 ${escapeHTML(domain)} <span class="count-chip">${domainItems.length}</span></div>
+        <div class="grid">${domainItems.map(cardHTML).join('')}</div>
+      </div>`;
+  }).join('');
+}
+function renderPlatformsGrouped(){renderGroupedByDomain('platformsGrouped', ['منصة']);}
+function renderFilesGrouped(){renderGroupedByDomain('filesGrouped', ['ملف','نموذج','دليل']);}
+function renderLinksGrouped(){renderGroupedByDomain('linksGrouped', ['رابط']);}
+
+function renderAll(){
+  renderStats();
+  renderTypeTabs();
+  renderMainGrid();
+  renderRecent();
+  renderMostUsed();
+  renderFavs();
+  renderPlatformsGrouped();
+  renderFilesGrouped();
+  renderLinksGrouped();
+  applySettingsToUI();
+}
+
+function applySettingsToUI(){
+  document.getElementById('brandName').textContent = SETTINGS.platformName;
+  document.getElementById('platformTitle').textContent = SETTINGS.platformName + ' للمنصات والملفات التعليمية';
+  document.title = SETTINGS.platformName;
+  document.getElementById('footerChannel').href = SETTINGS.footerChannel || '#';
+  document.getElementById('footerGroup').href = SETTINGS.footerGroup || '#';
+  const logoSlot = document.getElementById('logoSlot');
+  if(SETTINGS.logo){
+    logoSlot.innerHTML = `<img src="${escapeAttr(SETTINGS.logo)}" alt="شعار">`;
+  } else {
+    logoSlot.innerHTML = `<div class="logo-placeholder">فواز</div>`;
+  }
+}
+
+/* ---------- search ---------- */
+document.getElementById('mainSearch').addEventListener('input', ()=>renderMainGrid());
+document.getElementById('filterDomain').addEventListener('change', renderMainGrid);
+document.getElementById('filterBeneficiary').addEventListener('change', renderMainGrid);
+document.getElementById('filterStatus').addEventListener('change', renderMainGrid);
+function clearFilters(){
+  document.getElementById('mainSearch').value='';
+  document.getElementById('filterDomain').value='';
+  document.getElementById('filterBeneficiary').value='';
+  document.getElementById('filterStatus').value='';
+  currentTypeFilter='';
+  renderTypeTabs();
+  renderMainGrid();
+}
+function scrollToResults(){document.getElementById('allItemsSection').scrollIntoView({behavior:'smooth'});}
+
+/* ---------- theme ---------- */
+function toggleTheme(){
+  const body = document.body;
+  const cur = body.getAttribute('data-theme');
+  const next = cur==='dark'?'light':'dark';
+  body.setAttribute('data-theme', next);
+  localStorage.setItem('fawaz_library_theme', next);
+}
+(function initTheme(){
+  const saved = localStorage.getItem('fawaz_library_theme');
+  if(saved) document.body.setAttribute('data-theme', saved);
+})();
+
+/* ---------- back to top ---------- */
+window.addEventListener('scroll', ()=>{
+  document.getElementById('toTopBtn').classList.toggle('show', window.scrollY>400);
+});
+
+/* ---------- save indicator ---------- */
+function markSaved(){
+  const el = document.getElementById('saveIndicator');
+  if(!el) return;
+  const t = new Date().toLocaleTimeString('ar-SA',{hour:'2-digit',minute:'2-digit'});
+  el.textContent = `✅ تم الحفظ ${t}`;
+  clearTimeout(el._resetTimer);
+  el._resetTimer = setTimeout(()=>{el.textContent='💾 محفوظ تلقائيًا';}, 2500);
+}
+
+/* ---------- live backup file (File System Access API + IndexedDB) ---------- */
+let liveBackupHandle = null;
+
+function idbOpen(){
+  return new Promise((resolve,reject)=>{
+    const req = indexedDB.open('fawaz_library_idb', 1);
+    req.onupgradeneeded = ()=>{req.result.createObjectStore('handles');};
+    req.onsuccess = ()=>resolve(req.result);
+    req.onerror = ()=>reject(req.error);
+  });
+}
+async function idbSetHandle(handle){
+  try{
+    const db = await idbOpen();
+    await new Promise((res,rej)=>{
+      const tx = db.transaction('handles','readwrite');
+      tx.objectStore('handles').put(handle,'backupHandle');
+      tx.oncomplete = res; tx.onerror = ()=>rej(tx.error);
+    });
+  }catch(e){/* silent */}
+}
+async function idbGetHandle(){
+  try{
+    const db = await idbOpen();
+    return await new Promise((res)=>{
+      const tx = db.transaction('handles','readonly');
+      const r = tx.objectStore('handles').get('backupHandle');
+      r.onsuccess = ()=>res(r.result||null);
+      r.onerror = ()=>res(null);
+    });
+  }catch(e){return null;}
+}
+
+async function enableLiveBackup(){
+  if(!window.showSaveFilePicker){
+    toast('⚠️ هذه الميزة تعمل حاليًا على متصفحات كروم/إيدج فقط');
+    return;
+  }
+  // إذا كان هناك ملف مربوط مسبقًا وينقصه الإذن فقط، أعد طلب الإذن بدل اختيار ملف جديد
+  if(liveBackupHandle){
+    try{
+      const perm = await liveBackupHandle.requestPermission({mode:'readwrite'});
+      if(perm === 'granted'){
+        await writeLiveBackup(true);
+        toast('✅ تم تجديد صلاحية النسخة الاحتياطية الحية');
+        return;
+      }
+    }catch(e){/* fall through to picking a new file */}
+  }
+  try{
+    const handle = await window.showSaveFilePicker({
+      suggestedName: 'fawaz-library-live-backup.json',
+      types: [{description:'ملف JSON', accept:{'application/json':['.json']}}]
+    });
+    liveBackupHandle = handle;
+    await idbSetHandle(handle);
+    await writeLiveBackup(true);
+    setLiveBackupStatus('🟢 مفعّلة — يُكتب كل تغيير مباشرة إلى: ' + handle.name);
+    toast('✅ تم تفعيل النسخة الاحتياطية الحية بنجاح');
+  }catch(e){
+    if(e.name !== 'AbortError') toast('⚠️ لم يتم تفعيل النسخة الاحتياطية الحية');
+  }
+}
+
+async function writeLiveBackup(forceNotify){
+  if(!liveBackupHandle) return;
+  try{
+    const perm = await liveBackupHandle.queryPermission({mode:'readwrite'});
+    if(perm !== 'granted'){
+      setLiveBackupStatus('🟡 مفعّلة سابقًا — اضغط الزر لإعادة منح الإذن بعد إعادة فتح الصفحة');
+      return;
+    }
+    const payload = {items:ITEMS, settings:SETTINGS, requests:REQUESTS, savedAt:new Date().toISOString()};
+    const writable = await liveBackupHandle.createWritable();
+    await writable.write(JSON.stringify(payload,null,2));
+    await writable.close();
+    if(forceNotify) setLiveBackupStatus('🟢 مفعّلة — آخر كتابة: ' + new Date().toLocaleTimeString('ar-SA'));
+  }catch(e){/* silent fail, localStorage already safe */}
+}
+
+function setLiveBackupStatus(msg){
+  const el = document.getElementById('liveBackupStatus');
+  if(el) el.textContent = msg;
+}
+
+async function tryRestoreLiveBackupHandle(){
+  const handle = await idbGetHandle();
+  if(!handle) return;
+  try{
+    const perm = await handle.queryPermission({mode:'readwrite'});
+    if(perm === 'granted'){
+      liveBackupHandle = handle;
+      setLiveBackupStatus('🟢 مفعّلة — يُكتب كل تغيير مباشرة إلى: ' + handle.name);
+    } else {
+      liveBackupHandle = handle;
+      setLiveBackupStatus('🟡 مفعّلة سابقًا لملف: ' + handle.name + ' — اضغط الزر لإعادة منح الإذن');
+    }
+  }catch(e){/* silent */}
+}
+
+/* ---------- modal helpers ---------- */
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+/* ---------- add/edit item ---------- */
+function openAddItem(){
+  editingItemId = null;
+  document.getElementById('itemModalTitle').textContent = '➕ إضافة عنصر جديد';
+  ['f_title','f_desc','f_link','f_keywords'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f_type').value='منصة';
+  document.getElementById('f_status').value='عادي';
+  document.getElementById('f_domain').value=DOMAINS[0];
+  document.getElementById('f_beneficiary').value=BENEFICIARIES[0];
+  openModal('itemModal');
+}
+function openEditItem(id){
+  const it = ITEMS.find(i=>i.id===id); if(!it) return;
+  editingItemId = id;
+  document.getElementById('itemModalTitle').textContent = '✏️ تعديل عنصر';
+  document.getElementById('f_type').value = it.type;
+  document.getElementById('f_status').value = it.status;
+  document.getElementById('f_title').value = it.title;
+  document.getElementById('f_desc').value = it.desc||'';
+  document.getElementById('f_domain').value = it.domain;
+  document.getElementById('f_beneficiary').value = it.beneficiary;
+  document.getElementById('f_link').value = it.link||'';
+  document.getElementById('f_keywords').value = (it.keywords||[]).join(', ');
+  openModal('itemModal');
+}
+function saveItem(){
+  const title = document.getElementById('f_title').value.trim();
+  if(!title){toast('⚠️ الرجاء إدخال عنوان العنصر'); return;}
+  const data = {
+    type: document.getElementById('f_type').value,
+    status: document.getElementById('f_status').value,
+    title,
+    desc: document.getElementById('f_desc').value.trim(),
+    domain: document.getElementById('f_domain').value,
+    beneficiary: document.getElementById('f_beneficiary').value,
+    link: document.getElementById('f_link').value.trim() || '#',
+    keywords: document.getElementById('f_keywords').value.split(',').map(k=>k.trim()).filter(Boolean),
+  };
+  if(editingItemId){
+    const it = ITEMS.find(i=>i.id===editingItemId);
+    Object.assign(it, data);
+  } else {
+    ITEMS.push(Object.assign({id:uid(), date:new Date().toISOString().slice(0,10), uses:0, favorite:false}, data));
+  }
+  saveItems(ITEMS);
+  closeModal('itemModal');
+  renderAll();
+  renderAdminItemsList();
+  toast('✅ تم حفظ العنصر بنجاح');
+}
+function deleteItem(id){
+  if(!confirm('هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.')) return;
+  ITEMS = ITEMS.filter(i=>i.id!==id);
+  saveItems(ITEMS);
+  renderAll();
+  renderAdminItemsList();
+  toast('🗑️ تم حذف العنصر');
+}
+function clearDemoItems(){
+  const demoCount = ITEMS.filter(i=>i.id.startsWith('d') && /^d\d+$/.test(i.id)).length;
+  if(!demoCount){toast('لا توجد عناصر تجريبية متبقية'); return;}
+  if(!confirm(`سيتم حذف ${demoCount} عنصر/عناصر تجريبية فقط، مع الإبقاء الكامل على كل ما أضفته أنت. هل تريد المتابعة؟`)) return;
+  ITEMS = ITEMS.filter(i=>!(i.id.startsWith('d') && /^d\d+$/.test(i.id)));
+  saveItems(ITEMS);
+  renderAll();
+  renderAdminItemsList();
+  toast('✅ تم حذف العناصر التجريبية والإبقاء على عناصرك');
+}
+
+/* ---------- quick add from telegram ---------- */
+function openQuickAdd(){
+  document.getElementById('qa_raw').value='';
+  openModal('quickAddModal');
+}
+function guessTypeFromLink(link){
+  const l = (link||'').toLowerCase();
+  if(/\.(pdf|docx?|xlsx?|pptx?)(\?|$)/.test(l)) return 'ملف';
+  if(l.includes('drive.google.com') || l.includes('forms.gle') || l.includes('docs.google.com')) return 'رابط';
+  if(l.includes('t.me') || l.includes('telegram.me')) return 'منصة';
+  return 'منصة';
+}
+function analyzeQuickAdd(){
+  const raw = document.getElementById('qa_raw').value.trim();
+  if(!raw){toast('⚠️ الرجاء لصق نص أو رابط المنشور أولًا'); return;}
+
+  // استخراج أول رابط موجود في النص
+  const urlMatch = raw.match(/https?:\/\/[^\s)"'\]]+/);
+  const link = urlMatch ? urlMatch[0] : '';
+
+  // استخراج الوسوم (#كلمة) ككلمات مفتاحية
+  const hashtags = [...raw.matchAll(/#([\u0600-\u06FFA-Za-z0-9_]+)/g)].map(m=>m[1].replace(/_/g,' '));
+
+  // بقية الأسطر بعد إزالة الرابط والوسوم لاستخدامها كعنوان ووصف
+  let lines = raw
+    .replace(link, '')
+    .split('\n')
+    .map(l=>l.replace(/#([\u0600-\u06FFA-Za-z0-9_]+)/g,'').trim())
+    .filter(Boolean);
+
+  const title = (lines[0] || 'عنصر جديد من تليجرام').slice(0,90);
+  const desc = lines.slice(1).join(' ').slice(0,220);
+  const type = guessTypeFromLink(link);
+
+  closeModal('quickAddModal');
+  openAddItem();
+  document.getElementById('f_type').value = type;
+  document.getElementById('f_title').value = title;
+  document.getElementById('f_desc').value = desc;
+  document.getElementById('f_link').value = link;
+  document.getElementById('f_keywords').value = hashtags.join(', ');
+  document.getElementById('itemModalTitle').textContent = '✨ مراجعة عنصر مستورد من تليجرام';
+  toast('✅ تم الاستخراج — راجع البيانات ثم اضغط حفظ');
+}
+
+/* ---------- admin PIN lock ---------- */
+const ADMIN_PIN = 'fawaz2026';
+const ADMIN_SESSION_KEY = 'fawaz_library_admin_unlocked';
+
+function requestAdminAccess(){
+  if(sessionStorage.getItem(ADMIN_SESSION_KEY) === '1'){
+    openAdmin();
+    return;
+  }
+  document.getElementById('adminPinInput').value='';
+  openModal('adminPinModal');
+  setTimeout(()=>document.getElementById('adminPinInput').focus(), 100);
+}
+function checkAdminPin(){
+  const val = document.getElementById('adminPinInput').value;
+  if(val === ADMIN_PIN){
+    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+    closeModal('adminPinModal');
+    openAdmin();
+  } else {
+    toast('⚠️ رمز الدخول غير صحيح');
+    document.getElementById('adminPinInput').value='';
+    document.getElementById('adminPinInput').focus();
+  }
+}
+
+/* ---------- admin panel ---------- */
+function openAdmin(){
+  document.getElementById('s_platformName').value = SETTINGS.platformName;
+  document.getElementById('s_logo').value = SETTINGS.logo;
+  document.getElementById('s_ownerTelegram').value = SETTINGS.ownerTelegram;
+  document.getElementById('s_footerChannel').value = SETTINGS.footerChannel;
+  document.getElementById('s_footerGroup').value = SETTINGS.footerGroup;
+  renderAdminItemsList();
+  renderAdminRequestsList();
+  switchAdminTab('items');
+  tryRestoreLiveBackupHandle();
+  openModal('adminModal');
+}
+function switchAdminTab(tab){
+  ['items','settings','data','requests'].forEach(t=>{
+    document.getElementById('adminTab_'+t).style.display = t===tab?'block':'none';
+  });
+  document.querySelectorAll('.admin-tabs button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+}
+function renderAdminItemsList(){
+  const el = document.getElementById('adminItemsList');
+  if(!ITEMS.length){el.innerHTML='<div class="admin-row">لا توجد عناصر بعد</div>';return;}
+  el.innerHTML = ITEMS.map(i=>`
+    <div class="admin-row">
+      <span>${TYPE_ICON[i.type]||'📌'}</span>
+      <span class="grow">${escapeHTML(i.title)}</span>
+      <span class="hint">${escapeHTML(i.domain)}</span>
+      <button onclick="openEditItem('${i.id}')">✏️</button>
+      <button onclick="deleteItem('${i.id}')">🗑️</button>
+    </div>
+  `).join('');
+}
+function saveSettings(){
+  SETTINGS.platformName = document.getElementById('s_platformName').value.trim() || defaultSettings.platformName;
+  SETTINGS.logo = document.getElementById('s_logo').value.trim();
+  SETTINGS.ownerTelegram = document.getElementById('s_ownerTelegram').value.trim() || defaultSettings.ownerTelegram;
+  SETTINGS.footerChannel = document.getElementById('s_footerChannel').value.trim() || defaultSettings.footerChannel;
+  SETTINGS.footerGroup = document.getElementById('s_footerGroup').value.trim() || defaultSettings.footerGroup;
+  saveSettingsToStorage(SETTINGS);
+  applySettingsToUI();
+  toast('✅ تم حفظ إعدادات المنصة');
+}
+
+function exportDistributionCopy(){
+  try{
+    // إغلاق أي نوافذ مفتوحة قبل أخذ لقطة من الصفحة لتفادي تصدير حالة غير مقصودة
+    document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
+
+    let src = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+    // استبدال العناصر الافتراضية ببيانات المستخدم الحالية
+    const itemsJSON = 'let demoItems = ' + JSON.stringify(ITEMS, null, 2) + ';';
+    src = src.replace(/let demoItems = \[[\s\S]*?\];/, itemsJSON);
+
+    const settingsJSON = 'let defaultSettings = ' + JSON.stringify(SETTINGS, null, 2) + ';';
+    src = src.replace(/let defaultSettings = \{[\s\S]*?\};/, settingsJSON);
+
+    downloadFile('مكتبة-د-فواز-جاهزة-للنشر.html', src, 'text/html;charset=utf-8;');
+    toast('📦 تم إنشاء النسخة الجاهزة للنشر — ارفعها الآن على GitHub بدل الملف القديم');
+  }catch(e){
+    toast('⚠️ تعذّر إنشاء النسخة، حاول مجددًا');
+  }
+}
+
+/* ---------- export / import / wipe ---------- */
+function downloadFile(filename, content, mime){
+  const blob = new Blob([content], {type:mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+function exportJSON(){
+  const payload = {items:ITEMS, settings:SETTINGS, exportedAt:new Date().toISOString()};
+  downloadFile('fawaz-library-backup.json', JSON.stringify(payload,null,2), 'application/json');
+  toast('⬇️ تم تصدير البيانات JSON');
+}
+function exportCSV(){
+  const headers = ['النوع','العنوان','الوصف','المجال','الفئة المستفيدة','الرابط','الحالة','الكلمات المفتاحية','التاريخ','الاستخدام'];
+  const rows = ITEMS.map(i=>[i.type,i.title,i.desc,i.domain,i.beneficiary,i.link,i.status,(i.keywords||[]).join(' | '),i.date,i.uses].map(v=>`"${(v||'').toString().replace(/"/g,'""')}"`).join(','));
+  const csv = '\uFEFF'+[headers.join(','), ...rows].join('\n');
+  downloadFile('fawaz-library.csv', csv, 'text/csv;charset=utf-8;');
+  toast('⬇️ تم تصدير البيانات CSV');
+}
+function importJSON(evt){
+  const file = evt.target.files[0]; if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(data.items){ITEMS = data.items; saveItems(ITEMS);}
+      if(data.settings){SETTINGS = Object.assign({},defaultSettings,data.settings); saveSettingsToStorage(SETTINGS);}
+      renderAll(); renderAdminItemsList();
+      toast('✅ تم استيراد البيانات بنجاح');
+    }catch(err){toast('⚠️ ملف غير صالح');}
+  };
+  reader.readAsText(file);
+  evt.target.value='';
+}
+function wipeData(){
+  if(!confirm('سيتم حذف جميع البيانات المخزّنة نهائيًا من هذا المتصفح. هل تريد المتابعة؟')) return;
+  if(!confirm('تأكيد أخير: هذا الإجراء لا يمكن التراجع عنه. هل أنت متأكد؟')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(SETTINGS_KEY);
+  localStorage.removeItem(REQUESTS_KEY);
+  ITEMS=[]; SETTINGS=Object.assign({},defaultSettings); REQUESTS=[];
+  renderAll(); renderAdminItemsList(); renderAdminRequestsList();
+  toast('🗑️ تم تفريغ جميع البيانات');
+}
+function openBackup(){
+  exportJSON();
+}
+
+/* ---------- request platform form ---------- */
+function openRequestForm(prefillType){
+  ['r_name','r_org','r_contact','r_desc','r_notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('r_type').value = prefillType ? ('منصة مشابهة لـ: '+prefillType) : '';
+  document.getElementById('r_urgency').value='عادي';
+  document.getElementById('r_attach').value='لا';
+  document.getElementById('requestSummaryBox').style.display='none';
+  openModal('requestModal');
+}
+function submitRequest(){
+  const req = {
+    id: uid(),
+    name: document.getElementById('r_name').value.trim(),
+    org: document.getElementById('r_org').value.trim(),
+    contact: document.getElementById('r_contact').value.trim(),
+    type: document.getElementById('r_type').value.trim(),
+    desc: document.getElementById('r_desc').value.trim(),
+    attach: document.getElementById('r_attach').value,
+    urgency: document.getElementById('r_urgency').value,
+    notes: document.getElementById('r_notes').value.trim(),
+    date: new Date().toISOString().slice(0,16).replace('T',' ')
+  };
+  if(!req.name || !req.type){toast('⚠️ الرجاء تعبئة الاسم ونوع المنصة على الأقل'); return;}
+  REQUESTS.push(req); saveRequests(REQUESTS);
+  const summary =
+`الاسم: ${req.name}
+الجهة/المدرسة: ${req.org||'—'}
+التواصل: ${req.contact||'—'}
+نوع المنصة المطلوبة: ${req.type}
+وصف الفكرة: ${req.desc||'—'}
+ملفات مرفقة: ${req.attach}
+درجة الاستعجال: ${req.urgency}
+ملاحظات: ${req.notes||'—'}
+تاريخ الطلب: ${req.date}`;
+  document.getElementById('requestSummaryText').textContent = summary;
+  document.getElementById('requestSummaryBox').style.display='block';
+  const tgLink = (SETTINGS.ownerTelegram||defaultSettings.ownerTelegram) ;
+  document.getElementById('sendTelegramBtn').href = tgLink;
+  window._lastRequestSummary = summary;
+  renderAdminRequestsList();
+  toast('✅ تم إعداد ملخص الطلب');
+}
+function copyRequestSummary(){
+  const txt = window._lastRequestSummary || document.getElementById('requestSummaryText').textContent;
+  navigator.clipboard && navigator.clipboard.writeText(txt).catch(()=>{});
+  toast('📋 تم نسخ الطلب — يمكنك إرساله يدويًا إن تعذر الإرسال المباشر');
+}
+function renderAdminRequestsList(){
+  const el = document.getElementById('adminRequestsList');
+  if(!REQUESTS.length){el.innerHTML='<div class="admin-row">لا توجد طلبات بعد</div>'; return;}
+  el.innerHTML = [...REQUESTS].reverse().map(r=>`
+    <div class="admin-row">
+      <span>✉️</span>
+      <span class="grow">${escapeHTML(r.name)} — ${escapeHTML(r.type)}</span>
+      <span class="hint">${r.urgency}</span>
+      <span class="hint">${r.date}</span>
+    </div>
+  `).join('');
+}
+
+/* ---------- initial boot ---------- */
+fillDomainOptions();
+renderAll();
+tryRestoreLiveBackupHandle();
+</script>
+
+
+</body></html>

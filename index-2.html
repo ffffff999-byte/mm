@@ -399,15 +399,18 @@ footer a{color:#fff;text-decoration:underline;}
   <div class="no-print" style="margin-top:8px;opacity:.7;font-size:11.5px;">مكتبة د/فواز الرقمية — تعمل بالكامل محليًا دون اتصال بالإنترنت</div>
 </footer>
 
-<!-- ===== Admin PIN Lock Modal ===== -->
+<!-- ===== Admin Login Modal (Firebase Auth) ===== -->
 <div class="modal-overlay" id="adminPinModal">
   <div class="modal" style="max-width:380px;text-align:center;">
     <button class="close-x" onclick="closeModal('adminPinModal')">✖</button>
     <h3 style="justify-content:center;">🔒 دخول لوحة الإدارة</h3>
-    <p class="hint">هذه اللوحة مخصصة للمالك فقط. الرجاء إدخال رمز الدخول.</p>
+    <p class="hint">هذه اللوحة مخصصة للمالك فقط. سجّل الدخول بالبريد وكلمة المرور.</p>
     <div class="form-grid">
       <div class="full">
-        <input type="password" id="adminPinInput" placeholder="رمز الدخول" style="text-align:center;font-size:16px;letter-spacing:2px;"
+        <input type="email" id="adminEmailInput" placeholder="البريد الإلكتروني" style="text-align:center;font-size:15px;">
+      </div>
+      <div class="full">
+        <input type="password" id="adminPinInput" placeholder="كلمة المرور" style="text-align:center;font-size:15px;"
           onkeydown="if(event.key==='Enter'){checkAdminPin();}">
       </div>
     </div>
@@ -415,6 +418,7 @@ footer a{color:#fff;text-decoration:underline;}
       <button class="btn" onclick="closeModal('adminPinModal')">إلغاء</button>
       <button class="btn gold" onclick="checkAdminPin()">دخول</button>
     </div>
+    <p class="hint" id="adminLoginError" style="color:var(--danger);display:none;">⚠️ البريد أو كلمة المرور غير صحيحة</p>
   </div>
 </div>
 
@@ -492,46 +496,21 @@ footer a{color:#fff;text-decoration:underline;}
     </div>
 
     <div id="adminTab_data" style="display:none;">
-      <p class="hint">يمكنك تصدير جميع البيانات كنسخة احتياطية أو لنقلها لجهاز آخر، أو استيرادها من ملف سابق.</p>
+      <p class="hint">
+        بياناتك الآن محفوظة في قاعدة بيانات حقيقية على الإنترنت (Firebase). أي إضافة أو تعديل تسويه
+        يظهر فورًا لكل زائر، من أي جهاز، بدون أي خطوة نشر يدوية.
+      </p>
       <div class="modal-actions" style="justify-content:flex-start;">
-        <button class="btn primary" onclick="exportJSON()">⬇️ تصدير JSON</button>
+        <button class="btn primary" onclick="exportJSON()">⬇️ تصدير نسخة احتياطية JSON</button>
         <button class="btn primary" onclick="exportCSV()">⬇️ تصدير CSV</button>
-        <button class="btn" onclick="document.getElementById('importFile').click()">⬆️ استيراد JSON</button>
+        <button class="btn" onclick="document.getElementById('importFile').click()">⬆️ استيراد JSON (إضافة للقاعدة)</button>
         <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(event)">
-        <button class="btn danger" onclick="wipeData()">🗑️ تفريغ جميع البيانات</button>
       </div>
       <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
-      <h4 style="margin:0 0 6px;">🔒 نسخة احتياطية حية على جهازك (موصى به بشدة)</h4>
-      <p class="hint">
-        بياناتك تُحفظ تلقائيًا داخل المتصفح (LocalStorage) مع كل إضافة أو تعديل، وتبقى محفوظة حتى بعد إغلاق المنصة
-        وإعادة فتحها من نفس الجهاز والمتصفح. لكن مسح بيانات المتصفح أو استخدام جهاز/متصفح آخر يفقدها.
-        لضمان أقصى حماية، فعّل الخيار التالي (متاح في متصفحات كروم/إيدج) ليكتب كل تغيير مباشرة في ملف
-        نسخة احتياطية حقيقي على جهازك، بشكل تلقائي وبدون أي إجراء إضافي منك.
-      </p>
+      <h4 style="margin:0 0 6px;">👤 الحساب</h4>
+      <p class="hint" id="adminAccountEmail">—</p>
       <div class="modal-actions" style="justify-content:flex-start;">
-        <button class="btn gold" id="liveBackupBtn" onclick="enableLiveBackup()">🔒 تفعيل النسخة الاحتياطية الحية</button>
-        <span class="hint" id="liveBackupStatus">لم تُفعَّل بعد في هذا المتصفح</span>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
-      <h4 style="margin:0 0 6px;">🧹 حذف البيانات التجريبية التي وضعتها المنصة عند الإنشاء</h4>
-      <p class="hint">
-        العناصر الافتراضية (مثل "منصة مسابقة الرخصة المهنية للمعلمين") موضوعة فقط كأمثلة توضيحية لشكل البطاقات.
-        يمكنك حذفها دفعة واحدة مع الإبقاء الكامل على أي عنصر أضفته أنت بنفسك — أو تعديل أي منها بدل حذفه واستخدامه
-        كنقطة بداية جاهزة.
-      </p>
-      <div class="modal-actions" style="justify-content:flex-start;">
-        <button class="btn danger" onclick="clearDemoItems()">🧹 حذف العناصر التجريبية فقط</button>
-      </div>
-      <hr style="border:none;border-top:1px solid var(--border);margin:18px 0;">
-      <h4 style="margin:0 0 6px;">📦 إنشاء نسخة جاهزة للنشر على GitHub</h4>
-      <p class="hint">
-        بعد الانتهاء من الإضافة والتعديل ومراجعة الشكل، اضغط الزر التالي لإنشاء ملف HTML جديد كامل تكون فيه
-        كل منصاتك وملفاتك الحالية مكتوبة داخل الملف نفسه من البداية (تمامًا كمنصاتك السابقة). بعدها ارفع هذا
-        الملف الجديد إلى مستودع GitHub بدل الملف القديم (بنفس الاسم ليستبدله)، وسيراه كل زائر فورًا كما هو،
-        بدون إنترنت مطلوب وقت العرض، وبدون أي حساب أو جهة خارجية.
-      </p>
-      <div class="modal-actions" style="justify-content:flex-start;">
-        <button class="btn gold" onclick="exportDistributionCopy()">📦 إنشاء نسخة جاهزة للنشر</button>
+        <button class="btn danger" onclick="signOutAdmin()">🚪 تسجيل الخروج</button>
       </div>
     </div>
 
@@ -603,7 +582,25 @@ https://t.me/TAqhjT3MFVE1Yzk0/123"></textarea>
   </div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script>
+/* ==========================================================
+   الاتصال بقاعدة بيانات Firebase
+   ========================================================== */
+const firebaseConfig = {
+  apiKey: "AIzaSyBEgJRy1mwCkmduF9zQfTmOdO8J43MBWiI",
+  authDomain: "fawaz-205df.firebaseapp.com",
+  projectId: "fawaz-205df",
+  storageBucket: "fawaz-205df.firebasestorage.app",
+  messagingSenderId: "853907485015",
+  appId: "1:853907485015:web:211529698a8d503f9a4e12"
+};
+firebase.initializeApp(firebaseConfig);
+const fbAuth = firebase.auth();
+const fbDb = firebase.firestore();
+
 /* ==========================================================
    مكتبة د/فواز الرقمية — منطق التطبيق بالكامل (Vanilla JS)
    ========================================================== */
@@ -619,276 +616,75 @@ const BENEFICIARIES = ["معلم","مدير مدرسة","وكيل مدرسة","�
 const TYPE_ICON = {"منصة":"💻","ملف":"📄","رابط":"🔗","نموذج":"🧾","دليل":"📘"};
 
 let defaultSettings = {
-  "platformName": "مكتبة د/فواز الرقمية",
-  "logo": "",
-  "ownerTelegram": "https://t.me/fawaz_hs",
-  "footerChannel": "https://t.me/TAqhjT3MFVE1Yzk0",
-  "footerGroup": "https://t.me/TAqhjT3MFVE1Yzk0"
+  platformName: "مكتبة د/فواز الرقمية",
+  logo: "",
+  ownerTelegram: "https://t.me/fawaz_hs",
+  footerChannel: "https://t.me/TAqhjT3MFVE1Yzk0",
+  footerGroup: "https://t.me/TAqhjT3MFVE1Yzk0"
 };
 
 let demoItems = [
-  {
-    "id": "id_mrapkgivuaan3",
-    "date": "2026-07-07",
-    "uses": 1,
-    "favorite": false,
-    "type": "منصة",
-    "status": "مميز",
-    "title": "دليل  ساعات  التطوير  المهني    ونقاطها",
-    "desc": "منصة عرض    مختصره    لعدد ساعات النشاطات وضوابطها",
-    "domain": "الإدارة المدرسية",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffffff999-byte.github.io/mm/uyhu",
-    "keywords": []
-  },
-  {
-    "id": "id_mras0fp567g6c",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "حاسبة التقاعد ومكافأة نهاية الخدمة",
-    "desc": "اعداد اخونا بدر البلوي   تصميم د/فواز",
-    "domain": "خدمات",
-    "beneficiary": "الكل",
-    "link": "https://ffff040004-a11y.github.io/fawaz/retirement_calculator-2",
-    "keywords": []
-  },
-  {
-    "id": "id_mras2k1s2b18a",
-    "date": "2026-07-07",
-    "uses": 1,
-    "favorite": true,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "الدليل الإرشادي",
-    "desc": "إدارة درجات الدور الثاني وترفيع الطلاب",
-    "domain": "الاختبارات",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffffff999-byte.github.io/zaza44/noor-infographic",
-    "keywords": []
-  },
-  {
-    "id": "id_mrasfwhzr0kww",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "خطوات المباشرة  لمنقول في  فرص",
-    "desc": "خطوات رفع  المباشرة  لمنقول في  فرص",
-    "domain": "أخرى",
-    "beneficiary": "الكل",
-    "link": "https://ffffff999-byte.github.io/zaza44/faris-infographic",
-    "keywords": []
-  },
-  {
-    "id": "id_mrat5hrk08eh0",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "منصة  شهادات شكر وتقدير  رسميه",
-    "desc": "",
-    "domain": "خدمات",
-    "beneficiary": "الكل",
-    "link": "https://ffffff999-byte.github.io/zaza44/index9",
-    "keywords": []
-  },
-  {
-    "id": "id_mrat7b73fqjkz",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "ثلاثة  طرق لاستخراج  نتائج الطلاب",
-    "desc": "",
-    "domain": "الاختبارات",
-    "beneficiary": "الكل",
-    "link": "https://ffff040004-a11y.github.io/fawaz/hhiih",
-    "keywords": []
-  },
-  {
-    "id": "id_mrat9kbvm9ppn",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "إدخال جميع درجات المراجعة قبل الإغلاق\"",
-    "desc": "إغلاق إدخال الدرجات\nحل مشكلة الطلاب المكملين وخطوات الإغلاق الناجح",
-    "domain": "الاختبارات",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffff040004-a11y.github.io/fawaz/hhhi",
-    "keywords": []
-  },
-  {
-    "id": "id_mratbk5xl547g",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "خطوات إخلاء الطرف والمباشرة للمعلمين وغيرهم  من الوظائف التعليميه عبر نظام \"فارس\"",
-    "desc": "",
-    "domain": "خدمات",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffff040004-a11y.github.io/fawaz/ttvvcc",
-    "keywords": []
-  },
-  {
-    "id": "id_mratdvoub97o7",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "قيم نفسك  رقميا  بمعايير  الخارجي  في التقويم   منصة الشواهد والمجالات والمعاير كامله",
-    "desc": "منصة الكترونيه  لجميع  المجالات وشواهدها كما في   الادلة الاسترشادية",
-    "domain": "التقويم المدرسي",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffffff999-byte.github.io/ff/TTT",
-    "keywords": []
-  },
-  {
-    "id": "id_mratj6aalbbah",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "منصه  لتوليد  خطة التحسين ع المجالات  الاربعه",
-    "desc": "",
-    "domain": "التقويم المدرسي",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffffff999-byte.github.io/zaza44/dd55xx",
-    "keywords": []
-  },
-  {
-    "id": "id_mratk2jdw9p5w",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "منصة  توليد  خطة تحسين على المجالات الاربعه",
-    "desc": "",
-    "domain": "التقويم المدرسي",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffffff999-byte.github.io/zaza44/d5xx",
-    "keywords": []
-  },
-  {
-    "id": "id_mratlqa9rztb9",
-    "date": "2026-07-07",
-    "uses": 1,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "منصة رقمية  اختبر  نفسك ذاتيا",
-    "desc": "تجميعات  ٣  متوسط  لجميع المواد المركزيه",
-    "domain": "التدريب",
-    "beneficiary": "الكل",
-    "link": "https://ffffff999-byte.github.io/zaza44/index",
-    "keywords": []
-  },
-  {
-    "id": "id_mratnsuzyi7hb",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "١٠٠   سؤال في الرخصة المهنيه",
-    "desc": "اختبر نفسك  ذاتيا",
-    "domain": "التدريب",
-    "beneficiary": "الكل",
-    "link": "https://ffffff999-byte.github.io/zaza44/200s",
-    "keywords": []
-  },
-  {
-    "id": "id_mratotmklbglq",
-    "date": "2026-07-07",
-    "uses": 1,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "منصة  ١٠٠   سؤال في الرخصة المهنيه",
-    "desc": "اختبر نفسك  ذاتيا",
-    "domain": "التدريب",
-    "beneficiary": "الكل",
-    "link": "https://ffffff999-byte.github.io/zaza44/100s",
-    "keywords": []
-  },
-  {
-    "id": "id_mratr5mmaipw9",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "رصد  الملاحظة الصفية   وشرحها والمراد بها",
-    "desc": "",
-    "domain": "التقويم المدرسي",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffffff999-byte.github.io/zaza44/mk0099",
-    "keywords": []
-  },
-  {
-    "id": "id_mratsgm9uqv67",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "رصد  الملاحظة الصفية   وشرحها والمراد بها",
-    "desc": "٢",
-    "domain": "التقويم المدرسي",
-    "beneficiary": "الكل",
-    "link": "https://ffffff999-byte.github.io/zaza44/mk009",
-    "keywords": []
-  },
-  {
-    "id": "id_mrb30nxu5foha",
-    "date": "2026-07-07",
-    "uses": 0,
-    "favorite": false,
-    "type": "منصة",
-    "status": "عادي",
-    "title": "حاسبة   الاهداف  والجدارات   للمشرفين  والاداريين    ومجموع   التقييم",
-    "desc": "",
-    "domain": "خدمات",
-    "beneficiary": "مدير مدرسة",
-    "link": "https://ffff040004-a11y.github.io/ff22/se45",
-    "keywords": []
-  }
+  {id:"d1",type:"منصة",title:"منصة مسابقة الرخصة المهنية للمعلمين",desc:"مسابقة تفاعلية عبر تليجرام لأسئلة الرخصة المهنية مع لوحة صدارة فورية.",domain:"الرخصة المهنية",beneficiary:"معلم",keywords:["رخصة","مسابقة","معلم"],link:"https://t.me/TAqhjT3MFVE1Yzk0",status:"مميز",date: daysAgo(2),uses:14,favorite:false},
+  {id:"d2",type:"ملف",title:"دليل التقويم المدرسي 1448هـ",desc:"ملف PDF يوضح التقويم الدراسي والإجازات والمواعيد المهمة.",domain:"التقويم المدرسي",beneficiary:"إداري",keywords:["تقويم","1448"],link:"#",status:"جديد",date:daysAgo(1),uses:9,favorite:true},
+  {id:"d3",type:"رابط",title:"نموذج تقييم الأداء الوظيفي",desc:"رابط جوجل درايف لنموذج تقييم أداء المعلمين والإداريين.",domain:"الإدارة المدرسية",beneficiary:"مدير مدرسة",keywords:["تقييم","أداء"],link:"#",status:"محدث",date:daysAgo(5),uses:22,favorite:false},
+  {id:"d4",type:"منصة",title:"منصة حساب ساعات التطوير المهني",desc:"حاسبة تفاعلية لساعات التطوير المهني وفق معايير المعهد الوطني.",domain:"التدريب",beneficiary:"معلم",keywords:["تطوير مهني","ساعات"],link:"#",status:"مهم",date:daysAgo(3),uses:31,favorite:true},
+  {id:"d5",type:"دليل",title:"دليل السلوك والمواظبة",desc:"دليل إجرائي لمتابعة سلوك الطلاب وإشعارات أولياء الأمور.",domain:"السلوك والمواظبة",beneficiary:"مرشد طلابي",keywords:["سلوك","مواظبة"],link:"#",status:"عادي",date:daysAgo(10),uses:6,favorite:false},
+  {id:"d6",type:"نموذج",title:"نموذج خطة تحسين مدرسي",desc:"نموذج جاهز لبناء خطة التحسين المدرسي وفق معايير هيئة تقويم التعليم.",domain:"الجودة والتميز",beneficiary:"وكيل مدرسة",keywords:["خطة","تحسين","جودة"],link:"#",status:"محدث",date:daysAgo(7),uses:17,favorite:false},
 ];
 
 function daysAgo(n){const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10);}
 function uid(){return 'id_'+Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
 
-/*
-  منطق مهم جدًا: كتالوج المنصة (منصاتك وملفاتك) يُقرأ دائمًا من demoItems (البيانات المنشورة داخل
-  الملف نفسه) لأي زائر عادي، بحيث كل من يفتح الرابط يرى نفس المحتوى المنشور بالضبط، بغض النظر عمّا
-  خزّنه متصفحه سابقًا. فقط جهازك أنت (بعد دخولك رمز الإدارة وإجراء تعديل فعلي) يستخدم النسخة
-  المحفوظة محليًا لمتابعة عملك قبل النشر. هذا يمنع مشكلة "تجمّد" الكتالوج عند الزوار على نسخة قديمة.
-*/
-function loadItems(){
-  if(localStorage.getItem(ADMIN_EDITS_KEY) === '1'){
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw){try{return JSON.parse(raw);}catch(e){/* تجاهل وارجع للكتالوج المنشور */}}
+/* ---------- تحويل بين شكل بيانات الواجهة وشكل مستند Firestore ---------- */
+function mapRowToItem(row){
+  return {
+    id: row.id, type: row.type, title: row.title, desc: row.description || '',
+    domain: row.domain, beneficiary: row.beneficiary, link: row.link,
+    keywords: row.keywords || [], status: row.status, date: row.item_date,
+    uses: row.uses || 0, favorite: false
+  };
+}
+function mapItemToRow(item){
+  return {
+    id: item.id, title: item.title, description: item.desc, domain: item.domain,
+    beneficiary: item.beneficiary, type: item.type, status: item.status,
+    link: item.link, keywords: item.keywords || [], item_date: item.date, uses: item.uses || 0
+  };
+}
+
+/* كتالوج المنصة الآن يعيش في قاعدة بيانات حقيقية (Firebase Firestore) — كل زائر يقرأ نفس البيانات
+   لحظيًا من نفس المصدر، بدون أي حاجة لملفات نشر أو نسخ محلية متجمدة. */
+async function fetchItemsFromDB(){
+  try{
+    const snap = await fbDb.collection('library_items').orderBy('created_at','desc').get();
+    return snap.docs.map(doc => mapRowToItem(doc.data()));
+  }catch(e){
+    console.error('تعذر جلب العناصر من القاعدة', e);
+    return null;
   }
-  return JSON.parse(JSON.stringify(demoItems));
 }
-function saveItems(items){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  localStorage.setItem(ADMIN_EDITS_KEY, '1');
-  markSaved(); writeLiveBackup();
+async function insertItemToDB(item){
+  try{
+    const row = mapItemToRow(item);
+    row.created_at = firebase.firestore.FieldValue.serverTimestamp();
+    await fbDb.collection('library_items').doc(item.id).set(row);
+    return true;
+  }catch(e){ console.error(e); return false; }
 }
-/* تطبيق تفضيلات الزائر الشخصية (المفضلة وعدد الاستخدام) فوق الكتالوج دون تجميده */
+async function updateItemInDB(item){
+  try{
+    await fbDb.collection('library_items').doc(item.id).set(mapItemToRow(item), {merge:true});
+    return true;
+  }catch(e){ console.error(e); return false; }
+}
+async function deleteItemFromDB(id){
+  try{
+    await fbDb.collection('library_items').doc(id).delete();
+    return true;
+  }catch(e){ console.error(e); return false; }
+}
+
+/* تطبيق تفضيلات الزائر الشخصية (المفضلة وعدد الاستخدام) فوق الكتالوج دون التأثير على القاعدة */
 function applyPersonalOverlay(items){
   let favIds = [];
   let uses = {};
@@ -906,15 +702,15 @@ function loadSettings(){
   if(raw){try{return Object.assign({},defaultSettings,JSON.parse(raw));}catch(e){return defaultSettings;}}
   return defaultSettings;
 }
-function saveSettingsToStorage(s){localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); markSaved(); writeLiveBackup();}
+function saveSettingsToStorage(s){localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); markSaved();}
 function loadRequests(){
   const raw = localStorage.getItem(REQUESTS_KEY);
   if(raw){try{return JSON.parse(raw);}catch(e){return [];}}
   return [];
 }
-function saveRequests(r){localStorage.setItem(REQUESTS_KEY, JSON.stringify(r)); markSaved(); writeLiveBackup();}
+function saveRequests(r){localStorage.setItem(REQUESTS_KEY, JSON.stringify(r)); markSaved();}
 
-let ITEMS = applyPersonalOverlay(loadItems());
+let ITEMS = applyPersonalOverlay(JSON.parse(JSON.stringify(demoItems))); // عرض أولي فوري، يُستبدل فور وصول بيانات القاعدة
 let SETTINGS = loadSettings();
 let REQUESTS = loadRequests();
 let currentTypeFilter = "";
@@ -1178,106 +974,6 @@ function markSaved(){
   el._resetTimer = setTimeout(()=>{el.textContent='💾 محفوظ تلقائيًا';}, 2500);
 }
 
-/* ---------- live backup file (File System Access API + IndexedDB) ---------- */
-let liveBackupHandle = null;
-
-function idbOpen(){
-  return new Promise((resolve,reject)=>{
-    const req = indexedDB.open('fawaz_library_idb', 1);
-    req.onupgradeneeded = ()=>{req.result.createObjectStore('handles');};
-    req.onsuccess = ()=>resolve(req.result);
-    req.onerror = ()=>reject(req.error);
-  });
-}
-async function idbSetHandle(handle){
-  try{
-    const db = await idbOpen();
-    await new Promise((res,rej)=>{
-      const tx = db.transaction('handles','readwrite');
-      tx.objectStore('handles').put(handle,'backupHandle');
-      tx.oncomplete = res; tx.onerror = ()=>rej(tx.error);
-    });
-  }catch(e){/* silent */}
-}
-async function idbGetHandle(){
-  try{
-    const db = await idbOpen();
-    return await new Promise((res)=>{
-      const tx = db.transaction('handles','readonly');
-      const r = tx.objectStore('handles').get('backupHandle');
-      r.onsuccess = ()=>res(r.result||null);
-      r.onerror = ()=>res(null);
-    });
-  }catch(e){return null;}
-}
-
-async function enableLiveBackup(){
-  if(!window.showSaveFilePicker){
-    toast('⚠️ هذه الميزة تعمل حاليًا على متصفحات كروم/إيدج فقط');
-    return;
-  }
-  // إذا كان هناك ملف مربوط مسبقًا وينقصه الإذن فقط، أعد طلب الإذن بدل اختيار ملف جديد
-  if(liveBackupHandle){
-    try{
-      const perm = await liveBackupHandle.requestPermission({mode:'readwrite'});
-      if(perm === 'granted'){
-        await writeLiveBackup(true);
-        toast('✅ تم تجديد صلاحية النسخة الاحتياطية الحية');
-        return;
-      }
-    }catch(e){/* fall through to picking a new file */}
-  }
-  try{
-    const handle = await window.showSaveFilePicker({
-      suggestedName: 'fawaz-library-live-backup.json',
-      types: [{description:'ملف JSON', accept:{'application/json':['.json']}}]
-    });
-    liveBackupHandle = handle;
-    await idbSetHandle(handle);
-    await writeLiveBackup(true);
-    setLiveBackupStatus('🟢 مفعّلة — يُكتب كل تغيير مباشرة إلى: ' + handle.name);
-    toast('✅ تم تفعيل النسخة الاحتياطية الحية بنجاح');
-  }catch(e){
-    if(e.name !== 'AbortError') toast('⚠️ لم يتم تفعيل النسخة الاحتياطية الحية');
-  }
-}
-
-async function writeLiveBackup(forceNotify){
-  if(!liveBackupHandle) return;
-  try{
-    const perm = await liveBackupHandle.queryPermission({mode:'readwrite'});
-    if(perm !== 'granted'){
-      setLiveBackupStatus('🟡 مفعّلة سابقًا — اضغط الزر لإعادة منح الإذن بعد إعادة فتح الصفحة');
-      return;
-    }
-    const payload = {items:ITEMS, settings:SETTINGS, requests:REQUESTS, savedAt:new Date().toISOString()};
-    const writable = await liveBackupHandle.createWritable();
-    await writable.write(JSON.stringify(payload,null,2));
-    await writable.close();
-    if(forceNotify) setLiveBackupStatus('🟢 مفعّلة — آخر كتابة: ' + new Date().toLocaleTimeString('ar-SA'));
-  }catch(e){/* silent fail, localStorage already safe */}
-}
-
-function setLiveBackupStatus(msg){
-  const el = document.getElementById('liveBackupStatus');
-  if(el) el.textContent = msg;
-}
-
-async function tryRestoreLiveBackupHandle(){
-  const handle = await idbGetHandle();
-  if(!handle) return;
-  try{
-    const perm = await handle.queryPermission({mode:'readwrite'});
-    if(perm === 'granted'){
-      liveBackupHandle = handle;
-      setLiveBackupStatus('🟢 مفعّلة — يُكتب كل تغيير مباشرة إلى: ' + handle.name);
-    } else {
-      liveBackupHandle = handle;
-      setLiveBackupStatus('🟡 مفعّلة سابقًا لملف: ' + handle.name + ' — اضغط الزر لإعادة منح الإذن');
-    }
-  }catch(e){/* silent */}
-}
-
 /* ---------- modal helpers ---------- */
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
@@ -1307,7 +1003,7 @@ function openEditItem(id){
   document.getElementById('f_keywords').value = (it.keywords||[]).join(', ');
   openModal('itemModal');
 }
-function saveItem(){
+async function saveItem(){
   const title = document.getElementById('f_title').value.trim();
   if(!title){toast('⚠️ الرجاء إدخال عنوان العنصر'); return;}
   const data = {
@@ -1320,35 +1016,32 @@ function saveItem(){
     link: document.getElementById('f_link').value.trim() || '#',
     keywords: document.getElementById('f_keywords').value.split(',').map(k=>k.trim()).filter(Boolean),
   };
+  let ok;
   if(editingItemId){
     const it = ITEMS.find(i=>i.id===editingItemId);
     Object.assign(it, data);
+    ok = await updateItemInDB(it);
   } else {
-    ITEMS.push(Object.assign({id:uid(), date:new Date().toISOString().slice(0,10), uses:0, favorite:false}, data));
+    const newItem = Object.assign({id:uid(), date:new Date().toISOString().slice(0,10), uses:0, favorite:false}, data);
+    ok = await insertItemToDB(newItem);
+    if(ok) ITEMS.push(newItem);
   }
-  saveItems(ITEMS);
+  if(!ok){ toast('⚠️ تعذّر الحفظ في قاعدة البيانات، تحقق من اتصالك بالإنترنت'); return; }
+  markSaved();
   closeModal('itemModal');
   renderAll();
   renderAdminItemsList();
-  toast('✅ تم حفظ العنصر بنجاح');
+  toast('✅ تم حفظ العنصر في قاعدة البيانات — يظهر للجميع الآن');
 }
-function deleteItem(id){
-  if(!confirm('هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.')) return;
+async function deleteItem(id){
+  if(!confirm('هل أنت متأكد من حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء، وسيختفي فورًا لدى الجميع.')) return;
+  const ok = await deleteItemFromDB(id);
+  if(!ok){ toast('⚠️ تعذّر الحذف من قاعدة البيانات'); return; }
   ITEMS = ITEMS.filter(i=>i.id!==id);
-  saveItems(ITEMS);
+  markSaved();
   renderAll();
   renderAdminItemsList();
-  toast('🗑️ تم حذف العنصر');
-}
-function clearDemoItems(){
-  const demoCount = ITEMS.filter(i=>i.id.startsWith('d') && /^d\d+$/.test(i.id)).length;
-  if(!demoCount){toast('لا توجد عناصر تجريبية متبقية'); return;}
-  if(!confirm(`سيتم حذف ${demoCount} عنصر/عناصر تجريبية فقط، مع الإبقاء الكامل على كل ما أضفته أنت. هل تريد المتابعة؟`)) return;
-  ITEMS = ITEMS.filter(i=>!(i.id.startsWith('d') && /^d\d+$/.test(i.id)));
-  saveItems(ITEMS);
-  renderAll();
-  renderAdminItemsList();
-  toast('✅ تم حذف العناصر التجريبية والإبقاء على عناصرك');
+  toast('🗑️ تم حذف العنصر من قاعدة البيانات');
 }
 
 /* ---------- quick add from telegram ---------- */
@@ -1396,30 +1089,40 @@ function analyzeQuickAdd(){
   toast('✅ تم الاستخراج — راجع البيانات ثم اضغط حفظ');
 }
 
-/* ---------- admin PIN lock ---------- */
-const ADMIN_PIN = 'fawaz2026';
-const ADMIN_SESSION_KEY = 'fawaz_library_admin_unlocked';
+/* ---------- admin login (Firebase Auth) ---------- */
+let currentSession = null;
 
-function requestAdminAccess(){
-  if(sessionStorage.getItem(ADMIN_SESSION_KEY) === '1'){
+async function requestAdminAccess(){
+  if(fbAuth.currentUser){
+    currentSession = {user:{email: fbAuth.currentUser.email}};
     openAdmin();
     return;
   }
+  document.getElementById('adminEmailInput').value='';
   document.getElementById('adminPinInput').value='';
+  document.getElementById('adminLoginError').style.display='none';
   openModal('adminPinModal');
-  setTimeout(()=>document.getElementById('adminPinInput').focus(), 100);
+  setTimeout(()=>document.getElementById('adminEmailInput').focus(), 100);
 }
-function checkAdminPin(){
-  const val = document.getElementById('adminPinInput').value;
-  if(val === ADMIN_PIN){
-    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+async function checkAdminPin(){
+  const email = document.getElementById('adminEmailInput').value.trim();
+  const password = document.getElementById('adminPinInput').value;
+  if(!email || !password){ toast('⚠️ أدخل البريد وكلمة المرور'); return; }
+  try{
+    const cred = await fbAuth.signInWithEmailAndPassword(email, password);
+    currentSession = {user:{email: cred.user.email}};
+    document.getElementById('adminLoginError').style.display='none';
     closeModal('adminPinModal');
     openAdmin();
-  } else {
-    toast('⚠️ رمز الدخول غير صحيح');
-    document.getElementById('adminPinInput').value='';
-    document.getElementById('adminPinInput').focus();
+  }catch(e){
+    document.getElementById('adminLoginError').style.display='block';
   }
+}
+async function signOutAdmin(){
+  await fbAuth.signOut();
+  currentSession = null;
+  closeModal('adminModal');
+  toast('🚪 تم تسجيل الخروج');
 }
 
 /* ---------- admin panel ---------- */
@@ -1429,10 +1132,10 @@ function openAdmin(){
   document.getElementById('s_ownerTelegram').value = SETTINGS.ownerTelegram;
   document.getElementById('s_footerChannel').value = SETTINGS.footerChannel;
   document.getElementById('s_footerGroup').value = SETTINGS.footerGroup;
+  document.getElementById('adminAccountEmail').textContent = currentSession ? ('مسجّل الدخول باسم: ' + currentSession.user.email) : '—';
   renderAdminItemsList();
   renderAdminRequestsList();
   switchAdminTab('items');
-  tryRestoreLiveBackupHandle();
   openModal('adminModal');
 }
 function switchAdminTab(tab){
@@ -1465,27 +1168,6 @@ function saveSettings(){
   toast('✅ تم حفظ إعدادات المنصة');
 }
 
-function exportDistributionCopy(){
-  try{
-    // إغلاق أي نوافذ مفتوحة قبل أخذ لقطة من الصفحة لتفادي تصدير حالة غير مقصودة
-    document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
-
-    let src = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-
-    // استبدال العناصر الافتراضية ببيانات المستخدم الحالية
-    const itemsJSON = 'let demoItems = ' + JSON.stringify(ITEMS, null, 2) + ';';
-    src = src.replace(/let demoItems = \[[\s\S]*?\];/, itemsJSON);
-
-    const settingsJSON = 'let defaultSettings = ' + JSON.stringify(SETTINGS, null, 2) + ';';
-    src = src.replace(/let defaultSettings = \{[\s\S]*?\};/, settingsJSON);
-
-    downloadFile('مكتبة-د-فواز-جاهزة-للنشر.html', src, 'text/html;charset=utf-8;');
-    toast('📦 تم إنشاء النسخة الجاهزة للنشر — ارفعها الآن على GitHub بدل الملف القديم');
-  }catch(e){
-    toast('⚠️ تعذّر إنشاء النسخة، حاول مجددًا');
-  }
-}
-
 /* ---------- export / import / wipe ---------- */
 function downloadFile(filename, content, mime){
   const blob = new Blob([content], {type:mime});
@@ -1506,33 +1188,27 @@ function exportCSV(){
   downloadFile('fawaz-library.csv', csv, 'text/csv;charset=utf-8;');
   toast('⬇️ تم تصدير البيانات CSV');
 }
-function importJSON(evt){
+async function importJSON(evt){
   const file = evt.target.files[0]; if(!file) return;
   const reader = new FileReader();
-  reader.onload = e=>{
+  reader.onload = async e=>{
     try{
       const data = JSON.parse(e.target.result);
-      if(data.items){ITEMS = data.items; saveItems(ITEMS);}
-      if(data.settings){SETTINGS = Object.assign({},defaultSettings,data.settings); saveSettingsToStorage(SETTINGS);}
+      if(Array.isArray(data.items) && data.items.length){
+        toast('⏳ جارٍ إضافة ' + data.items.length + ' عنصر إلى قاعدة البيانات...');
+        for(const it of data.items){
+          if(!it.id) it.id = uid();
+          await fbDb.collection('library_items').doc(it.id).set(mapItemToRow(it), {merge:true});
+        }
+        const fresh = await fetchItemsFromDB();
+        if(fresh) ITEMS = applyPersonalOverlay(fresh);
+      }
       renderAll(); renderAdminItemsList();
-      toast('✅ تم استيراد البيانات بنجاح');
+      toast('✅ تم استيراد البيانات إلى قاعدة البيانات بنجاح');
     }catch(err){toast('⚠️ ملف غير صالح');}
   };
   reader.readAsText(file);
   evt.target.value='';
-}
-function wipeData(){
-  if(!confirm('سيتم حذف جميع البيانات المخزّنة نهائيًا من هذا المتصفح. هل تريد المتابعة؟')) return;
-  if(!confirm('تأكيد أخير: هذا الإجراء لا يمكن التراجع عنه. هل أنت متأكد؟')) return;
-  localStorage.removeItem(STORAGE_KEY);
-  localStorage.removeItem(SETTINGS_KEY);
-  localStorage.removeItem(REQUESTS_KEY);
-  localStorage.removeItem(ADMIN_EDITS_KEY);
-  localStorage.removeItem(FAV_KEY);
-  localStorage.removeItem(USES_KEY);
-  ITEMS=applyPersonalOverlay(JSON.parse(JSON.stringify(demoItems))); SETTINGS=Object.assign({},defaultSettings); REQUESTS=[];
-  renderAll(); renderAdminItemsList(); renderAdminRequestsList();
-  toast('🗑️ تم تفريغ جميع البيانات والرجوع للكتالوج المنشور الأصلي');
 }
 function openBackup(){
   exportJSON();
@@ -1600,8 +1276,23 @@ function renderAdminRequestsList(){
 
 /* ---------- initial boot ---------- */
 fillDomainOptions();
-renderAll();
-tryRestoreLiveBackupHandle();
+renderAll(); // عرض فوري (بيانات افتراضية مؤقتة) بينما تُجلب البيانات الحقيقية
+
+async function bootFromDB(){
+  const fresh = await fetchItemsFromDB();
+  if(fresh){
+    ITEMS = applyPersonalOverlay(fresh);
+    renderAll();
+  } else {
+    toast('⚠️ تعذّر الاتصال بقاعدة البيانات — تحقق من اتصالك بالإنترنت');
+  }
+}
+bootFromDB();
+
+// إبقاء الواجهة متزامنة مع تسجيل الدخول/الخروج
+fbAuth.onAuthStateChanged((user)=>{
+  currentSession = user ? {user:{email:user.email}} : null;
+});
 </script>
 </body>
 </html>

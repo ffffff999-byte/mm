@@ -153,6 +153,8 @@
         .icon-pdf   { background: linear-gradient(135deg, #e11d48, #be123c); color: white; }
         .icon-print { background: linear-gradient(135deg, var(--teal), #0891b2); color: white; }
         .icon-clear { background: linear-gradient(135deg, #475569, #334155); color: white; }
+        .icon-backup  { background: linear-gradient(135deg, #059669, #047857); color: white; }
+        .icon-restore { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
         .tool-btn.generating .tool-icon {
             animation: aiPulse 1.2s ease-in-out infinite;
         }
@@ -486,6 +488,15 @@
             <div class="tool-icon icon-clear"><i class="fas fa-rotate-left"></i></div>
             <span>مسح</span>
         </button>
+        <button class="tool-btn" onclick="exportBackup()">
+            <div class="tool-icon icon-backup"><i class="fas fa-download"></i></div>
+            <span>نسخ احتياطي</span>
+        </button>
+        <button class="tool-btn" onclick="document.getElementById('restoreInput').click()">
+            <div class="tool-icon icon-restore"><i class="fas fa-upload"></i></div>
+            <span>استعادة</span>
+        </button>
+        <input type="file" id="restoreInput" accept="application/json" style="display:none" onchange="importBackup(this.files[0])">
     </div>
 
     <!-- التبويبات -->
@@ -628,6 +639,7 @@
             }
             document.getElementById('goalsArea').value = goals;
             document.getElementById('stepsArea').value = steps;
+            autoSave();
             btn.classList.remove('generating');
             label.textContent = 'توليد ذكي';
             document.querySelectorAll('.tab-btn')[1].click();
@@ -640,6 +652,7 @@
         if (!input.files.length) return;
         grid.innerHTML = '';
         const files = Array.from(input.files).slice(0, 4);
+        let loaded = 0;
         files.forEach(file => {
             const r = new FileReader();
             r.onload = e => {
@@ -647,23 +660,112 @@
                 slot.className = 'image-slot';
                 slot.innerHTML = `<img src="${e.target.result}" alt="شاهد">`;
                 grid.appendChild(slot);
+                loaded++;
+                if (loaded === files.length) {
+                    for (let i = files.length; i < 4; i++)
+                        grid.innerHTML += `<div class="image-slot"><i class="fas fa-image"></i></div>`;
+                    autoSave();
+                }
             };
             r.readAsDataURL(file);
         });
-        for (let i = files.length; i < 4; i++)
+    }
+
+    // إرجاع الصور المرفوعة حالياً كمصفوفة base64 (بدون الخانات الفارغة)
+    function getImagesData() {
+        return Array.from(document.querySelectorAll('#imgGrid .image-slot img')).map(img => img.src);
+    }
+
+    // إعادة بناء شبكة الصور من مصفوفة base64
+    function renderImages(list) {
+        const grid = document.getElementById('imgGrid');
+        grid.innerHTML = '';
+        (list || []).slice(0, 4).forEach(src => {
+            const slot = document.createElement('div');
+            slot.className = 'image-slot';
+            slot.innerHTML = `<img src="${src}" alt="شاهد">`;
+            grid.appendChild(slot);
+        });
+        for (let i = (list || []).length; i < 4; i++)
             grid.innerHTML += `<div class="image-slot"><i class="fas fa-image"></i></div>`;
+    }
+
+    const FIELD_IDS = ['programName','programField','progDate','progExec','progBene','progCount','goalsArea','stepsArea','schoolName'];
+    const STORAGE_KEY = 'activityReportData';
+
+    function collectData() {
+        const data = {};
+        FIELD_IDS.forEach(id => { const el = document.getElementById(id); data[id] = el ? el.value : ''; });
+        data.images = getImagesData();
+        return data;
+    }
+
+    function applyData(data) {
+        if (!data) return;
+        FIELD_IDS.forEach(id => { const el = document.getElementById(id); if (el && data[id] !== undefined) el.value = data[id]; });
+        renderImages(data.images);
+    }
+
+    // حفظ تلقائي فوري في المتصفح
+    function autoSave() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData())); } catch (e) {}
+    }
+
+    function restoreAutoSave() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) applyData(JSON.parse(raw));
+        } catch (e) {}
+    }
+
+    // نسخة احتياطية: تنزيل بيانات النموذج كملف JSON
+    function exportBackup() {
+        const data = collectData();
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url  = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const name = (data.programName || 'تقرير_برنامج').trim() || 'تقرير_برنامج';
+        a.href = url;
+        a.download = `نسخة-احتياطية-${name}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    }
+
+    // استعادة: استيراد ملف JSON وتعبئة النموذج منه
+    function importBackup(file) {
+        if (!file) return;
+        const r = new FileReader();
+        r.onload = e => {
+            try {
+                const data = JSON.parse(e.target.result);
+                applyData(data);
+                autoSave();
+                alert('تمت الاستعادة بنجاح.');
+            } catch (err) {
+                alert('تعذّرت قراءة ملف النسخة الاحتياطية. تأكد من أنه ملف JSON صحيح صادر من هذه المنصة.');
+            }
+        };
+        r.readAsText(file);
+        document.getElementById('restoreInput').value = '';
     }
 
     function clearForm() {
         if (!confirm('هل أنت متأكد من مسح جميع البيانات؟')) return;
-        ['programName','programField','progDate','progExec','progBene','progCount','goalsArea','stepsArea','schoolName']
-            .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-        document.getElementById('imgGrid').innerHTML = `
-            <div class="image-slot"><i class="fas fa-image"></i></div>
-            <div class="image-slot"><i class="fas fa-image"></i></div>
-            <div class="image-slot"><i class="fas fa-image"></i></div>
-            <div class="image-slot"><i class="fas fa-image"></i></div>`;
+        FIELD_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        renderImages([]);
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
     }
+
+    // حفظ تلقائي فوري عند أي تغيير في الحقول النصية
+    document.addEventListener('DOMContentLoaded', () => {
+        restoreAutoSave();
+        FIELD_IDS.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', autoSave);
+        });
+    });
 </script>
 </body>
 </html>

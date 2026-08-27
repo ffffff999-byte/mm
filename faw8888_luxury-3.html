@@ -230,8 +230,19 @@
             box-shadow: 0 0 0 4px rgba(14,116,144,0.08);
         }
         .field-input::placeholder { color: #adb5c7; font-weight: 400; }
-        textarea.field-input { min-height: 155px; resize: vertical; line-height: 1.85; }
-        .print-mirror { display: none; }
+        .editable-area {
+            min-height: 155px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            overflow: visible;
+            line-height: 1.85;
+            cursor: text;
+        }
+        .editable-area:empty::before {
+            content: attr(data-placeholder);
+            color: #adb5c7;
+            font-weight: 400;
+        }
 
         .two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
         @media (max-width: 640px) { .two-cols { grid-template-columns: 1fr; } }
@@ -258,8 +269,7 @@
             .card { padding: 1.1rem; border-radius: 14px; }
             .fields-grid { grid-template-columns: 1fr; gap: 0.9rem; }
             .field-input { font-size: 0.92rem; }
-            textarea.field-input { min-height: 120px; }
-
+            .editable-area { min-height: 120px; }
             .upload-zone { padding: 1.3rem 1rem; }
             .images-grid { grid-template-columns: repeat(2, 1fr); gap: 0.6rem; }
 
@@ -443,29 +453,16 @@
                 border: 1px solid #ccd4dc !important;
                 background: #fafbfc !important;
             }
-            textarea.field-input {
-                min-height: 55pt !important;
-                max-height: 60pt !important;
-                overflow: hidden !important;
-                resize: none !important;
-            }
 
-            /* إخفاء الـ textarea الفعلي عند الطباعة، واستبداله بنسخة نصية تتمدد تلقائياً بلا قصّ */
-            textarea.field-input { display: none !important; }
-            .print-mirror {
-                display: block !important;
+            /* .editable-area (حقول الأهداف/الخطوات) عبارة عن <div> عادي بلا JS —
+               لا ارتفاع ثابت ولا overflow:hidden، فلا يمكن أن يُقصّ نصها عند الطباعة
+               بغض النظر عن وسيلة الطباعة (زر داخل المنصة، مشاركة النظام، أو معاينة بلا تشغيل جافاسكربت) */
+            .editable-area {
                 min-height: 55pt !important;
                 max-height: none !important;
                 overflow: visible !important;
                 white-space: pre-wrap !important;
                 word-break: break-word !important;
-                font-size: 8.5pt !important;
-                padding: 4pt 6pt !important;
-                border-radius: 5px !important;
-                border: 1px solid #ccd4dc !important;
-                background: #fafbfc !important;
-                font-family: 'Tajawal', sans-serif !important;
-                color: #1e293b !important;
                 line-height: 1.6 !important;
             }
 
@@ -586,11 +583,11 @@
             <div class="two-cols">
                 <div>
                     <div class="section-label"><span class="dot"></span> الأهداف</div>
-                    <textarea id="goalsArea" class="field-input" placeholder="1. الهدف الأول...&#10;2. الهدف الثاني...&#10;3. الهدف الثالث..."></textarea>
+                    <div id="goalsArea" class="field-input editable-area" contenteditable="true" data-placeholder="1. الهدف الأول... 2. الهدف الثاني... 3. الهدف الثالث..."></div>
                 </div>
                 <div>
                     <div class="section-label"><span class="dot"></span> خطوات التنفيذ</div>
-                    <textarea id="stepsArea" class="field-input" placeholder="1. الخطوة الأولى...&#10;2. الخطوة الثانية...&#10;3. الخطوة الثالثة..."></textarea>
+                    <div id="stepsArea" class="field-input editable-area" contenteditable="true" data-placeholder="1. الخطوة الأولى... 2. الخطوة الثانية... 3. الخطوة الثالثة..."></div>
                 </div>
             </div>
         </div>
@@ -622,27 +619,26 @@
 </div>
 
 <script>
-    // بناء نسخ نصية (مرايا) لكل textarea قبل الطباعة، حتى لا يُقصّ النص الطويل
-    function buildPrintMirrors() {
-        document.querySelectorAll('textarea.field-input').forEach(ta => {
-            let mirror = ta.nextElementSibling;
-            if (!mirror || !mirror.classList || !mirror.classList.contains('print-mirror')) {
-                mirror = document.createElement('div');
-                mirror.className = 'print-mirror';
-                ta.insertAdjacentElement('afterend', mirror);
-            }
-            mirror.textContent = ta.value || '';
-        });
+    // قراءة/كتابة قيمة أي حقل بغض النظر عن نوعه (input/textarea عادي، أو div قابل للتحرير)
+    function getFieldValue(id) {
+        const el = document.getElementById(id);
+        if (!el) return '';
+        return el.isContentEditable ? el.innerText.replace(/\n$/, '') : el.value;
+    }
+    function setFieldValue(id, val) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.isContentEditable) el.innerText = val || '';
+        else el.value = val || '';
     }
 
     function printNow() {
-        buildPrintMirrors();
         window.print();
     }
 
-    window.addEventListener('beforeprint', buildPrintMirrors);
-    // احتياط إضافي: بعض متصفحات الويب (مثل مشاركة/طباعة النظام داخل تطبيقات مثل تيليجرام)
-    // لا تُطلق حدث beforeprint بشكل موثوق، لذا تُبقى المرايا محدَّثة باستمرار أيضاً لا فقط عند الطباعة
+    // ملاحظة: الحقول الطويلة (الأهداف/الخطوات) الآن عناصر div عادية قابلة للتحرير
+    // (وليست textarea)، فهي تعرض نصها كاملاً دائماً بلا أي اعتماد على جافاسكربت وقت الطباعة —
+    // يعمل هذا حتى لو لم تُشغَّل جافاسكربت إطلاقاً في مسار الطباعة/المعاينة المستخدَم.
 
     function switchTab(id, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -675,10 +671,9 @@
                 goals = `1. تحقيق أهداف ${name} وفق الخطة المدرسية.\n2. تنمية مهارات الطلاب في ${field || 'هذا المجال'}.\n3. تعزيز روح الفريق والمشاركة الإيجابية.\n4. اكتشاف المواهب وتعزيز الثقة بالنفس.`;
                 steps = `1. اجتماعات تحضيرية لفريق العمل وتوزيع المهام.\n2. الإعلان عن ${name} وتحفيز الطلاب للمشاركة.\n3. تنفيذ ورش عمل وعروض مرتبطة بالبرنامج.\n4. إقامة الفعاليات المصاحبة.\n5. التقييم الختامي ورفع التقرير والشواهد.`;
             }
-            document.getElementById('goalsArea').value = goals;
-            document.getElementById('stepsArea').value = steps;
+            setFieldValue('goalsArea', goals);
+            setFieldValue('stepsArea', steps);
             autoSave();
-            buildPrintMirrors();
             btn.classList.remove('generating');
             label.textContent = 'توليد ذكي';
             document.querySelectorAll('.tab-btn')[1].click();
@@ -734,14 +729,14 @@
 
     function collectData() {
         const data = {};
-        FIELD_IDS.forEach(id => { const el = document.getElementById(id); data[id] = el ? el.value : ''; });
+        FIELD_IDS.forEach(id => { data[id] = getFieldValue(id); });
         data.images = getImagesData();
         return data;
     }
 
     function applyData(data) {
         if (!data) return;
-        FIELD_IDS.forEach(id => { const el = document.getElementById(id); if (el && data[id] !== undefined) el.value = data[id]; });
+        FIELD_IDS.forEach(id => { if (data[id] !== undefined) setFieldValue(id, data[id]); });
         renderImages(data.images);
     }
 
@@ -781,7 +776,6 @@
                 const data = JSON.parse(e.target.result);
                 applyData(data);
                 autoSave();
-                buildPrintMirrors();
                 alert('تمت الاستعادة بنجاح.');
             } catch (err) {
                 alert('تعذّرت قراءة ملف النسخة الاحتياطية. تأكد من أنه ملف JSON صحيح صادر من هذه المنصة.');
@@ -793,21 +787,17 @@
 
     function clearForm() {
         if (!confirm('هل أنت متأكد من مسح جميع البيانات؟')) return;
-        FIELD_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+        FIELD_IDS.forEach(id => setFieldValue(id, ''));
         renderImages([]);
         try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-        buildPrintMirrors();
     }
 
-    // حفظ تلقائي فوري + تحديث مرايا الطباعة عند أي تغيير في الحقول النصية
-    // (تحديث المرايا بشكل مستمر، وليس فقط عند الضغط على زر الطباعة، يضمن سلامة
-    // المحتوى المطبوع حتى عند الطباعة من خارج المنصة — مثل مشاركة/طباعة النظام)
+    // حفظ تلقائي فوري عند أي تغيير في الحقول
     document.addEventListener('DOMContentLoaded', () => {
         restoreAutoSave();
-        buildPrintMirrors();
         FIELD_IDS.forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.addEventListener('input', () => { autoSave(); buildPrintMirrors(); });
+            if (el) el.addEventListener('input', autoSave);
         });
     });
 </script>

@@ -389,6 +389,7 @@
                 margin-bottom: 4pt !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
+                overflow: visible !important;
             }
             .card::before { height: 2px !important; }
 
@@ -605,6 +606,8 @@
     }
 
     window.addEventListener('beforeprint', buildPrintMirrors);
+    // احتياط إضافي: بعض متصفحات الويب (مثل مشاركة/طباعة النظام داخل تطبيقات مثل تيليجرام)
+    // لا تُطلق حدث beforeprint بشكل موثوق، لذا تُبقى المرايا محدَّثة باستمرار أيضاً لا فقط عند الطباعة
 
     function switchTab(id, btn) {
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -640,6 +643,7 @@
             document.getElementById('goalsArea').value = goals;
             document.getElementById('stepsArea').value = steps;
             autoSave();
+            buildPrintMirrors();
             btn.classList.remove('generating');
             label.textContent = 'توليد ذكي';
             document.querySelectorAll('.tab-btn')[1].click();
@@ -742,6 +746,7 @@
                 const data = JSON.parse(e.target.result);
                 applyData(data);
                 autoSave();
+                buildPrintMirrors();
                 alert('تمت الاستعادة بنجاح.');
             } catch (err) {
                 alert('تعذّرت قراءة ملف النسخة الاحتياطية. تأكد من أنه ملف JSON صحيح صادر من هذه المنصة.');
@@ -756,14 +761,18 @@
         FIELD_IDS.forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
         renderImages([]);
         try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        buildPrintMirrors();
     }
 
-    // حفظ تلقائي فوري عند أي تغيير في الحقول النصية
+    // حفظ تلقائي فوري + تحديث مرايا الطباعة عند أي تغيير في الحقول النصية
+    // (تحديث المرايا بشكل مستمر، وليس فقط عند الضغط على زر الطباعة، يضمن سلامة
+    // المحتوى المطبوع حتى عند الطباعة من خارج المنصة — مثل مشاركة/طباعة النظام)
     document.addEventListener('DOMContentLoaded', () => {
         restoreAutoSave();
+        buildPrintMirrors();
         FIELD_IDS.forEach(id => {
             const el = document.getElementById(id);
-            if (el) el.addEventListener('input', autoSave);
+            if (el) el.addEventListener('input', () => { autoSave(); buildPrintMirrors(); });
         });
     });
 </script>

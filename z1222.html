@@ -5,18 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منصة إنجاز | التقييم الشامل للأداء الوظيفي</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Reem+Kufi:wght@600;700&family=Dancing+Script:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Cairo', sans-serif; }
+        *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; color-adjust:exact !important; }
+
+        /* ===== الكليشة: مخفية دائمًا إلا عند الطباعة ===== */
+        .print-only{ display:none; }
+
         @media print {
             body { background-color: white !important; }
-            .no-print, header, #evaluation-form-container, #calc-modal, footer { display: none !important; }
+            .no-print, header, #evaluation-form-container, #calc-modal, #settings-modal, #signature-modal, footer { display: none !important; }
             #results-container, #view-teacher-profile { grid-column: span 3 / span 3 !important; width: 100% !important;}
             .avoid-break { page-break-inside: avoid; }
             .print-push-bottom { margin-top: auto !important; padding-top: 30px !important; }
+
+            .print-only{ display:block !important; }
+            #print-cliche{ position:fixed; top:0; right:0; left:0; z-index:999; }
+            body{ padding-top:104px !important; }
+
+            /* منع تقطّع الصفوف فقط، وليس الجدول بالكامل */
+            table tr{ break-inside:avoid; page-break-inside:avoid; }
+            thead{ display:table-header-group; }
+
+            /* الجداول العريضة: تنقلب من overflow-scroll إلى تقلّص مع عرض الصفحة */
+            .overflow-x-auto{ overflow:visible !important; }
+            .overflow-x-auto table{ width:100% !important; table-layout:fixed !important; }
+            .overflow-x-auto td, .overflow-x-auto th{ word-break:break-word; padding:4px 3px !important; }
+
+            body.orient-portrait .overflow-x-auto table{ font-size:9.5px; }
+            body.orient-landscape .overflow-x-auto table{ font-size:11px; }
+
+            .page-break{ break-after:page; page-break-after:always; }
         }
+        @page{ size:A4 portrait; margin:1.5cm; }
+
+        /* ===== الكليشة: التصميم ===== */
+        #print-cliche .cliche-gradbar{ height:4px; background:linear-gradient(90deg,#0e2a47,#0891b2); }
+        #print-cliche .cliche-box{ background:#0e2a47; color:#fff; padding:8px 18px; }
+        #print-cliche .cliche-row1{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
+        #print-cliche .cliche-row2{ text-align:center; font-weight:700; font-size:13px; padding-top:6px; margin-top:6px; border-top:1px solid rgba(255,255,255,.15); }
+        #print-cliche .cliche-dotbar{ background:#fff; padding:3px 0; display:flex; justify-content:center; gap:6px; }
+        #print-cliche .cliche-dotbar span{ width:4px; height:4px; border-radius:50%; background:#c9a227; display:inline-block; }
+        #print-cliche .cliche-oval{ background:#fff; color:#0e2a47; font-weight:800; font-size:13px; text-align:center; border-radius:999px; padding:4px 22px; margin:-11px auto 0; width:fit-content; box-shadow:0 1px 3px rgba(0,0,0,.25); position:relative; z-index:2; }
+        #print-cliche .cliche-logo-dots{ display:grid; grid-template-columns:repeat(3,5px); gap:2px; }
+        #print-cliche .cliche-logo-dots span{ width:5px; height:5px; border-radius:50%; background:#fff; }
+
+        /* ===== عمود التوقيع ===== */
+        .sig-cell{ min-width:190px; }
+        .sig-line{ border-bottom:1.5px dashed #cbd5e1; height:34px; }
+        .sig-thumb{ max-height:60px; max-width:170px; object-fit:contain; }
+        #sig-draw-canvas{ touch-action:none; cursor:crosshair; }
         .rating-radio:checked + label {
             background-color: #0891b2; color: white; border-color: #0891b2;
             transform: scale(1.15); box-shadow: 0 4px 6px -1px rgba(8, 145, 178, 0.4);
@@ -32,6 +74,9 @@
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col relative">
+
+    <!-- ترويسة الطباعة (الكليشة) — تظهر فقط عند الطباعة -->
+    <div id="print-cliche" class="print-only"></div>
 
     <!-- الهيدر -->
     <header class="bg-gradient-to-r from-cyan-700 to-blue-800 text-white shadow-md sticky top-0 z-40 no-print">
@@ -49,6 +94,10 @@
                 <span class="font-bold text-cyan-50">منصة المدير لمتابعة الأداء الوظيفي</span>
                 <span class="text-cyan-300">|</span>
                 <span id="current-date" class="text-xs font-semibold"></span>
+                <button onclick="openSettings()" class="no-print flex items-center gap-1 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-full transition-all" title="إعدادات الطباعة والكليشة">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    إعدادات
+                </button>
             </div>
         </div>
     </header>
@@ -157,23 +206,35 @@
                     <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden avoid-break flex flex-col h-full">
                         <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center shrink-0">
                             <h2 class="text-base font-bold text-slate-800">قائمة ملفات المعلمين (Portfolios)</h2>
-                            <button onclick="resetPlatform()" class="no-print px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border border-rose-100">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                                مسح بيانات المنصة
-                            </button>
+                            <div class="flex items-center gap-2">
+                                <button onclick="printSection('teachers-list-wrap')" class="no-print p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-all" title="طباعة القائمة">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                                </button>
+                                <button onclick="saveSectionAsImage('teachers-list-wrap','قائمة_ملفات_المعلمين')" class="no-print p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-all" title="حفظ كصورة">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                </button>
+                                <button onclick="resetPlatform()" class="no-print px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 border border-rose-100">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                    مسح بيانات المنصة
+                                </button>
+                            </div>
                         </div>
-                        <div class="overflow-x-auto flex-grow">
+                        <div id="teachers-list-wrap" class="overflow-x-auto flex-grow">
                             <table class="w-full text-right border-collapse text-sm">
+                                <colgroup>
+                                    <col style="width:28%"><col style="width:14%"><col style="width:14%"><col style="width:26%"><col style="width:18%">
+                                </colgroup>
                                 <thead>
                                     <tr class="bg-slate-100 text-slate-500 text-xs uppercase font-bold border-b border-slate-200">
                                         <th class="p-4">المعلم والتخصص</th>
                                         <th class="p-4 text-center">متوسط الأداء</th>
                                         <th class="p-4 text-center">عدد التقييمات</th>
+                                        <th class="p-4 text-center">التوقيع</th>
                                         <th class="p-4 text-center">الإجراء</th>
                                     </tr>
                                 </thead>
                                 <tbody id="main-teachers-list" class="divide-y divide-slate-100">
-                                    <tr><td colspan="4" class="p-6 text-center text-slate-400 text-xs">لا يوجد تقييمات مسجلة بعد. استخدم الحاسبة للتشخيص والرصد.</td></tr>
+                                    <tr><td colspan="5" class="p-6 text-center text-slate-400 text-xs">لا يوجد تقييمات مسجلة بعد. استخدم الحاسبة للتشخيص والرصد.</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -217,13 +278,21 @@
             <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden avoid-break shrink-0">
                 <div class="p-5 border-b border-slate-100 bg-slate-50 flex justify-between items-center">
                     <h2 class="text-base font-bold text-slate-800">السجل التاريخي والتشخيصات الآلية</h2>
-                    <button onclick="window.print()" class="no-print px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 shadow-md">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        حفظ وطباعة
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button onclick="saveSectionAsImage('view-teacher-profile','ملف_المعلم')" class="no-print p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg transition-all" title="حفظ كصورة">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        </button>
+                        <button onclick="window.print()" class="no-print px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-bold transition-all flex items-center gap-1.5 shadow-md">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            حفظ وطباعة
+                        </button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right border-collapse text-sm">
+                        <colgroup>
+                            <col style="width:12%"><col style="width:9%"><col style="width:19%"><col style="width:60%">
+                        </colgroup>
                         <thead>
                             <tr class="bg-slate-100 text-slate-500 text-xs uppercase font-bold border-b border-slate-200">
                                 <th class="p-4">التاريخ</th>
@@ -241,14 +310,14 @@
 
             <!-- منطقة التواقيع -->
             <div class="mt-8 pt-8 border-t border-slate-200 flex justify-between items-end text-center avoid-break print-push-bottom shrink-0">
-                <div class="flex flex-col items-center gap-4 w-1/3">
+                <div class="flex flex-col items-center gap-4 w-1/2">
                     <span contenteditable="true" class="font-bold text-sm text-slate-800 bg-transparent outline-none hover:bg-slate-100 px-2 py-1 rounded transition-colors border-b border-transparent focus:border-cyan-500">توقيع المعلم</span>
-                    <span contenteditable="true" class="text-sm font-semibold text-slate-400 bg-transparent outline-none hover:bg-slate-100 px-4 py-1 border-b-2 border-dashed border-slate-300 min-w-[150px] focus:border-cyan-500 transition-colors">الاسم والتوقيع...</span>
+                    <span contenteditable="true" class="text-sm font-semibold text-slate-400 bg-transparent outline-none hover:bg-slate-100 px-6 py-4 border-b-2 border-dashed border-slate-300 min-w-[220px] min-h-[70px] focus:border-cyan-500 transition-colors">الاسم والتوقيع...</span>
                 </div>
                 
-                <div class="flex flex-col items-center gap-4 w-1/3">
+                <div class="flex flex-col items-center gap-4 w-1/2">
                     <span contenteditable="true" class="font-bold text-sm text-slate-800 bg-transparent outline-none hover:bg-slate-100 px-2 py-1 rounded transition-colors border-b border-transparent focus:border-cyan-500">توقيع مدير المدرسة</span>
-                    <span contenteditable="true" class="text-sm font-semibold text-slate-400 bg-transparent outline-none hover:bg-slate-100 px-4 py-1 border-b-2 border-dashed border-slate-300 min-w-[150px] focus:border-cyan-500 transition-colors">الاسم والتوقيع...</span>
+                    <span contenteditable="true" class="text-sm font-semibold text-slate-400 bg-transparent outline-none hover:bg-slate-100 px-6 py-4 border-b-2 border-dashed border-slate-300 min-w-[220px] min-h-[70px] focus:border-cyan-500 transition-colors">الاسم والتوقيع...</span>
                 </div>
             </div>
 
@@ -297,6 +366,89 @@
                     </button>
                     <button onclick="closeCalculator()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm font-bold transition-all">إلغاء</button>
                     <button onclick="applyCalculation()" class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-sm font-bold transition-all shadow-md shadow-cyan-200">تشخيص وتعبئة آلياً</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: إعدادات الطباعة والكليشة -->
+    <div id="settings-modal" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex justify-center items-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-slate-800 text-white p-4 flex justify-between items-center shrink-0">
+                <h3 class="font-bold">إعدادات المنصة والطباعة</h3>
+                <button onclick="closeSettings()" class="text-slate-400 hover:text-rose-400 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-5 overflow-y-auto space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">١) نمط ترويسة الطباعة (الكليشة)</label>
+                    <select id="set-theme" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                        <option value="default">الكليشة الافتراضية (بسيطة نصية)</option>
+                        <option value="identity">كليشة الهوية الوطنية</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">٢) اتجاه الطباعة</label>
+                    <select id="set-orientation" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                        <option value="portrait">عمودي</option>
+                        <option value="landscape">أفقي</option>
+                    </select>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">منطقة التعليم</label>
+                        <input type="text" id="set-region" placeholder="مثال: المدينة المنورة" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1">العام الدراسي</label>
+                        <input type="text" id="set-year" placeholder="مثال: 1448هـ" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">اسم المدرسة</label>
+                    <input type="text" id="set-school" placeholder="اسم المدرسة" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                </div>
+                <div class="pt-2 border-t border-slate-100">
+                    <p class="text-[11px] text-slate-400 leading-relaxed">ملاحظة: عند اختيار "الهوية الوطنية" يُبنى السطر الأيسر من الصندوق الداكن تلقائيًا من حقل "منطقة التعليم" أعلاه، وتُبنى الخانة البيضاوية من "اسم المدرسة" فقط.</p>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end gap-2 shrink-0">
+                <button onclick="closeSettings()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm font-bold transition-all">إلغاء</button>
+                <button onclick="saveSettings()" class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-sm font-bold transition-all shadow-md shadow-cyan-200">حفظ الإعدادات</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: التوقيع الإلكتروني -->
+    <div id="signature-modal" class="no-print fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex justify-center items-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-slate-800 text-white p-4 flex justify-between items-center shrink-0">
+                <h3 class="font-bold">توقيع: <span id="sig-teacher-name" class="text-cyan-300"></span></h3>
+                <button onclick="closeSignatureModal()" class="text-slate-400 hover:text-rose-400 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="p-4 flex gap-2 border-b border-slate-100 shrink-0">
+                <button id="sig-tab-draw" onclick="switchSigTab('draw')" class="flex-1 py-2 rounded-xl text-sm font-bold bg-cyan-600 text-white transition-all">✍️ رسم بالقلم</button>
+                <button id="sig-tab-type" onclick="switchSigTab('type')" class="flex-1 py-2 rounded-xl text-sm font-bold bg-slate-100 text-slate-600 transition-all">⌨️ كتابة بخط اليد</button>
+            </div>
+            <div class="p-4 space-y-3 overflow-y-auto">
+                <div id="sig-panel-draw">
+                    <p class="text-[11px] text-slate-400 mb-2">ارسم التوقيع باللمس أو الماوس داخل المربع أدناه:</p>
+                    <canvas id="sig-draw-canvas" width="600" height="230" class="w-full border-2 border-dashed border-slate-300 rounded-xl bg-slate-50"></canvas>
+                </div>
+                <div id="sig-panel-type" class="hidden">
+                    <p class="text-[11px] text-slate-400 mb-2">اكتب الاسم وسيتحول تلقائيًا إلى خط شبيه بالتوقيع:</p>
+                    <input type="text" id="sig-type-input" placeholder="اكتب الاسم هنا..." oninput="renderTypedSignature()" class="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm mb-2">
+                    <canvas id="sig-type-canvas" width="600" height="230" class="w-full border-2 border-dashed border-slate-300 rounded-xl bg-slate-50"></canvas>
+                </div>
+            </div>
+            <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-between gap-2 shrink-0">
+                <button onclick="clearSigCanvas()" class="px-4 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-xl text-sm font-bold transition-all">مسح</button>
+                <div class="flex gap-2">
+                    <button onclick="closeSignatureModal()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-sm font-bold transition-all">إلغاء</button>
+                    <button onclick="saveSignatureFn()" class="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-sm font-bold transition-all shadow-md shadow-cyan-200">اعتماد التوقيع</button>
                 </div>
             </div>
         </div>
@@ -380,6 +532,7 @@
         ];
 
         let evaluationsDB = [];
+        let state = {};
 
         const calcContainer = document.getElementById('calc-items');
         criteriaItems.forEach((item, index) => {
@@ -564,24 +717,286 @@
             document.getElementById('stat-needs-dev').innerText = totalDevTeachers;
 
             if(uniqueTeachers.length === 0) {
-                tableBody.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-slate-400 text-xs">لا يوجد تقييمات مسجلة بعد. استخدم الحاسبة للتشخيص والرصد.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="5" class="p-6 text-center text-slate-400 text-xs">لا يوجد تقييمات مسجلة بعد. استخدم الحاسبة للتشخيص والرصد.</td></tr>';
                 return;
             }
 
             uniqueTeachers.forEach(t => {
                 const avg = (t.sum / t.count).toFixed(1);
                 const scoreColor = avg >= 90 ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700';
-                
+                const safeName = t.name.replace(/'/g, "\\'");
+
                 tableBody.innerHTML += `
                     <tr class="hover:bg-slate-50 transition-all">
                         <td class="p-4 font-semibold text-slate-800">${t.name}<div class="text-xs font-normal text-slate-400">${t.specialty}</div></td>
                         <td class="p-4 text-center"><span class="px-2.5 py-1 ${scoreColor} rounded-full text-xs font-bold">${avg} / 100</span></td>
                         <td class="p-4 text-center font-bold text-slate-600">${t.count}</td>
+                        <td class="p-4 sig-cell">${renderSigCellHTML(t.name)}</td>
                         <td class="p-4 text-center">
-                            <button onclick="openTeacherProfile('${t.name}')" class="px-3 py-1.5 bg-cyan-100 hover:bg-cyan-200 text-cyan-700 rounded-lg text-xs font-bold transition-all">فتح الملف</button>
+                            <button onclick="openTeacherProfile('${safeName}')" class="px-3 py-1.5 bg-cyan-100 hover:bg-cyan-200 text-cyan-700 rounded-lg text-xs font-bold transition-all no-print">فتح الملف</button>
                         </td>
                     </tr>
                 `;
+            });
+        }
+
+        /* ============================================================
+           إعدادات المنصة + الكليشة (ترويسة الطباعة)
+        ============================================================ */
+        const SETTINGS_KEY = 'injaz_platform_settings_v1';
+        const SIGNATURES_KEY = 'injaz_platform_signatures_v1';
+
+        state.settings = Object.assign({
+            theme: 'default',
+            printOrientation: 'portrait',
+            region: '',
+            year: '',
+            schoolName: ''
+        }, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'));
+
+        let teacherSignatures = JSON.parse(localStorage.getItem(SIGNATURES_KEY) || '{}');
+
+        function dotsOr(val){
+            const v = (val || '').toString().trim();
+            return v ? v : '.......';
+        }
+
+        function buildClicheHTML(theme){
+            const s = state.settings;
+            if(theme === 'identity'){
+                return `
+                    <div class="cliche-gradbar"></div>
+                    <div class="cliche-box">
+                        <div class="cliche-row1">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <div class="cliche-logo-dots"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                                <div>
+                                    <div style="font-weight:800;font-size:14px;color:#5eead4;">وزارة التعليم</div>
+                                    <div style="font-size:9px;color:#cbd5e1;">Ministry of Education</div>
+                                </div>
+                            </div>
+                            <div style="font-weight:700;font-size:13px;">الإدارة العامة للتعليم بمنطقة ${dotsOr(s.region)}</div>
+                        </div>
+                        <div class="cliche-row2">التقييم الشامل للأداء الوظيفي ${dotsOr(s.year)}</div>
+                    </div>
+                    <div class="cliche-oval">${dotsOr(s.schoolName)}</div>
+                    <div class="cliche-dotbar"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                `;
+            }
+            return `
+                <div class="cliche-gradbar"></div>
+                <div class="cliche-box">
+                    <div class="cliche-row1">
+                        <div>
+                            <div style="font-weight:700;font-size:12px;">إدارة تعليم منطقة ${dotsOr(s.region)}</div>
+                            <div style="font-size:12px;color:#e2e8f0;">${dotsOr(s.schoolName)}</div>
+                        </div>
+                        <div style="text-align:left;">
+                            <div style="font-weight:700;font-size:12px;">المملكة العربية السعودية</div>
+                            <div style="font-size:11px;color:#cbd5e1;">وزارة التعليم</div>
+                        </div>
+                    </div>
+                    <div class="cliche-row2">التقييم الشامل للأداء الوظيفي ${dotsOr(s.year)}</div>
+                </div>
+                <div class="cliche-dotbar"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            `;
+        }
+
+        function renderPrintHeader(){
+            document.getElementById('print-cliche').innerHTML = buildClicheHTML(state.settings.theme);
+        }
+
+        function applyPrintOrientation(){
+            let styleEl = document.getElementById('dynPageStyle');
+            if(!styleEl){ styleEl = document.createElement('style'); styleEl.id = 'dynPageStyle'; document.head.appendChild(styleEl); }
+            const o = state.settings.printOrientation === 'landscape' ? 'landscape' : 'portrait';
+            styleEl.textContent = `@page{ size:A4 ${o}; margin:1.5cm; }`;
+            document.body.classList.remove('orient-portrait','orient-landscape');
+            document.body.classList.add(o === 'landscape' ? 'orient-landscape' : 'orient-portrait');
+        }
+
+        function initFormValues(){
+            document.getElementById('set-theme').value = state.settings.theme;
+            document.getElementById('set-orientation').value = state.settings.printOrientation;
+            document.getElementById('set-region').value = state.settings.region;
+            document.getElementById('set-year').value = state.settings.year;
+            document.getElementById('set-school').value = state.settings.schoolName;
+            applyPrintOrientation();
+            renderPrintHeader();
+        }
+
+        function openSettings(){
+            document.getElementById('set-theme').value = state.settings.theme;
+            document.getElementById('set-orientation').value = state.settings.printOrientation;
+            document.getElementById('set-region').value = state.settings.region;
+            document.getElementById('set-year').value = state.settings.year;
+            document.getElementById('set-school').value = state.settings.schoolName;
+            const m = document.getElementById('settings-modal');
+            m.classList.remove('hidden'); setTimeout(() => m.classList.remove('opacity-0'), 10);
+        }
+        function closeSettings(){
+            const m = document.getElementById('settings-modal');
+            m.classList.add('opacity-0'); setTimeout(() => m.classList.add('hidden'), 300);
+        }
+        function saveSettings(){
+            state.settings.theme = document.getElementById('set-theme').value;
+            state.settings.printOrientation = document.getElementById('set-orientation').value;
+            state.settings.region = document.getElementById('set-region').value.trim();
+            state.settings.year = document.getElementById('set-year').value.trim();
+            state.settings.schoolName = document.getElementById('set-school').value.trim();
+            localStorage.setItem(SETTINGS_KEY, JSON.stringify(state.settings));
+            applyPrintOrientation();
+            renderPrintHeader();
+            closeSettings();
+        }
+
+        /* ============================================================
+           التوقيع الإلكتروني (رسم / كتابة) — قص تلقائي على حدود الحبر
+        ============================================================ */
+        let currentSigTeacher = null;
+        let sigActiveTab = 'draw';
+        let sigDrawing = false;
+        let sigCtx = null;
+
+        function renderSigCellHTML(name){
+            const saved = teacherSignatures[name];
+            const safeName = name.replace(/'/g, "\\'");
+            if(saved){
+                return `
+                    <div class="flex items-center gap-2">
+                        <img src="${saved}" class="sig-thumb" alt="توقيع">
+                        <button onclick="openSignatureModal('${safeName}')" class="no-print text-[10px] font-bold text-cyan-600 hover:underline">تعديل</button>
+                    </div>`;
+            }
+            return `
+                <div class="flex flex-col gap-1">
+                    <div class="sig-line"></div>
+                    <button onclick="openSignatureModal('${safeName}')" class="no-print self-start text-[10px] font-bold text-cyan-600 hover:underline">✒️ توقيع</button>
+                </div>`;
+        }
+
+        function openSignatureModal(name){
+            currentSigTeacher = name;
+            document.getElementById('sig-teacher-name').innerText = name;
+            document.getElementById('sig-type-input').value = '';
+            switchSigTab('draw');
+            const m = document.getElementById('signature-modal');
+            m.classList.remove('hidden'); setTimeout(() => m.classList.remove('opacity-0'), 10);
+            setTimeout(setupDrawCanvas, 50);
+        }
+        function closeSignatureModal(){
+            const m = document.getElementById('signature-modal');
+            m.classList.add('opacity-0'); setTimeout(() => m.classList.add('hidden'), 300);
+        }
+
+        function switchSigTab(tab){
+            sigActiveTab = tab;
+            document.getElementById('sig-panel-draw').classList.toggle('hidden', tab !== 'draw');
+            document.getElementById('sig-panel-type').classList.toggle('hidden', tab !== 'type');
+            document.getElementById('sig-tab-draw').className = 'flex-1 py-2 rounded-xl text-sm font-bold transition-all ' + (tab==='draw' ? 'bg-cyan-600 text-white' : 'bg-slate-100 text-slate-600');
+            document.getElementById('sig-tab-type').className = 'flex-1 py-2 rounded-xl text-sm font-bold transition-all ' + (tab==='type' ? 'bg-cyan-600 text-white' : 'bg-slate-100 text-slate-600');
+        }
+
+        function setupDrawCanvas(){
+            const canvas = document.getElementById('sig-draw-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#0e2a47';
+            sigCtx = ctx;
+
+            function getPos(e){
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
+                return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+            }
+            canvas.onpointerdown = (e) => {
+                sigDrawing = true;
+                const p = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(p.x, p.y);
+            };
+            canvas.onpointermove = (e) => {
+                if(!sigDrawing) return;
+                const p = getPos(e);
+                ctx.lineTo(p.x, p.y);
+                ctx.stroke();
+            };
+            canvas.onpointerup = () => { sigDrawing = false; };
+            canvas.onpointerleave = () => { sigDrawing = false; };
+        }
+
+        function renderTypedSignature(){
+            const canvas = document.getElementById('sig-type-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            const text = document.getElementById('sig-type-input').value.trim();
+            if(!text) return;
+            ctx.fillStyle = '#0e2a47';
+            ctx.font = "60px 'Dancing Script', cursive";
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(text, canvas.width/2, canvas.height/2);
+        }
+
+        function clearSigCanvas(){
+            if(sigActiveTab === 'draw'){ setupDrawCanvas(); }
+            else { document.getElementById('sig-type-input').value=''; renderTypedSignature(); }
+        }
+
+        function trimCanvasToInk(canvas){
+            const ctx = canvas.getContext('2d');
+            const { width, height } = canvas;
+            const data = ctx.getImageData(0,0,width,height).data;
+            let minX=width, minY=height, maxX=0, maxY=0, found=false;
+            for(let y=0; y<height; y++){
+                for(let x=0; x<width; x++){
+                    const alpha = data[(y*width+x)*4+3];
+                    if(alpha > 10){
+                        found = true;
+                        if(x<minX) minX=x; if(x>maxX) maxX=x;
+                        if(y<minY) minY=y; if(y>maxY) maxY=y;
+                    }
+                }
+            }
+            if(!found) return null;
+            const pad = 8;
+            minX = Math.max(0, minX-pad); minY = Math.max(0, minY-pad);
+            maxX = Math.min(width, maxX+pad); maxY = Math.min(height, maxY+pad);
+            const w = maxX-minX, h = maxY-minY;
+            const out = document.createElement('canvas');
+            out.width = w; out.height = h;
+            out.getContext('2d').drawImage(canvas, minX, minY, w, h, 0, 0, w, h);
+            return out.toDataURL('image/png');
+        }
+
+        function saveSignatureFn(){
+            if(!currentSigTeacher) return;
+            const canvas = sigActiveTab === 'draw' ? document.getElementById('sig-draw-canvas') : document.getElementById('sig-type-canvas');
+            const trimmed = trimCanvasToInk(canvas);
+            if(!trimmed){ alert('يرجى إضافة توقيع أولاً.'); return; }
+            teacherSignatures[currentSigTeacher] = trimmed;
+            localStorage.setItem(SIGNATURES_KEY, JSON.stringify(teacherSignatures));
+            renderMainDashboard();
+            closeSignatureModal();
+        }
+
+        /* ============================================================
+           طباعة/حفظ قسم محدد
+        ============================================================ */
+        function printSection(){
+            window.print();
+        }
+        function saveSectionAsImage(elementId, filename){
+            const el = document.getElementById(elementId);
+            if(!el || typeof html2canvas === 'undefined') return;
+            html2canvas(el, { backgroundColor: '#ffffff', scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = (filename || 'قسم') + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
             });
         }
 
@@ -637,6 +1052,10 @@
             document.getElementById('view-teacher-profile').classList.remove('active');
             document.getElementById('view-dashboard').classList.add('active');
         }
+
+        // تهيئة الإعدادات والكليشة وحقول نافذة الإعدادات عند تحميل المنصة
+        initFormValues();
+        renderMainDashboard();
     </script>
 </body>
 </html>
